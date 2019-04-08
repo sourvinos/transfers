@@ -1,0 +1,14 @@
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+
+namespace Transfers.Models
+{
+	public class Context : IdentityDbContext<IdentityUser>
+	{
+		public Context(DbContextOptions<Context> options) : base(options) { }
+
+		public DbSet<Country> Countries { get; set; }
+		public DbSet<Customer> Customers { get; set; }
+	}
+}
