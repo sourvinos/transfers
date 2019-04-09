@@ -1,0 +1,18 @@
+8/4/2019
+
+    - Latest version of Angular 7.3.8
+    - Latest version of all the other dependencies
+      Exceptions are: zone.js and typescript, as instructed by npm install
+      This configuration gives zero vulnerabilities
+    - Working APIs: Customers, Register new user, Login
+    - Authentication is working as expected with token
+    - The SSL certificate is working as expected
+
+9/4/2019
+
+    - The DB connection and the Auth settings are read from the appsettings.json instead of hard coded values
+
+
+
+
+

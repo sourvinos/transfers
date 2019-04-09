@@ -27,6 +27,8 @@ namespace Transfers.Shared
 
 		public static void AddAuthentication(IConfiguration configuration, IServiceCollection services)
 		{
+			var settings = configuration.GetSection("Jwt");
+
 			services
 				.AddAuthentication(option =>
 				{
@@ -42,9 +44,9 @@ namespace Transfers.Shared
 					{
 						ValidateIssuer = true,
 						ValidateAudience = true,
-						ValidAudience = "http://www.security.org",
-						ValidIssuer = "http://www.security.org",
-						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Paris Berlin Cairo Sydney Tokyo Beijing Rome London Athens"))
+						ValidAudience = settings.GetValue<string>("Site"),
+						ValidIssuer = settings.GetValue<string>("Site"),
+						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.GetValue<string>("SigningKey")))
 					};
 				});
 		}

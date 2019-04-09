@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System;
+using Transfers.Shared;
 
 namespace Transfers
 {
@@ -16,6 +17,7 @@ namespace Transfers
 				.AddEnvironmentVariables()
 				.AddJsonFile("certificate.json", optional: true, reloadOnChange: true)
 				.AddJsonFile($"certificate.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true, reloadOnChange: true)
+				.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
 				.Build();
 
 			var certificateSettings = config.GetSection("certificateSettings");

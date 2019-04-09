@@ -8,7 +8,6 @@ using Transfers.Models;
 
 namespace Transfers.Controllers
 {
-	[Authorize]
 	[Route("api/[controller]")]
 	public class CustomerController : ControllerBase
 	{
