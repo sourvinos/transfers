@@ -1,0 +1,20 @@
+#user {
+    background-color: var(--dark-color);
+    color: var(--color);
+    grid-area: user;
+    text-align: right;
+}
+
+#login-details {
+    align-items: center;
+    color: var(--color);
+    display: flex;
+    font-size: 0.75rem;
+    justify-content: flex-end;
+    padding: 0.125rem 1.5625rem 0.125rem 1.25rem;
+}
+
+mat-icon {
+    color: var(--color);
+    margin-left: 0.625rem;
+}

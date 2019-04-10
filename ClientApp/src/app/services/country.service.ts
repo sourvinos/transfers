@@ -10,7 +10,7 @@ import { ICountry } from '../models/country';
 
 export class CountryService {
 
-    private url: string = 'https://localhost:5001/api/country';
+    private url: string = 'https://localhost:44322/api/country';
 
     constructor(private http: HttpClient) { }
 

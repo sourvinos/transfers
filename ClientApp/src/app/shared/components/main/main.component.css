@@ -1,0 +1,20 @@
+:host {
+    display: grid;
+    grid-template-areas:
+        "user"
+        "navigation"
+        "main"
+        "footer";
+    grid-template-rows: auto auto 1fr auto;
+}
+
+#main {
+    background-color: #dddddd;
+    display: grid;
+    grid-area: main;
+    grid-template-areas:
+        "main-header"
+        "main-content"
+        "main-footer";
+    grid-template-rows: max-content 1fr max-content;
+}

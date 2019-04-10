@@ -8,7 +8,7 @@ import { ILogin } from '../models/login';
 
 export class AuthService {
 
-    private url: string = 'https://localhost:5001/login';
+    private url: string = 'https://localhost:44322/login';
 
     constructor(private http: HttpClient) { }
 
@@ -26,7 +26,6 @@ export class AuthService {
 
     getToken(): string | null {
         var i = localStorage.getItem('token');
-        console.log('Token ' + i);
         if (i) {
             return i;
         }

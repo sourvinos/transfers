@@ -1,0 +1,11 @@
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+	selector: 'message-dialog',
+	templateUrl: './message-dialog.component.html',
+	styleUrls: ['./message-dialog.component.css']
+})
+export class MessageDialogComponent implements OnInit {
+	constructor() { }
+	ngOnInit() { }
+}

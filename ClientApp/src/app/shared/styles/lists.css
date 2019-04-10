@@ -1,0 +1,48 @@
+:host {
+    display: grid;
+    grid-template-areas:
+        "main-header"
+        "main-body"
+        "main-footer";
+    grid-template-rows: auto 1fr auto;
+}
+
+#main-header {
+    margin: 1rem 2rem;
+    color: var(--form-header-color);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    height: fit-content;
+    grid-area: main-header;
+}
+
+#search-box {
+    justify-self: end;
+    padding: 0.5rem;
+    width: 18rem;
+}
+
+#main-body {
+    margin: 0 2rem;
+    max-height: -webkit-fill-available;
+    opacity: 0.5;
+    overflow-y: scroll;
+    grid-area: main-body;
+}
+
+#main-footer {
+    color: var(--color);
+    margin: 1rem 2rem;
+    text-align: right;
+    grid-area: main-footer;
+}
+
+#main-body::-webkit-scrollbar {
+    width: 0.3125rem;
+}
+
+#main-body::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-bar-color);
+    min-height: 6.25rem;
+}

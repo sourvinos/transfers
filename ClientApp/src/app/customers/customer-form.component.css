@@ -1,0 +1,19 @@
+form {
+    display: grid;
+    grid-gap: 0.625rem;
+    grid-template-areas:
+        "header header"
+        "section-one section-two"
+        "footer footer";
+    grid-template-columns: 1fr, 1fr;
+    grid-template-rows: max-content 1fr max-content;
+    height: 100%;
+}
+
+#section-one {
+    grid-area: 'section-one'
+}
+
+#section-two {
+    grid-area: 'section-two'
+}

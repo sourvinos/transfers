@@ -1,4 +1,4 @@
-8/4/2019
+08/04/2019
 
     - Latest version of Angular 7.3.8
     - Latest version of all the other dependencies
@@ -8,11 +8,11 @@
     - Authentication is working as expected with token
     - The SSL certificate is working as expected
 
-9/4/2019
+09/04/2019
 
     - The DB connection and the Auth settings are read from the appsettings.json instead of hard coded values
 
 
+10/04/2019
 
-
-
+    - Adds Client Side Components

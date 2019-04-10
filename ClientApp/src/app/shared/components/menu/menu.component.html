@@ -1,0 +1,20 @@
+<div id='menu'>
+    <div *ngIf='this.service.isLoggedIn()'>
+        <button mat-button [routerLink]='["/customers"]'>Customers</button>
+        <button mat-button [routerLink]='["/pickups"]'>Pickups</button>
+        <button mat-button [matMenuTriggerFor]='tables'>Tables</button>
+        <mat-menu #tables='matMenu'>
+            <button mat-menu-item [routerLink]='["/countries"]'>Countries</button>
+            <button mat-menu-item [routerLink]='["/destinations"]'>Destinations</button>
+            <button mat-menu-item [routerLink]='["/pickupPoints"]'>Pickup points</button>
+            <button mat-menu-item [routerLink]='["/routes"]'>Routes</button>
+            <button mat-menu-item [routerLink]='["/taxOffices"]'>Tax Offices</button>
+            <button mat-menu-item [routerLink]='["/transferTypes"]'>Transfer types</button>
+            <button mat-menu-item [routerLink]='["/vatStates"]'>VAT States</button>
+        </mat-menu>
+        <button mat-button (click)='logout()'>Logout</button>
+    </div>
+    <div *ngIf='!this.service.isLoggedIn()'>
+        <button *ngIf='!this.service.isLoggedIn()' mat-button [routerLink]='["/login"]'>Login</button>
+    </div>
+</div>

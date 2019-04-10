@@ -1,0 +1,14 @@
+form {
+    display: grid;
+    grid-gap: 0.625rem;
+    grid-template-areas:
+        "header"
+        "section"
+        "footer";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+}
+
+#section {
+    grid-area: 'section'
+}

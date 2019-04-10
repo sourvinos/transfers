@@ -1,1 +1,65 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+body,
+h1,
+h2 {
+    margin: 0;
+}
+
+* {
+    --color: #ffffff;
+    --light-color: #9B2821;
+    --dark-color: #8C051B;
+
+    --content-background-color: #f0f0f8;
+
+    --form-header-color: #7A818B;
+    --form-header-size: 2.1875rem;
+    --form-header-weight: 100;
+
+    --form-sub-header-color: #7A818B;
+    --form-sub-header-size: 1.25rem;
+    --form-sub-header-weight: 100;
+
+    --list-background-color: #f0f0f8;
+
+    --scroll-bar-color: #c03437;
+
+    --fab-background-color: #737373;
+}
+
+* {
+    box-sizing: border-box !important;
+}
+
+h1 {
+    color: var(--form-header-color);
+    font-size: var(--form-header-size);
+    font-weight: var(--form-header-weight);
+    padding-bottom: 4px;
+}
+
+input {
+    font-size: 0.875rem;
+}
+
+button {
+    width: 5.625rem;
+}
+
+button:not(:last-child) {
+    margin-right: 0.625rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.mat-list-item-content {
+    color: #7A818B;
+}
+
+::placeholder {
+    color: lightskyblue;
+    font-style: italic;
+}

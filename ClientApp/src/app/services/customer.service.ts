@@ -10,7 +10,7 @@ import { ICustomer } from '../models/customer';
 
 export class CustomerService {
 
-    private url: string = 'https://localhost:5001/api/customer';
+    private url: string = 'https://localhost:44322/api/customer';
 
     constructor(private http: HttpClient) { }
 
