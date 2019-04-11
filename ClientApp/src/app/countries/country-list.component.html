@@ -7,7 +7,7 @@
 
 <div id='main-body'>
     <mat-nav-list>
-        <a mat-list-item *ngFor='let country of filteredCountries' [routerLink]='["/country", country.countryId]'>{{ country.description }}</a>
+        <a mat-list-item *ngFor='let country of filteredCountries' routerLink='/country/{{ country.countryId }}'>{{ country.description }}</a>
     </mat-nav-list>
 </div>
 

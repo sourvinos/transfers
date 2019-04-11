@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatSnackBar } from '@angular/material';
 
 import { CountryService } from '../services/country.service';
@@ -37,7 +37,8 @@ export class CountryFormComponent implements OnInit {
 
 	form = this.formBuilder.group({
 		countryId: 0,
-		description: ['', DescriptionValidators.cannotExceedMaxLength]
+		description: ['', Validators.required],
+		user: ['']
 	})
 
 	populateFields() {
@@ -46,6 +47,7 @@ export class CountryFormComponent implements OnInit {
 				this.country = result;
 				this.form.get('countryId').setValue(this.country.countryId);
 				this.form.get('description').setValue(this.country.description);
+				this.form.get('user').setValue(this.country.user);
 			},
 			error => {
 				Utils.ErrorLogger(error);

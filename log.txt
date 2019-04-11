@@ -12,7 +12,6 @@
 
     - The DB connection and the Auth settings are read from the appsettings.json instead of hard coded values
 
-
 10/04/2019
 
     - Adds Client Side Components

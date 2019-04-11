@@ -59,7 +59,7 @@ namespace Transfers.Controllers
 		{
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-			if (id != customer.Id) return BadRequest();
+			if (id != customer.CustomerId) return BadRequest();
 
 			context.Entry(customer).State = EntityState.Modified;
 

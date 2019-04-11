@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace Transfers.Controllers
 {
-	[Authorize]
 	[Route("api/[controller]")]
 	public class CountryController : ControllerBase
 	{

@@ -1,8 +1,6 @@
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
-body,
-h1,
-h2 {
+body, h1, h2 {
     margin: 0;
 }
 

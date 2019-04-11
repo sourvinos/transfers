@@ -1,5 +1,5 @@
 export interface ICustomer {
-    id: number;
+    customerId: number;
     description: string;
     profession: string;
     taxOfficeId: number;

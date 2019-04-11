@@ -73,11 +73,12 @@ import { AuthInterceptor } from '../services/auth.interceptor';
         ReactiveFormsModule,
         RouterModule.forRoot([
             { path: '', component: HomeComponent, pathMatch: 'full' },
+            { path: 'countries', component: CountryListComponent },
             { path: 'country/new', component: CountryFormComponent },
             { path: 'country/:id', component: CountryFormComponent },
-            { path: 'countries', component: CountryListComponent },
             { path: 'customers', component: CustomerListComponent },
             { path: 'customer/new', component: CustomerFormComponent },
+            { path: 'customer/:id', component: CustomerFormComponent },
             { path: 'login', component: LoginComponent }
         ])
     ],

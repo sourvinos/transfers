@@ -36,8 +36,8 @@ export class CustomerFormComponent implements OnInit {
     }
 
     form = this.formBuilder.group({
-        id: 0,
-        description: ['', Validators.required, Validators.maxLength(50)],
+        customerId: 0,
+        description: ['', Validators.required],
         profession: [''],
         taxOfficeId: [''],
         vatStateId: [''],
@@ -54,8 +54,18 @@ export class CustomerFormComponent implements OnInit {
         this.service.getCustomer(this.id).subscribe(
             result => {
                 this.customer = result;
-                this.form.get('id').setValue(this.customer.id);
+                this.form.get('customerId').setValue(this.customer.customerId);
                 this.form.get('description').setValue(this.customer.description);
+                this.form.get('profession').setValue(this.customer.profession);
+                this.form.get('taxOfficeId').setValue(this.customer.taxOfficeId);
+                this.form.get('vatStateId').setValue(this.customer.vatStateId);
+                this.form.get('address').setValue(this.customer.address);
+                this.form.get('phones').setValue(this.customer.phones);
+                this.form.get('personInCharge').setValue(this.customer.personInCharge);
+                this.form.get('email').setValue(this.customer.email);
+                this.form.get('taxNo').setValue(this.customer.taxNo);
+                this.form.get('accountCode').setValue(this.customer.accountCode);
+                this.form.get('user').setValue(this.customer.user);
             },
             error => {
                 Utils.ErrorLogger(error);
