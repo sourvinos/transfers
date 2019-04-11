@@ -10,5 +10,7 @@ namespace Transfers.Models
 
 		public DbSet<Country> Countries { get; set; }
 		public DbSet<Customer> Customers { get; set; }
+		public DbSet<TaxOffice> TaxOffices { get; set; }
+		public DbSet<VATState> VATStates { get; set; }
 	}
 }

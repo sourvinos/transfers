@@ -22,7 +22,7 @@ namespace Transfers.Controllers
 		[HttpGet]
 		public async Task<IEnumerable<Customer>> Get()
 		{
-			return await context.Customers.OrderBy(o => o.Description).ToListAsync();
+			return await context.Customers.Include(x => x.TaxOffice).Include(x => x.VATState).OrderBy(o => o.Description).ToListAsync();
 		}
 
 		// GET: api/customer/5
@@ -55,13 +55,13 @@ namespace Transfers.Controllers
 
 		// PUT: api/customer/5
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Putcustomer([FromRoute] int id, [FromBody] Customer customer)
+		public async Task<IActionResult> Putcustomer([FromRoute] int id, [FromBody] Customer item)
 		{
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-			if (id != customer.CustomerId) return BadRequest();
+			if (id != item.CustomerId) return BadRequest();
 
-			context.Entry(customer).State = EntityState.Modified;
+			context.Entry(item).State = EntityState.Modified;
 
 			try
 			{
@@ -70,12 +70,12 @@ namespace Transfers.Controllers
 
 			catch (DbUpdateConcurrencyException)
 			{
-				Customer item = await context.Customers.FindAsync(id);
+				item = await context.Customers.FindAsync(id);
 
 				if (item == null) return NotFound(); else throw;
 			}
 
-			return Ok(customer);
+			return Ok(item);
 		}
 
 		// DELETE: api/customer/5
