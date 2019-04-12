@@ -29,23 +29,23 @@ namespace Transfers.Controllers
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetVATState(int id)
 		{
-			VATState item = await context.VATStates.FindAsync(id);
+			VATState vatState = await context.VATStates.FindAsync(id);
 
-			if (item == null) { return NotFound(); }
+			if (vatState == null) { return NotFound(); }
 
-			return Ok(item);
+			return Ok(vatState);
 		}
 
 		// POST: api/vatState
 		[HttpPost]
-		public async Task<IActionResult> PostVATState([FromBody] VATState item)
+		public async Task<IActionResult> PostVATState([FromBody] VATState vatState)
 		{
 			if (ModelState.IsValid)
 			{
-				context.VATStates.Add(item);
+				context.VATStates.Add(vatState);
 				await context.SaveChangesAsync();
 
-				return Ok(item);
+				return Ok(vatState);
 			}
 			else
 			{
@@ -55,13 +55,13 @@ namespace Transfers.Controllers
 
 		// PUT: api/vatState/5
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutVATState([FromRoute] int id, [FromBody] VATState item)
+		public async Task<IActionResult> PutVATState([FromRoute] int id, [FromBody] VATState vatState)
 		{
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-			if (id != item.VATStateId) return BadRequest();
+			if (id != vatState.VATStateId) return BadRequest();
 
-			context.Entry(item).State = EntityState.Modified;
+			context.Entry(vatState).State = EntityState.Modified;
 
 			try
 			{
@@ -70,23 +70,23 @@ namespace Transfers.Controllers
 
 			catch (DbUpdateConcurrencyException)
 			{
-				item = await context.VATStates.FindAsync(id);
+				vatState = await context.VATStates.FindAsync(id);
 
-				if (item == null) return NotFound(); else throw;
+				if (vatState == null) return NotFound(); else throw;
 			}
 
-			return Ok(item);
+			return Ok(vatState);
 		}
 
 		// DELETE: api/vatState/5
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteVATState([FromRoute] int id)
 		{
-			VATState item = await context.VATStates.FindAsync(id);
+			VATState vatState = await context.VATStates.FindAsync(id);
 
-			if (item == null) { return NotFound(); }
+			if (vatState == null) { return NotFound(); }
 
-			context.VATStates.Remove(item);
+			context.VATStates.Remove(vatState);
 			await context.SaveChangesAsync();
 
 			return NoContent();

@@ -12,5 +12,6 @@ namespace Transfers.Models
 		public DbSet<Customer> Customers { get; set; }
 		public DbSet<TaxOffice> TaxOffices { get; set; }
 		public DbSet<VATState> VATStates { get; set; }
+		public DbSet<Route> Routes { get; set; }
 	}
 }

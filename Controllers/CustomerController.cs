@@ -55,13 +55,13 @@ namespace Transfers.Controllers
 
 		// PUT: api/customer/5
 		[HttpPut("{id}")]
-		public async Task<IActionResult> Putcustomer([FromRoute] int id, [FromBody] Customer item)
+		public async Task<IActionResult> Putcustomer([FromRoute] int id, [FromBody] Customer customer)
 		{
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-			if (id != item.CustomerId) return BadRequest();
+			if (id != customer.CustomerId) return BadRequest();
 
-			context.Entry(item).State = EntityState.Modified;
+			context.Entry(customer).State = EntityState.Modified;
 
 			try
 			{
@@ -70,12 +70,12 @@ namespace Transfers.Controllers
 
 			catch (DbUpdateConcurrencyException)
 			{
-				item = await context.Customers.FindAsync(id);
+				customer = await context.Customers.FindAsync(id);
 
-				if (item == null) return NotFound(); else throw;
+				if (customer == null) return NotFound(); else throw;
 			}
 
-			return Ok(item);
+			return Ok(customer);
 		}
 
 		// DELETE: api/customer/5

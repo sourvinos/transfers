@@ -29,23 +29,23 @@ namespace Transfers.Controllers
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetTaxOffice(int id)
 		{
-			TaxOffice item = await context.TaxOffices.FindAsync(id);
+			TaxOffice taxOffice = await context.TaxOffices.FindAsync(id);
 
-			if (item == null) { return NotFound(); }
+			if (taxOffice == null) { return NotFound(); }
 
-			return Ok(item);
+			return Ok(taxOffice);
 		}
 
 		// POST: api/taxOffice
 		[HttpPost]
-		public async Task<IActionResult> PostTaxOffice([FromBody] TaxOffice item)
+		public async Task<IActionResult> PostTaxOffice([FromBody] TaxOffice taxOffice)
 		{
 			if (ModelState.IsValid)
 			{
-				context.TaxOffices.Add(item);
+				context.TaxOffices.Add(taxOffice);
 				await context.SaveChangesAsync();
 
-				return Ok(item);
+				return Ok(taxOffice);
 			}
 			else
 			{
@@ -55,13 +55,13 @@ namespace Transfers.Controllers
 
 		// PUT: api/taxOffice/5
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutTaxOffice([FromRoute] int id, [FromBody] TaxOffice item)
+		public async Task<IActionResult> PutTaxOffice([FromRoute] int id, [FromBody] TaxOffice taxOffice)
 		{
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-			if (id != item.TaxOfficeId) return BadRequest();
+			if (id != taxOffice.TaxOfficeId) return BadRequest();
 
-			context.Entry(item).State = EntityState.Modified;
+			context.Entry(taxOffice).State = EntityState.Modified;
 
 			try
 			{
@@ -70,23 +70,23 @@ namespace Transfers.Controllers
 
 			catch (DbUpdateConcurrencyException)
 			{
-				item = await context.TaxOffices.FindAsync(id);
+				taxOffice = await context.TaxOffices.FindAsync(id);
 
-				if (item == null) return NotFound(); else throw;
+				if (taxOffice == null) return NotFound(); else throw;
 			}
 
-			return Ok(item);
+			return Ok(taxOffice);
 		}
 
 		// DELETE: api/taxOffice/5
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteTaxOffice([FromRoute] int id)
 		{
-			TaxOffice item = await context.TaxOffices.FindAsync(id);
+			TaxOffice taxOffice = await context.TaxOffices.FindAsync(id);
 
-			if (item == null) { return NotFound(); }
+			if (taxOffice == null) { return NotFound(); }
 
-			context.TaxOffices.Remove(item);
+			context.TaxOffices.Remove(taxOffice);
 			await context.SaveChangesAsync();
 
 			return NoContent();

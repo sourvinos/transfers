@@ -70,9 +70,9 @@ namespace Transfers.Controllers
 
 			catch (DbUpdateConcurrencyException)
 			{
-				Country item = await context.Countries.FindAsync(id);
+				country = await context.Countries.FindAsync(id);
 
-				if (item == null) return NotFound(); else throw;
+				if (country == null) return NotFound(); else throw;
 			}
 
 			return Ok(country);
