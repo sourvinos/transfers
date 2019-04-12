@@ -29,8 +29,6 @@ import { UserInfoComponent } from '../shared/components/user-info/user-info.comp
 import { CustomerListComponent } from '../customers/customer-list.component';
 import { CustomerFormComponent } from '../customers/customer-form.component';
 
-import { CountryFormComponent } from '../countries/country-form.component'
-import { CountryListComponent } from '../countries/country-list.component';
 import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { HomeComponent } from '../home/home.component';
 import { MessageDialogComponent } from '../shared/components/message-dialog/message-dialog.component';
@@ -49,7 +47,6 @@ import { AuthInterceptor } from '../services/auth.interceptor';
         LoginComponent,
         DeleteDialogComponent,
         MessageDialogComponent,
-        CountryFormComponent, CountryListComponent,
         CustomerListComponent, CustomerFormComponent
     ],
     entryComponents: [
@@ -73,9 +70,6 @@ import { AuthInterceptor } from '../services/auth.interceptor';
         ReactiveFormsModule,
         RouterModule.forRoot([
             { path: '', component: HomeComponent, pathMatch: 'full' },
-            { path: 'countries', component: CountryListComponent },
-            { path: 'country/new', component: CountryFormComponent },
-            { path: 'country/:id', component: CountryFormComponent },
             { path: 'customers', component: CustomerListComponent },
             { path: 'customer/new', component: CustomerFormComponent },
             { path: 'customer/:id', component: CustomerFormComponent },

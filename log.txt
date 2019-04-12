@@ -15,8 +15,9 @@
 10/04/2019
 
     - Adds Client Side Components
-    - Adds Controllers for TaxOffices and VATStates
+    - Adds API for TaxOffices and VATStates
 
 11/04/2019
 
-    - Adds Controller for Routes
+    - Adds API for Routes
+    - Adds API for Destinations

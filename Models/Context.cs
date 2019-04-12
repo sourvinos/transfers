@@ -8,10 +8,10 @@ namespace Transfers.Models
 	{
 		public Context(DbContextOptions<Context> options) : base(options) { }
 
-		public DbSet<Country> Countries { get; set; }
 		public DbSet<Customer> Customers { get; set; }
 		public DbSet<TaxOffice> TaxOffices { get; set; }
 		public DbSet<VATState> VATStates { get; set; }
 		public DbSet<Route> Routes { get; set; }
+		public DbSet<Destination> Destinations { get; set; }
 	}
 }
