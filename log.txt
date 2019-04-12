@@ -15,9 +15,11 @@
 10/04/2019
 
     - Adds Client Side Components
-    - Adds API for TaxOffices and VATStates
+    - Adds API for TaxOffices
+    - Adds API for VATStates
 
 11/04/2019
 
     - Adds API for Routes
     - Adds API for Destinations
+    - Adds API for Transfer Types

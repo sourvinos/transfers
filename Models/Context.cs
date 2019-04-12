@@ -13,5 +13,6 @@ namespace Transfers.Models
 		public DbSet<VATState> VATStates { get; set; }
 		public DbSet<Route> Routes { get; set; }
 		public DbSet<Destination> Destinations { get; set; }
+		public DbSet<TransferType> TransferTypes { get; set; }
 	}
 }
