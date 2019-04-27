@@ -29,7 +29,7 @@ namespace Transfers.Controllers
 		[HttpGet("{id}")]
 		public async Task<IActionResult> Getcustomer(int id)
 		{
-			Customer customer = await context.Customers.FindAsync(id);
+			Customer customer = await context.Customers.Include(x => x.TaxOffice).Include(x => x.VATState).SingleOrDefaultAsync(m => m.CustomerId == id);
 
 			if (customer == null) { return NotFound(); }
 

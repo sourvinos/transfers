@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Reflection;
 using Transfers.Models;
 
 namespace Transfers.Controllers
@@ -22,14 +23,14 @@ namespace Transfers.Controllers
 		[HttpGet]
 		public async Task<IEnumerable<Route>> Get()
 		{
-			return await context.Routes.OrderBy(o => o.Description).ToListAsync();
+			return await context.Routes.Include(x => x.PickupPoints).AsNoTracking().OrderBy(o => o.Description).ToListAsync();
 		}
 
 		// GET: api/route/5
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetRoute(int id)
 		{
-			Route route = await context.Routes.FindAsync(id);
+			Route route = await context.Routes.Include(x => x.PickupPoints).AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
 
 			if (route == null) { return NotFound(); }
 
@@ -59,7 +60,7 @@ namespace Transfers.Controllers
 		{
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-			if (id != route.RouteId) return BadRequest();
+			if (id != route.Id) return BadRequest();
 
 			context.Entry(route).State = EntityState.Modified;
 
