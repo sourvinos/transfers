@@ -26,14 +26,19 @@ import { MenuComponent } from '../shared/components/menu/menu.component';
 import { NavigationComponent } from '../shared/components/navigation/navigation.component';
 import { UserInfoComponent } from '../shared/components/user-info/user-info.component';
 
-import { CustomerListComponent } from '../customers/customer-list.component';
-import { CustomerFormComponent } from '../customers/customer-form.component';
-
 import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { HomeComponent } from '../home/home.component';
 import { MessageDialogComponent } from '../shared/components/message-dialog/message-dialog.component';
 
 import { AuthInterceptor } from '../services/auth.interceptor';
+
+import { CustomerListComponent } from '../customers/customer-list.component';
+import { CustomerFormComponent } from '../customers/customer-form.component';
+
+import { RouteListComponent } from '../routes/route-list.component';
+import { RouteFormComponent } from '../routes/route-form.component';
+
+import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.component';
 
 @NgModule({
     declarations: [
@@ -47,7 +52,9 @@ import { AuthInterceptor } from '../services/auth.interceptor';
         LoginComponent,
         DeleteDialogComponent,
         MessageDialogComponent,
-        CustomerListComponent, CustomerFormComponent
+        CustomerListComponent, CustomerFormComponent,
+        RouteListComponent, RouteFormComponent,
+        PickupPointListComponent
     ],
     entryComponents: [
         DeleteDialogComponent,
@@ -71,8 +78,12 @@ import { AuthInterceptor } from '../services/auth.interceptor';
         RouterModule.forRoot([
             { path: '', component: HomeComponent, pathMatch: 'full' },
             { path: 'customers', component: CustomerListComponent },
-            { path: 'customer/new', component: CustomerFormComponent },
-            { path: 'customer/:id', component: CustomerFormComponent },
+            { path: 'customers/new', component: CustomerFormComponent },
+            { path: 'customers/:id', component: CustomerFormComponent },
+            { path: 'routes', component: RouteListComponent },
+            { path: 'routes/new', component: RouteFormComponent },
+            { path: 'routes/:id', component: RouteFormComponent },
+            { path: 'pickuppoints', component: PickupPointListComponent },
             { path: 'login', component: LoginComponent }
         ])
     ],

@@ -36,7 +36,7 @@ export class CustomerFormComponent implements OnInit {
     }
 
     form = this.formBuilder.group({
-        customerId: 0,
+        id: 0,
         description: ['', Validators.required],
         profession: [''],
         taxOfficeId: [''],
@@ -54,11 +54,11 @@ export class CustomerFormComponent implements OnInit {
         this.service.getCustomer(this.id).subscribe(
             result => {
                 this.customer = result;
-                this.form.get('customerId').setValue(this.customer.customerId);
+                this.form.get('id').setValue(this.customer.id);
                 this.form.get('description').setValue(this.customer.description);
                 this.form.get('profession').setValue(this.customer.profession);
-                this.form.get('taxOfficeId').setValue(this.customer.taxOfficeId);
-                this.form.get('vatStateId').setValue(this.customer.vatStateId);
+                this.form.get('taxOfficeId').setValue(this.customer.taxOffice.id);
+                this.form.get('vatStateId').setValue(this.customer.vatState.id);
                 this.form.get('address').setValue(this.customer.address);
                 this.form.get('phones').setValue(this.customer.phones);
                 this.form.get('personInCharge').setValue(this.customer.personInCharge);
@@ -84,7 +84,7 @@ export class CustomerFormComponent implements OnInit {
         if (this.id == null) {
             this.service.addCustomer(this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error));
         } else {
-            this.service.updateCustomer(this.form.value.customerId, this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error));
+            this.service.updateCustomer(this.form.value.id, this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error));
         }
     }
 

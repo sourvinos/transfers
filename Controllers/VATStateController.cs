@@ -9,23 +9,21 @@ using Transfers.Models;
 namespace Transfers.Controllers
 {
 	[Route("api/[controller]")]
-	public class VATStateController : ControllerBase
+	public class VATStatesController : ControllerBase
 	{
 		private readonly Context context;
 
-		public VATStateController(Context context)
+		public VATStatesController(Context context)
 		{
 			this.context = context;
 		}
 
-		// GET: api/vatState
 		[HttpGet]
 		public async Task<IEnumerable<VATState>> Get()
 		{
-			return await context.VATStates.OrderBy(o => o.Description).ToListAsync();
+			return await context.VATStates.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
 		}
 
-		// GET: api/vatState/5
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetVATState(int id)
 		{
@@ -36,7 +34,6 @@ namespace Transfers.Controllers
 			return Ok(vatState);
 		}
 
-		// POST: api/vatState
 		[HttpPost]
 		public async Task<IActionResult> PostVATState([FromBody] VATState vatState)
 		{
@@ -53,13 +50,12 @@ namespace Transfers.Controllers
 			}
 		}
 
-		// PUT: api/vatState/5
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutVATState([FromRoute] int id, [FromBody] VATState vatState)
 		{
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-			if (id != vatState.VATStateId) return BadRequest();
+			if (id != vatState.Id) return BadRequest();
 
 			context.Entry(vatState).State = EntityState.Modified;
 
@@ -78,7 +74,6 @@ namespace Transfers.Controllers
 			return Ok(vatState);
 		}
 
-		// DELETE: api/vatState/5
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteVATState([FromRoute] int id)
 		{

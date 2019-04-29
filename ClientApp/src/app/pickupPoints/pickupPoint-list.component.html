@@ -1,0 +1,22 @@
+<div id='main-header'>
+    <h1>Pickup Points</h1>
+</div>
+
+<div id='main-body'>
+    <!-- Routes -->
+    <label for="route">Route</label>
+    <select id="route" class="form-control" (change)="onRouteChange()" [(ngModel)]="pickupPoint.routeId" name="routeId" #route="ngModel" required>
+        <option value="">Select</option>
+        <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
+    </select>
+    <!-- PickupPoints -->
+    <mat-nav-list>
+        <a mat-list-item *ngFor='let pickupPoint of pickupPoints' routerLink='/pickupPoint/{{ pickupPoint.id}}'>{{ pickupPoint.description }}</a>
+    </mat-nav-list>
+</div>
+
+<div id='main-footer'>
+    <button mat-fab [routerLink]='["/routes/new"]'>
+        <mat-icon>add</mat-icon>
+    </button>
+</div>

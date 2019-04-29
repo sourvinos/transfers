@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Transfers.Models
 {
@@ -13,9 +12,6 @@ namespace Transfers.Models
 
 		public ICollection<PickupPoint> PickupPoints { get; set; }
 
-		public Route()
-		{
-			PickupPoints = new Collection<PickupPoint>();
-		}
+
 	}
 }

@@ -1,9 +1,11 @@
+import { KeyValuePair } from './keyValuePair';
+
 export interface ICustomer {
-    customerId: number;
+    id: number;
     description: string;
     profession: string;
-    taxOfficeId: number;
-    vatStateId: number;
+    taxOffice: KeyValuePair;
+    vatState: KeyValuePair;
     address: string
     phones: string
     personInCharge: string
