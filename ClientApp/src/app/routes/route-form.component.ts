@@ -27,7 +27,7 @@ export class RouteFormComponent implements OnInit {
     isNewRecord: boolean = true;
     subHeader: string = '';
 
-    constructor(private service: RouteService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) { };
+    constructor(private service: RouteService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar) { };
 
     ngOnInit() {
         this.subHeader = 'New';
@@ -41,39 +41,55 @@ export class RouteFormComponent implements OnInit {
 
     form = this.formBuilder.group({
         id: '0',
-        shortDescription: ['', Validators.required],
-        description: ['', Validators.required],
+        shortDescription: ['', [Validators.required, Validators.maxLength(5)]],
+        description: ['', [Validators.required, Validators.maxLength(50)]],
         user: ['']
     })
 
     populateFields() {
         this.service.getRoute(this.id).subscribe(
             result => {
-                this.coachRoute = result;
-                this.form.get('id').setValue(this.coachRoute.id);
-                this.form.get('shortDescription').setValue(this.coachRoute.shortDescription);
-                this.form.get('description').setValue(this.coachRoute.description);
-                this.form.get('user').setValue(this.coachRoute.user);
+                this.form.setValue({
+                    id: result.id,
+                    shortDescription: result.shortDescription,
+                    description: result.description,
+                    user: result.user
+                })
             },
             error => {
                 Utils.ErrorLogger(error);
             });;
     }
 
+    get shortDescription() {
+        return this.form.get('shortDescription');
+    }
+
     get description() {
         return this.form.get('description');
     }
 
-    getErrorMessage() {
-        return 'This field is required!';
+    getRequiredFieldMessage() {
+        return 'This field is required, silly!';
+    }
+
+    getMaxLengthFieldMessage() {
+        return 'This field must not be longer than '
     }
 
     save() {
-        console.log(this.id)
+        if (!this.form.valid) return
         if (this.id == null) {
-            this.service.addRoute(this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error));
-        } else {
-            this.service.updateRoute(this.form.value.id, this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error));
+            this.service.addRoute(this.form.value).subscribe(data => {
+                this.router.navigate(['/routes'])
+                this.snackBar.open('Route saved!', '', { duration: 1500 })
+            }, error => Utils.ErrorLogger(error));
+        }
+        else {
+            if (this.id != null) this.service.updateRoute(this.form.value.id, this.form.value).subscribe(data => {
+                this.router.navigate(['/routes'])
+                this.snackBar.open('Route updated!', '', { duration: 1500 })
+            }, error => Utils.ErrorLogger(error));
         }
     }
 
@@ -83,6 +99,7 @@ export class RouteFormComponent implements OnInit {
                 if (response == 'yes') {
                     this.service.deleteRoute(this.id).subscribe(data => {
                         this.router.navigate(['/routes'])
+                        this.snackBar.open('Route deleted!', '', { duration: 1500 })
                     }, error => Utils.ErrorLogger(error));
                 }
             });

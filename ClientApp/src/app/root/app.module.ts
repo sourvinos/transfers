@@ -39,6 +39,7 @@ import { RouteListComponent } from '../routes/route-list.component';
 import { RouteFormComponent } from '../routes/route-form.component';
 
 import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.component';
+import { PickupPointFormComponent } from '../pickupPoints/pickupPoint-form.component';
 
 @NgModule({
     declarations: [
@@ -54,7 +55,7 @@ import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.compo
         MessageDialogComponent,
         CustomerListComponent, CustomerFormComponent,
         RouteListComponent, RouteFormComponent,
-        PickupPointListComponent
+        PickupPointListComponent, PickupPointFormComponent
     ],
     entryComponents: [
         DeleteDialogComponent,
@@ -84,6 +85,7 @@ import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.compo
             { path: 'routes/new', component: RouteFormComponent },
             { path: 'routes/:id', component: RouteFormComponent },
             { path: 'pickuppoints', component: PickupPointListComponent },
+            { path: 'pickuppoints/:id', component: PickupPointFormComponent },
             { path: 'login', component: LoginComponent }
         ])
     ],

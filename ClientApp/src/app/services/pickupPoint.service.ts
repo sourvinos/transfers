@@ -11,20 +11,20 @@ import { IRoute } from '../models/route';
 
 export class PickupPointService {
 
-    private routesUrl: string = "https://localhost:44322/api/routes";
-    private url: string = 'https://localhost:44322/api/pickupPoints';
+    private baseUrl: string = "https://localhost:44322/api"
+    private url: string = this.baseUrl + '/pickupPoints'
 
     constructor(private http: HttpClient) { }
 
-    getRoutes(): Observable<IRoute[]> {
-        return this.http.get<IRoute[]>(this.routesUrl);
+    getRoutes() {
+        return this.http.get(this.baseUrl + '/routes');
     }
 
     getPickupPoints(): Observable<IPickupPoint[]> {
         return this.http.get<IPickupPoint[]>(this.url);
     }
 
-    getPickupPoint(id: string): Observable<IPickupPoint> {
+    getPickupPoint(id: number): Observable<IPickupPoint> {
         return this.http.get<IPickupPoint>(this.url + '/' + id);
     }
 

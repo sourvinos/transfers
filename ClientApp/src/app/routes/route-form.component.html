@@ -6,20 +6,18 @@
     </div>
 
     <div id="section-one">
-        <input type='text' formControlName='id' hidden>
-        <input type='text' formControlName='user' hidden>
         <div class='field-wrapper'>
             <mat-form-field>
                 <input matInput placeholder='Short description' formControlName='shortDescription' required>
-                <mat-error *ngIf='this.form.get("shortDescription").errors?.required'>This field is required</mat-error>
-                <mat-error *ngIf='this.form.get("shortDescription").errors?.cannotExceedMaxLength'>This field must not be longer than ten characters</mat-error>
+                <mat-error *ngIf='shortDescription.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
+                <mat-error *ngIf='shortDescription.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ shortDescription.errors.maxlength.requiredLength }} characters</mat-error>
             </mat-form-field>
         </div>
         <div class='field-wrapper'>
             <mat-form-field>
                 <input matInput placeholder='Description' formControlName='description' required>
-                <mat-error *ngIf='this.form.get("description").errors?.required'>This field is required</mat-error>
-                <mat-error *ngIf='this.form.get("description").errors?.cannotExceedMaxLength'>This field must not be longer than ten characters</mat-error>
+                <mat-error *ngIf='description.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
+                <mat-error *ngIf='description.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ shortDescription.errors.maxlength.requiredLength }} characters</mat-error>
             </mat-form-field>
         </div>
     </div>

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { IPickupPoint } from '../models/pickupPoint';
-import { Utils } from '../shared/classes/utils';
-import { PickupPointService } from '../services/pickupPoint.service';
 import { IRoute } from '../models/route';
+import { IPickupPoint } from '../models/pickupPoint';
+import { PickupPointService } from '../services/pickupPoint.service';
+import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'pickupPoint-list',
@@ -13,7 +13,7 @@ import { IRoute } from '../models/route';
 
 export class PickupPointListComponent implements OnInit {
 
-    routes: IRoute[];
+    routes: any;
     pickupPoints: IPickupPoint[];
 
     pickupPoint: IPickupPoint = {
