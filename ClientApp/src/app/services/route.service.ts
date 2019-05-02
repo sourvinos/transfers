@@ -18,7 +18,7 @@ export class RouteService {
         return this.http.get<IRoute[]>(this.url);
     }
 
-    getRoute(id: string): Observable<IRoute> {
+    getRoute(id: number): Observable<IRoute> {
         return this.http.get<IRoute>(this.url + '/' + id);
     }
 
@@ -26,11 +26,12 @@ export class RouteService {
         return this.http.post<IRoute>(this.url, formData);
     }
 
-    updateRoute(RouteId: string, formData: IRoute): Observable<IRoute> {
+    updateRoute(RouteId: number, formData: IRoute): Observable<IRoute> {
+        console.log("Updating" + formData)
         return this.http.put<IRoute>(this.url + '/' + RouteId, formData);
     }
 
-    deleteRoute(RouteId: string): Observable<IRoute> {
+    deleteRoute(RouteId: number): Observable<IRoute> {
         return this.http.delete<IRoute>(this.url + '/' + RouteId);
     }
 

@@ -10,7 +10,7 @@ import { ICustomer } from '../models/customer';
 
 export class CustomerService {
 
-    private url: string = 'https://localhost:44322/api/customers';
+    private url: string = 'https://localhost:44322/api/customers/';
 
     constructor(private http: HttpClient) { }
 
@@ -19,7 +19,7 @@ export class CustomerService {
     }
 
     getCustomer(id: string): Observable<ICustomer> {
-        return this.http.get<ICustomer>(this.url + '/' + id);
+        return this.http.get<ICustomer>(this.url + id);
     }
 
     addCustomer(formData: ICustomer): Observable<ICustomer> {
@@ -27,11 +27,11 @@ export class CustomerService {
     }
 
     updateCustomer(id: string, formData: ICustomer): Observable<ICustomer> {
-        return this.http.put<ICustomer>(this.url + '/' + id, formData);
+        return this.http.put<ICustomer>(this.url + id, formData);
     }
 
     deleteCustomer(id: string): Observable<ICustomer> {
-        return this.http.delete<ICustomer>(this.url + '/' + id);
+        return this.http.delete<ICustomer>(this.url + id);
     }
 
 }

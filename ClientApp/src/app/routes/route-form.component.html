@@ -3,21 +3,22 @@
     <div id='header'>
         <h2>{{ subHeader }}</h2>
         <h1>Route</h1>
+        <p>{{ form.value | json }} {{ form.valid }}</p>
     </div>
 
     <div id="section-one">
         <div class='field-wrapper'>
             <mat-form-field>
-                <input matInput placeholder='Short description' formControlName='shortDescription' required>
+                <input matInput placeholder='Short Description' formControlName='shortDescription'>
                 <mat-error *ngIf='shortDescription.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
                 <mat-error *ngIf='shortDescription.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ shortDescription.errors.maxlength.requiredLength }} characters</mat-error>
             </mat-form-field>
         </div>
         <div class='field-wrapper'>
             <mat-form-field>
-                <input matInput placeholder='Description' formControlName='description' required>
+                <input matInput placeholder='Description' formControlName='description'>
                 <mat-error *ngIf='description.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
-                <mat-error *ngIf='description.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ shortDescription.errors.maxlength.requiredLength }} characters</mat-error>
+                <mat-error *ngIf='description.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ description.errors.maxlength.requiredLength }} characters</mat-error>
             </mat-form-field>
         </div>
     </div>
@@ -25,7 +26,7 @@
     <div id='footer'>
         <div class='button-wrapper'>
             <button type='button' mat-button (click)='goBack()'>Back</button>
-            <button type='button' mat-button color='warn' (click)='delete()' [class.hidden]='isNewRecord'>Delete</button>
+            <button type='button' mat-button color='warn' (click)='delete()' [class.hidden]='id == null'>Delete</button>
             <button type='button' mat-raised-button color='primary' (click)='save()'>Save</button>
         </div>
     </div>

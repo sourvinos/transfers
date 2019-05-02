@@ -78,14 +78,19 @@ import { PickupPointFormComponent } from '../pickupPoints/pickupPoint-form.compo
         ReactiveFormsModule,
         RouterModule.forRoot([
             { path: '', component: HomeComponent, pathMatch: 'full' },
+
             { path: 'customers', component: CustomerListComponent },
             { path: 'customers/new', component: CustomerFormComponent },
             { path: 'customers/:id', component: CustomerFormComponent },
+
             { path: 'routes', component: RouteListComponent },
             { path: 'routes/new', component: RouteFormComponent },
             { path: 'routes/:id', component: RouteFormComponent },
+
             { path: 'pickuppoints', component: PickupPointListComponent },
+            { path: 'pickuppoints/new', component: PickupPointFormComponent },
             { path: 'pickuppoints/:id', component: PickupPointFormComponent },
+
             { path: 'login', component: LoginComponent }
         ])
     ],

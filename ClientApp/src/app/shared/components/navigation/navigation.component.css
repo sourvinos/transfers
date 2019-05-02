@@ -2,7 +2,7 @@
     background-color: var(--light-color);
     color: var(--color);
     grid-area: navigation;
-    text-align: center;
+    text-align: left;
 }
 
 #navbar {

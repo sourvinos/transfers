@@ -33,7 +33,6 @@ export class PickupPointListComponent implements OnInit {
 
     onRouteChange() {
         this.populatePickupPoints()
-        delete this.pickupPoint.routeId
     }
 
     private populatePickupPoints() {

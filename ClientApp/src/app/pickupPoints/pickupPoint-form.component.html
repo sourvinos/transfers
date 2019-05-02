@@ -1,33 +1,36 @@
-<form #form='ngForm' autocomplete='off'>
-
-    {{ pickupPoint | json }}
+<form [formGroup]='form' autocomplete='off'>
 
     <div id='header'>
         <h2>{{ subHeader }}</h2>
         <h1>Pickup point</h1>
+        <p>{{ form.value | json }} {{ form.valid }}</p>
     </div>
 
     <div id="section-one">
         <div class='field-wrapper'>
             <label for="route">Route</label>
-            <select id="route" class="form-control" [(ngModel)]="pickupPoint.routeId" name="routeId" #route="ngModel" required>
+            <select id="route" class="form-control" formControlName='routeId'>
                 <option value="">Select</option>
                 <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
             </select>
         </div>
         <div class='field-wrapper'>
             <mat-form-field>
-                <input matInput placeholder='Description' [(ngModel)]="pickupPoint.description" name='description' #description="ngModel" required>
+                <input matInput placeholder='Description' formControlName='description'>
+                <mat-error *ngIf='description.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
+                <mat-error *ngIf='description.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ shortDescription.errors.maxlength.requiredLength }} characters</mat-error>
             </mat-form-field>
         </div>
         <div class='field-wrapper'>
             <mat-form-field>
-                <input matInput placeholder='Exact point' [(ngModel)]="pickupPoint.exactPoint" name='exactPoint' #exactPoint="ngModel" required>
+                <input matInput placeholder='Exact point' formControlName='exactPoint'>
             </mat-form-field>
         </div>
         <div class='field-wrapper'>
             <mat-form-field>
-                <input matInput placeholder='Time' [(ngModel)]="pickupPoint.time" name='tiem' #tiem="ngModel" required>
+                <input matInput placeholder='Time' formControlName='time'>
+                <mat-error *ngIf='time.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
+                <mat-error *ngIf='time.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ time.errors.maxlength.requiredLength }} characters</mat-error>
             </mat-form-field>
         </div>
     </div>
@@ -35,7 +38,7 @@
     <div id='footer'>
         <div class='button-wrapper'>
             <button type='button' mat-button (click)='goBack()'>Back</button>
-            <button type='button' mat-button color='warn' (click)='delete()' [class.hidden]='isNewRecord'>Delete</button>
+            <button type='button' mat-button color='warn' (click)='delete()' [class.hidden]='id == null'>Delete</button>
             <button type='button' mat-raised-button color='primary' (click)='save()'>Save</button>
         </div>
     </div>

@@ -1,11 +1,11 @@
 import { ActivatedRoute, Router } from '@angular/router'
 import { Component, OnInit } from '@angular/core'
+import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component'
 import { FormBuilder, Validators } from '@angular/forms'
 import { MatDialog, MatSnackBar } from '@angular/material'
 import { forkJoin } from 'rxjs'
 
-import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component'
-import { IPickupPoint } from '../models/pickupPoint'
+import { IPickupPoint } from './../models/pickupPoint';
 import { PickupPointService } from '../services/pickupPoint.service'
 import { Utils } from '../shared/classes/utils';
 
@@ -20,6 +20,9 @@ export class PickupPointFormComponent implements OnInit {
     routes: any
     pickupPoints: any
 
+    id: number = null;
+    subHeader: string = 'New';
+
     pickupPoint: IPickupPoint = {
         id: null,
         routeId: null,
@@ -29,31 +32,30 @@ export class PickupPointFormComponent implements OnInit {
         user: '',
     }
 
-    homeURL: string = '/pickuppoints'
-    isNewRecord: boolean = true
-    subHeader: string = ''
+    form = this.formBuilder.group({
+        id: 0,
+        routeId: 0,
+        description: ['', [Validators.required, Validators.maxLength(50)]],
+        exactPoint: ['', [Validators.required]],
+        time: ['', [Validators.required, Validators.maxLength(5)]],
+        user: ['']
+    })
 
-    constructor(private service: PickupPointService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) {
-        route.params.subscribe(p => (this.pickupPoint.id = p['id']))
+    constructor(private service: PickupPointService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar) {
+        route.params.subscribe(p => (this.id = p['id']))
     }
 
     ngOnInit() {
         let sources = [this.service.getRoutes()]
-        if (this.pickupPoint.id) {
-            sources.push(this.service.getPickupPoint(this.pickupPoint.id))
+        if (this.id) {
+            this.subHeader = 'Edit'
+            sources.push(this.service.getPickupPoint(this.id))
         }
         return forkJoin(sources).subscribe(
             result => {
                 this.routes = result[0]
-                if (this.pickupPoint.id) {
-                    this.setPickupPoint(result[1] as {
-                        id: number
-                        routeId: number
-                        description: string
-                        exactPoint: string
-                        time: string
-                        user: string
-                    })
+                if (this.id) {
+                    this.populateFields()
                     this.populateRoutes()
                 }
             },
@@ -63,16 +65,6 @@ export class PickupPointFormComponent implements OnInit {
                 }
             }
         )
-
-    }
-
-    private setPickupPoint(v: IPickupPoint) {
-        this.pickupPoint.id = v.id
-        this.pickupPoint.routeId = v.routeId
-        this.pickupPoint.description = v.description
-        this.pickupPoint.exactPoint = v.exactPoint
-        this.pickupPoint.time = v.time
-        this.pickupPoint.user = v.user
     }
 
     private populateRoutes() {
@@ -80,14 +72,67 @@ export class PickupPointFormComponent implements OnInit {
         this.pickupPoints = selectedRoute ? selectedRoute.pickupPoints : []
     }
 
+    populateFields() {
+        this.service.getPickupPoint(this.id).subscribe(
+            result => {
+                this.form.setValue({
+                    id: result.id,
+                    routeId: result.routeId,
+                    description: result.description,
+                    exactPoint: result.exactPoint,
+                    time: result.time,
+                    user: result.user
+                })
+            },
+            error => {
+                Utils.ErrorLogger(error);
+            });;
+    }
+
+    get description() {
+        return this.form.get('description');
+    }
+
+    get time() {
+        return this.form.get('time');
+    }
+
+    getRequiredFieldMessage() {
+        return 'This field is required, silly!';
+    }
+
+    getMaxLengthFieldMessage() {
+        return 'This field must not be longer than '
+    }
+
     save() {
-        console.log(this.pickupPoint.id)
-        if (this.pickupPoint.id == null) {
-            this.service.addPickupPoint(this.form.value).subscribe(data => this.router.navigate(['/pickuppoints']), error => Utils.ErrorLogger(error));
-        } else {
-            this.service.updateRoute(this.form.value.id, this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error));
+        if (!this.form.valid) return
+        if (this.id == null) {
+            this.service.addPickupPoint(this.form.value).subscribe(data => {
+                this.router.navigate(['/pickuppoints'])
+            }, (error: Response) => Utils.ErrorLogger(error));
+        }
+        else
+            this.service.updatePickupPoint(this.id, this.form.value).subscribe(data => {
+                this.router.navigate(['/pickuppoints'])
+            }, (error: Response) => Utils.ErrorLogger(error));
+    }
+
+    delete() {
+        if (this.pickupPoint.id != null) {
+            this.dialog.open(DeleteDialogComponent).afterClosed().subscribe(response => {
+                if (response == 'yes') {
+                    this.service.deletePickupPoint(this.pickupPoint.id).subscribe(data => {
+                        this.router.navigate(['/pickuppoints'])
+                        this.snackBar.open('Pickup point deleted!', '', { duration: 1500 })
+                    }, error => Utils.ErrorLogger(error));
+                }
+            });
         }
     }
 
+    goBack() {
+        this.router.navigate(['/pickuppoints']);
+    }
 
 }

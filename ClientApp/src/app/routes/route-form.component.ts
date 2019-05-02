@@ -1,12 +1,12 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatSnackBar } from '@angular/material';
 
 import { IRoute } from '../models/route';
-import { Utils } from '../shared/classes/utils';
-import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { RouteService } from '../services/route.service';
+import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'app-route-form',
@@ -16,35 +16,39 @@ import { RouteService } from '../services/route.service';
 
 export class RouteFormComponent implements OnInit {
 
-    id: string;
+    id: number = null;
+    subHeader: string = 'New';
+
     coachRoute: IRoute = {
-        id: 0,
+        id: null,
         shortDescription: '',
         description: '',
-        user: '',
-        pickupPoints: []
-    }
-    isNewRecord: boolean = true;
-    subHeader: string = '';
-
-    constructor(private service: RouteService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar) { };
-
-    ngOnInit() {
-        this.subHeader = 'New';
-        this.id = this.route.snapshot.paramMap.get('id');
-        if (this.id) {
-            this.isNewRecord = false;
-            this.subHeader = 'Edit';
-            this.populateFields();
-        }
+        user: ''
     }
 
     form = this.formBuilder.group({
         id: '0',
         shortDescription: ['', [Validators.required, Validators.maxLength(5)]],
-        description: ['', [Validators.required, Validators.maxLength(50)]],
+        description: ['', [Validators.required, Validators.maxLength(100)]],
         user: ['']
     })
+
+    constructor(private service: RouteService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar) {
+        route.params.subscribe(p => (this.id = p['id']))
+    };
+
+    ngOnInit() {
+        if (this.id) {
+            this.subHeader = 'Edit'
+            this.service.getRoute(this.id).subscribe(result => {
+                this.populateFields()
+            }, error => {
+                if (error.status == 404) {
+                    this.router.navigate(['/error'])
+                }
+            });
+        }
+    }
 
     populateFields() {
         this.service.getRoute(this.id).subscribe(
@@ -86,10 +90,11 @@ export class RouteFormComponent implements OnInit {
             }, error => Utils.ErrorLogger(error));
         }
         else {
-            if (this.id != null) this.service.updateRoute(this.form.value.id, this.form.value).subscribe(data => {
-                this.router.navigate(['/routes'])
-                this.snackBar.open('Route updated!', '', { duration: 1500 })
-            }, error => Utils.ErrorLogger(error));
+            if (this.id != null)
+                this.service.updateRoute(this.id, this.form.value).subscribe(data => {
+                    this.router.navigate(['/routes'])
+                    this.snackBar.open('Route updated!', '', { duration: 1500 })
+                }, error => Utils.ErrorLogger(error));
         }
     }
 
