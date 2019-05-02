@@ -18,7 +18,7 @@
             <mat-form-field>
                 <input matInput placeholder='Description' formControlName='description'>
                 <mat-error *ngIf='description.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
-                <mat-error *ngIf='description.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ shortDescription.errors.maxlength.requiredLength }} characters</mat-error>
+                <mat-error *ngIf='description.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ description.errors.maxlength.requiredLength }} characters</mat-error>
             </mat-form-field>
         </div>
         <div class='field-wrapper'>

@@ -18,7 +18,6 @@ import { Utils } from '../shared/classes/utils';
 export class PickupPointFormComponent implements OnInit {
 
     routes: any
-    pickupPoints: any
 
     id: number = null;
     subHeader: string = 'New';
@@ -42,7 +41,7 @@ export class PickupPointFormComponent implements OnInit {
     })
 
     constructor(private service: PickupPointService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar) {
-        route.params.subscribe(p => (this.id = p['id']))
+        route.params.subscribe(p => this.id = p['id'])
     }
 
     ngOnInit() {
@@ -69,7 +68,6 @@ export class PickupPointFormComponent implements OnInit {
 
     private populateRoutes() {
         const selectedRoute = this.routes.find((x: { id: any }) => x.id == this.pickupPoint.routeId)
-        this.pickupPoints = selectedRoute ? selectedRoute.pickupPoints : []
     }
 
     populateFields() {

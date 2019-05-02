@@ -18,19 +18,19 @@ export class CustomerService {
         return this.http.get<ICustomer[]>(this.url);
     }
 
-    getCustomer(id: string): Observable<ICustomer> {
-        return this.http.get<ICustomer>(this.url + id);
+    getCustomer(id: number): Observable<ICustomer> {
+        return this.http.get<ICustomer>(this.url + id)
     }
 
     addCustomer(formData: ICustomer): Observable<ICustomer> {
         return this.http.post<ICustomer>(this.url, formData);
     }
 
-    updateCustomer(id: string, formData: ICustomer): Observable<ICustomer> {
+    updateCustomer(id: number, formData: ICustomer): Observable<ICustomer> {
         return this.http.put<ICustomer>(this.url + id, formData);
     }
 
-    deleteCustomer(id: string): Observable<ICustomer> {
+    deleteCustomer(id: number): Observable<ICustomer> {
         return this.http.delete<ICustomer>(this.url + id);
     }
 

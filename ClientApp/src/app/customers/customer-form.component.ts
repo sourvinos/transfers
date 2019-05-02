@@ -1,13 +1,15 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatSnackBar } from '@angular/material';
+import { forkJoin } from 'rxjs'
 
 import { CustomerService } from '../services/customer.service';
-import { DescriptionValidators } from './customer-validators';
 import { ICustomer } from '../models/customer';
+import { TaxOfficeService } from '../services/taxOffice.service';
 import { Utils } from '../shared/classes/utils';
-import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
+import { VatStateService } from '../services/vatState.service';
 
 @Component({
     selector: 'app-customer-form',
@@ -17,30 +19,33 @@ import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete
 
 export class CustomerFormComponent implements OnInit {
 
-    id: string;
-    customer: ICustomer;
-    homeURL: string = '/customers';
-    isNewRecord: boolean = true;
-    subHeader: string = '';
+    taxOffices: any
+    vatStates: any
 
-    constructor(private service: CustomerService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) { };
+    id: number = null;
+    subHeader: string = 'New';
 
-    ngOnInit() {
-        this.subHeader = 'New';
-        this.id = this.route.snapshot.paramMap.get('id');
-        if (this.id) {
-            this.isNewRecord = false;
-            this.subHeader = 'Edit';
-            this.populateFields();
-        }
+    customer: ICustomer = {
+        id: null,
+        description: '',
+        profession: '',
+        taxOfficeId: null,
+        vatStateId: null,
+        address: '',
+        phones: '',
+        personInCharge: '',
+        email: '',
+        taxNo: '',
+        accountCode: '',
+        user: ''
     }
 
     form = this.formBuilder.group({
         id: 0,
         description: ['', Validators.required],
         profession: [''],
-        taxOfficeId: [''],
-        vatStateId: [''],
+        taxOfficeId: ['', Validators.required],
+        vatStateId: ['', Validators.required],
         address: [''],
         phones: [''],
         personInCharge: [''],
@@ -50,41 +55,74 @@ export class CustomerFormComponent implements OnInit {
         user: ['']
     })
 
-    populateFields() {
-        this.service.getCustomer(this.id).subscribe(
+    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) {
+        route.params.subscribe(p => (this.id = p['id']))
+    };
+
+    ngOnInit() {
+        let sources = []
+        sources.push(this.taxOfficeService.getTaxOffices())
+        sources.push(this.vatStateService.getVatStates())
+        if (this.id) {
+            sources.push(this.customerService.getCustomer(this.id))
+        }
+        return forkJoin(sources).subscribe(
             result => {
-                this.customer = result;
-                this.form.get('id').setValue(this.customer.id);
-                this.form.get('description').setValue(this.customer.description);
-                this.form.get('profession').setValue(this.customer.profession);
-                this.form.get('taxOfficeId').setValue(this.customer.taxOffice.id);
-                this.form.get('vatStateId').setValue(this.customer.vatState.id);
-                this.form.get('address').setValue(this.customer.address);
-                this.form.get('phones').setValue(this.customer.phones);
-                this.form.get('personInCharge').setValue(this.customer.personInCharge);
-                this.form.get('email').setValue(this.customer.email);
-                this.form.get('taxNo').setValue(this.customer.taxNo);
-                this.form.get('accountCode').setValue(this.customer.accountCode);
-                this.form.get('user').setValue(this.customer.user);
+                this.taxOffices = result[0]
+                this.vatStates = result[1]
+                if (this.id) {
+                    this.populateFields()
+                }
+            },
+            error => {
+                if (error.status == 404) {
+                    this.router.navigate(['/error'])
+                }
+            }
+        )
+
+    }
+
+    populateFields() {
+        this.customerService.getCustomer(this.id).subscribe(
+            result => {
+                this.form.setValue({
+                    id: result.id,
+                    description: result.description,
+                    profession: result.profession,
+                    taxOfficeId: result.taxOfficeId,
+                    vatStateId: result.vatStateId,
+                    address: result.address,
+                    phones: result.phones,
+                    personInCharge: result.personInCharge,
+                    email: result.email,
+                    taxNo: result.taxNo,
+                    accountCode: result.accountCode,
+                    user: result.user
+                })
             },
             error => {
                 Utils.ErrorLogger(error);
-            });;
+            });
     }
 
     get description() {
         return this.form.get('description');
     }
 
-    getErrorMessage() {
-        return 'This field is required!';
+    getRequiredFieldMessage() {
+        return 'This field is required, silly!';
+    }
+
+    getMaxLengthFieldMessage() {
+        return 'This field must not be longer than '
     }
 
     save() {
         if (this.id == null) {
-            this.service.addCustomer(this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error));
+            this.customerService.addCustomer(this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error));
         } else {
-            this.service.updateCustomer(this.form.value.id, this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error));
+            this.customerService.updateCustomer(this.form.value.id, this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error));
         }
     }
 
@@ -92,7 +130,7 @@ export class CustomerFormComponent implements OnInit {
         if (this.id != null) {
             this.dialog.open(DeleteDialogComponent).afterClosed().subscribe(response => {
                 if (response == 'yes') {
-                    this.service.deleteCustomer(this.id).subscribe(data => {
+                    this.customerService.deleteCustomer(this.id).subscribe(data => {
                         this.router.navigate(['/customers'])
                     }, error => Utils.ErrorLogger(error));
                 }
