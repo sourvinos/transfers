@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System;
 using Transfers.ViewModels;
+using System.Security.Claims;
 
 namespace Transfers.Controllers
 {
@@ -45,10 +45,15 @@ namespace Transfers.Controllers
 
 			if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
 			{
-				Array claim = new[] { new Claim(JwtRegisteredClaimNames.Sub, user.UserName) };
+				Claim[] claims = new Claim[] { new Claim(JwtRegisteredClaimNames.Sub, user.UserName) };
 				SymmetricSecurityKey signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Paris Berlin Cairo Sydney Tokyo Beijing Rome London Athens"));
 				int expiryInMinutes = Convert.ToInt32("60");
-				JwtSecurityToken token = new JwtSecurityToken(issuer: "http://www.security.org", audience: "http://www.security.org", expires: DateTime.UtcNow.AddMinutes(expiryInMinutes), signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256));
+				JwtSecurityToken token = new JwtSecurityToken(
+					issuer: "http://www.peoplemovers.io",
+					audience: "http://www.peoplemovers.io",
+					claims: claims,
+					expires: DateTime.UtcNow.AddMinutes(expiryInMinutes),
+					signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256));
 
 				return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expiration = token.ValidTo });
 			}

@@ -1,6 +1,6 @@
 <div id='user'>
     <div id='login-details'>
-        <div>You are connected as John</div>
-        <mat-icon>person</mat-icon>
+        <div *ngIf='this.service.isLoggedIn()'>You are connected as {{ userName() }}</div>
+        <div *ngIf='!this.service.isLoggedIn()'>You are not connected</div>
     </div>
 </div>
