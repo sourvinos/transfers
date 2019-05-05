@@ -41,18 +41,19 @@ namespace Transfers.Controllers
 		[Route("login")]
 		public async Task<ActionResult> Login([FromBody] LoginViewModel model)
 		{
+			var settings = configuration.GetSection("Jwt");
+
 			IdentityUser user = await userManager.FindByNameAsync(model.Username);
 
 			if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
 			{
 				Claim[] claims = new Claim[] { new Claim(JwtRegisteredClaimNames.Sub, user.UserName) };
-				SymmetricSecurityKey signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Paris Berlin Cairo Sydney Tokyo Beijing Rome London Athens"));
-				int expiryInMinutes = Convert.ToInt32("60");
+				SymmetricSecurityKey signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.GetValue<string>("SigningKey")));
 				JwtSecurityToken token = new JwtSecurityToken(
-					issuer: "http://www.peoplemovers.io",
-					audience: "http://www.peoplemovers.io",
+					issuer: settings.GetValue<string>("Site"),
+					audience: settings.GetValue<string>("Site"),
 					claims: claims,
-					expires: DateTime.UtcNow.AddMinutes(expiryInMinutes),
+					expires: DateTime.UtcNow.AddMinutes(Convert.ToInt32(settings.GetValue<string>("ExpiryInMinutes"))),
 					signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256));
 
 				return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expiration = token.ValidTo });
