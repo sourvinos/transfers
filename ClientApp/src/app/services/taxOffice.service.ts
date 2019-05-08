@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { IKeyValuePair } from '../models/keyValuePair';
+import { ITaxOffice } from '../models/taxOffice';
 
 @Injectable({
     providedIn: 'root'
@@ -14,24 +14,24 @@ export class TaxOfficeService {
 
     constructor(private http: HttpClient) { }
 
-    getTaxOffices(): Observable<IKeyValuePair[]> {
-        return this.http.get<IKeyValuePair[]>(this.url);
+    getTaxOffices(): Observable<ITaxOffice[]> {
+        return this.http.get<ITaxOffice[]>(this.url);
     }
 
-    getTaxOffice(id: string): Observable<IKeyValuePair> {
-        return this.http.get<IKeyValuePair>(this.url + id);
+    getTaxOffice(id: number): Observable<ITaxOffice> {
+        return this.http.get<ITaxOffice>(this.url + id);
     }
 
-    addTaxOffice(formData: IKeyValuePair): Observable<IKeyValuePair> {
-        return this.http.post<IKeyValuePair>(this.url, formData);
+    addTaxOffice(formData: ITaxOffice): Observable<ITaxOffice> {
+        return this.http.post<ITaxOffice>(this.url, formData);
     }
 
-    updateTaxOffice(id: string, formData: IKeyValuePair): Observable<IKeyValuePair> {
-        return this.http.put<IKeyValuePair>(this.url + id, formData);
+    updateTaxOffice(id: number, formData: ITaxOffice): Observable<ITaxOffice> {
+        return this.http.put<ITaxOffice>(this.url + id, formData);
     }
 
-    deleteTaxOffice(id: string): Observable<IKeyValuePair> {
-        return this.http.delete<IKeyValuePair>(this.url + id);
+    deleteTaxOffice(id: number): Observable<ITaxOffice> {
+        return this.http.delete<ITaxOffice>(this.url + id);
     }
 
 }

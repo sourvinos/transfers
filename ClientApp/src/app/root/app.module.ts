@@ -44,6 +44,8 @@ import { PickupPointFormComponent } from '../pickupPoints/pickupPoint-form.compo
 import { DestinationListComponent } from '../destinations/destination-list.component';
 import { DestinationFormComponent } from '../destinations/destination-form.component';
 
+import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component';
+import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component';
 
 @NgModule({
     declarations: [
@@ -60,7 +62,8 @@ import { DestinationFormComponent } from '../destinations/destination-form.compo
         CustomerListComponent, CustomerFormComponent,
         RouteListComponent, RouteFormComponent,
         PickupPointListComponent, PickupPointFormComponent,
-        DestinationListComponent, DestinationFormComponent
+        DestinationListComponent, DestinationFormComponent,
+        TaxOfficeListComponent, TaxOfficeFormComponent
     ],
     entryComponents: [
         DeleteDialogComponent,
@@ -99,6 +102,10 @@ import { DestinationFormComponent } from '../destinations/destination-form.compo
             { path: 'destinations', component: DestinationListComponent },
             { path: 'destinations/new', component: DestinationFormComponent },
             { path: 'destinations/:id', component: DestinationFormComponent },
+
+            { path: 'taxOffices', component: TaxOfficeListComponent },
+            { path: 'taxOffices/new', component: TaxOfficeFormComponent },
+            { path: 'taxOffices/:id', component: TaxOfficeFormComponent },
 
             { path: 'login', component: LoginComponent }
         ])

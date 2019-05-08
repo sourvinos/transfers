@@ -28,7 +28,7 @@ export class DestinationFormComponent implements OnInit {
 
     form = this.formBuilder.group({
         id: '0',
-        shortDescription: ['', [Validators.required, Validators.maxLength(5)]],
+        shortDescription: [''],
         description: ['', [Validators.required, Validators.maxLength(100)]],
         user: ['']
     })
@@ -63,10 +63,6 @@ export class DestinationFormComponent implements OnInit {
             error => {
                 Utils.ErrorLogger(error);
             });;
-    }
-
-    get shortDescription() {
-        return this.form.get('shortDescription');
     }
 
     get description() {

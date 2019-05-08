@@ -26,13 +26,13 @@ export class DestinationService {
 		return this.http.post<IDestination>(this.url, formData);
 	}
 
-	updateDestination(DestinationId: number, formData: IDestination): Observable<IDestination> {
+	updateDestination(id: number, formData: IDestination): Observable<IDestination> {
 		console.log("Updating" + formData)
-		return this.http.put<IDestination>(this.url + '/' + DestinationId, formData);
+		return this.http.put<IDestination>(this.url + '/' + id, formData);
 	}
 
-	deleteDestination(DestinationId: number): Observable<IDestination> {
-		return this.http.delete<IDestination>(this.url + '/' + DestinationId);
+	deleteDestination(id: number): Observable<IDestination> {
+		return this.http.delete<IDestination>(this.url + '/' + id);
 	}
 
 }
