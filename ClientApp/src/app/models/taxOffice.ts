@@ -1,5 +1,5 @@
-export interface ITaxOffice {
-    id: number;
-    description: string;
+import { IKeyValuePair } from "./keyValuePair";
+
+export interface ITaxOffice extends IKeyValuePair {
     user: string;
 }

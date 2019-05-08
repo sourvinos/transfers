@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { IKeyValuePair } from '../models/keyValuePair';
+import { IVatState } from '../models/vatState';
 
 @Injectable({
     providedIn: 'root'
@@ -11,28 +11,28 @@ import { IKeyValuePair } from '../models/keyValuePair';
 
 export class VatStateService {
 
-    private url: string = 'https://localhost:44322/api/vatstates/';
+    private url: string = 'https://localhost:44322/api/vatStates/';
 
     constructor(private http: HttpClient) { }
 
-    getVatStates(): Observable<IKeyValuePair[]> {
-        return this.http.get<IKeyValuePair[]>(this.url);
+    getVatStates(): Observable<IVatState[]> {
+        return this.http.get<IVatState[]>(this.url);
     }
 
-    getVatState(id: string): Observable<IKeyValuePair> {
-        return this.http.get<IKeyValuePair>(this.url + id);
+    getVatState(id: number): Observable<IVatState> {
+        return this.http.get<IVatState>(this.url + id);
     }
 
-    addVatState(formData: IKeyValuePair): Observable<IKeyValuePair> {
-        return this.http.post<IKeyValuePair>(this.url, formData);
+    addVatState(formData: IVatState): Observable<IVatState> {
+        return this.http.post<IVatState>(this.url, formData);
     }
 
-    updateVatState(id: string, formData: IKeyValuePair): Observable<IKeyValuePair> {
-        return this.http.put<IKeyValuePair>(this.url + id, formData);
+    updateVatState(id: number, formData: IVatState): Observable<IVatState> {
+        return this.http.put<IVatState>(this.url + id, formData);
     }
 
-    deleteVatState(id: string): Observable<IKeyValuePair> {
-        return this.http.delete<IKeyValuePair>(this.url + id);
+    deleteVatState(id: number): Observable<IVatState> {
+        return this.http.delete<IVatState>(this.url + id);
     }
 
 }

@@ -47,6 +47,12 @@ import { DestinationFormComponent } from '../destinations/destination-form.compo
 import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component';
 import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component';
 
+import { VatStateListComponent } from '../vatStates/vatState-list.component';
+import { VatStateFormComponent } from '../vatStates/vatState-form.component';
+
+import { TransferTypeListComponent } from '../transferTypes/transferType-list.component';
+import { TransferTypeFormComponent } from '../transferTypes/transferType-form.component';
+
 @NgModule({
     declarations: [
         RootComponent,
@@ -63,7 +69,9 @@ import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component';
         RouteListComponent, RouteFormComponent,
         PickupPointListComponent, PickupPointFormComponent,
         DestinationListComponent, DestinationFormComponent,
-        TaxOfficeListComponent, TaxOfficeFormComponent
+        TaxOfficeListComponent, TaxOfficeFormComponent,
+        VatStateListComponent, VatStateFormComponent,
+        TransferTypeListComponent, TransferTypeFormComponent
     ],
     entryComponents: [
         DeleteDialogComponent,
@@ -106,6 +114,14 @@ import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component';
             { path: 'taxOffices', component: TaxOfficeListComponent },
             { path: 'taxOffices/new', component: TaxOfficeFormComponent },
             { path: 'taxOffices/:id', component: TaxOfficeFormComponent },
+
+            { path: 'vatStates', component: VatStateListComponent },
+            { path: 'vatStates/new', component: VatStateFormComponent },
+            { path: 'vatStates/:id', component: VatStateFormComponent },
+
+            { path: 'transferTypes', component: TransferTypeListComponent },
+            { path: 'transferTypes/new', component: TransferTypeFormComponent },
+            { path: 'transferTypes/:id', component: TransferTypeFormComponent },
 
             { path: 'login', component: LoginComponent }
         ])
