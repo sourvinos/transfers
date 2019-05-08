@@ -1,4 +1,4 @@
-<div *ngIf='this.service.isLoggedIn()'>
+<div *ngIf='this.service.isLoggedIn() && !this.service.isTokenExpired()'>
     <button mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon>more_vert</mat-icon>
     </button>
@@ -15,4 +15,4 @@
     </mat-menu>
 </div>
 
-<button *ngIf='!this.service.isLoggedIn()' mat-button [routerLink]='["/login"]'>Login</button>
+<button *ngIf='!this.service.isLoggedIn() || this.service.isTokenExpired()' mat-button [routerLink]='["/login"]'>Login</button>

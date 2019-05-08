@@ -16,9 +16,13 @@ export class UserInfoComponent {
 		return this.service.isLoggedIn();
 	}
 
+	isTokenExpired(): boolean {
+		return this.service.isTokenExpired();
+	}
+
 	userName() {
-		let decodedToken = jwt_decode(this.service.getToken());
-		let userName = decodedToken['sub'];
+		let token = this.service.getDecodedToken();
+		let userName = token['sub'];
 
 		return userName;
 	}

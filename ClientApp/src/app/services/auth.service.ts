@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ILogin } from '../models/login';
+import * as jwt_decode from 'jwt-decode';
 
 @Injectable({
     providedIn: 'root'
@@ -24,10 +25,24 @@ export class AuthService {
         return localStorage.getItem('token') != null;
     }
 
+    isTokenExpired(): boolean {
+        let decodedToken = this.getDecodedToken();
+        let expireDate = decodedToken['exp'];
+        let currentTime = new Date().getTime() / 1000;
+
+        return currentTime > expireDate;
+    }
+
     getToken(): string | null {
+        var token = localStorage.getItem('token');
+
+        return token;
+    }
+    getDecodedToken(): {} | null {
         var i = localStorage.getItem('token');
-        if (i) {
-            return i;
+        let decodedToken = jwt_decode(i);
+        if (decodedToken) {
+            return decodedToken;
         }
         else {
             return null;
