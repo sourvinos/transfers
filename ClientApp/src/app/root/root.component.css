@@ -3,6 +3,8 @@ section {
     grid-template-areas:
         "sidebar"
         "main";
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: auto 1fr;
     height: 100vh;
+    transition: margin-left 0.7s;
+    overflow: hidden;
 }

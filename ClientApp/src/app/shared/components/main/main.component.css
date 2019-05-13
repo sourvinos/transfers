@@ -5,3 +5,43 @@
 #main {
     padding: 2rem;
 }
+
+#slide {
+    position: absolute;
+}
+
+#slide span {
+    margin: 5px;
+    width: 30px;
+    height: 5px;
+    background-color: #aaaaaa;
+    display: block;
+    transition: transform 1000ms;
+    cursor: pointer;
+}
+
+#slide.open span:first-child {
+    transform: translateY(10px) rotate(45deg);
+}
+
+#slide.open span:nth-child(2) {
+    visibility: hidden;
+}
+
+#slide.open span:last-child {
+    transform: translateY(-10px) rotate(-45deg);
+}
+
+@media only screen and (min-width:1281px) {
+
+    #slide {
+        display: none;
+    }
+}
+
+@media only screen and (max-width:1280px) {
+
+    #slide {
+        display: block;
+    }
+}
