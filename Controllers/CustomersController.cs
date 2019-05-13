@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Transfers.Models;
+using Transfers.Resources;
 
 namespace Transfers.Controllers
 {
@@ -12,17 +14,21 @@ namespace Transfers.Controllers
 	[Route("api/[controller]")]
 	public class CustomersController : ControllerBase
 	{
+		private readonly IMapper mapper;
 		private readonly Context context;
 
-		public CustomersController(Context context)
+		public CustomersController(IMapper mapper, Context context)
 		{
+			this.mapper = mapper;
 			this.context = context;
 		}
 
 		[HttpGet]
 		public async Task<IEnumerable<Customer>> Get()
 		{
-			return await context.Customers.Include(x => x.TaxOffice).Include(x => x.VATState).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+			var customers = await context.Customers.Include(x => x.TaxOffice).Include(x => x.VATState).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+
+			return customers;
 		}
 
 		[HttpGet("{id}")]

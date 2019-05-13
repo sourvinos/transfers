@@ -17,7 +17,10 @@ export class DestinationListComponent implements OnInit {
     constructor(private service: DestinationService) { }
 
     ngOnInit() {
-        this.service.getDestinations().subscribe(data => this.filteredDestinations = this.destinations = data, error => Utils.ErrorLogger(error));
+        this.service.getDestinations().subscribe(data => {
+            this.filteredDestinations = this.destinations = data
+            console.log(this.filteredDestinations)
+        }, error => Utils.ErrorLogger(error));
     }
 
     filter(query: string) {

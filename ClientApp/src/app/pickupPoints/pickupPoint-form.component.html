@@ -1,46 +1,61 @@
 <form [formGroup]='form' autocomplete='off'>
 
-    <div id='header'>
+    <!-- <div id='header'>
         <h2>{{ subHeader }}</h2>
         <h1>Pickup point</h1>
         <p>{{ form.value | json }} {{ form.valid }}</p>
     </div>
 
     <div id="section-one">
-        <div class='field-wrapper'>
-            <label for="route">Route</label>
-            <select id="route" class="form-control" formControlName='routeId'>
-                <option value="">Select</option>
-                <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
-            </select>
+
+        <div class="field">
+            <label>Route</label>
+            <div class="ui fluid search selection dropdown">
+                <input type="hidden" name="route">
+                <i class="dropdown icon"></i>
+                <div class="default text">Select...</div>
+                <div class="menu">
+                    <div class="item" *ngFor="let route of routes" data-value="{{ route.id }}">{{ route.description}}</div>
+                </div>
+            </div>
         </div>
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Description' formControlName='description'>
-                <mat-error *ngIf='description.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
-                <mat-error *ngIf='description.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ description.errors.maxlength.requiredLength }} characters</mat-error>
-            </mat-form-field>
-        </div>
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Exact point' formControlName='exactPoint'>
-            </mat-form-field>
-        </div>
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Time' formControlName='time'>
-                <mat-error *ngIf='time.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
-                <mat-error *ngIf='time.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ time.errors.maxlength.requiredLength }} characters</mat-error>
-            </mat-form-field>
-        </div>
+    </div>
+
+    <div class='field-wrapper'>
+        <label for="route">Route</label>
+        <select id="route" class="form-control" formControlName='routeId'>
+            <option value="">Select</option>
+            <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
+        </select>
+    </div>
+
+    <div class='field-wrapper'>
+        <mat-form-field>
+            <input matInput placeholder='Description' formControlName='description'>
+            <mat-error *ngIf='description.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
+            <mat-error *ngIf='description.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ description.errors.maxlength.requiredLength }} characters</mat-error>
+        </mat-form-field>
+    </div>
+    <div class='field-wrapper'>
+        <mat-form-field>
+            <input matInput placeholder='Exact point' formControlName='exactPoint'>
+        </mat-form-field>
+    </div>
+    <div class='field-wrapper'>
+        <mat-form-field>
+            <input matInput placeholder='Time' formControlName='time'>
+            <mat-error *ngIf='time.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
+            <mat-error *ngIf='time.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ time.errors.maxlength.requiredLength }} characters</mat-error>
+        </mat-form-field>
+    </div>
     </div>
 
     <div id='footer'>
         <div class='button-wrapper'>
-            <button type='button' mat-button (click)='goBack()'>Back</button>
-            <button type='button' mat-button color='warn' (click)='delete()' [class.hidden]='id == null'>Delete</button>
-            <button type='button' mat-raised-button color='primary' (click)='save()'>Save</button>
+            <button type='button' (click)='goBack()'>Back</button>
+            <button type='button' (click)='delete()' [class.hidden]='id == null'>Delete</button>
+            <button type='button' (click)='save()'>Save</button>
         </div>
-    </div>
+    </div> -->
 
 </form>

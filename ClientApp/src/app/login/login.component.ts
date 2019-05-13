@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
 import { MessageDialogComponent } from '../shared/components/message-dialog/message-dialog.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -14,7 +13,7 @@ export class LoginComponent {
 
 	validLogin: boolean = true;
 
-	constructor(private formBuilder: FormBuilder, private service: AuthService, private router: Router, private dialog: MatDialog) { }
+	constructor(private formBuilder: FormBuilder, private service: AuthService, private router: Router) { }
 
 	form = this.formBuilder.group({
 		userName: ['', Validators.required],
@@ -41,7 +40,7 @@ export class LoginComponent {
 				localStorage.setItem('token', response.token);
 			}
 		}, () => {
-			this.dialog.open(MessageDialogComponent).afterClosed().subscribe(() => this.validLogin = false);
+			this.validLogin = false;
 		});
 	}
 

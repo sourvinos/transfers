@@ -10,13 +10,13 @@
         <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
     </select>
     <!-- PickupPoints -->
-    <mat-nav-list>
+    <!-- <mat-nav-list>
         <a mat-list-item *ngFor='let pickupPoint of pickupPoints' routerLink='/pickuppoints/{{ pickupPoint.id}}'>{{ pickupPoint.description }}</a>
-    </mat-nav-list>
+    </mat-nav-list> -->
 </div>
 
 <div id='main-footer'>
-    <button mat-fab [routerLink]='["/pickuppoints/new"]'>
+    <!-- <button mat-fab [routerLink]='["/pickuppoints/new"]'>
         <mat-icon>add</mat-icon>
-    </button>
+    </button> -->
 </div>

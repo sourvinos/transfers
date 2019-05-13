@@ -21,7 +21,7 @@ namespace Transfers.Controllers
 		[HttpGet]
 		public async Task<IEnumerable<Transfer>> Get()
 		{
-			return await context.Transfers.Include(x => x.Customer).ToListAsync();
+			return await context.Transfers.Include(x => x.Customer).Where(x => x.CustomerId == 120).ToListAsync();
 		}
 
 		[HttpGet("{id}")]

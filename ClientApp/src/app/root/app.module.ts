@@ -8,23 +8,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RootComponent } from './root.component';
 import { RouterModule } from '@angular/router';
 
-import { MAT_LABEL_GLOBAL_OPTIONS } from '@angular/material';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material';
-import { MatDialogModule } from '@angular/material';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatToolbarModule } from '@angular/material/toolbar';
-
-import { FooterComponent } from '../shared/components/footer/footer.component';
 import { LoginComponent } from '../login/login.component';
 import { MainComponent } from '../shared/components/main/main.component';
-import { MenuComponent } from '../shared/components/menu/menu.component';
-import { NavigationComponent } from '../shared/components/navigation/navigation.component';
-import { UserInfoComponent } from '../shared/components/user-info/user-info.component';
 
 import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { HomeComponent } from '../home/home.component';
@@ -53,15 +38,15 @@ import { VatStateFormComponent } from '../vatStates/vatState-form.component';
 import { TransferTypeListComponent } from '../transferTypes/transferType-list.component';
 import { TransferTypeFormComponent } from '../transferTypes/transferType-form.component';
 
+import { TransferListComponent } from '../transfers/transfer-list.component'
+import { SidebarComponent } from '../shared/sidebar/sidebar.component';
+
 @NgModule({
     declarations: [
         RootComponent,
-        UserInfoComponent,
-        NavigationComponent,
+        SidebarComponent,
         HomeComponent,
-        MenuComponent,
         MainComponent,
-        FooterComponent,
         LoginComponent,
         DeleteDialogComponent,
         MessageDialogComponent,
@@ -71,7 +56,8 @@ import { TransferTypeFormComponent } from '../transferTypes/transferType-form.co
         DestinationListComponent, DestinationFormComponent,
         TaxOfficeListComponent, TaxOfficeFormComponent,
         VatStateListComponent, VatStateFormComponent,
-        TransferTypeListComponent, TransferTypeFormComponent
+        TransferTypeListComponent, TransferTypeFormComponent,
+        TransferListComponent
     ],
     entryComponents: [
         DeleteDialogComponent,
@@ -82,15 +68,6 @@ import { TransferTypeFormComponent } from '../transferTypes/transferType-form.co
         BrowserAnimationsModule,
         FormsModule,
         HttpClientModule,
-        MatButtonModule,
-        MatCheckboxModule,
-        MatDialogModule,
-        MatIconModule,
-        MatInputModule,
-        MatListModule,
-        MatMenuModule,
-        MatSnackBarModule,
-        MatToolbarModule,
         ReactiveFormsModule,
         RouterModule.forRoot([
             { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -123,13 +100,13 @@ import { TransferTypeFormComponent } from '../transferTypes/transferType-form.co
             { path: 'transferTypes/new', component: TransferTypeFormComponent },
             { path: 'transferTypes/:id', component: TransferTypeFormComponent },
 
+            { path: 'transfers', component: TransferListComponent },
+
             { path: 'login', component: LoginComponent }
         ])
     ],
     providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-        { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } }
-
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
     ],
     bootstrap: [RootComponent]
 })

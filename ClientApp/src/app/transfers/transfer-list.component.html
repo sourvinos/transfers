@@ -1,0 +1,18 @@
+<div id='main-header'>
+    <h1>Transfers</h1>
+    <div id='search-box'>
+        <input type='text' id='search-box' placeholder='Search...' #query (keyup)='filter(query.value)' autocomplete='off'>
+    </div>
+</div>
+
+<!-- <div id='main-body'>
+    <mat-nav-list>
+        <a mat-list-item *ngFor='let transfer of transfers' routerLink='/transfers/{{ transfer.id}}'>{{ transfer.date | date:'shortDate' }}</a>
+    </mat-nav-list>
+</div>
+
+<div id='main-footer'>
+    <button mat-fab [routerLink]='["/transfers/new"]'>
+        <mat-icon>add</mat-icon>
+    </button>
+</div> -->

@@ -1,9 +1,7 @@
 import { IDestination } from './../models/destination';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog, MatSnackBar } from '@angular/material';
 
 import { DestinationService } from '../services/destination.service';
 import { Utils } from '../shared/classes/utils';
@@ -33,7 +31,7 @@ export class DestinationFormComponent implements OnInit {
         user: ['']
     })
 
-    constructor(private service: DestinationService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar) {
+    constructor(private service: DestinationService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
@@ -82,28 +80,23 @@ export class DestinationFormComponent implements OnInit {
         if (this.id == null) {
             this.service.addDestination(this.form.value).subscribe(data => {
                 this.router.navigate(['/destinations'])
-                this.snackBar.open('Destination saved!', '', { duration: 1500 })
             }, error => Utils.ErrorLogger(error));
         }
         else {
             if (this.id != null)
                 this.service.updateDestination(this.id, this.form.value).subscribe(data => {
                     this.router.navigate(['/destinations'])
-                    this.snackBar.open('Destination updated!', '', { duration: 1500 })
                 }, error => Utils.ErrorLogger(error));
         }
     }
 
     delete() {
         if (this.id != null) {
-            this.dialog.open(DeleteDialogComponent).afterClosed().subscribe(response => {
-                if (response == 'yes') {
-                    this.service.deleteDestination(this.id).subscribe(data => {
-                        this.router.navigate(['/destinations'])
-                        this.snackBar.open('Destination deleted!', '', { duration: 1500 })
-                    }, error => Utils.ErrorLogger(error));
-                }
-            });
+            if (confirm('Please confirm')) {
+                this.service.deleteDestination(this.id).subscribe(data => {
+                    this.router.navigate(['/destinations'])
+                }, error => Utils.ErrorLogger(error));
+            }
         }
     }
 

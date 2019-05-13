@@ -7,7 +7,7 @@ import { Utils } from '../shared/classes/utils';
 @Component({
     selector: 'app-customer-list',
     templateUrl: './customer-list.component.html',
-    styleUrls: ['../shared/styles/lists.css']
+    styleUrls: ['./customer-list.component.css']
 })
 
 export class CustomerListComponent implements OnInit {

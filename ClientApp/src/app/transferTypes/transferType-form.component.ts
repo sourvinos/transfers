@@ -1,9 +1,7 @@
 import { ITransferType } from './../models/transferType';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog, MatSnackBar } from '@angular/material';
 
 import { Utils } from '../shared/classes/utils';
 import { TransferTypeService } from '../services/transferType.service';
@@ -31,7 +29,7 @@ export class TransferTypeFormComponent implements OnInit {
         user: ['']
     })
 
-    constructor(private service: TransferTypeService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar) {
+    constructor(private service: TransferTypeService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
@@ -79,28 +77,25 @@ export class TransferTypeFormComponent implements OnInit {
         if (this.id == null) {
             this.service.addTransferType(this.form.value).subscribe(data => {
                 this.router.navigate(['/transferTypes'])
-                this.snackBar.open('Transfer type saved!', '', { duration: 1500 })
             }, error => Utils.ErrorLogger(error));
         }
         else {
             if (this.id != null)
                 this.service.updateTransferType(this.id, this.form.value).subscribe(data => {
                     this.router.navigate(['/transferTypes'])
-                    this.snackBar.open('Transfer type updated!', '', { duration: 1500 })
                 }, error => Utils.ErrorLogger(error));
         }
     }
 
     delete() {
         if (this.id != null) {
-            this.dialog.open(DeleteDialogComponent).afterClosed().subscribe(response => {
-                if (response == 'yes') {
-                    this.service.deleteTransferType(this.id).subscribe(data => {
-                        this.router.navigate(['/transferTypes'])
-                        this.snackBar.open('Transfer type deleted!', '', { duration: 1500 })
-                    }, error => Utils.ErrorLogger(error));
-                }
-            });
+            if (confirm('Please confirm')) {
+                this.service.deleteTransferType(this.id).subscribe(data => {
+                    this.router.navigate(['/transferTypes'])
+
+                }, error => Utils.ErrorLogger(error));
+            }
+
         }
     }
 

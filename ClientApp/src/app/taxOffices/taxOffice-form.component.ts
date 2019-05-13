@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog, MatSnackBar } from '@angular/material';
 
 import { TaxOfficeService } from '../services/taxOffice.service';
 import { Utils } from '../shared/classes/utils';
@@ -31,7 +30,7 @@ export class TaxOfficeFormComponent implements OnInit {
         user: ['']
     })
 
-    constructor(private service: TaxOfficeService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar) {
+    constructor(private service: TaxOfficeService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
@@ -79,28 +78,23 @@ export class TaxOfficeFormComponent implements OnInit {
         if (this.id == null) {
             this.service.addTaxOffice(this.form.value).subscribe(data => {
                 this.router.navigate(['/taxOffices'])
-                this.snackBar.open('Tax office saved!', '', { duration: 1500 })
             }, error => Utils.ErrorLogger(error));
         }
         else {
             if (this.id != null)
                 this.service.updateTaxOffice(this.id, this.form.value).subscribe(data => {
                     this.router.navigate(['/taxOffices'])
-                    this.snackBar.open('Tax office updated!', '', { duration: 1500 })
                 }, error => Utils.ErrorLogger(error));
         }
     }
 
     delete() {
         if (this.id != null) {
-            this.dialog.open(DeleteDialogComponent).afterClosed().subscribe(response => {
-                if (response == 'yes') {
-                    this.service.deleteTaxOffice(this.id).subscribe(data => {
-                        this.router.navigate(['/taxOffices'])
-                        this.snackBar.open('Tax office deleted!', '', { duration: 1500 })
-                    }, error => Utils.ErrorLogger(error));
-                }
-            });
+            if (confirm('Please confirm')) {
+                this.service.deleteTaxOffice(this.id).subscribe(data => {
+                    this.router.navigate(['/taxOffices'])
+                }, error => Utils.ErrorLogger(error));
+            }
         }
     }
 

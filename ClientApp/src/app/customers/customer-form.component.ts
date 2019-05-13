@@ -1,9 +1,8 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog, MatSnackBar } from '@angular/material';
-import { forkJoin } from 'rxjs'
+import { forkJoin } from 'rxjs';
+import { get } from 'scriptjs';
 
 import { CustomerService } from '../services/customer.service';
 import { ICustomer } from '../models/customer';
@@ -55,12 +54,13 @@ export class CustomerFormComponent implements OnInit {
         user: ['']
     })
 
-    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog) {
+    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
     ngOnInit() {
         let sources = []
+        get('script.js', () => { })
         sources.push(this.taxOfficeService.getTaxOffices())
         sources.push(this.vatStateService.getVatStates())
         if (this.id) {
@@ -80,7 +80,6 @@ export class CustomerFormComponent implements OnInit {
                 }
             }
         )
-
     }
 
     populateFields() {
@@ -128,13 +127,11 @@ export class CustomerFormComponent implements OnInit {
 
     delete() {
         if (this.id != null) {
-            this.dialog.open(DeleteDialogComponent).afterClosed().subscribe(response => {
-                if (response == 'yes') {
-                    this.customerService.deleteCustomer(this.id).subscribe(data => {
-                        this.router.navigate(['/customers'])
-                    }, error => Utils.ErrorLogger(error));
-                }
-            });
+            if (confirm('Please confirm')) {
+                this.customerService.deleteCustomer(this.id).subscribe(data => {
+                    this.router.navigate(['/customers'])
+                }, error => Utils.ErrorLogger(error));
+            };
         }
     }
 

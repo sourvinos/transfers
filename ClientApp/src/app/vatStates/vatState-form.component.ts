@@ -1,9 +1,7 @@
 import { IVatState } from './../models/vatState';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog, MatSnackBar } from '@angular/material';
 
 import { Utils } from '../shared/classes/utils';
 import { VatStateService } from '../services/vatState.service';
@@ -31,7 +29,7 @@ export class VatStateFormComponent implements OnInit {
         user: ['']
     })
 
-    constructor(private service: VatStateService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar) {
+    constructor(private service: VatStateService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
@@ -79,28 +77,23 @@ export class VatStateFormComponent implements OnInit {
         if (this.id == null) {
             this.service.getVatState(this.form.value).subscribe(data => {
                 this.router.navigate(['/vatStates'])
-                this.snackBar.open('Vat regime saved!', '', { duration: 1500 })
             }, error => Utils.ErrorLogger(error));
         }
         else {
             if (this.id != null)
                 this.service.updateVatState(this.id, this.form.value).subscribe(data => {
                     this.router.navigate(['/vatStates'])
-                    this.snackBar.open('Vat regime updated!', '', { duration: 1500 })
                 }, error => Utils.ErrorLogger(error));
         }
     }
 
     delete() {
         if (this.id != null) {
-            this.dialog.open(DeleteDialogComponent).afterClosed().subscribe(response => {
-                if (response == 'yes') {
-                    this.service.deleteVatState(this.id).subscribe(data => {
-                        this.router.navigate(['/vatStates'])
-                        this.snackBar.open('Vat regime deleted!', '', { duration: 1500 })
-                    }, error => Utils.ErrorLogger(error));
-                }
-            });
+            if (confirm('Please confirm')) {
+                this.service.deleteVatState(this.id).subscribe(data => {
+                    this.router.navigate(['/vatStates'])
+                }, error => Utils.ErrorLogger(error));
+            }
         }
     }
 

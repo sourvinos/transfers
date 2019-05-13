@@ -1,32 +1,27 @@
-<form [formGroup]='form' autocomplete='off'>
+<div id="main-content">
 
-    <div id='header'>
-        <h2>{{ subHeader }}</h2>
+    <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
+
+    <div id="header">
         <h1>Destination</h1>
-        <p>{{ form.value | json }} {{ form.valid }}</p>
     </div>
 
-    <div id="section-one">
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Short Description' formControlName='shortDescription'>
-            </mat-form-field>
-        </div>
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Description' formControlName='description'>
-                <mat-error *ngIf='description.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
-                <mat-error *ngIf='description.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ description.errors.maxlength.requiredLength }} characters</mat-error>
-            </mat-form-field>
-        </div>
+    <div id="main">
+        <form [formGroup]='form' class="ui form" autocomplete='off'>
+            <div class="field">
+                <label>Abbreviation</label>
+                <input type="text" placeholder='Abbreviation' formControlName='shortDescription' required>
+            </div>
+            <div class="field">
+                <label>Description</label>
+                <input type="text" placeholder='Description' formControlName='description' required>
+            </div>
+        </form>
     </div>
 
-    <div id='footer'>
-        <div class='button-wrapper'>
-            <button type='button' mat-button (click)='goBack()'>Back</button>
-            <button type='button' mat-button color='warn' (click)='delete()' [class.hidden]='id == null'>Delete</button>
-            <button type='button' mat-raised-button color='primary' (click)='save()'>Save</button>
-        </div>
+    <div id="footer">
+        <button class="ui button" (click)="delete()" [class.hidden]='id == null'>Save</button>
+        <button class="ui button" (click)="save()">Save</button>
     </div>
 
-</form>
+</div>

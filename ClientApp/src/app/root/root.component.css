@@ -1,11 +1,8 @@
-#container {
+section {
     display: grid;
     grid-template-areas:
-        "user"
-        "navigation"
-        "main"
-        "footer";
-    grid-template-rows: max-content max-content 1fr max-content;
-    grid-template-columns: 1fr;
+        "sidebar"
+        "main";
+    grid-template-columns: 300px 1fr;
     height: 100vh;
 }

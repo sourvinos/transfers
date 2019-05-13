@@ -3,7 +3,3 @@ h1 {
     font-size: var(--form-header-size);
     font-weight: var(--form-header-weight);
 }
-
-mat-dialog-actions {
-    margin: 2.1875rem 1.25rem 0 0;
-}

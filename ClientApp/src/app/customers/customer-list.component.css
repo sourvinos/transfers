@@ -1,1 +1,67 @@
-/* All styles are here: ../shared/styles/lists.css */
+:host {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100%;
+}
+
+#header {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 0 2rem 2rem 2rem;
+}
+
+#search-box {
+    justify-self: end;
+}
+
+#body {
+    max-height: -webkit-fill-available;
+    overflow-y: scroll;
+}
+
+#footer {
+    margin: 2rem 2rem 0 2rem;
+    text-align: right;
+}
+
+#body::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+#body::-webkit-scrollbar-thumb {
+    background-color: #D67474;
+    min-height: 6.25rem;
+}
+
+table {
+    font-family: "Play";
+    border: 0 !important;
+}
+
+table th {
+    color: #939393;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+table tr:hover {
+    cursor: pointer !important;
+}
+
+h2 {
+    color: #D67474;
+    font-family: "Orbitron";
+    font-weight: bold;
+}
+
+button.ui.button {
+    color: #ffffff !important;
+    background-color: #D67474 !important;
+    margin: 0;
+}
+
+div.input {
+    width: 300px !important;
+}

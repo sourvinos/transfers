@@ -6,13 +6,15 @@
 </div>
 
 <div id='main-body'>
-    <mat-nav-list>
-        <a mat-list-item *ngFor='let destination of filteredDestinations' routerLink='/destinations/{{ destination.id}}'>{{ destination.description }}</a>
-    </mat-nav-list>
+    <ul>
+        <li>1</li>
+        <li>2</li>
+    </ul>
+    <ul>
+        <li *ngFor='let destination of filteredDestinations' routerLink='/destinations/{{ destination.id}}'>{{ destination.description }}</li>
+    </ul>
 </div>
 
 <div id='main-footer'>
-    <button mat-fab [routerLink]='["/destinations/new"]'>
-        <mat-icon>add</mat-icon>
-    </button>
+    <button [routerLink]='["/destinations/new"]'>New</button>
 </div>

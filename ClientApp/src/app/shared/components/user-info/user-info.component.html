@@ -1,6 +1,0 @@
-<div id='user'>
-    <div id='login-details'>
-        <div *ngIf='this.service.isLoggedIn() && !this.service.isTokenExpired()'>You are connected as {{ userName() }}</div>
-        <div *ngIf='!this.service.isLoggedIn() || this.service.isTokenExpired()'>You are not connected</div>
-    </div>
-</div>

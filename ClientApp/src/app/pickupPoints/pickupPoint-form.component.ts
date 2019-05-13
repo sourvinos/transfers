@@ -1,8 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router'
 import { Component, OnInit } from '@angular/core'
-import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component'
 import { FormBuilder, Validators } from '@angular/forms'
-import { MatDialog, MatSnackBar } from '@angular/material'
 import { forkJoin } from 'rxjs'
 
 import { IPickupPoint } from './../models/pickupPoint';
@@ -40,7 +38,7 @@ export class PickupPointFormComponent implements OnInit {
         user: ['']
     })
 
-    constructor(private service: PickupPointService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar) {
+    constructor(private service: PickupPointService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => this.id = p['id'])
     }
 
@@ -118,14 +116,11 @@ export class PickupPointFormComponent implements OnInit {
 
     delete() {
         if (this.pickupPoint.id != null) {
-            this.dialog.open(DeleteDialogComponent).afterClosed().subscribe(response => {
-                if (response == 'yes') {
-                    this.service.deletePickupPoint(this.pickupPoint.id).subscribe(data => {
-                        this.router.navigate(['/pickuppoints'])
-                        this.snackBar.open('Pickup point deleted!', '', { duration: 1500 })
-                    }, error => Utils.ErrorLogger(error));
-                }
-            });
+            if (confirm('Please confirm')) {
+                this.service.deletePickupPoint(this.pickupPoint.id).subscribe(data => {
+                    this.router.navigate(['/pickuppoints'])
+                }, error => Utils.ErrorLogger(error));
+            }
         }
     }
 

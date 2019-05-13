@@ -1,8 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog, MatSnackBar } from '@angular/material';
 
 import { IRoute } from '../models/route';
 import { RouteService } from '../services/route.service';
@@ -33,7 +31,7 @@ export class RouteFormComponent implements OnInit {
         user: ['']
     })
 
-    constructor(private service: RouteService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar) {
+    constructor(private service: RouteService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
@@ -86,28 +84,24 @@ export class RouteFormComponent implements OnInit {
         if (this.id == null) {
             this.service.addRoute(this.form.value).subscribe(data => {
                 this.router.navigate(['/routes'])
-                this.snackBar.open('Route saved!', '', { duration: 1500 })
             }, error => Utils.ErrorLogger(error));
         }
         else {
             if (this.id != null)
                 this.service.updateRoute(this.id, this.form.value).subscribe(data => {
                     this.router.navigate(['/routes'])
-                    this.snackBar.open('Route updated!', '', { duration: 1500 })
                 }, error => Utils.ErrorLogger(error));
         }
     }
 
     delete() {
         if (this.id != null) {
-            this.dialog.open(DeleteDialogComponent).afterClosed().subscribe(response => {
-                if (response == 'yes') {
-                    this.service.deleteRoute(this.id).subscribe(data => {
-                        this.router.navigate(['/routes'])
-                        this.snackBar.open('Route deleted!', '', { duration: 1500 })
-                    }, error => Utils.ErrorLogger(error));
-                }
-            });
+            if (confirm('Please confirm')) {
+                this.service.deleteRoute(this.id).subscribe(data => {
+                    this.router.navigate(['/routes'])
+
+                }, error => Utils.ErrorLogger(error));
+            }
         }
     }
 

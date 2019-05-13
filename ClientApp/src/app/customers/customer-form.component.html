@@ -1,81 +1,65 @@
-<form [formGroup]='form' autocomplete='off'>
+<!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
 
-    <div id='header'>
-        <h2>{{ subHeader }}</h2>
-        <h1>Customer</h1>
-        <p>{{ form.value | json }} {{ form.valid }}</p>
-    </div>
+<div id="header">
+    <h2>Customer</h2>
+</div>
 
-    <div id="section-one">
-        <input type='text' formControlName='id'>
-        <input type='text' formControlName='user'>
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Description' formControlName='description'>
-                <mat-error *ngIf='description.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
-                <mat-error *ngIf='description.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ shortDescription.errors.maxlength.requiredLength }} characters</mat-error>
-            </mat-form-field>
+<div id="main">
+    <form [formGroup]='form' class="ui form" autocomplete='off'>
+        <div id="left">
+            <div class="field">
+                <label>Description</label>
+                <input type="text" name="description" formControlName="description">
+            </div>
+            <div class="field">
+                <label>Profession</label>
+                <input type="text" name="shipping[last-name]" placeholder="Profession">
+            </div>
+            <div class="field">
+                <label>Address</label>
+                <input type="text" name="shipping[last-name]" placeholder="Address">
+            </div>
+            <div class="field">
+                <label>Phones</label>
+                <input type="text" name="shipping[last-name]" placeholder="Phones">
+            </div>
+            <div class="field">
+                <label>Person in charge</label>
+                <input type="text" name="shipping[last-name]" placeholder="Person in charge">
+            </div>
         </div>
-        <div class='field-wrapper'>
-            <label for="taxOffice">Tax office</label>
-            <select id="taxOffice" class="form-control" formControlName='taxOfficeId'>
-                <option value="">Select</option>
-                <option *ngFor='let taxOffice of taxOffices' value='{{ taxOffice.id }}'>{{ taxOffice.description }}</option>
-            </select>
+        <div id="right">
+            <div class="field">
+                <label>Email</label>
+                <input type="text" name="shipping[last-name]" placeholder="Email">
+            </div>
+            <div class="field">
+                <label>Tax number</label>
+                <input type="text" name="shipping[last-name]" placeholder="Tax number">
+            </div>
+            <div class="field">
+                <label>Account code</label>
+                <input type="text" name="shipping[last-name]" placeholder="Account code">
+            </div>
+            <div class="field">
+                <label>Tax office</label>
+                <select id="taxOffice" class="form-control" formControlName='taxOfficeId'>
+                    <option value="">Select</option>
+                    <option *ngFor='let taxOffice of taxOffices' value='{{ taxOffice.id }}'>{{ taxOffice.description }}</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>VAT regime</label>
+                <select id="vatState" class="form-control" formControlName='vatStateId'>
+                    <option value="">Select</option>
+                    <option *ngFor='let vatState of vatStates' value='{{ vatState.id }}'>{{ vatState.description }}</option>
+                </select>
+            </div>
         </div>
-        <div class='field-wrapper'>
-            <label for="vatState">VAT state</label>
-            <select id="vatState" class="form-control" formControlName='vatStateId'>
-                <option value="">Select</option>
-                <option *ngFor='let vatState of vatStates' value='{{ vatState.id }}'>{{ vatState.description }}</option>
-            </select>
-        </div>
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Profession' formControlName='profession'>
-            </mat-form-field>
-        </div>
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Address' formControlName='address'>
-            </mat-form-field>
-        </div>
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Phones' formControlName='phones'>
-            </mat-form-field>
-        </div>
-    </div>
+    </form>
+</div>
 
-    <div id="section-two">
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Person in charge' formControlName='personInCharge'>
-            </mat-form-field>
-        </div>
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Email' formControlName='email'>
-            </mat-form-field>
-        </div>
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Tax No' formControlName='taxNo'>
-            </mat-form-field>
-        </div>
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Account code' formControlName='accountCode'>
-            </mat-form-field>
-        </div>
-    </div>
-
-    <div id='footer'>
-        <div class='button-wrapper'>
-            <button type='button' mat-button (click)='goBack()'>Back</button>
-            <button type='button' mat-button color='warn' (click)='delete()' [class.hidden]='id == null'>Delete</button>
-            <button type='button' mat-raised-button color='primary' (click)='save()'>Save</button>
-        </div>
-    </div>
-
-</form>
+<div id="footer">
+    <button class="ui button">Exit</button>
+    <button class="ui button" id="save">Save</button>
+</div>

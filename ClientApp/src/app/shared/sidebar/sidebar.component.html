@@ -1,0 +1,29 @@
+<div id="sidebar">
+	<div id="userInfo">
+		<div *ngIf='this.service.isLoggedIn() && !this.service.isTokenExpired()'>Hello, {{ userName() }}</div>
+		<div *ngIf='!this.service.isLoggedIn() || this.service.isTokenExpired()'>You are not connected</div>
+	</div>
+	<div id="logo">
+		<h1>People</h1>
+		<h2>movers</h2>
+	</div>
+	<div id="image">
+		<img src="Round.svg">
+	</div>
+	<div id="menu">
+		<ul>
+			<li [routerLink]='["/customers"]'>Customers</li>
+			<li [routerLink]='["/destinations"]'>Destinations</li>
+			<li [routerLink]='["/pickuppoints/"]'>Pickup points</li>
+			<li [routerLink]='["/routes/"]'>Routes</li>
+			<li [routerLink]='["/taxOffices/"]'>Tax Offices</li>
+			<li [routerLink]='["/transferTypes/"]'>Transfer types</li>
+			<li [routerLink]='["/vatStates/"]'>VAT Regimes</li>
+			<li [routerLink]='["/transactions/"]'>Transactions</li>
+			<li [routerLink]='["/reports"]'>Reports</li>
+			<li [routerLink]='["/login"]'>Login</li>
+			<li [routerLink]='["/logout"]'>Logout</li>
+		</ul>
+	</div>
+	<div id="copyright">Created with .NET Core<br />and Angular</div>
+</div>

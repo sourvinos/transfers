@@ -10,10 +10,36 @@ form {
     height: 100%;
 }
 
+#header {
+    align-items: center;
+    display: grid;
+    grid-area: "header";
+    grid-template-columns: 1fr;
+    margin: 0 2rem 2rem 2rem;
+}
+
 #section-one {
-    grid-area: 'section-one'
+    grid-area: "section-one"
 }
 
 #section-two {
-    grid-area: 'section-two'
+    grid-area: "section-two"
+}
+
+#footer {
+    grid-area: "footer";
+    margin: 2rem 2rem 0 2rem;
+    text-align: right;
+}
+
+h2 {
+    color: #D67474;
+    font-family: "Orbitron";
+    font-weight: bold;
+}
+
+button.ui.button#save {
+    color: #ffffff !important;
+    background-color: #D67474 !important;
+    margin: 0;
 }
