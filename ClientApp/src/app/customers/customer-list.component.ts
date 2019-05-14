@@ -4,7 +4,6 @@ import { get } from 'scriptjs';
 import { CustomerService } from '../services/customer.service';
 import { ICustomer } from '../models/customer';
 import { Utils } from '../shared/classes/utils';
-import { $ } from 'protractor';
 
 @Component({
     selector: 'app-customer-list',

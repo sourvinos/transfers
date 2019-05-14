@@ -1,7 +1,6 @@
-<!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
-
 <div id="header">
     <h2>Customer</h2>
+    <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
     <div class="ui divider"></div>
 </div>
 
@@ -11,36 +10,61 @@
             <div class="field">
                 <label>Description</label>
                 <input type="text" name="description" formControlName="description">
+                <div *ngIf='description.invalid && description.touched'>
+                    <small *ngIf='description.errors?.required' class='text-danger'>{{ getRequiredFieldMessage() }}</small>
+                    <small *ngIf='description.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
+                </div>
             </div>
             <div class="field">
                 <label>Profession</label>
-                <input type="text" name="shipping[last-name]" placeholder="Profession">
+                <input type="text" name="profession" formControlName="profession">
+                <div *ngIf='profession.invalid && profession.touched'>
+                    <small *ngIf='profession.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
+                </div>
             </div>
             <div class="field">
                 <label>Address</label>
-                <input type="text" name="shipping[last-name]" placeholder="Address">
+                <input type="text" name="address" formControlName="address">
+                <div *ngIf='address.invalid && address.touched'>
+                    <small *ngIf='address.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
+                </div>
             </div>
             <div class="field">
                 <label>Phones</label>
-                <input type="text" name="shipping[last-name]" placeholder="Phones">
+                <input type="text" name="phones" formControlName="phones">
+                <div *ngIf='phones.invalid && phones.touched'>
+                    <small *ngIf='phones.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
+                </div>
             </div>
             <div class="field">
                 <label>Person in charge</label>
-                <input type="text" name="shipping[last-name]" placeholder="Person in charge">
+                <input type="text" name="personInCharge" formControlName="personInCharge">
+                <div *ngIf='personInCharge.invalid && personInCharge.touched'>
+                    <small *ngIf='personInCharge.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
+                </div>
             </div>
         </div>
         <div id="right">
             <div class="field">
                 <label>Email</label>
-                <input type="text" name="shipping[last-name]" placeholder="Email">
+                <input type="text" name="email" formControlName="email">
+                <div *ngIf='email.invalid && email.touched'>
+                    <small *ngIf='email.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
+                </div>
             </div>
             <div class="field">
                 <label>Tax number</label>
-                <input type="text" name="shipping[last-name]" placeholder="Tax number">
+                <input type="text" name="taxNo" formControlName="taxNo">
+                <div *ngIf='taxNo.invalid && taxNo.touched'>
+                    <small *ngIf='taxNo.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
+                </div>
             </div>
             <div class="field">
                 <label>Account code</label>
-                <input type="text" name="shipping[last-name]" placeholder="Account code">
+                <input type="text" name="accountCode" formControlName="accountCode">
+                <div *ngIf='accountCode.invalid && accountCode.touched'>
+                    <small *ngIf='accountCode.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
+                </div>
             </div>
             <div class="field">
                 <label>Tax office</label>
@@ -48,6 +72,9 @@
                     <option value="">Select</option>
                     <option *ngFor='let taxOffice of taxOffices' value='{{ taxOffice.id }}'>{{ taxOffice.description }}</option>
                 </select>
+                <div *ngIf='taxOfficeId.invalid && taxOfficeId.touched'>
+                    <small *ngIf='taxOfficeId.errors?.required' class='text-danger'>{{ getRequiredFieldMessage() }}</small>
+                </div>
             </div>
             <div class="field">
                 <label>VAT regime</label>
@@ -55,6 +82,9 @@
                     <option value="">Select</option>
                     <option *ngFor='let vatState of vatStates' value='{{ vatState.id }}'>{{ vatState.description }}</option>
                 </select>
+                <div *ngIf='vatStateId.invalid && vatStateId.touched'>
+                    <small *ngIf='vatStateId.errors?.required' class='text-danger'>{{ getRequiredFieldMessage() }}</small>
+                </div>
             </div>
         </div>
     </form>
@@ -63,5 +93,5 @@
 <div id="footer">
     <div class="ui divider"></div>
     <button class="ui button" [routerLink]="['/customers']">Exit</button>
-    <button class="ui button" id="save">Save</button>
+    <button class="ui button" id="save" (click)="save()">Save</button>
 </div>

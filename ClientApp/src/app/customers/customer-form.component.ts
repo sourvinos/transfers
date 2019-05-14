@@ -13,7 +13,7 @@ import { VatStateService } from '../services/vatState.service';
 @Component({
     selector: 'app-customer-form',
     templateUrl: './customer-form.component.html',
-    styleUrls: ['./customer-form.component.css', '../shared/styles/input-forms.css']
+    styleUrls: ['./customer-form.component.css']
 })
 
 export class CustomerFormComponent implements OnInit {
@@ -41,16 +41,16 @@ export class CustomerFormComponent implements OnInit {
 
     form = this.formBuilder.group({
         id: 0,
-        description: ['', Validators.required],
-        profession: [''],
+        description: ['', [Validators.required, Validators.maxLength(100)]],
+        profession: ['', [Validators.maxLength(100)]],
         taxOfficeId: ['', Validators.required],
         vatStateId: ['', Validators.required],
-        address: [''],
-        phones: [''],
-        personInCharge: [''],
-        email: [''],
-        taxNo: [''],
-        accountCode: [''],
+        address: ['', [Validators.maxLength(100)]],
+        phones: ['', [Validators.maxLength(100)]],
+        personInCharge: ['', [Validators.maxLength(100)]],
+        email: ['', [Validators.maxLength(100)]],
+        taxNo: ['', [Validators.maxLength(100)]],
+        accountCode: ['', [Validators.maxLength(100)]],
         user: ['']
     })
 
@@ -109,6 +109,40 @@ export class CustomerFormComponent implements OnInit {
         return this.form.get('description');
     }
 
+    get profession() {
+        return this.form.get('profession');
+    }
+
+    get address() {
+        return this.form.get('address');
+    }
+
+    get phones() {
+        return this.form.get('phones');
+    }
+    get personInCharge() {
+        return this.form.get('personInCharge');
+    }
+
+    get email() {
+        return this.form.get('email');
+    }
+
+    get taxNo() {
+        return this.form.get('taxNo');
+    }
+    get accountCode() {
+        return this.form.get('accountCode');
+    }
+
+    get taxOfficeId() {
+        return this.form.get('taxOfficeId');
+    }
+
+    get vatStateId() {
+        return this.form.get('vatStateId');
+    }
+
     getRequiredFieldMessage() {
         return 'This field is required, silly!';
     }
@@ -117,7 +151,14 @@ export class CustomerFormComponent implements OnInit {
         return 'This field must not be longer than '
     }
 
+    getValidationPassMessage() {
+        return 'This field is valid'
+    }
+
+
+
     save() {
+        if (!this.form.valid) return
         if (this.id == null) {
             this.customerService.addCustomer(this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error));
         } else {

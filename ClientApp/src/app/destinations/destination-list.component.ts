@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { get } from 'scriptjs';
+
 import { DestinationService } from '../services/destination.service';
 import { IDestination } from '../models/destination';
 import { Utils } from '../shared/classes/utils';
@@ -6,7 +8,7 @@ import { Utils } from '../shared/classes/utils';
 @Component({
     selector: 'destination-list',
     templateUrl: './destination-list.component.html',
-    styleUrls: ['../shared/styles/lists.css']
+    styleUrls: ['./destination-list.component.css']
 })
 
 export class DestinationListComponent implements OnInit {
@@ -16,10 +18,14 @@ export class DestinationListComponent implements OnInit {
 
     constructor(private service: DestinationService) { }
 
+    triggerEvent(elem, event) {
+        var clickEvent = new Event(event);
+        elem.dispatchEvent(clickEvent);
+    }
+
     ngOnInit() {
-        this.service.getDestinations().subscribe(data => {
-            this.filteredDestinations = this.destinations = data
-        }, error => Utils.ErrorLogger(error));
+        get('script.js', () => { });
+        this.service.getDestinations().subscribe(data => { this.filteredDestinations = this.destinations = data }, error => Utils.ErrorLogger(error));
     }
 
     filter(query: string) {

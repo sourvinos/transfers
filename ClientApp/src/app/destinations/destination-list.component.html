@@ -1,20 +1,29 @@
-<div id='main-header'>
-    <h1>Destinations</h1>
-    <div id='search-box'>
-        <input type='text' id='search-box' placeholder='Search...' #query (keyup)='filter(query.value)' autocomplete='off'>
+<div id="header">
+    <h2>Destinations</h2>
+    <div class="ui divider"></div>
+    <div id="search-box">
+        <div class="ui icon input">
+            <i class="search icon"></i>
+            <input type="text" placeholder="Search..." #query (keyup)="filter(query.value)" autocomplete="off">
+        </div>
     </div>
 </div>
 
-<div id='main-body'>
-    <ul>
-        <li>1</li>
-        <li>2</li>
-    </ul>
-    <ul>
-        <li *ngFor='let destination of filteredDestinations' routerLink='/destinations/{{ destination.id}}'>{{ destination.description }}</li>
-    </ul>
+<div id="content">
+    <table class="ui selectable sortable fixed table">
+        <thead>
+            <tr>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let destination of filteredDestinations" routerLink="/destinations/{{ destination.id}}">
+                <td>{{ destination.description}}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
-<div id='main-footer'>
-    <button [routerLink]='["/destinations/new"]'>New</button>
+<div id="footer">
+    <button class="ui button" id="new" [routerLink]="['/destinations/new']">New</button>
 </div>

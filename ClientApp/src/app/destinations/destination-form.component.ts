@@ -1,15 +1,17 @@
-import { IDestination } from './../models/destination';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
+import { get } from 'scriptjs';
 
-import { DestinationService } from '../services/destination.service';
+import { IDestination } from './../models/destination';
 import { Utils } from '../shared/classes/utils';
+import { DestinationService } from '../services/destination.service';
 
 @Component({
     selector: 'app-destination-form',
     templateUrl: './destination-form.component.html',
-    styleUrls: ['./destination-form.component.css', '../shared/styles/input-forms.css']
+    styleUrls: ['./destination-form.component.css']
 })
 
 export class DestinationFormComponent implements OnInit {
@@ -26,30 +28,36 @@ export class DestinationFormComponent implements OnInit {
 
     form = this.formBuilder.group({
         id: '0',
-        shortDescription: [''],
+        shortDescription: ['', [Validators.maxLength(100)]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
         user: ['']
     })
 
-    constructor(private service: DestinationService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private destinationService: DestinationService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
     ngOnInit() {
+        let sources = []
+        get('script.js', () => { })
         if (this.id) {
-            this.subHeader = 'Edit'
-            this.service.getDestination(this.id).subscribe(result => {
-                this.populateFields()
-            }, error => {
+            sources.push(this.destinationService.getDestination(this.id))
+        }
+        return forkJoin(sources).subscribe(
+            result => {
+                if (this.id) {
+                    this.populateFields()
+                }
+            },
+            error => {
                 if (error.status == 404) {
                     this.router.navigate(['/error'])
                 }
-            });
-        }
+            })
     }
 
     populateFields() {
-        this.service.getDestination(this.id).subscribe(
+        this.destinationService.getDestination(this.id).subscribe(
             result => {
                 this.form.setValue({
                     id: result.id,
@@ -61,6 +69,10 @@ export class DestinationFormComponent implements OnInit {
             error => {
                 Utils.ErrorLogger(error);
             });;
+    }
+
+    get shortDescription() {
+        return this.form.get('shortDescription');
     }
 
     get description() {
@@ -78,22 +90,17 @@ export class DestinationFormComponent implements OnInit {
     save() {
         if (!this.form.valid) return
         if (this.id == null) {
-            this.service.addDestination(this.form.value).subscribe(data => {
-                this.router.navigate(['/destinations'])
-            }, error => Utils.ErrorLogger(error));
+            this.destinationService.addDestination(this.form.value).subscribe(data => this.router.navigate(['/destinations']), error => Utils.ErrorLogger(error));
         }
         else {
-            if (this.id != null)
-                this.service.updateDestination(this.id, this.form.value).subscribe(data => {
-                    this.router.navigate(['/destinations'])
-                }, error => Utils.ErrorLogger(error));
+            this.destinationService.updateDestination(this.id, this.form.value).subscribe(data => this.router.navigate(['/destinations']), error => Utils.ErrorLogger(error));
         }
     }
 
     delete() {
         if (this.id != null) {
             if (confirm('Please confirm')) {
-                this.service.deleteDestination(this.id).subscribe(data => {
+                this.destinationService.deleteDestination(this.id).subscribe(data => {
                     this.router.navigate(['/destinations'])
                 }, error => Utils.ErrorLogger(error));
             }

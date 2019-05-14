@@ -1,27 +1,33 @@
-<div id="main-content">
+<div id="header">
+    <h2>Destination</h2>
+    <p>{{ form.value | json }} {{ form.valid }}</p>
+    <div class="ui divider"></div>
+</div>
 
-    <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
-
-    <div id="header">
-        <h1>Destination</h1>
-    </div>
-
-    <div id="main">
-        <form [formGroup]='form' class="ui form" autocomplete='off'>
+<div id="content">
+    <form [formGroup]='form' class="ui form" autocomplete='off'>
+        <div id="left">
             <div class="field">
                 <label>Abbreviation</label>
-                <input type="text" placeholder='Abbreviation' formControlName='shortDescription' required>
+                <input type="text" name="shortDescription" formControlName="shortDescription">
+                <div *ngIf='shortDescription.invalid && shortDescription.touched'>
+                    <small *ngIf='shortDescription.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
+                </div>
             </div>
             <div class="field">
                 <label>Description</label>
-                <input type="text" placeholder='Description' formControlName='description' required>
+                <input type="text" name="description" formControlName="description">
+                <div *ngIf='description.invalid && description.touched'>
+                    <small *ngIf='description.errors?.required' class='text-danger'>{{ getRequiredFieldMessage() }}</small>
+                    <small *ngIf='description.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 
-    <div id="footer">
-        <button class="ui button" (click)="delete()" [class.hidden]='id == null'>Save</button>
-        <button class="ui button" (click)="save()">Save</button>
-    </div>
-
+<div id="footer">
+    <div class="ui divider"></div>
+    <button class="ui button" [routerLink]="['/destinations']">Exit</button>
+    <button class="ui button" id="save" (click)="save()">Save</button>
 </div>
