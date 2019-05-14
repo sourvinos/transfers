@@ -27,7 +27,6 @@ export class DestinationService {
 	}
 
 	updateDestination(id: number, formData: IDestination): Observable<IDestination> {
-		console.log("Updating" + formData)
 		return this.http.put<IDestination>(this.url + '/' + id, formData);
 	}
 

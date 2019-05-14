@@ -19,7 +19,6 @@ export class DestinationListComponent implements OnInit {
     ngOnInit() {
         this.service.getDestinations().subscribe(data => {
             this.filteredDestinations = this.destinations = data
-            console.log(this.filteredDestinations)
         }, error => Utils.ErrorLogger(error));
     }
 

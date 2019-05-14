@@ -27,7 +27,6 @@ export class RouteService {
     }
 
     updateRoute(RouteId: number, formData: IRoute): Observable<IRoute> {
-        console.log("Updating" + formData)
         return this.http.put<IRoute>(this.url + '/' + RouteId, formData);
     }
 

@@ -2,9 +2,10 @@
 
 <div id="header">
     <h2>Customer</h2>
+    <div class="ui divider"></div>
 </div>
 
-<div id="main">
+<div id="content">
     <form [formGroup]='form' class="ui form" autocomplete='off'>
         <div id="left">
             <div class="field">
@@ -60,6 +61,7 @@
 </div>
 
 <div id="footer">
-    <button class="ui button">Exit</button>
+    <div class="ui divider"></div>
+    <button class="ui button" [routerLink]="['/customers']">Exit</button>
     <button class="ui button" id="save">Save</button>
 </div>

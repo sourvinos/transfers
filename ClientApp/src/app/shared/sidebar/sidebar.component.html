@@ -11,7 +11,7 @@
 		<img src="Round.svg">
 	</div>
 	<div id="menu">
-		<ul>
+		<ul id="menuItems" (click)="closeSidebar()">
 			<li [routerLink]='["/customers"]'>Customers</li>
 			<li [routerLink]='["/destinations"]'>Destinations</li>
 			<li [routerLink]='["/pickuppoints/"]'>Pickup points</li>

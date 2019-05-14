@@ -1,5 +1,5 @@
 import { AuthService } from '../../services/auth.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'sidebar',
@@ -8,7 +8,14 @@ import { Component } from '@angular/core';
 })
 
 export class SidebarComponent {
+
     constructor(private service: AuthService) { }
+
+    triggerEvent(elem: HTMLElement, event: string) {
+        let clickEvent = new Event(event);
+
+        elem.dispatchEvent(clickEvent);
+    }
 
     isLoggedIn(): boolean {
         return this.service.isLoggedIn();
@@ -25,4 +32,11 @@ export class SidebarComponent {
         return userName;
     }
 
+    closeSidebar() {
+        var slide = document.getElementById("slide");
+
+        if (slide.className == "open") {
+            this.triggerEvent(slide, "click");
+        };
+    }
 }

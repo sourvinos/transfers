@@ -2,12 +2,10 @@
     display: grid;
 }
 
-#main {
-    padding: 2rem;
-}
-
 #slide {
     position: absolute;
+    margin-left: 2rem;
+    top: 23px;
 }
 
 #slide span {

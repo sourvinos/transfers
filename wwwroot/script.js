@@ -1,2 +1,2 @@
-$('.selection.dropdown').dropdown()
-$('table').tablesort()
+$(".selection.dropdown").dropdown()
+$("table").tablesort()
