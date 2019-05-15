@@ -1,5 +1,8 @@
 <div id="header">
-    <h2>Customers</h2>
+    <div>
+        <h2>Customers</h2>
+        <div id="close" [routerLink]="['/']">X</div>
+    </div>
     <div class="ui divider"></div>
     <div id="search-box">
         <div class="ui icon input">
@@ -29,5 +32,7 @@
 </div>
 
 <div id="footer">
-    <button class="ui button" id="new" [routerLink]="['/customers/new']">New</button>
+    <div id="buttons">
+        <button class="ui button" id="new" [routerLink]="['/customers/new']">New</button>
+    </div>
 </div>

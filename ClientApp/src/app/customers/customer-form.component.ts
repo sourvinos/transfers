@@ -4,11 +4,11 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { get } from 'scriptjs';
 
-import { CustomerService } from '../services/customer.service';
 import { ICustomer } from '../models/customer';
+import { CustomerService } from '../services/customer.service';
 import { TaxOfficeService } from '../services/taxOffice.service';
-import { Utils } from '../shared/classes/utils';
 import { VatStateService } from '../services/vatState.service';
+import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'app-customer-form',
@@ -155,10 +155,7 @@ export class CustomerFormComponent implements OnInit {
         return 'This field is valid'
     }
 
-
-
     save() {
-        if (!this.form.valid) return
         if (this.id == null) {
             this.customerService.addCustomer(this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error));
         } else {
@@ -168,7 +165,7 @@ export class CustomerFormComponent implements OnInit {
 
     delete() {
         if (this.id != null) {
-            if (confirm('Please confirm')) {
+            if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.customerService.deleteCustomer(this.id).subscribe(data => {
                     this.router.navigate(['/customers'])
                 }, error => Utils.ErrorLogger(error));

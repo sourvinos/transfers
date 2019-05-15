@@ -1,90 +1,62 @@
 <div id="header">
-    <h2>Customer</h2>
-    <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
+    <div>
+        <h2>Customer</h2>
+        <div id="close" [routerLink]="['/customers']">X</div>
+        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
+    </div>
     <div class="ui divider"></div>
 </div>
 
 <div id="content">
     <form [formGroup]='form' class="ui form" autocomplete='off'>
         <div id="left">
-            <div class="field">
+            <div class="field" [class.error]="description.invalid && description.touched">
                 <label>Description</label>
-                <input type="text" name="description" formControlName="description">
-                <div *ngIf='description.invalid && description.touched'>
-                    <small *ngIf='description.errors?.required' class='text-danger'>{{ getRequiredFieldMessage() }}</small>
-                    <small *ngIf='description.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
-                </div>
+                <input type="text" formControlName="description">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="profession.invalid && profession.touched">
                 <label>Profession</label>
-                <input type="text" name="profession" formControlName="profession">
-                <div *ngIf='profession.invalid && profession.touched'>
-                    <small *ngIf='profession.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
-                </div>
+                <input type="text" formControlName="profession">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="address.invalid && address.touched">
                 <label>Address</label>
-                <input type="text" name="address" formControlName="address">
-                <div *ngIf='address.invalid && address.touched'>
-                    <small *ngIf='address.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
-                </div>
+                <input type="text" formControlName="address">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="phones.invalid && phones.touched">
                 <label>Phones</label>
-                <input type="text" name="phones" formControlName="phones">
-                <div *ngIf='phones.invalid && phones.touched'>
-                    <small *ngIf='phones.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
-                </div>
+                <input type="text" formControlName="phones">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="personInCharge.invalid && personInCharge.touched">
                 <label>Person in charge</label>
-                <input type="text" name="personInCharge" formControlName="personInCharge">
-                <div *ngIf='personInCharge.invalid && personInCharge.touched'>
-                    <small *ngIf='personInCharge.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
-                </div>
+                <input type="text" formControlName="personInCharge">
             </div>
         </div>
         <div id="right">
-            <div class="field">
+            <div class="field" [class.error]="email.invalid && email.touched">
                 <label>Email</label>
-                <input type="text" name="email" formControlName="email">
-                <div *ngIf='email.invalid && email.touched'>
-                    <small *ngIf='email.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
-                </div>
+                <input type="text" formControlName="email">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="taxNo.invalid && taxNo.touched">
                 <label>Tax number</label>
-                <input type="text" name="taxNo" formControlName="taxNo">
-                <div *ngIf='taxNo.invalid && taxNo.touched'>
-                    <small *ngIf='taxNo.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
-                </div>
+                <input type="text" formControlName="taxNo">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="accountCode.invalid && accountCode.touched">
                 <label>Account code</label>
-                <input type="text" name="accountCode" formControlName="accountCode">
-                <div *ngIf='accountCode.invalid && accountCode.touched'>
-                    <small *ngIf='accountCode.errors?.maxlength' class='text-danger'>{{ getMaxLengthFieldMessage() }}</small>
-                </div>
+                <input type="text" formControlName="accountCode">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="taxOfficeId.invalid && taxOfficeId.touched">
                 <label>Tax office</label>
                 <select id="taxOffice" class="form-control" formControlName='taxOfficeId'>
                     <option value="">Select</option>
                     <option *ngFor='let taxOffice of taxOffices' value='{{ taxOffice.id }}'>{{ taxOffice.description }}</option>
                 </select>
-                <div *ngIf='taxOfficeId.invalid && taxOfficeId.touched'>
-                    <small *ngIf='taxOfficeId.errors?.required' class='text-danger'>{{ getRequiredFieldMessage() }}</small>
-                </div>
             </div>
-            <div class="field">
+            <div class="field" [class.error]="vatStateId.invalid && vatStateId.touched">
                 <label>VAT regime</label>
                 <select id="vatState" class="form-control" formControlName='vatStateId'>
                     <option value="">Select</option>
                     <option *ngFor='let vatState of vatStates' value='{{ vatState.id }}'>{{ vatState.description }}</option>
                 </select>
-                <div *ngIf='vatStateId.invalid && vatStateId.touched'>
-                    <small *ngIf='vatStateId.errors?.required' class='text-danger'>{{ getRequiredFieldMessage() }}</small>
-                </div>
             </div>
         </div>
     </form>
@@ -92,6 +64,8 @@
 
 <div id="footer">
     <div class="ui divider"></div>
-    <button class="ui button" [routerLink]="['/customers']">Exit</button>
-    <button class="ui button" id="save" (click)="save()">Save</button>
+    <div id="buttons">
+        <button class="ui button blue" id="save" (click)="save()" [disabled]="!form.valid">Save</button>
+        <button class="ui button orange" id="delete" (click)="delete()" [hidden]="!form.value.id">Delete</button>
+    </div>
 </div>
