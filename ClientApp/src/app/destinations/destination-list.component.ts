@@ -18,11 +18,6 @@ export class DestinationListComponent implements OnInit {
 
     constructor(private service: DestinationService) { }
 
-    triggerEvent(elem, event) {
-        var clickEvent = new Event(event);
-        elem.dispatchEvent(clickEvent);
-    }
-
     ngOnInit() {
         get('script.js', () => { });
         this.service.getDestinations().subscribe(data => { this.filteredDestinations = this.destinations = data }, error => Utils.ErrorLogger(error));

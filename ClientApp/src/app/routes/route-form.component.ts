@@ -96,10 +96,9 @@ export class RouteFormComponent implements OnInit {
 
     delete() {
         if (this.id != null) {
-            if (confirm('Please confirm')) {
+            if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.service.deleteRoute(this.id).subscribe(data => {
                     this.router.navigate(['/routes'])
-
                 }, error => Utils.ErrorLogger(error));
             }
         }

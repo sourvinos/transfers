@@ -16,16 +16,16 @@
     <table class="ui selectable sortable fixed table">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Phones</th>
-                <th>Email</th>
+                <th class="center aligned eight wide">Name</th>
+                <th class="center aligned four wide">Phones</th>
+                <th class="center aligned four wide">Email</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let customer of filteredCustomers" routerLink="/customers/{{ customer.id}}">
-                <td>{{ customer.description}}</td>
-                <td>{{ customer.phones}}</td>
-                <td>{{ customer.email}}</td>
+            <tr *ngFor="let customer of filteredCustomers" routerLink="/customers/{{ customer.id }}">
+                <td>{{ customer.description }}</td>
+                <td>{{ customer.phones }}</td>
+                <td>{{ customer.email }}</td>
             </tr>
         </tbody>
     </table>

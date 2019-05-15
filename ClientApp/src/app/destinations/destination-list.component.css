@@ -16,9 +16,34 @@
 }
 
 /*  */
+#header div {
+    display: flex;
+    justify-content: space-between;
+}
+
+/*  */
+#close {
+    color: #939393;
+    cursor: pointer;
+    font-family: "Play";
+    font-size: 2.2rem;
+    font-weight: bold;
+    line-height: 8px;
+    margin-right: 0.2rem;
+    outline: 0;
+    padding: 0.6rem;
+}
+
+/*  */
+#close:hover {
+    color: #D67474;
+}
+
+/*  */
 #header #search-box {
-    text-align: end;
-    margin-bottom: 2rem;
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 1rem 2rem 0;
 }
 
 /*  */
@@ -35,6 +60,11 @@
     grid-area: "footer";
     margin: 2rem;
     text-align: right;
+}
+
+/*  */
+#footer #buttons {
+    margin-right: 1rem;
 }
 
 /*  */

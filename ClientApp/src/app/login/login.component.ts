@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MessageDialogComponent } from '../shared/components/message-dialog/message-dialog.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 

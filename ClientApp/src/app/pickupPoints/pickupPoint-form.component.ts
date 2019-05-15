@@ -10,7 +10,7 @@ import { Utils } from '../shared/classes/utils';
 @Component({
     selector: 'pickupPoint-customer-form',
     templateUrl: './pickupPoint-form.component.html',
-    styleUrls: ['./pickupPoint-form.component.css', '../shared/styles/input-forms.css']
+    styleUrls: ['./pickupPoint-form.component.css']
 })
 
 export class PickupPointFormComponent implements OnInit {
@@ -32,9 +32,9 @@ export class PickupPointFormComponent implements OnInit {
     form = this.formBuilder.group({
         id: 0,
         routeId: 0,
-        description: ['', [Validators.required, Validators.maxLength(50)]],
-        exactPoint: ['', [Validators.required]],
-        time: ['', [Validators.required, Validators.maxLength(5)]],
+        description: ['', [Validators.required, Validators.maxLength(100)]],
+        exactPoint: ['', [Validators.maxLength(100)]],
+        time: ['', [Validators.required, Validators.pattern("[0-9][0-9]:[0-9][0-9]")]],
         user: ['']
     })
 
@@ -45,7 +45,6 @@ export class PickupPointFormComponent implements OnInit {
     ngOnInit() {
         let sources = [this.service.getRoutes()]
         if (this.id) {
-            this.subHeader = 'Edit'
             sources.push(this.service.getPickupPoint(this.id))
         }
         return forkJoin(sources).subscribe(
@@ -85,8 +84,16 @@ export class PickupPointFormComponent implements OnInit {
             });;
     }
 
+    get routeId() {
+        return this.form.get('routeId');
+    }
+
     get description() {
         return this.form.get('description');
+    }
+
+    get exactPoint() {
+        return this.form.get('exactPoint');
     }
 
     get time() {
@@ -115,9 +122,9 @@ export class PickupPointFormComponent implements OnInit {
     }
 
     delete() {
-        if (this.pickupPoint.id != null) {
-            if (confirm('Please confirm')) {
-                this.service.deletePickupPoint(this.pickupPoint.id).subscribe(data => {
+        if (this.id != null) {
+            if (confirm('This record will permanently be deleted. Are you sure?')) {
+                this.service.deletePickupPoint(this.id).subscribe(data => {
                     this.router.navigate(['/pickuppoints'])
                 }, error => Utils.ErrorLogger(error));
             }

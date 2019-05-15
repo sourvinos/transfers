@@ -18,11 +18,6 @@ export class CustomerListComponent implements OnInit {
 
     constructor(private service: CustomerService) { }
 
-    triggerEvent(elem, event) {
-        var clickEvent = new Event(event);
-        elem.dispatchEvent(clickEvent);
-    }
-
     ngOnInit() {
         get('script.js', () => { });
         this.service.getCustomers().subscribe(data => this.filteredCustomers = this.customers = data, error => Utils.ErrorLogger(error));

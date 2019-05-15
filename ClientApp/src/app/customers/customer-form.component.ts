@@ -60,7 +60,6 @@ export class CustomerFormComponent implements OnInit {
 
     ngOnInit() {
         let sources = []
-        get('script.js', () => { })
         sources.push(this.taxOfficeService.getTaxOffices())
         sources.push(this.vatStateService.getVatStates())
         if (this.id) {
@@ -120,6 +119,7 @@ export class CustomerFormComponent implements OnInit {
     get phones() {
         return this.form.get('phones');
     }
+
     get personInCharge() {
         return this.form.get('personInCharge');
     }
@@ -131,6 +131,7 @@ export class CustomerFormComponent implements OnInit {
     get taxNo() {
         return this.form.get('taxNo');
     }
+
     get accountCode() {
         return this.form.get('accountCode');
     }
@@ -149,10 +150,6 @@ export class CustomerFormComponent implements OnInit {
 
     getMaxLengthFieldMessage() {
         return 'This field must not be longer than '
-    }
-
-    getValidationPassMessage() {
-        return 'This field is valid'
     }
 
     save() {

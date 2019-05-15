@@ -1,44 +1,102 @@
- #main-content {
-     background-color: #ffffff;
-     display: grid;
-     grid-template-areas:
-         "header"
-         "main"
-         "footer";
-     grid-template-rows: min-content auto min-content;
-     justify-content: center;
-     max-width: 61.25rem;
-     height: 100%;
- }
+/*  */
+:host {
+    display: grid;
+    grid-template-areas:
+        "header"
+        "content"
+        "footer";
+    grid-template-rows: max-content 1fr max-content;
+    height: 100%;
+}
 
- #header {
-     margin-bottom: 2rem;
- }
+/*  */
+#header {
+    grid-area: "header";
+    margin: 2rem 2rem 0 2rem;
+}
 
- #main {
-     justify-content: center;
-     margin: 0 auto;
- }
+#header div {
+    display: flex;
+    justify-content: space-between;
+}
 
- #footer {
-     justify-content: center;
-     margin-top: 2rem;
-     text-align: right;
- }
+#close {
+    color: #939393;
+    cursor: pointer;
+    font-family: "Play";
+    font-size: 2.2rem;
+    font-weight: bold;
+    line-height: 8px;
+    margin-right: 1rem;
+    outline: 0;
+    padding: 0.6rem;
+}
 
- h1 {
-     color: #c9c9c9;
-     font-family: "Orbitron";
-     font-weight: normal;
-     padding: 0;
- }
+#close:hover {
+    color: #D67474;
+}
 
- input {
-     width: 400px !important;
- }
+/*  */
+#content {
+    display: grid;
+    grid-area: "content";
+    justify-content: center;
+    margin: 0 2rem;
+}
 
- button {
-     background-color: #D67474 !important;
-     color: white !important;
-     margin: 0 !important;
- }
+/*  */
+#content form {
+    display: grid;
+    grid-gap: 0.625rem;
+    grid-template-areas:
+        "section-one section-two";
+    grid-template-columns: 1fr, 1fr;
+    height: 100%;
+}
+
+/*  */
+#footer {
+    grid-area: "footer";
+    margin: 0 2rem 2rem 2rem;
+    text-align: right;
+}
+
+#footer #buttons {
+    margin-right: 1rem;
+}
+
+/*  */
+.ui.divider {
+    margin: 2rem 0;
+}
+
+/*  */
+.field {
+    width: 400px;
+}
+
+/*  */
+h2 {
+    color: #D67474;
+    font-family: "Orbitron";
+    font-weight: bold;
+    height: 25px;
+}
+
+/*  */
+#section-one {
+    grid-area: "section-one"
+}
+
+/*  */
+#section-two {
+    grid-area: "section-two"
+}
+
+/*  */
+@media only screen and (max-width:1280px) {
+
+    h2 {
+        margin-left: 3rem !important;
+    }
+}

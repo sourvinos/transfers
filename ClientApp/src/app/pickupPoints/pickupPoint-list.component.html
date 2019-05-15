@@ -1,22 +1,40 @@
-<div id='main-header'>
-    <h1>Pickup Points</h1>
+<div id="header">
+    <div id="title">
+        <h2>Pickup points</h2>
+        <div id="close" [routerLink]="['/']">X</div>
+    </div>
+    <div class="ui divider"></div>
+    <div id="search-box">
+        <form class="ui form" autocomplete='off'>
+            <div class="field">
+                <select id="route" class="form-control" (change)="onRouteChange()" [(ngModel)]="pickupPoint.routeId" name="routeId" #route="ngModel" required>
+                    <option value="0">Select route</option>
+                    <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
+                </select>
+            </div>
+        </form>
+    </div>
 </div>
 
-<div id='main-body'>
-    <!-- Routes -->
-    <label for="route">Route</label>
-    <select id="route" class="form-control" (change)="onRouteChange()" [(ngModel)]="pickupPoint.routeId" name="routeId" #route="ngModel" required>
-        <option value="">Select</option>
-        <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
-    </select>
-    <!-- PickupPoints -->
-    <!-- <mat-nav-list>
-        <a mat-list-item *ngFor='let pickupPoint of pickupPoints' routerLink='/pickuppoints/{{ pickupPoint.id}}'>{{ pickupPoint.description }}</a>
-    </mat-nav-list> -->
+<div id="content">
+    <table class="ui selectable sortable fixed table">
+        <thead>
+            <tr>
+                <th class="center aligned">Description</th>
+                <th class="center aligned two wide">Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let pickupPoint of pickupPoints" routerLink="/pickuppoints/{{ pickupPoint.id }}">
+                <td>{{ pickupPoint.description }}</td>
+                <td class="center aligned">{{ pickupPoint.time }}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
-<div id='main-footer'>
-    <!-- <button mat-fab [routerLink]='["/pickuppoints/new"]'>
-        <mat-icon>add</mat-icon>
-    </button> -->
+<div id="footer">
+    <div id="buttons">
+        <button class="ui button" id="new" [routerLink]="['/pickuppoints/new']">New</button>
+    </div>
 </div>

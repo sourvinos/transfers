@@ -27,7 +27,7 @@ export class DestinationFormComponent implements OnInit {
     }
 
     form = this.formBuilder.group({
-        id: '0',
+        id: 0,
         shortDescription: ['', [Validators.maxLength(100)]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
         user: ['']
@@ -39,7 +39,6 @@ export class DestinationFormComponent implements OnInit {
 
     ngOnInit() {
         let sources = []
-        get('script.js', () => { })
         if (this.id) {
             sources.push(this.destinationService.getDestination(this.id))
         }

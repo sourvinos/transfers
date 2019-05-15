@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { get } from 'scriptjs';
 
-import { IRoute } from '../models/route';
 import { IPickupPoint } from '../models/pickupPoint';
 import { PickupPointService } from '../services/pickupPoint.service';
 import { Utils } from '../shared/classes/utils';
@@ -8,7 +8,7 @@ import { Utils } from '../shared/classes/utils';
 @Component({
     selector: 'pickupPoint-list',
     templateUrl: './pickupPoint-list.component.html',
-    styleUrls: ['../shared/styles/lists.css']
+    styleUrls: ['./pickupPoint-list.component.css']
 })
 
 export class PickupPointListComponent implements OnInit {
@@ -28,6 +28,7 @@ export class PickupPointListComponent implements OnInit {
     constructor(private service: PickupPointService) { }
 
     ngOnInit() {
+        get('script.js', () => { });
         this.service.getRoutes().subscribe(data => this.routes = data, error => Utils.ErrorLogger(error))
     }
 

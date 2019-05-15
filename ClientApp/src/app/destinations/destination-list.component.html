@@ -1,5 +1,8 @@
 <div id="header">
-    <h2>Destinations</h2>
+    <div>
+        <h2>Destinations</h2>
+        <div id="close" [routerLink]="['/']">X</div>
+    </div>
     <div class="ui divider"></div>
     <div id="search-box">
         <div class="ui icon input">
@@ -13,17 +16,19 @@
     <table class="ui selectable sortable fixed table">
         <thead>
             <tr>
-                <th>Description</th>
+                <th class="center aligned">Description</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let destination of filteredDestinations" routerLink="/destinations/{{ destination.id}}">
-                <td>{{ destination.description}}</td>
+            <tr *ngFor="let destination of filteredDestinations" routerLink="/destinations/{{ destination.id }}">
+                <td>{{ destination.description }}</td>
             </tr>
         </tbody>
     </table>
 </div>
 
 <div id="footer">
-    <button class="ui button" id="new" [routerLink]="['/destinations/new']">New</button>
+    <div id="buttons">
+        <button class="ui button" id="new" [routerLink]="['/destinations/new']">New</button>
+    </div>
 </div>

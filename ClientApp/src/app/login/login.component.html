@@ -1,24 +1,30 @@
-<div id="main-content">
-
-    <div id="header">
-        <h1>Login</h1>
+<div id="header">
+    <div>
+        <h2>Login</h2>
+        <div id="close" [routerLink]="['/']">X</div>
+        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
     </div>
+    <div class="ui divider"></div>
+</div>
 
-    <div id="main">
-        <form [formGroup]='form' class="ui form" autocomplete='off'>
-            <div class="field">
+<div id="content">
+    <form [formGroup]='form' class="ui form" autocomplete='on'>
+        <div id="left">
+            <div class="field" [class.error]="userName.invalid && userName.touched">
                 <label>Username</label>
-                <input type="text" placeholder='Username' formControlName='userName' required>
+                <input type="text" formControlName="userName">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="password.invalid && password.touched">
                 <label>Password</label>
-                <input type="password" placeholder='Password' formControlName='password' required>
+                <input type="password" formControlName="password">
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 
-    <div id="footer">
-        <button class="ui button" (click)="login()">Login</button>
+<div id="footer">
+    <div class="ui divider"></div>
+    <div id="buttons">
+        <button class="ui button blue" (click)="login()" [disabled]="!form.valid">Login</button>
     </div>
-
 </div>

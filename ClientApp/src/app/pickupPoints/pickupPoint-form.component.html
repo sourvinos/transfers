@@ -1,61 +1,42 @@
-<form [formGroup]='form' autocomplete='off'>
-
-    <!-- <div id='header'>
-        <h2>{{ subHeader }}</h2>
-        <h1>Pickup point</h1>
-        <p>{{ form.value | json }} {{ form.valid }}</p>
+<div id="header">
+    <div>
+        <h2>Pickup point</h2>
+        <div id="close" [routerLink]="['/pickuppoints']">X</div>
+        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
     </div>
+    <div class="ui divider"></div>
+</div>
 
-    <div id="section-one">
-
-        <div class="field">
-            <label>Route</label>
-            <div class="ui fluid search selection dropdown">
-                <input type="hidden" name="route">
-                <i class="dropdown icon"></i>
-                <div class="default text">Select...</div>
-                <div class="menu">
-                    <div class="item" *ngFor="let route of routes" data-value="{{ route.id }}">{{ route.description}}</div>
-                </div>
+<div id="content">
+    <form [formGroup]='form' class="ui form" autocomplete='off'>
+        <div id="left">
+            <div class="field" [class.error]="routeId.invalid && routeId.touched">
+                <label>Route</label>
+                <select id="route" class="form-control" formControlName='routeId'>
+                    <option value="">Select</option>
+                    <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
+                </select>
+            </div>
+            <div class="field" [class.error]="description.invalid && description.touched">
+                <label>Description</label>
+                <input type="text" formControlName="description">
+            </div>
+            <div class="field" [class.error]="exactPoint.invalid && exactPoint.touched">
+                <label>Exact point</label>
+                <input type="text" formControlName="exactPoint">
+            </div>
+            <div class="field" [class.error]="time.invalid && time.touched">
+                <label>Time</label>
+                <input type="text" formControlName="time">
             </div>
         </div>
-    </div>
+    </form>
+</div>
 
-    <div class='field-wrapper'>
-        <label for="route">Route</label>
-        <select id="route" class="form-control" formControlName='routeId'>
-            <option value="">Select</option>
-            <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
-        </select>
+<div id="footer">
+    <div class="ui divider"></div>
+    <div id="buttons">
+        <button class="ui button basic red" id="delete" (click)="delete()" [hidden]="!form.value.id">Delete</button>
+        <button class="ui button" id="save" (click)="save()" [disabled]="!form.valid">Save</button>
     </div>
-
-    <div class='field-wrapper'>
-        <mat-form-field>
-            <input matInput placeholder='Description' formControlName='description'>
-            <mat-error *ngIf='description.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
-            <mat-error *ngIf='description.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ description.errors.maxlength.requiredLength }} characters</mat-error>
-        </mat-form-field>
-    </div>
-    <div class='field-wrapper'>
-        <mat-form-field>
-            <input matInput placeholder='Exact point' formControlName='exactPoint'>
-        </mat-form-field>
-    </div>
-    <div class='field-wrapper'>
-        <mat-form-field>
-            <input matInput placeholder='Time' formControlName='time'>
-            <mat-error *ngIf='time.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
-            <mat-error *ngIf='time.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ time.errors.maxlength.requiredLength }} characters</mat-error>
-        </mat-form-field>
-    </div>
-    </div>
-
-    <div id='footer'>
-        <div class='button-wrapper'>
-            <button type='button' (click)='goBack()'>Back</button>
-            <button type='button' (click)='delete()' [class.hidden]='id == null'>Delete</button>
-            <button type='button' (click)='save()'>Save</button>
-        </div>
-    </div> -->
-
-</form>
+</div>
