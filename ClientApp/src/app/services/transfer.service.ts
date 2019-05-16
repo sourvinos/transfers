@@ -15,8 +15,8 @@ export class TransferService {
 
     constructor(private http: HttpClient) { }
 
-    getTransfers(): Observable<ITransfer[]> {
-        return this.http.get<ITransfer[]>(this.url);
+    getTransfers(customerId: number): Observable<ITransfer[]> {
+        return this.http.get<ITransfer[]>(this.url + "getFiltered" + customerId);
     }
 
     getTransfer(id: number): Observable<ITransfer> {

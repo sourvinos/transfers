@@ -15,10 +15,16 @@ export class TransferListComponent implements OnInit {
 
     transfers: ITransfer[];
 
+    customerId: number = 35;
+
     constructor(private service: TransferService) { }
 
     ngOnInit() {
-        this.service.getTransfers().subscribe(data => { this.transfers = data }, error => Utils.ErrorLogger(error));
+        get('script.js', () => { });
+        this.service.getTransfers(this.customerId).subscribe(data => {
+            console.log(data)
+            this.transfers = data
+        }, error => Utils.ErrorLogger(error));
     }
 
 }

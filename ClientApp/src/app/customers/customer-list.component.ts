@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { get } from 'scriptjs';
 
-import { CustomerService } from '../services/customer.service';
 import { ICustomer } from '../models/customer';
+import { CustomerService } from '../services/customer.service';
 import { Utils } from '../shared/classes/utils';
 
 @Component({

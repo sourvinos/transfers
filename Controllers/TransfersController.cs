@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +17,15 @@ namespace Transfers.Controllers
 			this.context = context;
 		}
 
-		[HttpGet]
-		public async Task<IEnumerable<Transfer>> Get()
+		[HttpGet("getFiltered")]
+		public async Task<IEnumerable<Transfer>> getFiltered(int customerId)
 		{
-			return await context.Transfers.Include(x => x.Customer).Where(x => x.CustomerId == 120).ToListAsync();
+			return await context.Transfers
+				.Include(x => x.Customer)
+				.Include(x => x.TransferType)
+				.Include(x => x.PickupPoint)
+				.Include(x => x.Destination)
+				.Where(x => x.CustomerId == customerId).ToListAsync();
 		}
 
 		[HttpGet("{id}")]

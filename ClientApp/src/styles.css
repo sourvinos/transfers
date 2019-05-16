@@ -18,7 +18,13 @@ select {
     height: 38px !important;
 }
 
-button#save {
+button#primary {
     background-color: #D67474;
+    border: 1px solid #D67474;
     color: #ffffff;
+}
+
+button#secondary {
+    background-color: #ffffff;
+    border: 1px solid #D67474;
 }
