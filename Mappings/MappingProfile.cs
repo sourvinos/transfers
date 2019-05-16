@@ -8,9 +8,19 @@ namespace Transfers.Mappings
 	{
 		public MappingProfile()
 		{
-			// From Domain To API
-			CreateMap<Customer, CustomerResource>()
-				.ForMember(cr => cr.TaxOffice, opt => opt.MapFrom(v => v.TaxOffice.Description));
+			CreateMap<Transfer, TransferResource>()
+				.ForMember(tr => tr.Customer, opt => opt.MapFrom(v => new CustomerResource { Description = v.Customer.Description }))
+				.ForMember(tr => tr.Destination, opt => opt.MapFrom(v => new DestinationResource { Description = v.Destination.Description }))
+				.ForMember(tr => tr.PickupPoint, opt => opt.MapFrom(v => new PickupPointResource
+				{
+					Description = v.PickupPoint.Description,
+					ExactPoint = v.PickupPoint.ExactPoint,
+					Time = v.PickupPoint.Time,
+					Route = new RouteResource
+					{
+						Description = v.PickupPoint.Route.Description
+					}
+				}));
 		}
 	}
 }

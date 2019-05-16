@@ -2,7 +2,7 @@ using Transfers.Models;
 
 namespace Transfers.Resources
 {
-	public class CustomerResource
+	public class RouteResource
 	{
 		public string Description { get; set; }
 	}
