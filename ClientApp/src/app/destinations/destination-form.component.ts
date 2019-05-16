@@ -2,22 +2,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
-import { get } from 'scriptjs';
 
 import { IDestination } from './../models/destination';
-import { Utils } from '../shared/classes/utils';
 import { DestinationService } from '../services/destination.service';
+import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'app-destination-form',
     templateUrl: './destination-form.component.html',
-    styleUrls: ['./destination-form.component.css']
+    styleUrls: ['../shared/styles/forms.css']
 })
 
 export class DestinationFormComponent implements OnInit {
 
     id: number = null;
-    subHeader: string = 'New';
 
     destination: IDestination = {
         id: null,
@@ -28,7 +26,7 @@ export class DestinationFormComponent implements OnInit {
 
     form = this.formBuilder.group({
         id: 0,
-        shortDescription: ['', [Validators.maxLength(100)]],
+        shortDescription: ['', [Validators.maxLength(5)]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
         user: ['']
     })
@@ -98,7 +96,7 @@ export class DestinationFormComponent implements OnInit {
 
     delete() {
         if (this.id != null) {
-            if (confirm('Please confirm')) {
+            if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.destinationService.deleteDestination(this.id).subscribe(data => {
                     this.router.navigate(['/destinations'])
                 }, error => Utils.ErrorLogger(error));

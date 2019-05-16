@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { get } from 'scriptjs';
 
 import { IRoute } from '../models/route';
 import { RouteService } from '../services/route.service';
@@ -18,6 +19,7 @@ export class RouteListComponent implements OnInit {
     constructor(private service: RouteService) { }
 
     ngOnInit() {
+        get('script.js', () => { });
         this.service.getRoutes().subscribe(data => this.filteredRoutes = this.coachRoutes = data, error => Utils.ErrorLogger(error));
     }
 

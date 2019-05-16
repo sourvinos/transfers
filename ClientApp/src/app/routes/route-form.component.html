@@ -1,34 +1,31 @@
-<form [formGroup]='form' autocomplete='off'>
-
-    <div id='header'>
-        <h2>{{ subHeader }}</h2>
-        <h1>Route</h1>
-        <p>{{ form.value | json }} {{ form.valid }}</p>
+<div id="header">
+    <div>
+        <h2>Route</h2>
+        <div id="close" [routerLink]="['/routes']">X</div>
+        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
     </div>
+    <div class="ui divider"></div>
+</div>
 
-    <!-- <div id="section-one">
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Short Description' formControlName='shortDescription'>
-                <mat-error *ngIf='shortDescription.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
-                <mat-error *ngIf='shortDescription.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ shortDescription.errors.maxlength.requiredLength }} characters</mat-error>
-            </mat-form-field>
+<div id="content">
+    <form [formGroup]='form' class="ui form" autocomplete='off'>
+        <div id="left">
+            <div class="field" [class.error]="shortDescription.invalid && shortDescription.touched">
+                <label>Abbreviation</label>
+                <input type="text" formControlName="shortDescription">
+            </div>
+            <div class="field" [class.error]="description.invalid && description.touched">
+                <label>Description</label>
+                <input type="text" formControlName="description">
+            </div>
         </div>
-        <div class='field-wrapper'>
-            <mat-form-field>
-                <input matInput placeholder='Description' formControlName='description'>
-                <mat-error *ngIf='description.errors?.required'>{{ getRequiredFieldMessage() }}</mat-error>
-                <mat-error *ngIf='description.errors?.maxlength'>{{ getMaxLengthFieldMessage() }} {{ description.errors.maxlength.requiredLength }} characters</mat-error>
-            </mat-form-field>
-        </div>
+    </form>
+</div>
+
+<div id="footer">
+    <div class="ui divider"></div>
+    <div id="buttons">
+        <button class="ui button basic red" id="delete" (click)="delete()" [hidden]="!form.value.id">Delete</button>
+        <button class="ui button" id="save" (click)="save()" [disabled]="!form.valid">Save</button>
     </div>
-
-    <div id='footer'>
-        <div class='button-wrapper'>
-            <button type='button' mat-button (click)='goBack()'>Back</button>
-            <button type='button' mat-button color='warn' (click)='delete()' [class.hidden]='id == null'>Delete</button>
-            <button type='button' mat-raised-button color='primary' (click)='save()'>Save</button>
-        </div>
-    </div> -->
-
-</form>
+</div>

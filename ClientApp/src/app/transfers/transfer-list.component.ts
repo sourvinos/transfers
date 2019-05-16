@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { get } from 'scriptjs';
 
 import { ITransfer } from './../models/transfer';
 import { TransferService } from '../services/transfer.service';

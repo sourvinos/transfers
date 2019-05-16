@@ -5,14 +5,12 @@
     </div>
     <div class="ui divider"></div>
     <div id="search-box">
-        <form class="ui form" autocomplete='off'>
-            <div class="field">
-                <select id="route" class="form-control" (change)="onRouteChange()" [(ngModel)]="pickupPoint.routeId" name="routeId" #route="ngModel" required>
-                    <option value="0">Select route</option>
-                    <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
-                </select>
-            </div>
-        </form>
+        <div class="field">
+            <select id="route" class="form-control" (change)="onRouteChange()" [(ngModel)]="pickupPoint.routeId" name="routeId" #route="ngModel" required>
+                <option value="0">Select route</option>
+                <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
+            </select>
+        </div>
     </div>
 </div>
 

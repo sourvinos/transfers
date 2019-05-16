@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { get } from 'scriptjs';
 
-import { DestinationService } from '../services/destination.service';
 import { IDestination } from '../models/destination';
+import { DestinationService } from '../services/destination.service';
 import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'destination-list',
     templateUrl: './destination-list.component.html',
-    styleUrls: ['./destination-list.component.css']
+    styleUrls: ['../shared/styles/lists.css']
 })
 
 export class DestinationListComponent implements OnInit {

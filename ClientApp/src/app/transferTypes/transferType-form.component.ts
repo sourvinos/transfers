@@ -1,21 +1,21 @@
-import { ITransferType } from './../models/transferType';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
-import { Utils } from '../shared/classes/utils';
+
+import { ITransferType } from './../models/transferType';
 import { TransferTypeService } from '../services/transferType.service';
+import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'app-transferType-form',
     templateUrl: './transferType-form.component.html',
-    styleUrls: ['./transferType-form.component.css', '../shared/styles/input-forms.css']
+    styleUrls: ['../shared/styles/forms.css']
 })
 
 export class TransferTypeFormComponent implements OnInit {
 
     id: number = null;
-    subHeader: string = 'New';
 
     transferType: ITransferType = {
         id: null,
@@ -24,7 +24,7 @@ export class TransferTypeFormComponent implements OnInit {
     }
 
     form = this.formBuilder.group({
-        id: '0',
+        id: 0,
         description: ['', [Validators.required, Validators.maxLength(100)]],
         user: ['']
     })
@@ -35,7 +35,6 @@ export class TransferTypeFormComponent implements OnInit {
 
     ngOnInit() {
         if (this.id) {
-            this.subHeader = 'Edit'
             this.service.getTransferType(this.id).subscribe(result => {
                 this.populateFields()
             }, error => {
@@ -75,24 +74,18 @@ export class TransferTypeFormComponent implements OnInit {
     save() {
         if (!this.form.valid) return
         if (this.id == null) {
-            this.service.addTransferType(this.form.value).subscribe(data => {
-                this.router.navigate(['/transferTypes'])
-            }, error => Utils.ErrorLogger(error));
+            this.service.addTransferType(this.form.value).subscribe(data => { this.router.navigate(['/transferTypes']) }, error => Utils.ErrorLogger(error));
         }
         else {
-            if (this.id != null)
-                this.service.updateTransferType(this.id, this.form.value).subscribe(data => {
-                    this.router.navigate(['/transferTypes'])
-                }, error => Utils.ErrorLogger(error));
+            this.service.updateTransferType(this.id, this.form.value).subscribe(data => { this.router.navigate(['/transferTypes']) }, error => Utils.ErrorLogger(error));
         }
     }
 
     delete() {
         if (this.id != null) {
-            if (confirm('Please confirm')) {
+            if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.service.deleteTransferType(this.id).subscribe(data => {
                     this.router.navigate(['/transferTypes'])
-
                 }, error => Utils.ErrorLogger(error));
             }
 

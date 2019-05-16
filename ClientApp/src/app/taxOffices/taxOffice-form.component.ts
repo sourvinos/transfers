@@ -1,22 +1,20 @@
-import { ITaxOffice } from './../models/taxOffice';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { FormBuilder, Validators } from '@angular/forms';
 
+import { ITaxOffice } from './../models/taxOffice';
 import { TaxOfficeService } from '../services/taxOffice.service';
 import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'app-taxOffice-form',
     templateUrl: './taxOffice-form.component.html',
-    styleUrls: ['./taxOffice-form.component.css', '../shared/styles/input-forms.css']
+    styleUrls: ['../shared/styles/forms.css']
 })
 
 export class TaxOfficeFormComponent implements OnInit {
 
     id: number = null;
-    subHeader: string = 'New';
 
     taxOffice: ITaxOffice = {
         id: null,
@@ -25,7 +23,7 @@ export class TaxOfficeFormComponent implements OnInit {
     }
 
     form = this.formBuilder.group({
-        id: '0',
+        id: 0,
         description: ['', [Validators.required, Validators.maxLength(100)]],
         user: ['']
     })
@@ -36,7 +34,6 @@ export class TaxOfficeFormComponent implements OnInit {
 
     ngOnInit() {
         if (this.id) {
-            this.subHeader = 'Edit'
             this.service.getTaxOffice(this.id).subscribe(result => {
                 this.populateFields()
             }, error => {
@@ -76,21 +73,16 @@ export class TaxOfficeFormComponent implements OnInit {
     save() {
         if (!this.form.valid) return
         if (this.id == null) {
-            this.service.addTaxOffice(this.form.value).subscribe(data => {
-                this.router.navigate(['/taxOffices'])
-            }, error => Utils.ErrorLogger(error));
+            this.service.addTaxOffice(this.form.value).subscribe(data => { this.router.navigate(['/taxOffices']) }, error => Utils.ErrorLogger(error));
         }
         else {
-            if (this.id != null)
-                this.service.updateTaxOffice(this.id, this.form.value).subscribe(data => {
-                    this.router.navigate(['/taxOffices'])
-                }, error => Utils.ErrorLogger(error));
+            this.service.updateTaxOffice(this.id, this.form.value).subscribe(data => { this.router.navigate(['/taxOffices']) }, error => Utils.ErrorLogger(error));
         }
     }
 
     delete() {
         if (this.id != null) {
-            if (confirm('Please confirm')) {
+            if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.service.deleteTaxOffice(this.id).subscribe(data => {
                     this.router.navigate(['/taxOffices'])
                 }, error => Utils.ErrorLogger(error));

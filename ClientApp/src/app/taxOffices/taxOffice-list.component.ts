@@ -1,5 +1,7 @@
-import { ITaxOffice } from './../models/taxOffice';
 import { Component, OnInit } from '@angular/core';
+import { get } from 'scriptjs';
+
+import { ITaxOffice } from './../models/taxOffice';
 import { TaxOfficeService } from '../services/taxOffice.service';
 import { Utils } from '../shared/classes/utils';
 
@@ -17,6 +19,7 @@ export class TaxOfficeListComponent implements OnInit {
     constructor(private service: TaxOfficeService) { }
 
     ngOnInit() {
+        get('script.js', () => { });
         this.service.getTaxOffices().subscribe(data => this.filteredTaxOffices = this.taxOffices = data, error => Utils.ErrorLogger(error));
     }
 

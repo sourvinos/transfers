@@ -1,16 +1,34 @@
-<div id='main-header'>
-    <h1>VAT Regimes</h1>
-    <div id='search-box'>
-        <input type='text' id='search-box' placeholder='Search...' #query (keyup)='filter(query.value)' autocomplete='off'>
+<div id="header">
+    <div id="title">
+        <h2>VAT Regimes</h2>
+        <div id="close" [routerLink]="['/']">X</div>
+    </div>
+    <div class="ui divider"></div>
+    <div id="search-box">
+        <div class="ui icon input">
+            <i class="search icon"></i>
+            <input type="text" placeholder="Search..." #query (keyup)="filter(query.value)" autocomplete="off">
+        </div>
     </div>
 </div>
 
-<!-- <div id='main-body'>
-    <ul>
-        <a *ngFor='let vatState of filteredVatStates' routerLink='/vatStates/{{ vatState.id}}'>{{ vatState.description }}</a>
-    </ul>
+<div id="content">
+    <table class="ui selectable sortable fixed table">
+        <thead>
+            <tr>
+                <th class="center aligned">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let vatRegime of filteredVatStates" routerLink="/vatStates/{{ vatRegime.id }}">
+                <td>{{ vatRegime.description }}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
-<div id='main-footer'>
-    <button [routerLink]='["/vatStates/new"]'>Add</button>
-</div> -->
+<div id="footer">
+    <div id="buttons">
+        <button class="ui button" id="new" [routerLink]="['/vatStates/new']">New</button>
+    </div>
+</div>

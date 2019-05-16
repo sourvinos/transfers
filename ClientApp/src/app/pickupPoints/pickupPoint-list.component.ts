@@ -8,7 +8,7 @@ import { Utils } from '../shared/classes/utils';
 @Component({
     selector: 'pickupPoint-list',
     templateUrl: './pickupPoint-list.component.html',
-    styleUrls: ['./pickupPoint-list.component.css']
+    styleUrls: ['../shared/styles/lists.css']
 })
 
 export class PickupPointListComponent implements OnInit {

@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
+
 import { IRoute } from '../models/route';
 import { RouteService } from '../services/route.service';
 import { Utils } from '../shared/classes/utils';
@@ -9,7 +10,7 @@ import { Utils } from '../shared/classes/utils';
 @Component({
     selector: 'app-route-form',
     templateUrl: './route-form.component.html',
-    styleUrls: ['./route-form.component.css', '../shared/styles/input-forms.css']
+    styleUrls: ['../shared/styles/forms.css']
 })
 
 export class RouteFormComponent implements OnInit {
@@ -25,8 +26,8 @@ export class RouteFormComponent implements OnInit {
     }
 
     form = this.formBuilder.group({
-        id: '0',
-        shortDescription: ['', [Validators.required, Validators.maxLength(5)]],
+        id: 0,
+        shortDescription: ['', [Validators.maxLength(5)]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
         user: ['']
     })
@@ -37,7 +38,6 @@ export class RouteFormComponent implements OnInit {
 
     ngOnInit() {
         if (this.id) {
-            this.subHeader = 'Edit'
             this.service.getRoute(this.id).subscribe(result => {
                 this.populateFields()
             }, error => {
@@ -82,15 +82,10 @@ export class RouteFormComponent implements OnInit {
     save() {
         if (!this.form.valid) return
         if (this.id == null) {
-            this.service.addRoute(this.form.value).subscribe(data => {
-                this.router.navigate(['/routes'])
-            }, error => Utils.ErrorLogger(error));
+            this.service.addRoute(this.form.value).subscribe(data => { this.router.navigate(['/routes']) }, error => Utils.ErrorLogger(error));
         }
         else {
-            if (this.id != null)
-                this.service.updateRoute(this.id, this.form.value).subscribe(data => {
-                    this.router.navigate(['/routes'])
-                }, error => Utils.ErrorLogger(error));
+            this.service.updateRoute(this.id, this.form.value).subscribe(data => { this.router.navigate(['/routes']) }, error => Utils.ErrorLogger(error));
         }
     }
 

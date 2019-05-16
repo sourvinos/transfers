@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Utils } from '../shared/classes/utils';
-import { TransferTypeService } from '../services/transferType.service';
+import { get } from 'scriptjs';
+
 import { ITransferType } from '../models/transferType';
+import { TransferTypeService } from '../services/transferType.service';
+import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'transferType-list',
@@ -17,6 +19,7 @@ export class TransferTypeListComponent implements OnInit {
     constructor(private service: TransferTypeService) { }
 
     ngOnInit() {
+        get('script.js', () => { });
         this.service.getTransferTypes().subscribe(data => this.filteredTransferTypes = this.transferTypes = data, error => Utils.ErrorLogger(error));
     }
 

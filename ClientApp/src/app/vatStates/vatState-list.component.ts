@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Utils } from '../shared/classes/utils';
+import { get } from 'scriptjs';
+
 import { IVatState } from '../models/vatState';
 import { VatStateService } from '../services/vatState.service';
+import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'vatState-list',
@@ -17,6 +19,7 @@ export class VatStateListComponent implements OnInit {
     constructor(private service: VatStateService) { }
 
     ngOnInit() {
+        get('script.js', () => { });
         this.service.getVatStates().subscribe(data => this.filteredVatStates = this.vatStates = data, error => Utils.ErrorLogger(error));
     }
 

@@ -10,7 +10,7 @@ import { Utils } from '../shared/classes/utils';
 @Component({
     selector: 'pickupPoint-customer-form',
     templateUrl: './pickupPoint-form.component.html',
-    styleUrls: ['./pickupPoint-form.component.css']
+    styleUrls: ['../shared/styles/forms.css']
 })
 
 export class PickupPointFormComponent implements OnInit {

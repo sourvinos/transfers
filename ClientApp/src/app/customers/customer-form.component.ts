@@ -13,7 +13,7 @@ import { Utils } from '../shared/classes/utils';
 @Component({
     selector: 'app-customer-form',
     templateUrl: './customer-form.component.html',
-    styleUrls: ['./customer-form.component.css']
+    styleUrls: ['../shared/styles/forms.css']
 })
 
 export class CustomerFormComponent implements OnInit {
