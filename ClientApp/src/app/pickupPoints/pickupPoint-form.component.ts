@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs'
 import { IPickupPoint } from './../models/pickupPoint';
 import { PickupPointService } from '../services/pickupPoint.service'
 import { Utils } from '../shared/classes/utils';
+import { RouteService } from '../services/route.service';
 
 @Component({
     selector: 'pickupPoint-customer-form',
@@ -38,14 +39,15 @@ export class PickupPointFormComponent implements OnInit {
         user: ['']
     })
 
-    constructor(private service: PickupPointService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private routeService: RouteService, private pickupPointservice: PickupPointService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => this.id = p['id'])
     }
 
     ngOnInit() {
-        let sources = [this.service.getRoutes()]
+        let sources = [];
+        sources.push(this.routeService.getRoutes())
         if (this.id) {
-            sources.push(this.service.getPickupPoint(this.id))
+            sources.push(this.pickupPointservice.getPickupPoint(this.id))
         }
         return forkJoin(sources).subscribe(
             result => {
@@ -68,7 +70,7 @@ export class PickupPointFormComponent implements OnInit {
     }
 
     populateFields() {
-        this.service.getPickupPoint(this.id).subscribe(
+        this.pickupPointservice.getPickupPoint(this.id).subscribe(
             result => {
                 this.form.setValue({
                     id: result.id,
@@ -111,12 +113,12 @@ export class PickupPointFormComponent implements OnInit {
     save() {
         if (!this.form.valid) return
         if (this.id == null) {
-            this.service.addPickupPoint(this.form.value).subscribe(data => {
+            this.pickupPointservice.addPickupPoint(this.form.value).subscribe(data => {
                 this.router.navigate(['/pickuppoints'])
             }, (error: Response) => Utils.ErrorLogger(error));
         }
         else
-            this.service.updatePickupPoint(this.id, this.form.value).subscribe(data => {
+            this.pickupPointservice.updatePickupPoint(this.id, this.form.value).subscribe(data => {
                 this.router.navigate(['/pickuppoints'])
             }, (error: Response) => Utils.ErrorLogger(error));
     }
@@ -124,7 +126,7 @@ export class PickupPointFormComponent implements OnInit {
     delete() {
         if (this.id != null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.service.deletePickupPoint(this.id).subscribe(data => {
+                this.pickupPointservice.deletePickupPoint(this.id).subscribe(data => {
                     this.router.navigate(['/pickuppoints'])
                 }, error => Utils.ErrorLogger(error));
             }

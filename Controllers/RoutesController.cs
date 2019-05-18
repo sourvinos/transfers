@@ -20,7 +20,7 @@ namespace Transfers.Controllers
 		[HttpGet]
 		public async Task<IEnumerable<Route>> Get()
 		{
-			IEnumerable<Route> items = await context.Routes.Include(x => x.PickupPoints).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+			IEnumerable<Route> items = await context.Routes.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
 
 			return items;
 		}

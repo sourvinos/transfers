@@ -10,17 +10,12 @@ import { IPickupPoint } from '../models/pickupPoint';
 
 export class PickupPointService {
 
-    private routeurl: string = 'https://localhost:44322/api/routes/';
     private url: string = 'https://localhost:44322/api/pickuppoints/';
 
     constructor(private http: HttpClient) { }
 
-    getRoutes() {
-        return this.http.get(this.routeurl);
-    }
-
-    getPickupPoints(): Observable<IPickupPoint[]> {
-        return this.http.get<IPickupPoint[]>(this.url);
+    getPickupPoints(routeId: number): Observable<IPickupPoint[]> {
+        return this.http.get<IPickupPoint[]>(this.url + "route/" + routeId);
     }
 
     getPickupPoint(id: number): Observable<IPickupPoint> {

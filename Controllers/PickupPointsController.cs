@@ -20,10 +20,12 @@ namespace Transfers.Controllers
 			this.context = context;
 		}
 
-		[HttpGet]
-		public async Task<IEnumerable<PickupPoint>> Get()
+		[HttpGet("route/{routeId}")]
+		public async Task<IEnumerable<PickupPoint>> Get(int routeId)
 		{
-			return await context.PickupPoints.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+			var pickupPoints = await context.PickupPoints.Where(m => m.RouteId == routeId).ToListAsync();
+
+			return pickupPoints;
 		}
 
 		[HttpGet("{id}")]
