@@ -31,7 +31,7 @@ namespace Transfers.Controllers
 
 			if (result.Succeeded)
 			{
-				await userManager.AddToRoleAsync(user, "Customer");
+				await userManager.AddToRoleAsync(user, "Admin");
 			}
 
 			return Ok(new { Username = user.UserName });

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,8 +22,8 @@ namespace Transfers.Controllers
 			this.context = context;
 		}
 
-		[HttpGet("getFiltered")]
-		public async Task<IEnumerable<TransferResource>> getFiltered(int customerId)
+		[HttpGet("getByCustomerId/{customerId}")]
+		public async Task<IEnumerable<TransferResource>> getByCustomerId(int customerId)
 		{
 			var items = await context.Transfers
 				.Include(x => x.Customer)
@@ -31,6 +32,20 @@ namespace Transfers.Controllers
 					.ThenInclude(x => x.Route)
 				.Include(x => x.Destination)
 				.Where(x => x.CustomerId == customerId).ToListAsync();
+
+			return mapper.Map<IEnumerable<Transfer>, IEnumerable<TransferResource>>(items);
+		}
+
+		[HttpGet("getByDate/{fromDate}")]
+		public async Task<IEnumerable<TransferResource>> getByDate(DateTime fromDate)
+		{
+			var items = await context.Transfers
+				.Include(x => x.Customer)
+				.Include(x => x.TransferType)
+				.Include(x => x.PickupPoint)
+					.ThenInclude(x => x.Route)
+				.Include(x => x.Destination)
+				.Where(x => x.Date == fromDate).ToListAsync();
 
 			return mapper.Map<IEnumerable<Transfer>, IEnumerable<TransferResource>>(items);
 		}
