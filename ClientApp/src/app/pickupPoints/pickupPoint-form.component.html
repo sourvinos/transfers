@@ -2,7 +2,7 @@
     <div>
         <h2>Pickup point</h2>
         <div id="close" [routerLink]="['/pickuppoints']">X</div>
-        <p>{{ form.value | json }} {{ form.valid }}</p>
+        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
     </div>
     <div class="ui divider"></div>
 </div>
@@ -12,7 +12,7 @@
         <div id="left">
             <div class="field" [class.error]='(routeId.invalid && routeDescription.invalid && routeDescription.touched) || (routeDescription.touched && !arrayLookup(routes, routeDescription))'>
                 <label>Route</label>
-                <input type="text" class="form-control" list="routeList" formControlName='routeDescription' (change)="updateRouteId(routes, $event)">
+                <input type="text" list="routeList" formControlName='routeDescription' (change)="updateRouteId(routes, $event)">
                 <datalist id="routeList">
                     <select>
                         <option *ngFor='let route of routes' [value]="route.description"></option>

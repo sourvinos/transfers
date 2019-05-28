@@ -2,8 +2,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
-
-import { IRoute } from '../models/route';
 import { RouteService } from '../services/route.service';
 import { Utils } from '../shared/classes/utils';
 
@@ -16,14 +14,6 @@ import { Utils } from '../shared/classes/utils';
 export class RouteFormComponent implements OnInit {
 
     id: number = null;
-    subHeader: string = 'New';
-
-    coachRoute: IRoute = {
-        id: null,
-        shortDescription: '',
-        description: '',
-        user: ''
-    }
 
     form = this.formBuilder.group({
         id: 0,
@@ -32,13 +22,13 @@ export class RouteFormComponent implements OnInit {
         user: ['']
     })
 
-    constructor(private service: RouteService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private routeService: RouteService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
     ngOnInit() {
         if (this.id) {
-            this.service.getRoute(this.id).subscribe(result => {
+            this.routeService.getRoute(this.id).subscribe(result => {
                 this.populateFields()
             }, error => {
                 if (error.status == 404) {
@@ -49,7 +39,7 @@ export class RouteFormComponent implements OnInit {
     }
 
     populateFields() {
-        this.service.getRoute(this.id).subscribe(
+        this.routeService.getRoute(this.id).subscribe(
             result => {
                 this.form.setValue({
                     id: result.id,
@@ -82,19 +72,17 @@ export class RouteFormComponent implements OnInit {
     save() {
         if (!this.form.valid) return
         if (this.id == null) {
-            this.service.addRoute(this.form.value).subscribe(data => { this.router.navigate(['/routes']) }, error => Utils.ErrorLogger(error));
+            this.routeService.addRoute(this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error));
         }
         else {
-            this.service.updateRoute(this.id, this.form.value).subscribe(data => { this.router.navigate(['/routes']) }, error => Utils.ErrorLogger(error));
+            this.routeService.updateRoute(this.id, this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error));
         }
     }
 
     delete() {
         if (this.id != null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.service.deleteRoute(this.id).subscribe(data => {
-                    this.router.navigate(['/routes'])
-                }, error => Utils.ErrorLogger(error));
+                this.routeService.deleteRoute(this.id).subscribe(data => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error));
             }
         }
     }

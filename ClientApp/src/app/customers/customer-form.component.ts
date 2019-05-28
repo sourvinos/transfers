@@ -149,19 +149,18 @@ export class CustomerFormComponent implements OnInit {
     save() {
         if (!this.form.valid) return
         if (this.id == null) {
-            this.customerService.addCustomer(this.form.value).subscribe(data => { console.log(data), this.router.navigate(['/customers']) }, error => Utils.ErrorLogger(error))
+            this.customerService.addCustomer(this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
         }
         else {
             this.customerService.updateCustomer(this.form.value.id, this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
         }
     }
 
+    // 
     delete() {
         if (this.id != null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.customerService.deleteCustomer(this.id).subscribe(data => {
-                    this.router.navigate(['/customers'])
-                }, error => Utils.ErrorLogger(error))
+                this.customerService.deleteCustomer(this.id).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
             }
         }
     }

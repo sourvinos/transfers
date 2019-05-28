@@ -4,8 +4,8 @@ import { FormBuilder, Validators, FormControl } from '@angular/forms'
 import { forkJoin } from 'rxjs'
 
 import { PickupPointService } from '../services/pickupPoint.service'
-import { Utils } from '../shared/classes/utils'
 import { RouteService } from '../services/route.service'
+import { Utils } from '../shared/classes/utils'
 
 @Component({
     selector: 'pickupPoint-customer-form',
@@ -103,19 +103,18 @@ export class PickupPointFormComponent implements OnInit {
     save() {
         if (!this.form.valid) return
         if (this.id == null) {
-            this.pickupPointservice.addPickupPoint(this.form.value).subscribe(data => { this.router.navigate(['/pickuppoints']) }, (error: Response) => Utils.ErrorLogger(error))
+            this.pickupPointservice.addPickupPoint(this.form.value).subscribe(data => this.router.navigate(['/pickuppoints']), (error: Response) => Utils.ErrorLogger(error))
         }
         else {
-            this.pickupPointservice.updatePickupPoint(this.id, this.form.value).subscribe(data => { this.router.navigate(['/pickuppoints']) }, (error: Response) => Utils.ErrorLogger(error))
+            this.pickupPointservice.updatePickupPoint(this.id, this.form.value).subscribe(data => this.router.navigate(['/pickuppoints']), (error: Response) => Utils.ErrorLogger(error))
         }
     }
 
+    // 
     delete() {
         if (this.id != null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.pickupPointservice.deletePickupPoint(this.id).subscribe(data => {
-                    this.router.navigate(['/pickuppoints'])
-                }, error => Utils.ErrorLogger(error))
+                this.pickupPointservice.deletePickupPoint(this.id).subscribe(data => this.router.navigate(['/pickuppoints']), error => Utils.ErrorLogger(error))
             }
         }
     }

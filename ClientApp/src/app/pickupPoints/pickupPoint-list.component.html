@@ -5,12 +5,10 @@
     </div>
     <div class="ui divider"></div>
     <div id="search-box">
-        <div class="field">
-            <select id="route" class="form-control" (change)="onRouteChange()" [(ngModel)]="pickupPoint.route.id" name="routeId" #route="ngModel" required>
-                <option value="0">Select route</option>
-                <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
-            </select>
-        </div>
+        <select id="route" class="field form-control" (change)="onRouteChange()" [(ngModel)]="pickupPoint.route.id" name="routeId" #route="ngModel" required>
+            <option value="0">Select route</option>
+            <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
+        </select>
     </div>
 </div>
 
@@ -30,6 +28,8 @@
         </tbody>
     </table>
 </div>
+
+
 
 <div id="footer">
     <div id="buttons">

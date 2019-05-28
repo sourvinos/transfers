@@ -1,10 +1,9 @@
-import { IVatState } from './../models/vatState';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
-import { Utils } from '../shared/classes/utils';
 import { VatStateService } from '../services/vatState.service';
+import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'app-vatState-form',
@@ -16,25 +15,19 @@ export class VatStateFormComponent implements OnInit {
 
     id: number = null;
 
-    vatState: IVatState = {
-        id: null,
-        description: '',
-        user: ''
-    }
-
     form = this.formBuilder.group({
         id: 0,
         description: ['', [Validators.required, Validators.maxLength(100)]],
         user: ['']
     })
 
-    constructor(private service: VatStateService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private vatStateService: VatStateService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
     ngOnInit() {
         if (this.id) {
-            this.service.getVatState(this.id).subscribe(result => {
+            this.vatStateService.getVatState(this.id).subscribe(result => {
                 this.populateFields()
             }, error => {
                 if (error.status == 404) {
@@ -45,7 +38,7 @@ export class VatStateFormComponent implements OnInit {
     }
 
     populateFields() {
-        this.service.getVatState(this.id).subscribe(
+        this.vatStateService.getVatState(this.id).subscribe(
             result => {
                 this.form.setValue({
                     id: result.id,
@@ -73,19 +66,17 @@ export class VatStateFormComponent implements OnInit {
     save() {
         if (!this.form.valid) return
         if (this.id == null) {
-            this.service.addVatState(this.form.value).subscribe(data => { this.router.navigate(['/vatStates']) }, error => Utils.ErrorLogger(error));
+            this.vatStateService.addVatState(this.form.value).subscribe(data => this.router.navigate(['/vatStates']), error => Utils.ErrorLogger(error));
         }
         else {
-            this.service.updateVatState(this.id, this.form.value).subscribe(data => { this.router.navigate(['/vatStates']) }, error => Utils.ErrorLogger(error));
+            this.vatStateService.updateVatState(this.id, this.form.value).subscribe(data => this.router.navigate(['/vatStates']), error => Utils.ErrorLogger(error));
         }
     }
 
     delete() {
         if (this.id != null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.service.deleteVatState(this.id).subscribe(data => {
-                    this.router.navigate(['/vatStates'])
-                }, error => Utils.ErrorLogger(error));
+                this.vatStateService.deleteVatState(this.id).subscribe(data => this.router.navigate(['/vatStates']), error => Utils.ErrorLogger(error));
             }
         }
     }

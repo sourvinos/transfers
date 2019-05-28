@@ -2,7 +2,7 @@
     <div>
         <h2>Customer</h2>
         <div id="close" [routerLink]="['/customers']">X</div>
-        <p>{{ form.value | json }} {{ form.valid }}</p>
+        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
     </div>
     <div class="ui divider"></div>
 </div>
@@ -44,52 +44,24 @@
                 <label>Account code</label>
                 <input type="text" formControlName="accountCode">
             </div>
-
             <div class="field" [class.error]='(taxOfficeId.invalid && taxOfficeDescription.invalid && taxOfficeDescription.touched) || (taxOfficeDescription.touched && !arrayLookup(taxOffices, taxOfficeDescription))'>
                 <label>Tax office</label>
-                <input type="text" class="form-control" list="taxOfficeList" formControlName='taxOfficeDescription' (change)="updateTaxOfficeId(taxOffices, $event)">
+                <input type="text" list="taxOfficeList" formControlName='taxOfficeDescription' (change)="updateTaxOfficeId(taxOffices, $event)">
                 <datalist id="taxOfficeList">
                     <select>
                         <option *ngFor='let taxOffice of taxOffices' [value]="taxOffice.description"></option>
                     </select>
                 </datalist>
             </div>
-
             <div class="field" [class.error]='(vatStateId.invalid && vatStateDescription.invalid && vatStateDescription.touched) || (vatStateDescription.touched && !arrayLookup(vatStates, vatStateDescription))'>
                 <label>VAT Regimes</label>
-                <input type="text" class="form-control" list="vatStateList" formControlName='vatStateDescription' (change)="updateVatStateId(vatStates, $event)">
+                <input type="text" list="vatStateList" formControlName='vatStateDescription' (change)="updateVatStateId(vatStates, $event)">
                 <datalist id="vatStateList">
                     <select>
                         <option *ngFor='let vatState of vatStates' [value]="vatState.description"></option>
                     </select>
                 </datalist>
             </div>
-
-            <!-- <div class="field" [class.error]='(taxOfficeId.invalid && taxOfficeDescription.invalid && taxOfficeDescription.touched) || (taxOfficeDescription.touched && !arrayLookup(taxOffices, taxOfficeDescription))'>
-                <label>Tax office</label>
-                <input type="text" class="form-control" list="taxOfficeList" formControlName='taxOfficeDescription' (change)="updateTaxOfficeId(taxOffices, $event)">
-                <datalist id="taxOfficeList">
-                    <select>
-                        <option *ngFor='let taxOffice of taxOffices' [value]="taxOffice.description"></option>
-                    </select>
-                </datalist>
-            </div> -->
-
-            <!-- <div class=" field" [class.error]="taxOfficeId.invalid && taxOfficeId.touched">
-                <label>Tax office</label>
-                <select id="taxOffice" class="ui dropdown" formControlName='taxOfficeId'>
-                    <option value="">Select</option>
-                    <option *ngFor='let taxOffice of taxOffices' value='{{ taxOffice.id }}'>{{ taxOffice.description }}</option>
-                </select>
-            </div> -->
-
-            <!-- <div class="field" [class.error]="vatStateId.invalid && vatStateId.touched">
-                <label>VAT regime</label>
-                <select id="vatState" class="form-control" formControlName='vatStateId'>
-                    <option value="">Select</option>
-                    <option *ngFor='let vatState of vatStates' value='{{ vatState.id }}'>{{ vatState.description }}</option>
-                </select>
-            </div> -->
         </div>
     </form>
 </div>

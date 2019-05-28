@@ -2,8 +2,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
-
-import { ITransferType } from './../models/transferType';
 import { TransferTypeService } from '../services/transferType.service';
 import { Utils } from '../shared/classes/utils';
 
@@ -17,25 +15,19 @@ export class TransferTypeFormComponent implements OnInit {
 
     id: number = null;
 
-    transferType: ITransferType = {
-        id: null,
-        description: '',
-        user: ''
-    }
-
     form = this.formBuilder.group({
         id: 0,
         description: ['', [Validators.required, Validators.maxLength(100)]],
         user: ['']
     })
 
-    constructor(private service: TransferTypeService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private transferTypeService: TransferTypeService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
     ngOnInit() {
         if (this.id) {
-            this.service.getTransferType(this.id).subscribe(result => {
+            this.transferTypeService.getTransferType(this.id).subscribe(result => {
                 this.populateFields()
             }, error => {
                 if (error.status == 404) {
@@ -46,7 +38,7 @@ export class TransferTypeFormComponent implements OnInit {
     }
 
     populateFields() {
-        this.service.getTransferType(this.id).subscribe(
+        this.transferTypeService.getTransferType(this.id).subscribe(
             result => {
                 this.form.setValue({
                     id: result.id,
@@ -74,19 +66,17 @@ export class TransferTypeFormComponent implements OnInit {
     save() {
         if (!this.form.valid) return
         if (this.id == null) {
-            this.service.addTransferType(this.form.value).subscribe(data => { this.router.navigate(['/transferTypes']) }, error => Utils.ErrorLogger(error));
+            this.transferTypeService.addTransferType(this.form.value).subscribe(data => this.router.navigate(['/transferTypes']), error => Utils.ErrorLogger(error));
         }
         else {
-            this.service.updateTransferType(this.id, this.form.value).subscribe(data => { this.router.navigate(['/transferTypes']) }, error => Utils.ErrorLogger(error));
+            this.transferTypeService.updateTransferType(this.id, this.form.value).subscribe(data => this.router.navigate(['/transferTypes']), error => Utils.ErrorLogger(error));
         }
     }
 
     delete() {
         if (this.id != null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.service.deleteTransferType(this.id).subscribe(data => {
-                    this.router.navigate(['/transferTypes'])
-                }, error => Utils.ErrorLogger(error));
+                this.transferTypeService.deleteTransferType(this.id).subscribe(data => this.router.navigate(['/transferTypes']), error => Utils.ErrorLogger(error));
             }
 
         }

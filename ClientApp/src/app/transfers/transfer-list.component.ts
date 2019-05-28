@@ -22,7 +22,6 @@ export class TransferListComponent implements OnInit {
     ngOnInit() {
         get('script.js', () => { });
         this.service.getTransfers(this.customerId).subscribe(data => {
-            console.log(data)
             this.transfers = data
         }, error => Utils.ErrorLogger(error));
     }

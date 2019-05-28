@@ -44,7 +44,6 @@ export class PickupPointListComponent implements OnInit {
     }
 
     private populatePickupPoints() {
-        console.log(this.pickupPoint.route.id);
-        this.pickupPointService.getPickupPoints(this.pickupPoint.route.id).subscribe(data => { this.pickupPoints = data, console.log(data) }, error => Utils.ErrorLogger(error));
+        this.pickupPointService.getPickupPoints(this.pickupPoint.route.id).subscribe(data => this.pickupPoints = data, error => Utils.ErrorLogger(error));
     }
 }
