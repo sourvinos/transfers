@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,67 +11,76 @@ namespace Transfers.Controllers
 	[Route("api/[controller]")]
 	public class RoutesController : ControllerBase
 	{
+		private readonly IMapper mapper;
 		private readonly Context context;
 
-		public RoutesController(Context context)
+		public RoutesController(IMapper mapper, Context context)
 		{
+			this.mapper = mapper;
 			this.context = context;
 		}
 
 		[HttpGet]
 		public async Task<IEnumerable<Route>> Get()
 		{
-			IEnumerable<Route> items = await context.Routes.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
-
-			return items;
+			return await context.Routes.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
 		}
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetRoute(int id)
 		{
-			Route item = await context.Routes.FindAsync(id);
+			Route route = await context.Routes.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (item == null) return NotFound();
+			if (route == null) return NotFound();
 
-			return Ok(item);
+			return Ok(route);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> PostRoute([FromBody] Route coachRoute)
+		public async Task<IActionResult> PostRoute([FromBody] Route route)
 		{
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-			context.Routes.Add(coachRoute);
+			context.Routes.Add(route);
 
 			await context.SaveChangesAsync();
 
-			Route item = await context.Routes.FindAsync(coachRoute.Id);
-
-			return Ok(item);
+			return Ok(route);
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutRoute(int id, [FromBody] Route coachRoute)
+		public async Task<IActionResult> PutRoute(int id, [FromBody] Route route)
 		{
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-			if (id != coachRoute.Id) return BadRequest();
+			if (id != route.Id) return BadRequest();
 
-			context.Entry(coachRoute).State = EntityState.Modified;
+			context.Entry(route).State = EntityState.Modified;
 
-			await context.SaveChangesAsync();
+			try
+			{
+				await context.SaveChangesAsync();
+			}
 
-			return NoContent();
+			catch (DbUpdateConcurrencyException)
+			{
+				route = await context.Routes.SingleOrDefaultAsync(m => m.Id == id);
+
+				if (route == null) return NotFound(); else throw;
+			}
+
+			return Ok(route);
+
 		}
 
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteRoute([FromRoute] int id)
 		{
-			Route item = await context.Routes.SingleAsync(x => x.Id == id);
+			Route route = await context.Routes.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (item == null) return NotFound();
+			if (route == null) return NotFound();
 
-			context.Routes.Remove(item);
+			context.Routes.Remove(route);
 
 			await context.SaveChangesAsync();
 

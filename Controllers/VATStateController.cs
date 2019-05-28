@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,12 @@ namespace Transfers.Controllers
 	[Route("api/[controller]")]
 	public class VATStatesController : ControllerBase
 	{
+		private readonly IMapper mapper;
 		private readonly Context context;
 
-		public VATStatesController(Context context)
+		public VATStatesController(IMapper mapper, Context context)
 		{
+			this.mapper = mapper;
 			this.context = context;
 		}
 
@@ -26,9 +29,9 @@ namespace Transfers.Controllers
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetVATState(int id)
 		{
-			VATState vatState = await context.VATStates.FindAsync(id);
+			VATState vatState = await context.VATStates.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (vatState == null) { return NotFound(); }
+			if (vatState == null) return NotFound();
 
 			return Ok(vatState);
 		}
@@ -36,17 +39,13 @@ namespace Transfers.Controllers
 		[HttpPost]
 		public async Task<IActionResult> PostVATState([FromBody] VATState vatState)
 		{
-			if (ModelState.IsValid)
-			{
-				context.VATStates.Add(vatState);
-				await context.SaveChangesAsync();
+			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-				return Ok(vatState);
-			}
-			else
-			{
-				return BadRequest(ModelState);
-			}
+			context.VATStates.Add(vatState);
+
+			await context.SaveChangesAsync();
+
+			return Ok(vatState);
 		}
 
 		[HttpPut("{id}")]
@@ -65,7 +64,7 @@ namespace Transfers.Controllers
 
 			catch (DbUpdateConcurrencyException)
 			{
-				vatState = await context.VATStates.FindAsync(id);
+				vatState = await context.VATStates.SingleOrDefaultAsync(m => m.Id == id);
 
 				if (vatState == null) return NotFound(); else throw;
 			}
@@ -76,11 +75,12 @@ namespace Transfers.Controllers
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteVATState([FromRoute] int id)
 		{
-			VATState vatState = await context.VATStates.FindAsync(id);
+			VATState vatState = await context.VATStates.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (vatState == null) { return NotFound(); }
+			if (vatState == null) return NotFound();
 
 			context.VATStates.Remove(vatState);
+
 			await context.SaveChangesAsync();
 
 			return NoContent();

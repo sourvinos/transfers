@@ -20,7 +20,12 @@ export class PickupPointListComponent implements OnInit {
 
     pickupPoint: IPickupPoint = {
         id: 0,
-        routeId: 0,
+        route: {
+            id: 0,
+            shortDescription: '',
+            description: '',
+            user: ''
+        },
         description: '',
         exactPoint: '',
         time: '',
@@ -39,6 +44,7 @@ export class PickupPointListComponent implements OnInit {
     }
 
     private populatePickupPoints() {
-        this.pickupPointService.getPickupPoints(this.pickupPoint.routeId).subscribe(data => this.pickupPoints = data, error => Utils.ErrorLogger(error));
+        console.log(this.pickupPoint.route.id);
+        this.pickupPointService.getPickupPoints(this.pickupPoint.route.id).subscribe(data => { this.pickupPoints = data, console.log(data) }, error => Utils.ErrorLogger(error));
     }
 }

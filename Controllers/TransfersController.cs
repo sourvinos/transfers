@@ -25,21 +25,23 @@ namespace Transfers.Controllers
 		[HttpGet("getByCustomerId/{customerId}")]
 		public async Task<IEnumerable<TransferResource>> getByCustomerId(int customerId)
 		{
-			var items = await context.Transfers
+			List<Transfer> transfers = await context.Transfers
 				.Include(x => x.Customer)
 				.Include(x => x.TransferType)
 				.Include(x => x.PickupPoint)
 					.ThenInclude(x => x.Route)
 				.Include(x => x.Destination)
-				.Where(x => x.CustomerId == customerId).ToListAsync();
+				.Where(x => x.CustomerId == customerId)
+				.AsNoTracking()
+				.ToListAsync();
 
-			return mapper.Map<IEnumerable<Transfer>, IEnumerable<TransferResource>>(items);
+			return mapper.Map<IEnumerable<Transfer>, IEnumerable<TransferResource>>(transfers);
 		}
 
 		[HttpGet("getByDate/{fromDate}")]
 		public async Task<IEnumerable<TransferResource>> getByDate(DateTime fromDate)
 		{
-			var items = await context.Transfers
+			List<Transfer> transfers = await context.Transfers
 				.Include(x => x.Customer)
 				.Include(x => x.TransferType)
 				.Include(x => x.PickupPoint)
@@ -47,7 +49,7 @@ namespace Transfers.Controllers
 				.Include(x => x.Destination)
 				.Where(x => x.Date == fromDate).ToListAsync();
 
-			return mapper.Map<IEnumerable<Transfer>, IEnumerable<TransferResource>>(items);
+			return mapper.Map<IEnumerable<Transfer>, IEnumerable<TransferResource>>(transfers);
 		}
 
 		[HttpGet("{id}")]
@@ -60,7 +62,7 @@ namespace Transfers.Controllers
 				.Include(x => x.Destination)
 				.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (transfer == null) { return NotFound(); }
+			if (transfer == null) return NotFound();
 
 			return Ok(transfer);
 		}
@@ -68,17 +70,13 @@ namespace Transfers.Controllers
 		[HttpPost]
 		public async Task<IActionResult> PostTransfer([FromBody] Transfer transfer)
 		{
-			if (ModelState.IsValid)
-			{
-				context.Transfers.Add(transfer);
-				await context.SaveChangesAsync();
+			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-				return Ok(transfer);
-			}
-			else
-			{
-				return BadRequest(ModelState);
-			}
+			context.Transfers.Add(transfer);
+
+			await context.SaveChangesAsync();
+
+			return Ok(transfer);
 		}
 
 		[HttpPut("{id}")]
@@ -97,7 +95,7 @@ namespace Transfers.Controllers
 
 			catch (DbUpdateConcurrencyException)
 			{
-				transfer = await context.Transfers.FindAsync(id);
+				transfer = await context.Transfers.SingleOrDefaultAsync(m => m.Id == id);
 
 				if (transfer == null) return NotFound(); else throw;
 			}
@@ -108,11 +106,12 @@ namespace Transfers.Controllers
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteTransfer([FromRoute] int id)
 		{
-			Transfer transfer = await context.Transfers.FindAsync(id);
+			Transfer transfer = await context.Transfers.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (transfer == null) { return NotFound(); }
+			if (transfer == null) return NotFound();
 
 			context.Transfers.Remove(transfer);
+
 			await context.SaveChangesAsync();
 
 			return NoContent();

@@ -17,12 +17,12 @@ export class DestinationFormComponent implements OnInit {
 
     id: number = null;
 
-    destination: IDestination = {
-        id: null,
-        shortDescription: '',
-        description: '',
-        user: ''
-    }
+    // destination: IDestination = {
+    //     id: null,
+    //     shortDescription: '',
+    //     description: '',
+    //     user: ''
+    // }
 
     form = this.formBuilder.group({
         id: 0,

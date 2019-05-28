@@ -1,12 +1,11 @@
 import { ActivatedRoute, Router } from '@angular/router'
 import { Component, OnInit } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
+import { FormBuilder, Validators, FormControl } from '@angular/forms'
 import { forkJoin } from 'rxjs'
 
-import { IPickupPoint } from './../models/pickupPoint';
 import { PickupPointService } from '../services/pickupPoint.service'
-import { Utils } from '../shared/classes/utils';
-import { RouteService } from '../services/route.service';
+import { Utils } from '../shared/classes/utils'
+import { RouteService } from '../services/route.service'
 
 @Component({
     selector: 'pickupPoint-customer-form',
@@ -18,21 +17,12 @@ export class PickupPointFormComponent implements OnInit {
 
     routes: any
 
-    id: number = null;
-    subHeader: string = 'New';
-
-    pickupPoint: IPickupPoint = {
-        id: null,
-        routeId: null,
-        description: '',
-        exactPoint: '',
-        time: '',
-        user: '',
-    }
+    id: number = null
 
     form = this.formBuilder.group({
         id: 0,
-        routeId: 0,
+        routeId: ['', Validators.required],
+        routeDescription: ['', [Validators.required]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
         exactPoint: ['', [Validators.maxLength(100)]],
         time: ['', [Validators.required, Validators.pattern("[0-9][0-9]:[0-9][0-9]")]],
@@ -44,7 +34,7 @@ export class PickupPointFormComponent implements OnInit {
     }
 
     ngOnInit() {
-        let sources = [];
+        let sources = []
         sources.push(this.routeService.getRoutes())
         if (this.id) {
             sources.push(this.pickupPointservice.getPickupPoint(this.id))
@@ -54,7 +44,6 @@ export class PickupPointFormComponent implements OnInit {
                 this.routes = result[0]
                 if (this.id) {
                     this.populateFields()
-                    this.populateRoutes()
                 }
             },
             error => {
@@ -65,16 +54,13 @@ export class PickupPointFormComponent implements OnInit {
         )
     }
 
-    private populateRoutes() {
-        const selectedRoute = this.routes.find((x: { id: any }) => x.id == this.pickupPoint.routeId)
-    }
-
     populateFields() {
         this.pickupPointservice.getPickupPoint(this.id).subscribe(
             result => {
                 this.form.setValue({
                     id: result.id,
-                    routeId: result.routeId,
+                    routeId: result.route.id,
+                    routeDescription: result.route.description,
                     description: result.description,
                     exactPoint: result.exactPoint,
                     time: result.time,
@@ -82,28 +68,32 @@ export class PickupPointFormComponent implements OnInit {
                 })
             },
             error => {
-                Utils.ErrorLogger(error);
-            });;
+                Utils.ErrorLogger(error)
+            })
     }
 
     get routeId() {
-        return this.form.get('routeId');
+        return this.form.get('routeId')
+    }
+
+    get routeDescription() {
+        return this.form.get('routeDescription')
     }
 
     get description() {
-        return this.form.get('description');
+        return this.form.get('description')
     }
 
     get exactPoint() {
-        return this.form.get('exactPoint');
+        return this.form.get('exactPoint')
     }
 
     get time() {
-        return this.form.get('time');
+        return this.form.get('time')
     }
 
     getRequiredFieldMessage() {
-        return 'This field is required, silly!';
+        return 'This field is required, silly!'
     }
 
     getMaxLengthFieldMessage() {
@@ -113,14 +103,11 @@ export class PickupPointFormComponent implements OnInit {
     save() {
         if (!this.form.valid) return
         if (this.id == null) {
-            this.pickupPointservice.addPickupPoint(this.form.value).subscribe(data => {
-                this.router.navigate(['/pickuppoints'])
-            }, (error: Response) => Utils.ErrorLogger(error));
+            this.pickupPointservice.addPickupPoint(this.form.value).subscribe(data => { this.router.navigate(['/pickuppoints']) }, (error: Response) => Utils.ErrorLogger(error))
         }
-        else
-            this.pickupPointservice.updatePickupPoint(this.id, this.form.value).subscribe(data => {
-                this.router.navigate(['/pickuppoints'])
-            }, (error: Response) => Utils.ErrorLogger(error));
+        else {
+            this.pickupPointservice.updatePickupPoint(this.id, this.form.value).subscribe(data => { this.router.navigate(['/pickuppoints']) }, (error: Response) => Utils.ErrorLogger(error))
+        }
     }
 
     delete() {
@@ -128,13 +115,28 @@ export class PickupPointFormComponent implements OnInit {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.pickupPointservice.deletePickupPoint(this.id).subscribe(data => {
                     this.router.navigate(['/pickuppoints'])
-                }, error => Utils.ErrorLogger(error));
+                }, error => Utils.ErrorLogger(error))
             }
         }
     }
 
     goBack() {
-        this.router.navigate(['/pickuppoints']);
+        this.router.navigate(['/pickuppoints'])
+    }
+
+    arrayLookup(lookupArray: any[], givenField: FormControl) {
+        for (let x of lookupArray) {
+            if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
+                return true;
+            }
+        }
+    }
+
+    updateRouteId(lookupArray: any[], e: { target: { value: any; }; }): void {
+        let name = e.target.value;
+        let list = lookupArray.filter(x => x.description === name)[0];
+
+        this.form.patchValue({ routeId: list ? list.id : '' })
     }
 
 }

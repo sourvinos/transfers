@@ -23,17 +23,15 @@ namespace Transfers.Controllers
 		[HttpGet("route/{routeId}")]
 		public async Task<IEnumerable<PickupPoint>> Get(int routeId)
 		{
-			var pickupPoints = await context.PickupPoints.Where(m => m.RouteId == routeId).ToListAsync();
-
-			return pickupPoints;
+			return await context.PickupPoints.Include(x => x.Route).Where(m => m.RouteId == routeId).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
 		}
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetPickupPoint(int id)
 		{
-			var pickupPoint = await context.PickupPoints.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
+			PickupPoint pickupPoint = await context.PickupPoints.Include(x => x.Route).AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
 
-			if (pickupPoint == null) { return NotFound(); }
+			if (pickupPoint == null) return NotFound();
 
 			return Ok(pickupPoint);
 		}
@@ -66,7 +64,7 @@ namespace Transfers.Controllers
 
 			catch (DbUpdateConcurrencyException)
 			{
-				pickupPoint = await context.PickupPoints.FindAsync(id);
+				pickupPoint = await context.PickupPoints.SingleOrDefaultAsync(m => m.Id == id);
 
 				if (pickupPoint == null) return NotFound(); else throw;
 			}
@@ -77,7 +75,7 @@ namespace Transfers.Controllers
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeletePickupPoint([FromRoute] int id)
 		{
-			PickupPoint pickupPoint = await context.PickupPoints.FindAsync(id);
+			PickupPoint pickupPoint = await context.PickupPoints.SingleOrDefaultAsync(m => m.Id == id);
 
 			if (pickupPoint == null) return NotFound();
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -11,47 +11,45 @@ namespace Transfers.Controllers
 	[Route("api/[controller]")]
 	public class TransferTypesController : ControllerBase
 	{
+		private readonly IMapper mapper;
 		private readonly Context context;
 
-		public TransferTypesController(Context context)
+		public TransferTypesController(IMapper mapper, Context context)
 		{
+			this.mapper = mapper;
 			this.context = context;
 		}
 
 		[HttpGet]
 		public async Task<IEnumerable<TransferType>> Get()
 		{
-			return await context.TransferTypes.OrderBy(o => o.Description).ToListAsync();
+			return await context.TransferTypes.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
 		}
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetTransferType(int id)
 		{
-			TransferType transferType = await context.TransferTypes.FindAsync(id);
+			TransferType transferType = await context.TransferTypes.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (transferType == null) { return NotFound(); }
+			if (transferType == null) return NotFound();
 
 			return Ok(transferType);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> PostVATState([FromBody] TransferType transferType)
+		public async Task<IActionResult> PostTransferType([FromBody] TransferType transferType)
 		{
-			if (ModelState.IsValid)
-			{
-				context.TransferTypes.Add(transferType);
-				await context.SaveChangesAsync();
+			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-				return Ok(transferType);
-			}
-			else
-			{
-				return BadRequest(ModelState);
-			}
+			context.TransferTypes.Add(transferType);
+
+			await context.SaveChangesAsync();
+
+			return Ok(transferType);
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutVATState([FromRoute] int id, [FromBody] TransferType transferType)
+		public async Task<IActionResult> PutTransferType([FromRoute] int id, [FromBody] TransferType transferType)
 		{
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -66,7 +64,7 @@ namespace Transfers.Controllers
 
 			catch (DbUpdateConcurrencyException)
 			{
-				transferType = await context.TransferTypes.FindAsync(id);
+				transferType = await context.TransferTypes.SingleOrDefaultAsync(m => m.Id == id);
 
 				if (transferType == null) return NotFound(); else throw;
 			}
@@ -75,13 +73,14 @@ namespace Transfers.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteVATState([FromRoute] int id)
+		public async Task<IActionResult> DeleteTransferType([FromRoute] int id)
 		{
-			TransferType transferType = await context.TransferTypes.FindAsync(id);
+			TransferType transferType = await context.TransferTypes.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (transferType == null) { return NotFound(); }
+			if (transferType == null) return NotFound();
 
 			context.TransferTypes.Remove(transferType);
+
 			await context.SaveChangesAsync();
 
 			return NoContent();

@@ -1,0 +1,14 @@
+{
+	"sqltools.connections": [
+		{
+			"connectionTimeout": 30,
+			"database": "Transfers",
+			"dialect": "MSSQL",
+			"name": "SqlServerConnection",
+			"password": "Ncc74656",
+			"port": 1433,
+			"server": "localhost",
+			"username": "sa"
+		}
+	]
+}

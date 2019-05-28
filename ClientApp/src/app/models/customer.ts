@@ -1,9 +1,12 @@
+import { ITaxOffice } from "./taxOffice";
+import { IVatState } from "./vatState";
+
 export interface ICustomer {
-    id: number;
-    description: string;
-    profession: string;
-    taxOfficeId: number;
-    vatStateId: number;
+    id: number
+    description: string
+    profession: string
+    taxOffice: ITaxOffice
+    vatState: IVatState
     address: string
     phones: string
     personInCharge: string

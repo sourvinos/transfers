@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -11,10 +11,12 @@ namespace Transfers.Controllers
 	[Route("api/[controller]")]
 	public class DestinationsController : ControllerBase
 	{
+		private readonly IMapper mapper;
 		private readonly Context context;
 
-		public DestinationsController(Context context)
+		public DestinationsController(IMapper mapper, Context context)
 		{
+			this.mapper = mapper;
 			this.context = context;
 		}
 
@@ -25,33 +27,29 @@ namespace Transfers.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetCountry(int id)
+		public async Task<IActionResult> GetDestination(int id)
 		{
-			Destination destination = await context.Destinations.FindAsync(id);
+			Destination destination = await context.Destinations.SingleOrDefaultAsync(m => m.Id == id); ;
 
-			if (destination == null) { return NotFound(); }
+			if (destination == null) return NotFound();
 
 			return Ok(destination);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> PostCountry([FromBody] Destination destination)
+		public async Task<IActionResult> PostDestination([FromBody] Destination destination)
 		{
-			if (ModelState.IsValid)
-			{
-				context.Destinations.Add(destination);
-				await context.SaveChangesAsync();
+			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-				return Ok(destination);
-			}
-			else
-			{
-				return BadRequest(ModelState);
-			}
+			context.Destinations.Add(destination);
+
+			await context.SaveChangesAsync();
+
+			return Ok(destination);
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutCountry([FromRoute] int id, [FromBody] Destination destination)
+		public async Task<IActionResult> PutDestination([FromRoute] int id, [FromBody] Destination destination)
 		{
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -66,7 +64,7 @@ namespace Transfers.Controllers
 
 			catch (DbUpdateConcurrencyException)
 			{
-				destination = await context.Destinations.FindAsync(id);
+				destination = await context.Destinations.SingleOrDefaultAsync(m => m.Id == id);
 
 				if (destination == null) return NotFound(); else throw;
 			}
@@ -75,13 +73,14 @@ namespace Transfers.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteCountry([FromRoute] int id)
+		public async Task<IActionResult> DeleteDestination([FromRoute] int id)
 		{
-			Destination destination = await context.Destinations.FindAsync(id);
+			Destination destination = await context.Destinations.SingleOrDefaultAsync(m => m.Id == id);
 
 			if (destination == null) { return NotFound(); }
 
 			context.Destinations.Remove(destination);
+
 			await context.SaveChangesAsync();
 
 			return NoContent();

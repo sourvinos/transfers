@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -11,10 +11,12 @@ namespace Transfers.Controllers
 	[Route("api/[controller]")]
 	public class TaxOfficesController : ControllerBase
 	{
+		private readonly IMapper mapper;
 		private readonly Context context;
 
-		public TaxOfficesController(Context context)
+		public TaxOfficesController(IMapper mapper, Context context)
 		{
+			this.mapper = mapper;
 			this.context = context;
 		}
 
@@ -27,9 +29,9 @@ namespace Transfers.Controllers
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetTaxOffice(int id)
 		{
-			TaxOffice taxOffice = await context.TaxOffices.FindAsync(id);
+			TaxOffice taxOffice = await context.TaxOffices.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (taxOffice == null) { return NotFound(); }
+			if (taxOffice == null) return NotFound();
 
 			return Ok(taxOffice);
 		}
@@ -37,17 +39,13 @@ namespace Transfers.Controllers
 		[HttpPost]
 		public async Task<IActionResult> PostTaxOffice([FromBody] TaxOffice taxOffice)
 		{
-			if (ModelState.IsValid)
-			{
-				context.TaxOffices.Add(taxOffice);
-				await context.SaveChangesAsync();
+			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-				return Ok(taxOffice);
-			}
-			else
-			{
-				return BadRequest(ModelState);
-			}
+			context.TaxOffices.Add(taxOffice);
+
+			await context.SaveChangesAsync();
+
+			return Ok(taxOffice);
 		}
 
 		[HttpPut("{id}")]
@@ -66,7 +64,7 @@ namespace Transfers.Controllers
 
 			catch (DbUpdateConcurrencyException)
 			{
-				taxOffice = await context.TaxOffices.FindAsync(id);
+				taxOffice = await context.TaxOffices.SingleOrDefaultAsync(m => m.Id == id);
 
 				if (taxOffice == null) return NotFound(); else throw;
 			}
@@ -77,11 +75,12 @@ namespace Transfers.Controllers
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteTaxOffice([FromRoute] int id)
 		{
-			TaxOffice taxOffice = await context.TaxOffices.FindAsync(id);
+			TaxOffice taxOffice = await context.TaxOffices.SingleOrDefaultAsync(m => m.Id == id);
 
 			if (taxOffice == null) { return NotFound(); }
 
 			context.TaxOffices.Remove(taxOffice);
+
 			await context.SaveChangesAsync();
 
 			return NoContent();
