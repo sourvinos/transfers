@@ -22,8 +22,8 @@ namespace Transfers.Controllers
 			this.context = context;
 		}
 
-		[HttpGet("getByCustomerId/{customerId}")]
-		public async Task<IEnumerable<TransferResource>> getByCustomerId(int customerId)
+		[HttpGet("filterOnDate/{dateIn}")]
+		public async Task<IEnumerable<TransferResource>> getTransfers(DateTime? dateIn)
 		{
 			List<Transfer> transfers = await context.Transfers
 				.Include(x => x.Customer)
@@ -31,40 +31,23 @@ namespace Transfers.Controllers
 				.Include(x => x.PickupPoint)
 					.ThenInclude(x => x.Route)
 				.Include(x => x.Destination)
-				.Where(x => x.CustomerId == customerId)
-				.AsNoTracking()
-				.ToListAsync();
-
-			return mapper.Map<IEnumerable<Transfer>, IEnumerable<TransferResource>>(transfers);
-		}
-
-		[HttpGet("getByDate/{fromDate}")]
-		public async Task<IEnumerable<TransferResource>> getByDate(DateTime fromDate)
-		{
-			List<Transfer> transfers = await context.Transfers
-				.Include(x => x.Customer)
-				.Include(x => x.TransferType)
-				.Include(x => x.PickupPoint)
-					.ThenInclude(x => x.Route)
-				.Include(x => x.Destination)
-				.Where(x => x.Date == fromDate).ToListAsync();
+				.Where(x => x.DateIn == dateIn).ToListAsync();
 
 			return mapper.Map<IEnumerable<Transfer>, IEnumerable<TransferResource>>(transfers);
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetTransfer(int id)
+		public async Task<TransferResource> GetTransfer(int id)
 		{
 			Transfer transfer = await context.Transfers
 				.Include(x => x.Customer)
 				.Include(x => x.TransferType)
 				.Include(x => x.PickupPoint)
+					.ThenInclude(x => x.Route)
 				.Include(x => x.Destination)
 				.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (transfer == null) return NotFound();
-
-			return Ok(transfer);
+			return mapper.Map<Transfer, TransferResource>(transfer);
 		}
 
 		[HttpPost]

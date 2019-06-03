@@ -11,9 +11,10 @@ import { RouterModule } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
 import { MainComponent } from '../shared/components/main/main.component';
 
-import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
 import { HomeComponent } from '../home/home.component';
 import { MessageDialogComponent } from '../shared/components/message-dialog/message-dialog.component';
+import { DeleteDialogComponent } from '../shared/components/delete-dialog/delete-dialog.component';
+import { DateComponent } from '../shared/components/date/date.component'
 
 import { AuthInterceptor } from '../services/auth.interceptor';
 
@@ -39,6 +40,8 @@ import { TransferTypeListComponent } from '../transferTypes/transferType-list.co
 import { TransferTypeFormComponent } from '../transferTypes/transferType-form.component';
 
 import { TransferListComponent } from '../transfers/transfer-list.component'
+import { TransferFormComponent } from '../transfers/transfer-form.component'
+
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
 
 @NgModule({
@@ -48,6 +51,7 @@ import { SidebarComponent } from '../shared/sidebar/sidebar.component';
         HomeComponent,
         MainComponent,
         LoginComponent,
+        DateComponent,
         DeleteDialogComponent,
         MessageDialogComponent,
         CustomerListComponent, CustomerFormComponent,
@@ -57,7 +61,7 @@ import { SidebarComponent } from '../shared/sidebar/sidebar.component';
         TaxOfficeListComponent, TaxOfficeFormComponent,
         VatStateListComponent, VatStateFormComponent,
         TransferTypeListComponent, TransferTypeFormComponent,
-        TransferListComponent
+        TransferListComponent, TransferFormComponent
     ],
     entryComponents: [
         DeleteDialogComponent,
@@ -101,6 +105,7 @@ import { SidebarComponent } from '../shared/sidebar/sidebar.component';
             { path: 'transferTypes/:id', component: TransferTypeFormComponent },
 
             { path: 'transfers', component: TransferListComponent },
+            { path: 'transfers/:id', component: TransferFormComponent },
 
             { path: 'login', component: LoginComponent }
         ])

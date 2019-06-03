@@ -156,7 +156,6 @@ export class CustomerFormComponent implements OnInit {
         }
     }
 
-    // 
     delete() {
         if (this.id != null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {

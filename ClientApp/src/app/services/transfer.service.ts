@@ -1,4 +1,3 @@
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -15,8 +14,8 @@ export class TransferService {
 
     constructor(private http: HttpClient) { }
 
-    getTransfers(customerId: number): Observable<ITransfer[]> {
-        return this.http.get<ITransfer[]>(this.url + "getFiltered" + customerId);
+    getTransfers(date: string): Observable<ITransfer[]> {
+        return this.http.get<ITransfer[]>(this.url + 'filterOnDate' + '/' + date);
     }
 
     getTransfer(id: number): Observable<ITransfer> {

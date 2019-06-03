@@ -1,13 +1,30 @@
 export interface ITransfer {
     id: number;
-    date: string;
-    customerId: number;
-    transferTypeId: number;
-    pickupPointId: number;
-    destinationId: number;
+    dateIn: string;
+    customer: {
+        id: number
+        description: string
+    },
+    transferType: {
+        id: number
+        description: string
+    }
+    pickupPoint: {
+        id: number,
+        description: string
+        route: {
+            id: number
+            description: string
+        }
+    }
+    destination: {
+        id: number
+        description: string
+    }
     adults: number;
     kids: number;
     free: number;
+    total: number
     remarks: string;
-    user: string;
+    user: string
 }

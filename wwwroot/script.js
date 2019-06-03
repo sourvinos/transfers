@@ -1,3 +1,3 @@
-$(".ui.dropdown").dropdown()
-$("table").tablesort()
-$(".ui.modal").modal()
+$('.ui.dropdown').dropdown()
+$('.ui.modal').modal()
+$('table').tablesort()

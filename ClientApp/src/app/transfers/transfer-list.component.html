@@ -1,46 +1,49 @@
-<div id="header">
-    <div id="title">
+<div id='header'>
+    <div id='title'>
         <h2>Transfers</h2>
-        <div id="close" [routerLink]="['/']">X</div>
+        <p>{{ form.value | json }} {{ form.valid }}</p>
+        <div id='close' [routerLink]='["/"]'>X</div>
     </div>
-    <div class="ui divider"></div>
-    <div id="search-box">
-        <div class="ui icon input">
-            <i class="search icon"></i>
-            <input type="text" placeholder="Search..." #query (keyup)="filter(query.value)" autocomplete="off">
-        </div>
+    <div class='ui divider'></div>
+    <div id='search-box'>
+        <form [formGroup]='form' class="ui form" autocomplete='off'>
+            <div class="field">
+                <input type="text" formControlName="dateIn" placeholder="Date">
+                <button class='ui button solid' id='go' (click)='getTransfers()'>Go</button>
+            </div>
+        </form>
     </div>
 </div>
 
-<div id="content">
-    <table class="ui sortable fixed table">
+<div id='content'>
+    <table class='ui sortable fixed table'>
         <thead>
             <tr>
-                <th class="center aligned one wide">Date</th>
-                <th class="center aligned">Customer</th>
-                <th class="center aligned">Destination</th>
-                <th class="center aligned one wide">Adults</th>
-                <th class="center aligned one wide">Kids</th>
-                <th class="center aligned one wide">Free</th>
-                <th class="center aligned one wide">Total</th>
+                <th class='center aligned two wide'>Date</th>
+                <th class='center aligned'>Customer</th>
+                <th class='center aligned'>Destination</th>
+                <th class='center aligned one wide'>Adults</th>
+                <th class='center aligned one wide'>Kids</th>
+                <th class='center aligned one wide'>Free</th>
+                <th class='center aligned one wide'>Total</th>
             </tr>
         </thead>
         <tbody>
-            <!-- <tr *ngFor="let transfer of transfers" routerLink="/transfers/{{ transfer.id }}">
-                <td class="center aligned">{{ transfer.date | date:"dd/MM/yyyy" }}</td>
+            <tr *ngFor='let transfer of transfers' routerLink='/transfers/{{ transfer.id }}'>
+                <td class='center aligned'>{{ transfer.dateIn | date:'dd/MM/yyyy' }}</td>
                 <td>{{ transfer.customer.description }}</td>
                 <td>{{ transfer.destination.description }}</td>
-                <td class="right aligned">{{ transfer.adults }}</td>
-                <td class="right aligned">{{ transfer.kids }}</td>
-                <td class="right aligned">{{ transfer.free }}</td>
-                <td class="right aligned">{{ transfer.adults + transfer.kids + transfer.free }}</td>
-            </tr> -->
+                <td class='right aligned'>{{ transfer.adults }}</td>
+                <td class='right aligned'>{{ transfer.kids }}</td>
+                <td class='right aligned'>{{ transfer.free }}</td>
+                <td class='right aligned'>{{ transfer.adults + transfer.kids + transfer.free }}</td>
+            </tr>
         </tbody>
     </table>
 </div>
 
-<div id="footer">
-    <div id="buttons">
-        <button class="ui button" id="new" [routerLink]="['/transfers/new']">New</button>
+<div id='footer'>
+    <div id='buttons'>
+        <button class='ui button solid' [routerLink]='["/transfers/new"]'>New </button>
     </div>
 </div>

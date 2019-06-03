@@ -2,7 +2,7 @@
     <div>
         <h2>Customer</h2>
         <div id="close" [routerLink]="['/customers']">X</div>
-        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
+        <p>{{ form.value | json }} {{ form.valid }}</p>
     </div>
     <div class="ui divider"></div>
 </div>
@@ -69,7 +69,7 @@
 <div id="footer">
     <div class="ui divider"></div>
     <div id="buttons">
-        <button class="ui button" id="secondary" (click)="delete()" [hidden]="!form.value.id">Delete</button>
-        <button class="ui button" id="primary" (click)="save()" [disabled]="!form.valid">Save</button>
+        <button class="ui button secondary" (click)="delete()" [hidden]="!form.value.id">Delete</button>
+        <button class="ui button solid" (click)="save()" [disabled]="!form.valid">Save</button>
     </div>
 </div>

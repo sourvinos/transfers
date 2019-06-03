@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { get } from 'scriptjs';
+import { FormBuilder, Validators, FormControl } from '@angular/forms'
+import * as moment from 'moment'
 
 import { ITransfer } from './../models/transfer';
 import { TransferService } from '../services/transfer.service';
-import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'app-transfer-list',
@@ -13,17 +14,24 @@ import { Utils } from '../shared/classes/utils';
 
 export class TransferListComponent implements OnInit {
 
-    transfers: ITransfer[];
+    transfers: ITransfer[]
 
-    customerId: number = 35;
+    form = this.formBuilder.group({
+        dateIn: ['', [Validators.required]]
+    })
 
-    constructor(private service: TransferService) { }
+    constructor(private service: TransferService, private formBuilder: FormBuilder) { }
 
     ngOnInit() {
         get('script.js', () => { });
-        this.service.getTransfers(this.customerId).subscribe(data => {
-            this.transfers = data
-        }, error => Utils.ErrorLogger(error));
+    }
+
+    getTransfers() {
+        this.service.getTransfers(this.ISODate()).subscribe(data => { this.transfers = data })
+    }
+
+    ISODate() {
+        return moment(this.form.value.dateIn, 'DD/MM/YYYY').toISOString()
     }
 
 }

@@ -14,17 +14,26 @@ body, h1, h2 {
     display: none !important;
 }
 
+.calendar {
+    width: 200px;
+}
+
 select {
     height: 38px !important;
 }
 
-button#primary {
-    background-color: #D67474;
-    border: 1px solid #D67474;
-    color: #ffffff;
+button#go {
+    margin: 0 0 0 0.5rem;
 }
 
-button#secondary {
-    background-color: #ffffff;
-    border: 1px solid #D67474;
+button.solid {
+    background-color: #D67474 !important;
+    border: 1px solid #D67474 !important;
+    color: #ffffff !important;
+}
+
+button.secondary {
+    background-color: #ffffff !important;
+    border: 1px solid #D67474 !important;
+    color: #D67474 !important;
 }

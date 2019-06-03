@@ -233,3 +233,6 @@ _Pvt_Extensions
 # Some extra struff
 package-lock.json
 localhost.pfx
+
+# Sql Server
+*.sql
