@@ -24,7 +24,7 @@ export interface ITransfer {
     adults: number;
     kids: number;
     free: number;
-    total: number
+    totalPersons: number;
     remarks: string;
     user: string
 }

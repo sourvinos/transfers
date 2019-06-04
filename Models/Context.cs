@@ -16,5 +16,8 @@ namespace Transfers.Models
 		public DbSet<TaxOffice> TaxOffices { get; set; }
 		public DbSet<Customer> Customers { get; set; }
 		public DbSet<Transfer> Transfers { get; set; }
+
+		// protected override void OnModelCreating(ModelBuilder modelBuilder) { modelBuilder.Entity<Transfer>().Property(b => b.TotalPersons).ValueGeneratedOnAddOrUpdate(); }
 	}
+
 }

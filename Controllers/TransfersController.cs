@@ -63,11 +63,15 @@ namespace Transfers.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutTransfer([FromRoute] int id, [FromBody] Transfer transfer)
+		public async Task<IActionResult> PutTransfer([FromRoute] int id, [FromBody] SaveTransferResource transferResource)
 		{
 			if (!ModelState.IsValid) return BadRequest(ModelState);
 
-			if (id != transfer.Id) return BadRequest();
+			if (id != transferResource.Id) return BadRequest();
+
+			var transfer = await context.Transfers.SingleOrDefaultAsync(m => m.Id == id);
+
+			mapper.Map<SaveTransferResource, Transfer>(transferResource, transfer);
 
 			context.Entry(transfer).State = EntityState.Modified;
 
@@ -83,7 +87,11 @@ namespace Transfers.Controllers
 				if (transfer == null) return NotFound(); else throw;
 			}
 
-			return Ok(transfer);
+			var item = await context.Transfers.SingleOrDefaultAsync(m => m.Id == id);
+
+			var result = mapper.Map<Transfer, SaveTransferResource>(item);
+
+			return Ok(result);
 		}
 
 		[HttpDelete("{id}")]

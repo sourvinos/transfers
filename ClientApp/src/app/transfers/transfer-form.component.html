@@ -44,7 +44,7 @@
             <div class="field">
                 <label>Transfer type</label>
                 <input type="text" list="transferTypeList" formControlName='transferTypeDescription' (change)="updateTransferTypeId(transferTypes, $event)">
-                <datalist id="TransferTypeList">
+                <datalist id="transferTypeList">
                     <select>
                         <option *ngFor='let transferType of transferTypes' [value]="transferType.description"></option>
                     </select>
