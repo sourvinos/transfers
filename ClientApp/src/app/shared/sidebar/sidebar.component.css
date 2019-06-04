@@ -75,7 +75,7 @@
     transition-duration: 200ms;
 }
 
-#menu ul>li:hover {
+#menu ul>li:hover, #menu ul>li.active {
     color: #D67474;
     cursor: pointer;
     font-size: larger;

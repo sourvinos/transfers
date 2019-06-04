@@ -1,7 +1,7 @@
 <div id="sidebar">
 	<div id="userInfo">
-		<div *ngIf='this.service.isLoggedIn() && !this.service.isTokenExpired()'>Hello, {{ userName() }}</div>
-		<div *ngIf='!this.service.isLoggedIn() || this.service.isTokenExpired()'>You are not connected</div>
+		<div *ngIf="this.service.isLoggedIn() && !this.service.isTokenExpired()">Hello, {{ userName() }}</div>
+		<div *ngIf="!this.service.isLoggedIn() || this.service.isTokenExpired()">You are not connected</div>
 	</div>
 	<div id="logo">
 		<h1>People</h1>
@@ -12,17 +12,17 @@
 	</div>
 	<div id="menu">
 		<ul id="menuItems" (click)="closeSidebar()">
-			<li [routerLink]='["/customers"]'>Customers</li>
-			<li [routerLink]='["/destinations"]'>Destinations</li>
-			<li [routerLink]='["/pickuppoints/"]'>Pickup points</li>
-			<li [routerLink]='["/routes/"]'>Routes</li>
-			<li [routerLink]='["/taxOffices/"]'>Tax Offices</li>
-			<li [routerLink]='["/transferTypes/"]'>Transfer types</li>
-			<li [routerLink]='["/vatStates/"]'>VAT Regimes</li>
-			<li [routerLink]='["/transfers/"]'>Transfers</li>
-			<li [routerLink]='["/reports"]'>Reports</li>
-			<li [routerLink]='["/login"]'>Login</li>
-			<li [routerLink]='["/logout"]'>Logout</li>
+			<li [routerLink]="['/customers']" routerLinkActive="active">Customers</li>
+			<li [routerLink]="['/destinations']" routerLinkActive="active">Destinations</li>
+			<li [routerLink]="['/pickuppoints/']" routerLinkActive="active">Pickup points</li>
+			<li [routerLink]="['/routes/']" routerLinkActive="active">Routes</li>
+			<li [routerLink]="['/taxOffices/']" routerLinkActive="active">Tax Offices</li>
+			<li [routerLink]="['/transferTypes/']" routerLinkActive="active">Transfer types</li>
+			<li [routerLink]="['/vatStates/']" routerLinkActive="active">VAT Regimes</li>
+			<li [routerLink]="['/transfers/']" routerLinkActive="active">Transfers</li>
+			<li [routerLink]="['/reports']" routerLinkActive="active">Reports</li>
+			<li [routerLink]="['/login']" routerLinkActive="active">Login</li>
+			<li [routerLink]="['/logout']" routerLinkActive="active">Logout</li>
 		</ul>
 	</div>
 	<div id="copyright">Created with .NET Core<br />and Angular</div>
