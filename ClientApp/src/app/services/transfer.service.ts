@@ -15,7 +15,7 @@ export class TransferService {
     constructor(private http: HttpClient) { }
 
     getTransfers(date: string): Observable<ITransfer[]> {
-        return this.http.get<ITransfer[]>(this.url + 'filterOnDate' + '/' + date);
+        return this.http.get<ITransfer[]>(this.url + 'getByDate' + '/' + date);
     }
 
     getTransfer(id: number): Observable<ITransfer> {

@@ -16,12 +16,14 @@
 </div>
 
 <div id='content'>
-    <table class='ui sortable fixed table'>
+    <table class='ui sortable fixed single line table'>
         <thead>
             <tr>
-                <th class='center aligned two wide'>Date</th>
+                <th class='center aligned one wide'>Date</th>
+                <th class='center aligned two wide'>Destination</th>
+                <th class='center aligned'>Route</th>
                 <th class='center aligned'>Customer</th>
-                <th class='center aligned'>Destination</th>
+                <th class='center aligned one wide'>Time</th>
                 <th class='center aligned one wide'>Adults</th>
                 <th class='center aligned one wide'>Kids</th>
                 <th class='center aligned one wide'>Free</th>
@@ -30,9 +32,11 @@
         </thead>
         <tbody>
             <tr *ngFor='let transfer of transfers' routerLink='/transfers/{{ transfer.id }}'>
-                <td class='center aligned'>{{ transfer.dateIn | date:'dd/MM/yyyy' }}</td>
-                <td>{{ transfer.customer.description }}</td>
+                <td class='center aligned'>{{ transfer.dateIn | date:'dd/MM' }}</td>
                 <td>{{ transfer.destination.description }}</td>
+                <td>{{ transfer.pickupPoint.route.description }}</td>
+                <td>{{ transfer.customer.description }}</td>
+                <td class='center aligned'>{{ transfer.pickupPoint.time }}</td>
                 <td class='right aligned'>{{ transfer.adults }}</td>
                 <td class='right aligned'>{{ transfer.kids }}</td>
                 <td class='right aligned'>{{ transfer.free }}</td>
