@@ -9,11 +9,12 @@ import { TransferService } from '../services/transfer.service';
 @Component({
     selector: 'app-transfer-list',
     templateUrl: './transfer-list.component.html',
-    styleUrls: ['../shared/styles/lists.css']
+    styleUrls: ['../shared/styles/lists.css', 'transfer-list.component.css']
 })
 
 export class TransferListComponent implements OnInit {
 
+    queryResult: any = {}
     transfers: ITransfer[]
 
     form = this.formBuilder.group({
@@ -27,11 +28,17 @@ export class TransferListComponent implements OnInit {
     }
 
     getTransfers() {
-        this.service.getTransfers(this.ISODate()).subscribe(data => { this.transfers = data })
+        this.service.getTransfers(this.ISODate()).subscribe(data => {
+            this.queryResult = data
+        })
     }
 
     ISODate() {
         return moment(this.form.value.dateIn, 'DD/MM/YYYY').toISOString()
+    }
+
+    queryIsEmpty() {
+        return this.queryResult.transfers == undefined || this.queryResult.transfers.length == 0 ? true : false
     }
 
 }

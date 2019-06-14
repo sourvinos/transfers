@@ -1,0 +1,95 @@
+#content {
+    display: grid;
+    grid-template-areas: "tabs""main-content";
+    grid-template-rows: max-content 1fr;
+    height: 100%;
+    overflow-y: auto;
+}
+
+#empty {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+}
+
+.tab.segment {
+    margin: 0 !important;
+}
+
+.summary {
+    align-content: flex-start;
+    display: flex;
+    height: 100%;
+    justify-content: flex-start;
+    max-height: -webkit-fill-available;
+    overflow-y: scroll;
+}
+
+.summary::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.summary::-webkit-scrollbar-thumb {
+    background-color: #D67474;
+    min-height: 6.25rem;
+}
+
+
+.summaryBlock {
+    background-color: #f5f5f5;
+    margin: 0.2rem;
+    padding: 30px;
+    width: 300px;
+    height: fit-content;
+}
+
+.summaryBlock header {
+    color: #D67474;
+    font-family: "Orbitron";
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.summaryBlock .item {
+    color: #939393;
+    display: flex;
+    font-family: "Play";
+    font-size: 12px;
+    justify-content: space-between;
+}
+
+.summaryBlock .item .description {
+    max-width: 210px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.summaryBlock .item .total {
+    align-items: flex-end;
+    display: flex;
+}
+
+.summaryBlock footer {
+    color: #939393;
+    display: flex;
+    font-family: "Play";
+    font-size: 12px;
+    font-weight: bold;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+#content {
+    grid-area: "content";
+}
+
+.search.icon {
+    color: #939393;
+}
+
+h3 {
+    color: #939393;
+    font-family: "Economica";
+}
