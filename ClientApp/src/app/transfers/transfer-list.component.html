@@ -11,7 +11,7 @@
     <div id='search-box'>
         <form [formGroup]='form' class="ui form" autocomplete='off'>
             <div class="field">
-                <input type="text" formControlName="dateIn" placeholder="Date">
+                <input type="text" class="date" formControlName="dateIn" placeholder="Date">
                 <button class='ui button solid' id='go' (click)='getTransfers()'>Go</button>
             </div>
         </form>
@@ -117,6 +117,7 @@
                 <table class='ui sortable fixed single line table'>
                     <thead>
                         <tr>
+                            <th class='right aligned'>Id</th>
                             <th class='center aligned'>Destination</th>
                             <th class='center aligned'>Route</th>
                             <th class='center aligned'>Customer</th>
@@ -125,6 +126,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor='let transfer of queryResult.transfers' routerLink='/transfers/{{ transfer.id }}'>
+                            <td>{{ transfer.id }}</td>
                             <td>{{ transfer.destination.description }}</td>
                             <td>{{ transfer.pickupPoint.route.description }}</td>
                             <td>{{ transfer.customer.description }}</td>
