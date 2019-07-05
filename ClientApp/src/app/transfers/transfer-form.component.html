@@ -42,15 +42,6 @@
                 </datalist>
             </div>
             <div class="field">
-                <label>Transfer type</label>
-                <input type="text" list="transferTypeList" formControlName='transferTypeDescription' (change)="updateTransferTypeId(transferTypes, $event)">
-                <datalist id="transferTypeList">
-                    <select>
-                        <option *ngFor='let transferType of transferTypes' [value]="transferType.description"></option>
-                    </select>
-                </datalist>
-            </div>
-            <div class="field">
                 <label>Adults</label>
                 <input type="text" formControlName="adults">
             </div>

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using Transfers.Models;
 namespace Transfers.Controllers
 {
 	[Route("api/[controller]")]
+	[Authorize]
 	public class CustomersController : ControllerBase
 	{
 		private readonly IMapper mapper;

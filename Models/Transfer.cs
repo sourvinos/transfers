@@ -26,7 +26,6 @@ namespace Transfers
 		public int DestinationId { get; set; }
 
 		public Customer Customer { get; set; }
-		public TransferType TransferType { get; set; }
 		public PickupPoint PickupPoint { get; set; }
 		public Destination Destination { get; set; }
 	}

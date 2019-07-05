@@ -14,15 +14,15 @@
 		<ul id="menuItems" (click)="closeSidebar()">
 			<li [routerLink]="['/customers']" routerLinkActive="active">Customers</li>
 			<li [routerLink]="['/destinations']" routerLinkActive="active">Destinations</li>
+			<li [routerLink]="['/drivers']" routerLinkActive="active">Drivers</li>
 			<li [routerLink]="['/pickuppoints/']" routerLinkActive="active">Pickup points</li>
+			<li [routerLink]="['/ports/']" routerLinkActive="active">Ports</li>
 			<li [routerLink]="['/routes/']" routerLinkActive="active">Routes</li>
 			<li [routerLink]="['/taxOffices/']" routerLinkActive="active">Tax Offices</li>
-			<li [routerLink]="['/transferTypes/']" routerLinkActive="active">Transfer types</li>
 			<li [routerLink]="['/vatStates/']" routerLinkActive="active">VAT Regimes</li>
 			<li [routerLink]="['/transfers/']" routerLinkActive="active">Transfers</li>
-			<li [routerLink]="['/reports']" routerLinkActive="active">Reports</li>
-			<li [routerLink]="['/login']" routerLinkActive="active">Login</li>
-			<li [routerLink]="['/logout']" routerLinkActive="active">Logout</li>
+			<li *ngIf="!this.service.isLoggedIn()" [routerLink]="['/login']" routerLinkActive="active">Login</li>
+			<li *ngIf="this.service.isLoggedIn()" (click)="logout()" routerLinkActive="active">Logout</li>
 		</ul>
 	</div>
 	<div id="copyright">Created with .NET Core<br />and Angular</div>

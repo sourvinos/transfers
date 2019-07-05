@@ -20,6 +20,5 @@ namespace Transfers.Resources
 		public CustomerResource Customer { get; set; }
 		public DestinationResource Destination { get; set; }
 		public PickupPointResource PickupPoint { get; set; }
-		public TransferTypeResource TransferType { get; set; }
 	}
 }

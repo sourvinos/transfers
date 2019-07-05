@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { get } from 'scriptjs';
+import { Component, OnInit } from '@angular/core'
+import { get } from 'scriptjs'
 import { FormBuilder, Validators, FormControl } from '@angular/forms'
 import * as moment from 'moment'
 
-import { ITransfer } from './../models/transfer';
-import { TransferService } from '../services/transfer.service';
+import { ITransfer } from './../models/transfer'
+import { TransferService } from '../services/transfer.service'
 
 @Component({
     selector: 'app-transfer-list',
@@ -24,12 +24,15 @@ export class TransferListComponent implements OnInit {
     constructor(private service: TransferService, private formBuilder: FormBuilder) { }
 
     ngOnInit() {
-        get('script.js', () => { });
+        get('script.js', () => { })
+        this.form.setValue({ dateIn: this.getDateFromLocalStorage() })
+        this.getTransfers()
     }
 
     getTransfers() {
         this.service.getTransfers(this.ISODate()).subscribe(data => {
             this.queryResult = data
+            localStorage.setItem('date', this.form.value.dateIn)
         })
     }
 
@@ -40,5 +43,12 @@ export class TransferListComponent implements OnInit {
     queryIsEmpty() {
         return this.queryResult.transfers == undefined || this.queryResult.transfers.length == 0 ? true : false
     }
+
+    getDateFromLocalStorage(): string | null {
+        var date = localStorage.getItem('date');
+
+        return date;
+    }
+
 
 }

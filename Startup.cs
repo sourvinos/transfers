@@ -36,12 +36,13 @@ namespace Transfers
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
-			if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); } else { app.UseExceptionHandler("/Error"); app.UseHsts(); }
+			if (!env.IsDevelopment()) { app.UseDeveloperExceptionPage(); } else { app.UseExceptionHandler("/Error"); app.UseHsts(); }
 
 			app.UseAuthentication();
 			app.UseHttpsRedirection();
-			app.UseStaticFiles();
 			app.UseSpaStaticFiles();
+			app.UseStaticFiles();
+			app.UseStatusCodePages();
 			app.UseMvc(routes => { routes.MapRoute(name: "default", template: "{controller}/{action=Index}/{id?}"); });
 			app.UseSpa(spa => { spa.Options.SourcePath = "ClientApp"; if (env.IsDevelopment()) { spa.UseAngularCliServer(npmScript: "start"); } });
 		}

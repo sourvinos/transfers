@@ -53,8 +53,10 @@
 }
 
 #menu {
+    display: flex;
     height: 100%;
-    margin-top: 1rem;
+    justify-content: center;
+    padding: 1rem 0 1rem 0;
 }
 
 #menu ul {
@@ -73,6 +75,10 @@
     outline: 0;
     transition: font-size;
     transition-duration: 200ms;
+}
+
+#menu ul>li:last-child {
+    margin-top: auto;
 }
 
 #menu ul>li:hover, #menu ul>li.active {

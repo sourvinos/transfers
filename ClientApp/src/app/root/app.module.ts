@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 // Services
 import { AuthInterceptor } from '../services/auth.interceptor';
+import { AuthGuard } from './../services/auth.guard';
 
 // Common
 import { MainComponent } from './../shared/components/main/main.component';
@@ -30,8 +31,6 @@ import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component';
 import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component';
 import { TransferFormComponent } from '../transfers/transfer-form.component';
 import { TransferListComponent } from '../transfers/transfer-list.component';
-import { TransferTypeFormComponent } from '../transferTypes/transferType-form.component';
-import { TransferTypeListComponent } from '../transferTypes/transferType-list.component';
 import { VatStateFormComponent } from '../vatStates/vatState-form.component';
 import { VatStateListComponent } from '../vatStates/vatState-list.component';
 
@@ -50,7 +49,6 @@ import { VatStateListComponent } from '../vatStates/vatState-list.component';
         RouteFormComponent, RouteListComponent,
         TaxOfficeFormComponent, TaxOfficeListComponent,
         TransferFormComponent, TransferListComponent,
-        TransferTypeFormComponent, TransferTypeListComponent,
         VatStateFormComponent, VatStateListComponent
     ],
     imports: [
@@ -62,7 +60,7 @@ import { VatStateListComponent } from '../vatStates/vatState-list.component';
         ReactiveFormsModule
     ],
     entryComponents: [],
-    providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+    providers: [AuthGuard, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
     bootstrap: [RootComponent]
 })
 

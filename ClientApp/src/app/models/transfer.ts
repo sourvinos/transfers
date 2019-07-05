@@ -5,10 +5,6 @@ export interface ITransfer {
         id: number
         description: string
     },
-    transferType: {
-        id: number
-        description: string
-    }
     pickupPoint: {
         id: number,
         description: string

@@ -24,7 +24,7 @@ namespace Transfers.Controllers
 		[HttpGet("getByDate/{dateIn}")]
 		public TransferGroupResultResource<TransferResource> getTransfers(DateTime dateIn)
 		{
-			var details = context.Transfers.Include(x => x.Customer).Include(x => x.TransferType).Include(x => x.PickupPoint).ThenInclude(x => x.Route).Include(x => x.Destination).Where(x => x.DateIn == dateIn).OrderBy(x => x.PickupPoint.Route.Description);
+			var details = context.Transfers.Include(x => x.Customer).Include(x => x.PickupPoint).ThenInclude(x => x.Route).Include(x => x.Destination).Where(x => x.DateIn == dateIn).OrderBy(x => x.PickupPoint.Route.Description);
 			var totalPersonsPerCustomer = context.Transfers.Include(x => x.Customer).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.Customer.Description }).Select(x => new TotalPersonsPerCustomer { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
 			var TotalPersonsPerDestination = context.Transfers.Include(x => x.Destination).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.Destination.Description }).Select(x => new TotalPersonsPerDestination { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
 			var TotalPersonsPerRoute = context.Transfers.Include(x => x.PickupPoint.Route).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.PickupPoint.Route.Description }).Select(x => new TotalPersonsPerRoute { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
@@ -46,7 +46,6 @@ namespace Transfers.Controllers
 		{
 			Transfer transfer = await context.Transfers
 				.Include(x => x.Customer)
-				.Include(x => x.TransferType)
 				.Include(x => x.PickupPoint)
 					.ThenInclude(x => x.Route)
 				.Include(x => x.Destination)

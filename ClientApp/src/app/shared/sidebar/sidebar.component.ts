@@ -1,5 +1,5 @@
 import { AuthService } from '../../services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'sidebar',
@@ -23,6 +23,10 @@ export class SidebarComponent {
 
     isTokenExpired(): boolean {
         return this.service.isTokenExpired();
+    }
+
+    logout() {
+        this.service.logout()
     }
 
     userName() {

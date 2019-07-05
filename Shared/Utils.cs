@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Transfers.Shared
 {
@@ -50,5 +52,18 @@ namespace Transfers.Shared
 					};
 				});
 		}
+
+		public static void ErrorPages(IApplicationBuilder app, IHostingEnvironment env)
+		{
+			if (!env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+			}
+			else
+			{
+				app.UseExceptionHandler("/Error");
+			}
+		}
+
 	}
 }

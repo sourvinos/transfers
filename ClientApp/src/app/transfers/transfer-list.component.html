@@ -117,19 +117,27 @@
                 <table class='ui sortable fixed single line table'>
                     <thead>
                         <tr>
-                            <th class='right aligned'>Id</th>
-                            <th class='center aligned'>Destination</th>
-                            <th class='center aligned'>Route</th>
+                            <th class='center aligned one wide'>Destination</th>
+                            <th class='center aligned one wide'>Route</th>
                             <th class='center aligned'>Customer</th>
-                            <th class='center aligned two wide'>Persons</th>
+                            <th class='center aligned two wide'>Pickup point</th>
+                            <th class='center aligned one wide'>Time</th>
+                            <th class='center aligned one wide'>Adults</th>
+                            <th class='center aligned one wide'>Kids</th>
+                            <th class='center aligned one wide'>Free</th>
+                            <th class='center aligned one wide'>Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor='let transfer of queryResult.transfers' routerLink='/transfers/{{ transfer.id }}'>
-                            <td>{{ transfer.id }}</td>
-                            <td>{{ transfer.destination.description }}</td>
-                            <td>{{ transfer.pickupPoint.route.description }}</td>
+                            <td class="center aligned">{{ transfer.destination.shortDescription }}</td>
+                            <td>{{ transfer.pickupPoint.route.shortDescription }}</td>
                             <td>{{ transfer.customer.description }}</td>
+                            <td>{{ transfer.pickupPoint.exactPoint }}</td>
+                            <td class="center aligned">{{ transfer.pickupPoint.time }}</td>
+                            <td class='right aligned'>{{ transfer.adults }}</td>
+                            <td class='right aligned'>{{ transfer.kids }}</td>
+                            <td class='right aligned'>{{ transfer.free }}</td>
                             <td class='right aligned'>{{ transfer.totalPersons }}</td>
                         </tr>
                     </tbody>

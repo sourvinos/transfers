@@ -9,7 +9,6 @@ import { CustomerService } from '../services/customer.service'
 import { DestinationService } from '../services/destination.service';
 import { PickupPointService } from '../services/pickupPoint.service';
 import { TransferService } from '../services/transfer.service';
-import { TransferTypeService } from '../services/transferType.service';
 
 import { Utils } from '../shared/classes/utils'
 import { get } from 'scriptjs';
@@ -49,7 +48,7 @@ export class TransferFormComponent implements OnInit {
         user: [this.getUserName()]
     })
 
-    constructor(private customerService: CustomerService, private transferTypeService: TransferTypeService, private pickupPointService: PickupPointService, private destinationService: DestinationService, private transferService: TransferService, private authService: AuthService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private customerService: CustomerService, private pickupPointService: PickupPointService, private destinationService: DestinationService, private transferService: TransferService, private authService: AuthService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     }
 
@@ -60,7 +59,6 @@ export class TransferFormComponent implements OnInit {
         let sources = []
 
         sources.push(this.customerService.getCustomers())
-        sources.push(this.transferTypeService.getTransferTypes())
         sources.push(this.pickupPointService.getPickupPoints(2))
         sources.push(this.destinationService.getDestinations())
 
@@ -96,8 +94,6 @@ export class TransferFormComponent implements OnInit {
                     dateInput: moment(result.dateIn).format('DD/MM/YYYY'),
                     customerId: result.customer.id,
                     customerDescription: result.customer.description,
-                    transferTypeId: result.transferType.id,
-                    transferTypeDescription: result.transferType.description,
                     pickupPointId: result.pickupPoint.id,
                     pickupPointDescription: result.pickupPoint.description,
                     adults: result.adults,

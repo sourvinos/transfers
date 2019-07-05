@@ -1,3 +1,4 @@
+import { AuthGuard } from './../services/auth.guard';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -9,20 +10,18 @@ import { PickupPointFormComponent } from '../pickupPoints/pickupPoint-form.compo
 import { RouteFormComponent } from '../routes/route-form.component'; import { RouteListComponent } from '../routes/route-list.component';
 import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'; import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component';
 import { TransferFormComponent } from '../transfers/transfer-form.component'; import { TransferListComponent } from '../transfers/transfer-list.component'
-import { TransferTypeFormComponent } from '../transferTypes/transferType-form.component'; import { TransferTypeListComponent } from '../transferTypes/transferType-list.component';
 import { VatStateFormComponent } from '../vatStates/vatState-form.component'; import { VatStateListComponent } from '../vatStates/vatState-list.component';
 
 const appRoutes: Routes = [
-	{ path: '', component: HomeComponent, pathMatch: 'full' },
+	{ path: '', component: HomeComponent, pathMatch: 'full', canActivate: [AuthGuard] },
 	{ path: 'login', component: LoginComponent },
-	{ path: 'customers', component: CustomerListComponent }, { path: 'customers/new', component: CustomerFormComponent }, { path: 'customers/:id', component: CustomerFormComponent },
-	{ path: 'routes', component: RouteListComponent }, { path: 'routes/new', component: RouteFormComponent }, { path: 'routes/:id', component: RouteFormComponent },
-	{ path: 'pickuppoints', component: PickupPointListComponent }, { path: 'pickuppoints/new', component: PickupPointFormComponent }, { path: 'pickuppoints/:id', component: PickupPointFormComponent },
-	{ path: 'destinations', component: DestinationListComponent }, { path: 'destinations/new', component: DestinationFormComponent }, { path: 'destinations/:id', component: DestinationFormComponent },
-	{ path: 'taxOffices', component: TaxOfficeListComponent }, { path: 'taxOffices/new', component: TaxOfficeFormComponent }, { path: 'taxOffices/:id', component: TaxOfficeFormComponent },
-	{ path: 'vatStates', component: VatStateListComponent }, { path: 'vatStates/new', component: VatStateFormComponent }, { path: 'vatStates/:id', component: VatStateFormComponent },
-	{ path: 'transferTypes', component: TransferTypeListComponent }, { path: 'transferTypes/new', component: TransferTypeFormComponent }, { path: 'transferTypes/:id', component: TransferTypeFormComponent },
-	{ path: 'transfers', component: TransferListComponent }, { path: 'transfers/new', component: TransferFormComponent }, { path: 'transfers/:id', component: TransferFormComponent },
+	{ path: 'customers', component: CustomerListComponent, canActivate: [AuthGuard] }, { path: 'customers/new', component: CustomerFormComponent, canActivate: [AuthGuard] }, { path: 'customers/:id', component: CustomerFormComponent, canActivate: [AuthGuard] },
+	{ path: 'routes', component: RouteListComponent, canActivate: [AuthGuard] }, { path: 'routes/new', component: RouteFormComponent, canActivate: [AuthGuard] }, { path: 'routes/:id', component: RouteFormComponent, canActivate: [AuthGuard] },
+	{ path: 'pickuppoints', component: PickupPointListComponent, canActivate: [AuthGuard] }, { path: 'pickuppoints/new', component: PickupPointFormComponent, canActivate: [AuthGuard] }, { path: 'pickuppoints/:id', component: PickupPointFormComponent, canActivate: [AuthGuard] },
+	{ path: 'destinations', component: DestinationListComponent, canActivate: [AuthGuard] }, { path: 'destinations/new', component: DestinationFormComponent, canActivate: [AuthGuard] }, { path: 'destinations/:id', component: DestinationFormComponent, canActivate: [AuthGuard] },
+	{ path: 'taxOffices', component: TaxOfficeListComponent, canActivate: [AuthGuard] }, { path: 'taxOffices/new', component: TaxOfficeFormComponent, canActivate: [AuthGuard] }, { path: 'taxOffices/:id', component: TaxOfficeFormComponent, canActivate: [AuthGuard] },
+	{ path: 'vatStates', component: VatStateListComponent, canActivate: [AuthGuard] }, { path: 'vatStates/new', component: VatStateFormComponent, canActivate: [AuthGuard] }, { path: 'vatStates/:id', component: VatStateFormComponent, canActivate: [AuthGuard] },
+	{ path: 'transfers', component: TransferListComponent, canActivate: [AuthGuard] }, { path: 'transfers/new', component: TransferFormComponent, canActivate: [AuthGuard] }, { path: 'transfers/:id', component: TransferFormComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
