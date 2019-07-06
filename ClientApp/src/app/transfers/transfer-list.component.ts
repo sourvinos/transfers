@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, AfterViewInit } from '@angular/core'
+import { FormBuilder, Validators } from '@angular/forms'
 import { get } from 'scriptjs'
-import { FormBuilder, Validators, FormControl } from '@angular/forms'
 import * as moment from 'moment'
 
 import { ITransfer } from './../models/transfer'
@@ -12,7 +12,7 @@ import { TransferService } from '../services/transfer.service'
     styleUrls: ['../shared/styles/lists.css', 'transfer-list.component.css']
 })
 
-export class TransferListComponent implements OnInit {
+export class TransferListComponent implements OnInit, AfterViewInit {
 
     queryResult: any = {}
     transfers: ITransfer[]
@@ -27,6 +27,10 @@ export class TransferListComponent implements OnInit {
         get('script.js', () => { })
         this.readDateFromLocalStorage()
         this.getTransfers()
+    }
+
+    ngAfterViewInit(): void {
+        this.focusOnElement(0)
     }
 
     getTransfers() {
@@ -48,6 +52,12 @@ export class TransferListComponent implements OnInit {
 
     readDateFromLocalStorage() {
         this.form.setValue({ 'dateIn': localStorage.getItem('date') })
+    }
+
+    focusOnElement(index: number) {
+        var elements = document.getElementsByTagName('input')
+        elements[index].select()
+        elements[index].focus()
     }
 
 }

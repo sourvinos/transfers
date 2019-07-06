@@ -1,6 +1,6 @@
 import * as moment from 'moment'
 import { ActivatedRoute, Router } from '@angular/router'
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, AfterViewInit } from '@angular/core'
 import { FormBuilder, Validators, FormControl } from '@angular/forms'
 import { forkJoin } from 'rxjs'
 
@@ -19,7 +19,7 @@ import { get } from 'scriptjs';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class TransferFormComponent implements OnInit {
+export class TransferFormComponent implements OnInit, AfterViewInit {
 
     destinations: any
     customers: any
@@ -76,6 +76,11 @@ export class TransferFormComponent implements OnInit {
 
         )
     }
+
+    ngAfterViewInit(): void {
+        this.focusOnElement(0)
+    }
+
 
     populateFields() {
         this.transferService.getTransfer(this.id).subscribe(
@@ -168,6 +173,12 @@ export class TransferFormComponent implements OnInit {
 
     updateISODate() {
         this.form.patchValue({ dateIn: moment(this.form.value.dateInput, 'DD-MM-YYYY').toISOString(true) })
+    }
+
+    focusOnElement(index: number) {
+        var elements = document.getElementsByTagName('input')
+        elements[index].select()
+        elements[index].focus()
     }
 
 }
