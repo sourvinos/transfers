@@ -11,8 +11,9 @@
     <div id='search-box'>
         <form [formGroup]='form' class="ui form" autocomplete='off'>
             <div class="field">
-                <input type="text" class="date" formControlName="dateIn" placeholder="Date">
-                <button class='ui button solid' id='go' (click)='getTransfers()'>Go</button>
+                <input type="text" class="date" formControlName="dateIn" [appInputFormat]="'date'" tabindex='1' placeholder="Date">
+                <input class="dummy" tabindex='2'>
+                <button class='ui button solid' id='go' (click)='getTransfers()' tabindex='2'>Go</button>
             </div>
         </form>
     </div>

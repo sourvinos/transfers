@@ -1,8 +1,8 @@
+import * as moment from 'moment'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Component, OnInit } from '@angular/core'
 import { FormBuilder, Validators, FormControl } from '@angular/forms'
 import { forkJoin } from 'rxjs'
-import * as moment from 'moment'
 
 import { AuthService } from '../services/auth.service';
 import { CustomerService } from '../services/customer.service'
@@ -21,34 +21,27 @@ import { get } from 'scriptjs';
 
 export class TransferFormComponent implements OnInit {
 
-    customers: any
-    transferTypes: any
     destinations: any
+    customers: any
     pickupPoints: any
 
     id: number = null
 
     form = this.formBuilder.group({
         id: 0,
-        dateIn: ['', [Validators.required]],
-        dateInput: ['', [Validators.required]],
-        customerId: [0, Validators.required],
-        customerDescription: ['', Validators.required],
-        transferTypeId: ['', Validators.required],
-        transferTypeDescription: ['', Validators.required],
-        pickupPointId: ['', Validators.required],
-        pickupPointDescription: ['', Validators.required],
+        dateIn: ['', [Validators.required]], dateInput: ['', [Validators.required]],
+        destinationId: [0, Validators.required], destinationDescription: ['', Validators.required],
+        customerId: [0, Validators.required], customerDescription: ['', Validators.required],
+        pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
         adults: [0, Validators.required],
         kids: [0, Validators.required],
         free: [0, Validators.required],
         totalPersons: 0,
-        destinationId: [0, Validators.required],
-        destinationDescription: ['', Validators.required],
         remarks: [''],
         user: [this.getUserName()]
     })
 
-    constructor(private customerService: CustomerService, private pickupPointService: PickupPointService, private destinationService: DestinationService, private transferService: TransferService, private authService: AuthService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private transferService: TransferService, private authService: AuthService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     }
 
@@ -58,9 +51,9 @@ export class TransferFormComponent implements OnInit {
 
         let sources = []
 
+        sources.push(this.destinationService.getDestinations())
         sources.push(this.customerService.getCustomers())
         sources.push(this.pickupPointService.getPickupPoints(2))
-        sources.push(this.destinationService.getDestinations())
 
         if (this.id) {
             sources.push(this.transferService.getTransfer(this.id))
@@ -68,13 +61,12 @@ export class TransferFormComponent implements OnInit {
 
         return forkJoin(sources).subscribe(
             result => {
-                this.customers = result[0]
-                this.transferTypes = result[1]
-                this.pickupPoints = result[2]
-                this.destinations = result[3]
                 if (this.id) {
                     this.populateFields()
                 }
+                this.destinations = result[0]
+                this.customers = result[1]
+                this.pickupPoints = result[2]
             },
             error => {
                 if (error.status == 404) {
@@ -90,18 +82,14 @@ export class TransferFormComponent implements OnInit {
             result => {
                 this.form.setValue({
                     id: result.id,
-                    dateIn: result.dateIn,
-                    dateInput: moment(result.dateIn).format('DD/MM/YYYY'),
-                    customerId: result.customer.id,
-                    customerDescription: result.customer.description,
-                    pickupPointId: result.pickupPoint.id,
-                    pickupPointDescription: result.pickupPoint.description,
+                    dateIn: result.dateIn, dateInput: moment(result.dateIn).format('DD/MM/YYYY'),
+                    destinationId: result.destination.id, destinationDescription: result.destination.description,
+                    customerId: result.customer.id, customerDescription: result.customer.description,
+                    pickupPointId: result.pickupPoint.id, pickupPointDescription: result.pickupPoint.description,
                     adults: result.adults,
                     kids: result.kids,
                     free: result.free,
                     totalPersons: result.totalPersons,
-                    destinationId: result.destination.id,
-                    destinationDescription: result.destination.description,
                     remarks: result.remarks,
                     user: result.user
                 })
@@ -110,54 +98,6 @@ export class TransferFormComponent implements OnInit {
             error => {
                 Utils.ErrorLogger(error)
             })
-    }
-
-    get description() {
-        return this.form.get('description')
-    }
-
-    get profession() {
-        return this.form.get('profession')
-    }
-
-    get address() {
-        return this.form.get('address')
-    }
-
-    get phones() {
-        return this.form.get('phones')
-    }
-
-    get personInCharge() {
-        return this.form.get('personInCharge')
-    }
-
-    get email() {
-        return this.form.get('email')
-    }
-
-    get taxNo() {
-        return this.form.get('taxNo')
-    }
-
-    get accountCode() {
-        return this.form.get('accountCode')
-    }
-
-    get taxOfficeId() {
-        return this.form.get('taxOfficeId')
-    }
-
-    get taxOfficeDescription() {
-        return this.form.get('taxOfficeDescription')
-    }
-
-    get vatStateId() {
-        return this.form.get('vatStateId')
-    }
-
-    get vatStateDescription() {
-        return this.form.get('vatStateDescription')
     }
 
     getRequiredFieldMessage() {
@@ -198,6 +138,13 @@ export class TransferFormComponent implements OnInit {
         }
     }
 
+    updateDestinationId(lookupArray: any[], e: { target: { value: any } }): void {
+        let name = e.target.value
+        let list = lookupArray.filter(x => x.description === name)[0]
+
+        this.form.patchValue({ destinationId: list ? list.id : '' })
+    }
+
     updateCustomerId(lookupArray: any[], e: { target: { value: any } }): void {
         let name = e.target.value
         let list = lookupArray.filter(x => x.description === name)[0]
@@ -205,25 +152,11 @@ export class TransferFormComponent implements OnInit {
         this.form.patchValue({ customerId: list ? list.id : '' })
     }
 
-    updateTransferTypeId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ transferTypeId: list ? list.id : '' })
-    }
-
     updatePickupPointId(lookupArray: any[], e: { target: { value: any } }): void {
         let name = e.target.value
         let list = lookupArray.filter(x => x.description === name)[0]
 
         this.form.patchValue({ pickupPointId: list ? list.id : '' })
-    }
-
-    updateDestinationId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ DestinationId: list ? list.id : '' })
     }
 
     getUserName() {

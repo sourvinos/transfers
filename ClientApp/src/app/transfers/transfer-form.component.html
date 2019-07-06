@@ -1,7 +1,7 @@
 <div id="header">
     <div>
         <h2>Transfer</h2>
-        <p>{{ form.value | json }} {{ form.valid }}</p>
+        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
         <div id="close" [routerLink]="['/transfers']">X</div>
     </div>
     <div class="ui divider"></div>
@@ -12,20 +12,11 @@
         <div id="left">
             <div class="field">
                 <label>Date</label>
-                <input type="text" formControlName='dateInput' (change)='updateISODate()'>
-            </div>
-            <div class="field">
-                <label>Customer</label>
-                <input type="text" list="customerList" formControlName='customerDescription' (change)="updateCustomerId(customers, $event)">
-                <datalist id="customerList">
-                    <select>
-                        <option *ngFor='let customer of customers' [value]="customer.description"></option>
-                    </select>
-                </datalist>
+                <input type="text" formControlName='dateInput' (change)='updateISODate()' [appInputFormat]="'date'" tabindex='1'>
             </div>
             <div class="field">
                 <label>Destination</label>
-                <input type="text" list="destinationList" formControlName='destinationDescription' (change)="updateDestinationId(destinations, $event)">
+                <input type="text" list="destinationList" formControlName='destinationDescription' (change)="updateDestinationId(destinations, $event)" tabindex='2'>
                 <datalist id="destinationList">
                     <select>
                         <option *ngFor='let destination of destinations' [value]="destination.description"></option>
@@ -33,8 +24,17 @@
                 </datalist>
             </div>
             <div class="field">
+                <label>Customer</label>
+                <input type="text" list="customerList" formControlName='customerDescription' (change)="updateCustomerId(customers, $event)" tabindex='3'>
+                <datalist id="customerList">
+                    <select>
+                        <option *ngFor='let customer of customers' [value]="customer.description"></option>
+                    </select>
+                </datalist>
+            </div>
+            <div class="field">
                 <label>Pickup point</label>
-                <input type="text" list="pickupPointList" formControlName='pickupPointDescription' (change)="updatePickupPointId(pickupPoints, $event)">
+                <input type="text" list="pickupPointList" formControlName='pickupPointDescription' (change)="updatePickupPointId(pickupPoints, $event)" tabindex='4'>
                 <datalist id="pickupPointList">
                     <select>
                         <option *ngFor='let pickupPoint of pickupPoints' [value]="pickupPoint.description"></option>
@@ -43,15 +43,15 @@
             </div>
             <div class="field">
                 <label>Adults</label>
-                <input type="text" formControlName="adults">
+                <input type="text" formControlName="adults" tabindex='5'>
             </div>
             <div class="field">
                 <label>Kids</label>
-                <input type="text" formControlName="kids">
+                <input type="text" formControlName="kids" tabindex='6'>
             </div>
             <div class="field">
                 <label>Free</label>
-                <input type="text" formControlName="free">
+                <input type="text" formControlName="free" tabindex='7'>
             </div>
         </div>
         <div id="right">

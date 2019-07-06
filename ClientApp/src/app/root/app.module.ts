@@ -34,6 +34,9 @@ import { TransferListComponent } from '../transfers/transfer-list.component';
 import { VatStateFormComponent } from '../vatStates/vatState-form.component';
 import { VatStateListComponent } from '../vatStates/vatState-list.component';
 
+// Directives
+import { InputFormatDirective } from '../directives/input-format.directive';
+
 @NgModule({
     declarations: [
         // Common
@@ -49,7 +52,9 @@ import { VatStateListComponent } from '../vatStates/vatState-list.component';
         RouteFormComponent, RouteListComponent,
         TaxOfficeFormComponent, TaxOfficeListComponent,
         TransferFormComponent, TransferListComponent,
-        VatStateFormComponent, VatStateListComponent
+        VatStateFormComponent, VatStateListComponent,
+        // Directives
+        InputFormatDirective
     ],
     imports: [
         AppRoutingModule,

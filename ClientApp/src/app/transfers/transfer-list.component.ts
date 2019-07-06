@@ -25,15 +25,13 @@ export class TransferListComponent implements OnInit {
 
     ngOnInit() {
         get('script.js', () => { })
-        this.form.setValue({ dateIn: this.getDateFromLocalStorage() })
+        this.readDateFromLocalStorage()
         this.getTransfers()
     }
 
     getTransfers() {
-        this.service.getTransfers(this.ISODate()).subscribe(data => {
-            this.queryResult = data
-            localStorage.setItem('date', this.form.value.dateIn)
-        })
+        this.service.getTransfers(this.ISODate()).subscribe(data => { this.queryResult = data })
+        this.updateLocalStorageWithDate()
     }
 
     ISODate() {
@@ -44,11 +42,12 @@ export class TransferListComponent implements OnInit {
         return this.queryResult.transfers == undefined || this.queryResult.transfers.length == 0 ? true : false
     }
 
-    getDateFromLocalStorage(): string | null {
-        var date = localStorage.getItem('date');
-
-        return date;
+    updateLocalStorageWithDate() {
+        localStorage.setItem('date', moment(this.form.value.dateIn, 'DD/MM/YYYY').format('DD/MM/YYYY'))
     }
 
+    readDateFromLocalStorage() {
+        this.form.setValue({ 'dateIn': localStorage.getItem('date') })
+    }
 
 }
