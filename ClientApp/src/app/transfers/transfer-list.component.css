@@ -20,6 +20,10 @@
     margin: 0 1rem;
 }
 
+button#go {
+    margin: 0 0 0 0.5rem;
+}
+
 .tab.segment {
     margin: 0 !important;
 }
@@ -53,7 +57,7 @@
 
 .summaryBlock header {
     color: #D67474;
-    font-family: "Orbitron";
+    font-family: "Lato";
     font-size: 18px;
     margin-bottom: 15px;
 }
@@ -95,12 +99,6 @@
 .search.icon {
     color: #939393;
 }
-
-h3 {
-    color: #939393;
-    font-family: "Economica";
-}
-
 
 #footer {
     margin: 1rem 2rem 2rem 2rem;

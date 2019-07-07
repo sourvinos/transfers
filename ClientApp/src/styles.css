@@ -2,12 +2,16 @@
 @import url("https://fonts.googleapis.com/css?family=Orbitron");
 @import url('https://fonts.googleapis.com/css?family=Play');
 
+* {
+    box-sizing: border-box !important;
+}
+
 body, h1, h2 {
     margin: 0 !important;
 }
 
-* {
-    box-sizing: border-box !important;
+h1, h2, h3 {
+    color: #939393 !important;
 }
 
 .hidden {
@@ -26,10 +30,6 @@ body, h1, h2 {
 
 select {
     height: 38px !important;
-}
-
-button#go {
-    margin: 0 0 0 0.5rem;
 }
 
 button.solid {
