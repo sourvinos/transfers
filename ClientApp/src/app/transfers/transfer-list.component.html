@@ -1,7 +1,7 @@
 <div id='header'>
 
     <div id='title'>
-        <h2 class="ui header">Transfers</h2>
+        <h2>Transfers</h2>
         <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
         <div id='close' [routerLink]='["/"]'>X </div>
     </div>
@@ -22,135 +22,144 @@
 
 <div id="content">
 
-    <!-- Tabs -->
-    <div class="ui top attached tabular menu">
-        <a class="item active" data-tab="first">Summary</a>
-        <a class="item" data-tab="second">Details</a>
-    </div>
-
     <!-- Summary -->
-    <div class="ui bottom attached tab segment active" data-tab="first">
-
-        <!-- Empty -->
-        <div id="empty" [hidden]="!queryIsEmpty()">
-            <div class="ui icon header">
-                <i class="search icon"></i>
-                <h3>Nothing to show</h3>
+    <div id="summary">
+        <div class="summaryBlock">
+            <header>Destinations</header>
+            <div class="item" *ngFor="let item of queryResult.personsPerDestination">
+                <div class="description">
+                    {{ item.description }}
+                </div>
+                <div class="total">
+                    {{ item.persons }}
+                </div>
             </div>
+            <footer>
+                <div class="description">
+                    TOTAL
+                </div>
+                <div class="total">
+                    {{ queryResult.persons }}
+                </div>
+            </footer>
         </div>
-
-        <!-- Boxes -->
-        <div class="summary" [hidden]="queryIsEmpty()">
-            <div class="summaryBlock">
-                <header>Destinations</header>
-                <div class="item" *ngFor="let item of queryResult.personsPerDestination">
-                    <div class="description">
-                        {{ item.description }}
-                    </div>
-                    <div class="total">
-                        {{ item.persons }}
-                    </div>
+        <div class="summaryBlock">
+            <header>Customers</header>
+            <div class="item" *ngFor="let item of queryResult.personsPerCustomer">
+                <div class="description">
+                    {{ item.description }}
                 </div>
-                <footer>
-                    <div class="description">
-                        TOTAL
-                    </div>
-                    <div class="total">
-                        {{ queryResult.persons }}
-                    </div>
-                </footer>
-            </div>
-            <div class="summaryBlock">
-                <header>Customers</header>
-                <div class="item" *ngFor="let item of queryResult.personsPerCustomer">
-                    <div class="description">
-                        {{ item.description }}
-                    </div>
-                    <div class="total">
-                        {{ item.persons }}
-                    </div>
+                <div class="total">
+                    {{ item.persons }}
                 </div>
-                <footer>
-                    <div class="description">
-                        TOTAL
-                    </div>
-                    <div class="total">
-                        {{ queryResult.persons }}
-                    </div>
-                </footer>
             </div>
-            <div class="summaryBlock">
-                <header>Routes</header>
-                <div class="item" *ngFor="let item of queryResult.personsPerRoute">
-                    <div class="description">
-                        {{ item.description }}
-                    </div>
-                    <div class="total">
-                        {{ item.persons }}
-                    </div>
+            <footer>
+                <div class="description">
+                    TOTAL
                 </div>
-                <footer>
-                    <div class="description">
-                        TOTAL
-                    </div>
-                    <div class="total">
-                        {{ queryResult.persons }}
-                    </div>
-                </footer>
+                <div class="total">
+                    {{ queryResult.persons }}
+                </div>
+            </footer>
+        </div>
+        <div class="summaryBlock">
+            <header>Routes</header>
+            <div class="item" *ngFor="let item of queryResult.personsPerRoute">
+                <div class="description">
+                    {{ item.description }}
+                </div>
+                <div class="total">
+                    {{ item.persons }}
+                </div>
             </div>
+            <footer>
+                <div class="description">
+                    TOTAL
+                </div>
+                <div class="total">
+                    {{ queryResult.persons }}
+                </div>
+            </footer>
+        </div>
+        <div class="summaryBlock">
+            <header>Drivers</header>
+            <div class="item" *ngFor="let item of queryResult.personsPerRoute">
+                <div class="description">
+                    {{ item.description }}
+                </div>
+                <div class="total">
+                    {{ item.persons }}
+                </div>
+            </div>
+            <footer>
+                <div class="description">
+                    TOTAL
+                </div>
+                <div class="total">
+                    {{ queryResult.persons }}
+                </div>
+            </footer>
+        </div>
+        <div class="summaryBlock">
+            <header>Ports</header>
+            <div class="item" *ngFor="let item of queryResult.personsPerRoute">
+                <div class="description">
+                    {{ item.description }}
+                </div>
+                <div class="total">
+                    {{ item.persons }}
+                </div>
+            </div>
+            <footer>
+                <div class="description">
+                    TOTAL
+                </div>
+                <div class="total">
+                    {{ queryResult.persons }}
+                </div>
+            </footer>
         </div>
     </div>
 
-    <!-- Details -->
-    <div class="ui bottom attached tab segment" data-tab="second">
-
-        <!-- Empty -->
-        <div id="empty" [hidden]="!queryIsEmpty()">
-            <div class="ui icon header">
-                <i class="search icon"></i>
-                <h3>Nothing to show</h3>
-            </div>
-        </div>
-
+    <!-- Grid -->
+    <div id="grid">
         <!-- Table -->
-        <div class="summary" [hidden]="queryIsEmpty()">
-            <div id='main-content'>
-                <table class='ui sortable fixed single line table'>
-                    <thead>
-                        <tr>
-                            <th class='center aligned one wide'>Destination</th>
-                            <th class='center aligned one wide'>Route</th>
-                            <th class='center aligned'>Customer</th>
-                            <th class='center aligned two wide'>Pickup point</th>
-                            <th class='center aligned one wide'>Time</th>
-                            <th class='center aligned one wide'>Adults</th>
-                            <th class='center aligned one wide'>Kids</th>
-                            <th class='center aligned one wide'>Free</th>
-                            <th class='center aligned one wide'>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor='let transfer of queryResult.transfers' routerLink='/transfers/{{ transfer.id }}'>
-                            <td class="center aligned">{{ transfer.destination.shortDescription }}</td>
-                            <td>{{ transfer.pickupPoint.route.shortDescription }}</td>
-                            <td>{{ transfer.customer.description }}</td>
-                            <td>{{ transfer.pickupPoint.exactPoint }}</td>
-                            <td class="center aligned">{{ transfer.pickupPoint.time }}</td>
-                            <td class='right aligned'>{{ transfer.adults }}</td>
-                            <td class='right aligned'>{{ transfer.kids }}</td>
-                            <td class='right aligned'>{{ transfer.free }}</td>
-                            <td class='right aligned'>{{ transfer.totalPersons }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div id='main-content'>
+            <table class='ui sortable fixed single line table'>
+                <thead>
+                    <tr>
+                        <th class='center aligned one wide'>Destination</th>
+                        <th class='center aligned one wide'>Route</th>
+                        <th class='center aligned'>Customer</th>
+                        <th class='center aligned two wide'>Pickup point</th>
+                        <th class='center aligned one wide'>Time</th>
+                        <th class='center aligned one wide'>Adults</th>
+                        <th class='center aligned one wide'>Kids</th>
+                        <th class='center aligned one wide'>Free</th>
+                        <th class='center aligned one wide'>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='let transfer of queryResult.transfers' (click)='populateForm(transfer)'>
+                        <td class="center aligned">{{ transfer.destination.shortDescription }}</td>
+                        <td>{{ transfer.pickupPoint.route.shortDescription }}</td>
+                        <td>{{ transfer.customer.description }}</td>
+                        <td>{{ transfer.pickupPoint.exactPoint }}</td>
+                        <td class="center aligned">{{ transfer.pickupPoint.time }}</td>
+                        <td class=' right aligned'>{{ transfer.adults }}</td>
+                        <td class='right aligned'>{{ transfer.kids }}</td>
+                        <td class='right aligned'>{{ transfer.free }}</td>
+                        <td class='right aligned'>{{ transfer.totalPersons }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
     </div>
-</div>
 
-<div id='footer'>
-    <div id='buttons'>
-        <button class='ui button solid' [routerLink]='["/transfers/new"]'>New </button>
+    <!-- Form -->
+    <div id="form">
+        <app-transfer-form [parentData]="selectedDate" [transfer]='selectedTransfer'></app-transfer-form>
     </div>
+
 </div>

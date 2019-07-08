@@ -32,6 +32,10 @@ select {
     height: 38px !important;
 }
 
+.dropdown {
+    font-family: "Play"
+}
+
 button.solid {
     background-color: #D67474 !important;
     border: 1px solid #D67474 !important;

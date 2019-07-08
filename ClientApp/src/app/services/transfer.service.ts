@@ -19,7 +19,7 @@ export class TransferService {
     }
 
     getTransfer(id: number): Observable<ITransfer> {
-        return this.http.get<ITransfer>(this.url + id);
+        return this.http.get<ITransfer>(this.url + id.toString());
     }
 
     addTransfer(formData: ITransfer): Observable<ITransfer> {

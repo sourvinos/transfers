@@ -1,6 +1,6 @@
 <div id="header">
     <div>
-        <h2 class="ui header">Customer</h2>
+        <h2>Customer</h2>
         <div id="close" [routerLink]="['/customers']">X</div>
         <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
     </div>
@@ -54,7 +54,7 @@
                 </datalist>
             </div>
             <div class="field" [class.error]='(vatStateId.invalid && vatStateDescription.invalid && vatStateDescription.touched) || (vatStateDescription.touched && !arrayLookup(vatStates, vatStateDescription))'>
-                <label>VAT Regimes</label>
+                <label>VAT Regime</label>
                 <input type="text" list="vatStateList" formControlName='vatStateDescription' (change)="updateVatStateId(vatStates, $event)">
                 <datalist id="vatStateList">
                     <select>

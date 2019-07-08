@@ -1,68 +1,65 @@
-<div id="header">
-    <div>
-        <h2 class="ui header">Transfer</h2>
-        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
-        <div id="close" [routerLink]="['/transfers']">X</div>
+<!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
+<form [formGroup]='form' class="ui form" autocomplete='off'>
+    <div class="field" class="hidden">
+        <label>Date</label>
+        <input type="text" formControlName='dateInput' (change)='updateISODate()' [appInputFormat]="'date'" tabindex='1'>
     </div>
-    <div class="ui divider"></div>
-</div>
-
-<div id="content">
-    <form [formGroup]='form' class="ui form" autocomplete='off'>
-        <div id="left">
-            <div class="field">
-                <label>Date</label>
-                <input type="text" formControlName='dateInput' (change)='updateISODate()' [appInputFormat]="'date'" tabindex='1'>
-            </div>
-            <div class="field">
-                <label>Destination</label>
-                <input type="text" list="destinationList" formControlName='destinationDescription' (change)="updateDestinationId(destinations, $event)" tabindex='2'>
-                <datalist id="destinationList">
-                    <select>
-                        <option *ngFor='let destination of destinations' [value]="destination.description"></option>
-                    </select>
-                </datalist>
-            </div>
-            <div class="field">
-                <label>Customer</label>
-                <input type="text" list="customerList" formControlName='customerDescription' (change)="updateCustomerId(customers, $event)" tabindex='3'>
-                <datalist id="customerList">
-                    <select>
-                        <option *ngFor='let customer of customers' [value]="customer.description"></option>
-                    </select>
-                </datalist>
-            </div>
-            <div class="field">
-                <label>Pickup point</label>
-                <input type="text" list="pickupPointList" formControlName='pickupPointDescription' (change)="updatePickupPointId(pickupPoints, $event)" tabindex='4'>
-                <datalist id="pickupPointList">
-                    <select>
-                        <option *ngFor='let pickupPoint of pickupPoints' [value]="pickupPoint.description"></option>
-                    </select>
-                </datalist>
-            </div>
-            <div class="field">
-                <label>Adults</label>
-                <input type="text" formControlName="adults" tabindex='5'>
-            </div>
-            <div class="field">
-                <label>Kids</label>
-                <input type="text" formControlName="kids" tabindex='6'>
-            </div>
-            <div class="field">
-                <label>Free</label>
-                <input type="text" formControlName="free" tabindex='7'>
-            </div>
+    <div class="field fluid">
+        <label>Destination</label>
+        <input type="text" list="destinationList" formControlName='destinationDescription' (change)="updateDestinationId(destinations, $event)" tabindex='2'>
+        <datalist id="destinationList">
+            <select>
+                <option *ngFor='let destination of destinations' [value]="destination.description"></option>
+            </select>
+        </datalist>
+    </div>
+    <div class="field fluid">
+        <label>Customer</label>
+        <input type="text" list="customerList" formControlName='customerDescription' (change)="updateCustomerId(customers, $event)" tabindex='3'>
+        <datalist id="customerList">
+            <select>
+                <option *ngFor='let customer of customers' [value]="customer.description"></option>
+            </select>
+        </datalist>
+    </div>
+    <div class="field fluid">
+        <label>Pickup point</label>
+        <input type="text" list="pickupPointList" formControlName='pickupPointDescription' (change)="updatePickupPointId(pickupPoints, $event)" tabindex='4'>
+        <datalist id="pickupPointList">
+            <select>
+                <option *ngFor='let pickupPoint of pickupPoints' [value]="pickupPoint.description"></option>
+            </select>
+        </datalist>
+    </div>
+    <div class="fields fluid">
+        <div class="two wide field">
+            <label>Adults</label>
+            <input type="text" class="number" formControlName="adults" tabindex='5' (change)='calculateTotalPersons()'>
         </div>
-        <div id="right">
+        <div class="two wide field">
+            <label>Kids</label>
+            <input type="text" class="number" formControlName="kids" tabindex='6' (change)='calculateTotalPersons()'>
         </div>
-    </form>
-</div>
+        <div class="two wide field">
+            <label>Free</label>
+            <input type="text" class="number" formControlName="free" tabindex='7' (change)='calculateTotalPersons()'>
+        </div>
+        <div class="two wide field">
+            <label>Total</label>
+            <input type="text" class="number" formControlName="totalPersons">
+        </div>
+    </div>
+    <div class="field fluid">
+        <label>Remarks</label>
+        <input type="text" formControlName="remarks" tabindex="8">
+    </div>
+</form>
 
 <div id="footer">
-    <div class="ui divider"></div>
     <div id="buttons">
-        <button class="ui button secondary" (click)="delete()" [hidden]="!form.value.id">Delete</button>
-        <button class="ui button solid" (click)="save()" [disabled]="!form.valid">Save</button>
+        <button class="ui button solid" (click)="new()" [disabled]="!canCreate">New</button>
+        <button class="ui button solid" (click)="save()" [disabled]="!canSave">Save</button>
+        <button class="ui button solid" (click)="delete()" [disabled]="!canDelete">Delete</button>
+        <button class="ui button solid" (click)="abort()" [disabled]="!canAbort">Cancel</button>
     </div>
 </div>

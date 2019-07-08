@@ -1,35 +1,45 @@
 import * as moment from 'moment'
-import { ActivatedRoute, Router } from '@angular/router'
-import { Component, OnInit, AfterViewInit } from '@angular/core'
+import { Component, OnInit, AfterViewInit, Input } from '@angular/core'
 import { FormBuilder, Validators, FormControl } from '@angular/forms'
-import { forkJoin } from 'rxjs'
+import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
 import { AuthService } from '../services/auth.service';
-import { CustomerService } from '../services/customer.service'
-import { DestinationService } from '../services/destination.service';
-import { PickupPointService } from '../services/pickupPoint.service';
 import { TransferService } from '../services/transfer.service';
 
+import { ITransfer } from '../models/transfer';
 import { Utils } from '../shared/classes/utils'
 import { get } from 'scriptjs';
+import { DestinationService } from '../services/destination.service';
+import { CustomerService } from '../services/customer.service';
+import { PickupPointService } from '../services/pickupPoint.service';
 
 @Component({
     selector: 'app-transfer-form',
     templateUrl: './transfer-form.component.html',
-    styleUrls: ['../shared/styles/forms.css']
+    styleUrls: ['../shared/styles/forms.css', './transfer-form.component.css']
 })
 
 export class TransferFormComponent implements OnInit, AfterViewInit {
+
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private transferService: TransferService, private authService: AuthService, private formBuilder: FormBuilder, private router: Router) { }
+
+    @Input() set transfer(transfer: ITransfer) { if (transfer) this.populateFields(transfer) }
 
     destinations: any
     customers: any
     pickupPoints: any
 
-    id: number = null
+    canCreate: boolean = false
+    canSave: boolean = false
+    canDelete: boolean = false
+    canAbort: boolean = false
+
+    @Input() public parentData: string
 
     form = this.formBuilder.group({
         id: 0,
-        dateIn: ['', [Validators.required]], dateInput: ['', [Validators.required]],
+        dateIn: [this.parentData], dateInput: [this.parentData],
         destinationId: [0, Validators.required], destinationDescription: ['', Validators.required],
         customerId: [0, Validators.required], customerDescription: ['', Validators.required],
         pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
@@ -41,29 +51,28 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         user: [this.getUserName()]
     })
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private transferService: TransferService, private authService: AuthService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
-        route.params.subscribe(p => (this.id = p['id']))
+    ngOnInit() {
+        get('script.js', () => { });
+        this.populateDropDowns()
+        this.canCreate = true
+        this.canSave = false
+        this.canDelete = false
+        this.canAbort = false
+        this.form.patchValue({ dateInput: this.parentData })
+        this.updateISODate()
     }
 
-    ngOnInit() {
+    ngAfterViewInit(): void {
+        this.focusOnElement(0)
+    }
 
-        get('script.js', () => { });
-
+    populateDropDowns() {
         let sources = []
-
         sources.push(this.destinationService.getDestinations())
         sources.push(this.customerService.getCustomers())
         sources.push(this.pickupPointService.getPickupPoints(2))
-
-        if (this.id) {
-            sources.push(this.transferService.getTransfer(this.id))
-        }
-
         return forkJoin(sources).subscribe(
             result => {
-                if (this.id) {
-                    this.populateFields()
-                }
                 this.destinations = result[0]
                 this.customers = result[1]
                 this.pickupPoints = result[2]
@@ -73,36 +82,42 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
                     this.router.navigate(['/error'])
                 }
             }
-
         )
     }
 
-    ngAfterViewInit(): void {
-        this.focusOnElement(0)
+    disableFields() {
+        this.form.controls
+    }
+    populateFields(transfer: ITransfer) {
+        this.form.setValue({
+            id: transfer.id,
+            dateIn: transfer.dateIn, dateInput: moment(transfer.dateIn).format('DD/MM/YYYY'),
+            destinationId: transfer.destination.id, destinationDescription: transfer.destination.description,
+            customerId: transfer.customer.id, customerDescription: transfer.customer.description,
+            pickupPointId: transfer.pickupPoint.id, pickupPointDescription: transfer.pickupPoint.description,
+            adults: transfer.adults,
+            kids: transfer.kids,
+            free: transfer.free,
+            totalPersons: transfer.totalPersons,
+            remarks: transfer.remarks,
+            user: transfer.user
+        })
     }
 
-
-    populateFields() {
-        this.transferService.getTransfer(this.id).subscribe(
-            result => {
-                this.form.setValue({
-                    id: result.id,
-                    dateIn: result.dateIn, dateInput: moment(result.dateIn).format('DD/MM/YYYY'),
-                    destinationId: result.destination.id, destinationDescription: result.destination.description,
-                    customerId: result.customer.id, customerDescription: result.customer.description,
-                    pickupPointId: result.pickupPoint.id, pickupPointDescription: result.pickupPoint.description,
-                    adults: result.adults,
-                    kids: result.kids,
-                    free: result.free,
-                    totalPersons: result.totalPersons,
-                    remarks: result.remarks,
-                    user: result.user
-                })
-
-            },
-            error => {
-                Utils.ErrorLogger(error)
-            })
+    clearFields() {
+        this.form.setValue({
+            id: 0,
+            dateIn: this.parentData,
+            destinationId: 0, destinationDescription: '',
+            customerId: 0, customerDescription: '',
+            pickupPointId: 0, pickupPointDescription: '',
+            adults: '',
+            kids: '',
+            free: '',
+            totalPersons: '',
+            remarks: '',
+            user: ''
+        })
     }
 
     getRequiredFieldMessage() {
@@ -115,18 +130,20 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
 
     save() {
         if (!this.form.valid) return
-        if (this.id == null) {
-            this.transferService.addTransfer(this.form.value).subscribe(data => this.router.navigate(['/transfers']), error => Utils.ErrorLogger(error))
+        if (this.form.value.id == null) {
+            console.log("Saving...")
+            this.transferService.addTransfer(this.form.value).subscribe(data => { this.router.navigate(['/transfers']) }, error => Utils.ErrorLogger(error))
         }
         else {
-            this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(data => this.router.navigate(['/transfers']), error => Utils.ErrorLogger(error))
+            console.log("Updating...")
+            this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(data => { this.router.navigate(['/transfers']), this.clearFields() }, error => Utils.ErrorLogger(error))
         }
     }
 
     delete() {
-        if (this.id != null) {
+        if (this.form.value.id != null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.transferService.deleteTransfer(this.id).subscribe(data => this.router.navigate(['/transfers']), error => Utils.ErrorLogger(error))
+                this.transferService.deleteTransfer(this.form.value.id).subscribe(data => this.router.navigate(['/transfers']), error => Utils.ErrorLogger(error))
             }
         }
     }
@@ -179,6 +196,10 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         var elements = document.getElementsByTagName('input')
         elements[index].select()
         elements[index].focus()
+    }
+
+    calculateTotalPersons() {
+        this.form.patchValue({ totalPersons: parseInt(this.form.value.adults) + parseInt(this.form.value.kids) + parseInt(this.form.value.free) })
     }
 
 }

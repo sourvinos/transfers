@@ -1,7 +1,7 @@
+import * as moment from 'moment'
 import { Component, OnInit, AfterViewInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { get } from 'scriptjs'
-import * as moment from 'moment'
 
 import { ITransfer } from './../models/transfer'
 import { TransferService } from '../services/transfer.service'
@@ -16,16 +16,20 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     queryResult: any = {}
     transfers: ITransfer[]
+    selectedTransfer: ITransfer
 
     form = this.formBuilder.group({
         dateIn: ['', [Validators.required]]
     })
+
+    selectedDate: string
 
     constructor(private service: TransferService, private formBuilder: FormBuilder) { }
 
     ngOnInit() {
         get('script.js', () => { })
         this.readDateFromLocalStorage()
+        this.selectedDate = this.form.value.dateIn
         this.getTransfers()
     }
 
@@ -34,8 +38,12 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     getTransfers() {
-        this.service.getTransfers(this.ISODate()).subscribe(data => { this.queryResult = data })
+        this.service.getTransfers(this.ISODate()).subscribe(data => this.queryResult = data)
         this.updateLocalStorageWithDate()
+    }
+
+    populateForm(transfer: ITransfer) {
+        this.selectedTransfer = transfer
     }
 
     ISODate() {
