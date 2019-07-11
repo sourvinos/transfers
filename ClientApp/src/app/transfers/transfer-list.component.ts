@@ -14,15 +14,22 @@ import { TransferService } from '../services/transfer.service'
 
 export class TransferListComponent implements OnInit, AfterViewInit {
 
+    // queryResult: {
+    //     persons: number
+    //     transfers: ITransfer[]
+    //     personsPerCustomer: number[]
+    //     personsPerDestination: number[]
+    //     personsPerRoute: number[]
+    // }
     queryResult: any = {}
-    transfers: ITransfer[]
+    filter: any = {}
+
+    selectedDate: string
     selectedTransfer: ITransfer
 
     form = this.formBuilder.group({
         dateIn: ['', [Validators.required]]
     })
-
-    selectedDate: string
 
     constructor(private service: TransferService, private formBuilder: FormBuilder) { }
 
@@ -38,7 +45,9 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     getTransfers() {
-        this.service.getTransfers(this.ISODate()).subscribe(data => this.queryResult = data)
+        this.service.getTransfers(this.ISODate()).subscribe(data => {
+            this.queryResult = data
+        })
         this.updateLocalStorageWithDate()
     }
 
@@ -48,10 +57,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     ISODate() {
         return moment(this.form.value.dateIn, 'DD/MM/YYYY').toISOString()
-    }
-
-    queryIsEmpty() {
-        return this.queryResult.transfers == undefined || this.queryResult.transfers.length == 0 ? true : false
     }
 
     updateLocalStorageWithDate() {
@@ -67,5 +72,22 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         elements[index].select()
         elements[index].focus()
     }
+
+    filterByDestination() {
+        console.log('Filtering...')
+        this.queryResult.transfers = this.queryResult.transfers.filter((d: { destination: { shortDescription: string; }; }) => d.destination.shortDescription == 'AL' || d.destination.shortDescription == 'BL')
+    }
+
+    splitObject = function (obj: { [x: string]: any; }, keys: { forEach: (arg0: (d: any) => void) => void; }) {
+        var holder = {};
+
+        keys.forEach(function (d) {
+            holder[d] = obj[d];
+        })
+
+        return holder;
+    }
+
+
 
 }

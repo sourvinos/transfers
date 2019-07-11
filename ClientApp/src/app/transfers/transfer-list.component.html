@@ -22,25 +22,58 @@
 
 <div id="content">
 
+    <!-- Form -->
+    <div id="form">
+        <app-transfer-form [parentData]="selectedDate" [transfer]='selectedTransfer'></app-transfer-form>
+    </div>
+
+    <!-- Grid -->
+    <div id="grid">
+        <!-- Table -->
+        <div id='main-content'>
+            <table class='ui sortable fixed single line table'>
+                <thead>
+                    <tr>
+                        <th class='center aligned one wide'>Destination</th>
+                        <th class='center aligned one wide'>Route</th>
+                        <th class='center aligned'>Customer</th>
+                        <th class='center aligned two wide'>Pickup point</th>
+                        <th class='center aligned one wide'>Time</th>
+                        <th class='center aligned one wide'>Adults</th>
+                        <th class='center aligned one wide'>Kids</th>
+                        <th class='center aligned one wide'>Free</th>
+                        <th class='center aligned one wide'>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='let transfer of queryResult.transfers' (click)='populateForm(transfer)'>
+                        <td class="center aligned">{{ transfer.destination.shortDescription }}</td>
+                        <td>{{ transfer.pickupPoint.route.shortDescription }}</td>
+                        <td>{{ transfer.customer.description }}</td>
+                        <td>{{ transfer.pickupPoint.exactPoint }}</td>
+                        <td class="center aligned">{{ transfer.pickupPoint.time }}</td>
+                        <td class=' right aligned'>{{ transfer.adults }}</td>
+                        <td class='right aligned'>{{ transfer.kids }}</td>
+                        <td class='right aligned'>{{ transfer.free }}</td>
+                        <td class='right aligned'>{{ transfer.totalPersons }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
     <!-- Summary -->
     <div id="summary">
         <div class="summaryBlock">
             <header>Destinations</header>
             <div class="item" *ngFor="let item of queryResult.personsPerDestination">
-                <div class="description">
-                    {{ item.description }}
-                </div>
-                <div class="total">
-                    {{ item.persons }}
-                </div>
+                <div class="description" (click)="filterByDestination()">{{ item.description }}</div>
+                <div class="total">{{ item.persons }}</div>
             </div>
             <footer>
-                <div class="description">
-                    TOTAL
-                </div>
-                <div class="total">
-                    {{ queryResult.persons }}
-                </div>
+                <div class="description">TOTAL</div>
+                <div class="total">{{ queryResult.persons }}</div>
             </footer>
         </div>
         <div class="summaryBlock">
@@ -119,47 +152,6 @@
                 </div>
             </footer>
         </div>
-    </div>
-
-    <!-- Grid -->
-    <div id="grid">
-        <!-- Table -->
-        <div id='main-content'>
-            <table class='ui sortable fixed single line table'>
-                <thead>
-                    <tr>
-                        <th class='center aligned one wide'>Destination</th>
-                        <th class='center aligned one wide'>Route</th>
-                        <th class='center aligned'>Customer</th>
-                        <th class='center aligned two wide'>Pickup point</th>
-                        <th class='center aligned one wide'>Time</th>
-                        <th class='center aligned one wide'>Adults</th>
-                        <th class='center aligned one wide'>Kids</th>
-                        <th class='center aligned one wide'>Free</th>
-                        <th class='center aligned one wide'>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor='let transfer of queryResult.transfers' (click)='populateForm(transfer)'>
-                        <td class="center aligned">{{ transfer.destination.shortDescription }}</td>
-                        <td>{{ transfer.pickupPoint.route.shortDescription }}</td>
-                        <td>{{ transfer.customer.description }}</td>
-                        <td>{{ transfer.pickupPoint.exactPoint }}</td>
-                        <td class="center aligned">{{ transfer.pickupPoint.time }}</td>
-                        <td class=' right aligned'>{{ transfer.adults }}</td>
-                        <td class='right aligned'>{{ transfer.kids }}</td>
-                        <td class='right aligned'>{{ transfer.free }}</td>
-                        <td class='right aligned'>{{ transfer.totalPersons }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-
-    <!-- Form -->
-    <div id="form">
-        <app-transfer-form [parentData]="selectedDate" [transfer]='selectedTransfer'></app-transfer-form>
     </div>
 
 </div>

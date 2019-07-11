@@ -15,6 +15,7 @@ export interface ITransfer {
     }
     destination: {
         id: number
+        shortDescription: string
         description: string
     }
     adults: number;
