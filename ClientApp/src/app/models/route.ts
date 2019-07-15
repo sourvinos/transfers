@@ -1,6 +1,7 @@
 export interface IRoute {
-    id: number;
-    shortDescription: string;
-    description: string;
-    user: string;
+    id: number
+    shortDescription: string
+    description: string
+    isSelected: boolean
+    user: string
 }

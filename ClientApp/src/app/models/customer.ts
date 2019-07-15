@@ -13,5 +13,6 @@ export interface ICustomer {
     email: string
     taxNo: string
     accountCode: string
+    isSelected: boolean
     user: string
 }

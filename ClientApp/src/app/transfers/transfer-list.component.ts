@@ -26,6 +26,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     selectedDate: string
     selectedTransfer: ITransfer
+    selected: any;
 
     form = this.formBuilder.group({
         dateIn: ['', [Validators.required]]
@@ -74,7 +75,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     filterByDestination() {
-        console.log('Filtering...')
         this.queryResult.transfers = this.queryResult.transfers.filter((d: { destination: { shortDescription: string; }; }) => d.destination.shortDescription == 'AL' || d.destination.shortDescription == 'BL')
     }
 
@@ -88,6 +88,8 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         return holder;
     }
 
-
+    select(item: any) {
+        return item.isSelected = !item.isSelected;
+    };
 
 }
