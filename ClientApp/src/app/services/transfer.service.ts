@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ITransfer } from '../models/transfer';
+import { IQueryResult } from '../models/queryResult';
 
 @Injectable({
     providedIn: 'root'
@@ -14,8 +15,12 @@ export class TransferService {
 
     constructor(private http: HttpClient) { }
 
-    getTransfers(date: string): Observable<ITransfer[]> {
-        return this.http.get<ITransfer[]>(this.url + 'getByDate' + '/' + date);
+    // getTransfers(date: string): Observable<ITransfer[]> {
+    //     return this.http.get<ITransfer[]>(this.url + 'getByDate' + '/' + date);
+    // }
+
+    getTransfers(date: string): Observable<IQueryResult[]> {
+        return this.http.get<IQueryResult[]>(this.url + 'getByDate' + '/' + date);
     }
 
     getTransfer(id: number): Observable<ITransfer> {

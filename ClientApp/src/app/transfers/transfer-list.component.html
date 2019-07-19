@@ -14,6 +14,8 @@
                 <input type="text" class="date" formControlName="dateIn" [appInputFormat]="'date'" tabindex='1' placeholder="Date">
                 <input class="dummy" tabindex='2'>
                 <button class='ui button solid' id='go' (click)='getTransfers()' tabindex='2'>Go</button>
+                <button class='ui button solid' id='go' (click)='filterByDestination()' tabindex='2'>Filter</button>
+                <button class='ui button solid' id='go' (click)='resetFilter()' tabindex='2'>Reset</button>
             </div>
         </form>
     </div>
@@ -34,7 +36,8 @@
             <table class='ui sortable fixed single line table'>
                 <thead>
                     <tr>
-                        <th class='center aligned one wide'>Destination</th>
+                        <th class='center aligned one wide'>Dest</th>
+                        <th class='hidden'>Destination</th>
                         <th class='center aligned one wide'>Route</th>
                         <th class='center aligned'>Customer</th>
                         <th class='center aligned two wide'>Pickup point</th>
@@ -46,8 +49,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor='let transfer of queryResult.transfers' (click)='populateForm(transfer)'>
+                    <tr *ngFor='let transfer of queryResultFiltered.transfers' (click)='populateForm(transfer)'>
                         <td class="center aligned">{{ transfer.destination.shortDescription }}</td>
+                        <td class="hidden">{{ transfer.destination.description }}</td>
                         <td>{{ transfer.pickupPoint.route.shortDescription }}</td>
                         <td>{{ transfer.customer.description }}</td>
                         <td>{{ transfer.pickupPoint.exactPoint }}</td>
@@ -70,7 +74,7 @@
                 <header>Destinations</header>
                 <header class="total">{{ queryResult.persons }}</header>
             </div>
-            <div *ngFor="let item of queryResult.personsPerDestination" (click)="select(item)" class="item" [class.active]="item.isSelected">
+            <div *ngFor="let item of queryResult.personsPerDestination" (click)="toggleSelected(item)" class="item destination" [class.active]="item.isSelected" [id]="item.description">
                 <div class="description"> {{ item.description }} </div>
                 <div class="total"> {{ item.persons }} </div>
             </div>
@@ -80,7 +84,7 @@
                 <header>Customers</header>
                 <header class="total">{{ queryResult.persons }}</header>
             </div>
-            <div class="item" *ngFor="let item of queryResult.personsPerCustomer" (click)="select(item)" class="item" [class.active]="item.isSelected">
+            <div class="item" *ngFor="let item of queryResult.personsPerCustomer" (click)="toggleSelected(item)" class="item" [class.active]="item.isSelected">
                 <div class="description"> {{ item.description }} </div>
                 <div class="total"> {{ item.persons }} </div>
             </div>
@@ -90,7 +94,7 @@
                 <header>Routes</header>
                 <header class="total">{{ queryResult.persons }}</header>
             </div>
-            <div class="item" *ngFor="let item of queryResult.personsPerRoute" (click)="select(item)" class="item" [class.active]="item.isSelected">
+            <div class="item" *ngFor="let item of queryResult.personsPerRoute" (click)="toggleSelected(item)" class="item" [class.active]="item.isSelected">
                 <div class="description"> {{ item.description }} </div>
                 <div class="total"> {{ item.persons }} </div>
             </div>

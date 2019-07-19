@@ -21,8 +21,8 @@
 			<li [routerLink]="['/taxOffices/']" routerLinkActive="active">Tax Offices</li>
 			<li [routerLink]="['/vatStates/']" routerLinkActive="active">VAT Regimes</li>
 			<li [routerLink]="['/transfers/']" routerLinkActive="active">Transfers</li>
-			<li *ngIf="!this.service.isLoggedIn()" [routerLink]="['/login']" routerLinkActive="active">Login</li>
-			<li *ngIf="this.service.isLoggedIn()" (click)="logout()" routerLinkActive="active">Logout</li>
+			<li *ngIf="!this.service.isLoggedIn() || this.service.isTokenExpired()" [routerLink]="['/login']" routerLinkActive="active">Login</li>
+			<li *ngIf="this.service.isLoggedIn() && !this.service.isTokenExpired()" (click)="logout()" routerLinkActive="active">Logout</li>
 		</ul>
 	</div>
 	<div id="copyright">Created with .NET Core<br />and Angular</div>
