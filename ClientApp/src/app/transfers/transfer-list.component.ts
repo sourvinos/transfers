@@ -38,12 +38,10 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     getTransfers() {
-        this.service.getTransfers(this.ISODate()).subscribe(data => {
-            this.queryResult = this.queryResultFiltered = data
-        })
         this.updateLocalStorageWithDate()
-        this.selectDestinations()
-        this.selectCustomers()
+        this.service.getTransfers(this.ISODate()).subscribe(data => { this.queryResult = this.queryResultFiltered = data })
+        this.selectItems('item destination', this.selectedDestinations)
+        this.selectItems('item customer', this.selectedCustomers)
     }
 
     populateForm(transfer: ITransfer) {
@@ -51,21 +49,27 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     filterByCriteria() {
-        // console.log(this.selectedDestinations)
-        // console.log(this.selectedCustomers)
         this.queryResultFiltered = []
         this.queryResultFiltered.transfers = this.queryResult.transfers.filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) !== -1 }).filter((y: { customer: { description: string } }) => { return this.selectedCustomers.indexOf(y.customer.description) !== -1 })
-        // console.log(this.queryResultFiltered)
-
     }
 
-    toggleDestination(item: any) {
+    selectItems(className: string, lookupArray: any) {
+        setTimeout(() => {
+            let elements = document.getElementsByClassName(className)
+            for (let index = 0; index < elements.length; index++) {
+                const element = elements[index]
+                element.classList.add('active')
+                eval(lookupArray).push(element.id)
+            }
+        }, (1000))
+    }
+
+    toggleItem(item: any, lookupArray: string) {
         var element = document.getElementById(item.description)
-        // console.log('Destination', element)
         if (element.classList.contains('active')) {
-            for (var i = 0; i < this.selectedDestinations.length; i++) {
-                if (this.selectedDestinations[i] === item.description) {
-                    this.selectedDestinations.splice(i, 1)
+            for (var i = 0; i < eval(lookupArray).length; i++) {
+                if (eval(lookupArray)[i] === item.description) {
+                    eval(lookupArray).splice(i, 1)
                     i--
                     element.classList.remove('active')
                     break
@@ -73,54 +77,9 @@ export class TransferListComponent implements OnInit, AfterViewInit {
             }
         } else {
             element.classList.add('active')
-            this.selectedDestinations.push(item.description)
+            eval(lookupArray).push(item.description)
         }
         this.filterByCriteria()
-    }
-
-    toggleCustomer(item: any) {
-        var element = document.getElementById(item.description)
-        // console.log('Customer', element)
-        if (element.classList.contains('active')) {
-            for (var i = 0; i < this.selectedCustomers.length; i++) {
-                if (this.selectedCustomers[i] === item.description) {
-                    this.selectedCustomers.splice(i, 1)
-                    i--
-                    element.classList.remove('active')
-                    break
-                }
-            }
-        } else {
-            element.classList.add('active')
-            this.selectedCustomers.push(item.description)
-        }
-        this.filterByCriteria()
-    }
-
-    selectDestinations() {
-        this.selectedDestinations = []
-        setTimeout(() => {
-            let elements = document.getElementsByClassName("item destination")
-            for (let index = 0; index < elements.length; index++) {
-                const element = elements[index]
-                element.classList.add('active')
-                this.selectedDestinations.push(element.id)
-            }
-        }, (1000))
-        console.log(this.selectedDestinations)
-    }
-
-    selectCustomers() {
-        this.selectedCustomers = []
-        setTimeout(() => {
-            let elements = document.getElementsByClassName("item customer")
-            for (let index = 0; index < elements.length; index++) {
-                const element = elements[index]
-                element.classList.add('active')
-                this.selectedCustomers.push(element.id)
-            }
-        }, (1000))
-        console.log(this.selectedCustomers)
     }
 
     ISODate() {
