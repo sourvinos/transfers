@@ -50,25 +50,23 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         this.selectedTransfer = transfer
     }
 
-    filterByDestination() {
+    filterByCriteria() {
+        // console.log(this.selectedDestinations)
+        // console.log(this.selectedCustomers)
         this.queryResultFiltered = []
-        this.queryResultFiltered.transfers = this.queryResult.transfers.filter((x: { destination: { description: string; }; }) => { return this.selectedDestinations.indexOf(x.destination.description) !== -1 })
-    }
+        this.queryResultFiltered.transfers = this.queryResult.transfers.filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) !== -1 }).filter((y: { customer: { description: string } }) => { return this.selectedCustomers.indexOf(y.customer.description) !== -1 })
+        // console.log(this.queryResultFiltered)
 
-
-    filterByCustomer() {
-        this.queryResultFiltered = []
-        this.queryResultFiltered.transfers = this.queryResult.transfers.filter((x: { customer: { description: string; }; }) => { return this.selectedCustomers.indexOf(x.customer.description) !== -1 })
     }
 
     toggleDestination(item: any) {
         var element = document.getElementById(item.description)
-        console.log(element)
+        // console.log('Destination', element)
         if (element.classList.contains('active')) {
             for (var i = 0; i < this.selectedDestinations.length; i++) {
                 if (this.selectedDestinations[i] === item.description) {
-                    this.selectedDestinations.splice(i, 1);
-                    i--;
+                    this.selectedDestinations.splice(i, 1)
+                    i--
                     element.classList.remove('active')
                     break
                 }
@@ -77,17 +75,17 @@ export class TransferListComponent implements OnInit, AfterViewInit {
             element.classList.add('active')
             this.selectedDestinations.push(item.description)
         }
-        this.filterByDestination()
-    };
+        this.filterByCriteria()
+    }
 
     toggleCustomer(item: any) {
         var element = document.getElementById(item.description)
-        console.log(element)
+        // console.log('Customer', element)
         if (element.classList.contains('active')) {
             for (var i = 0; i < this.selectedCustomers.length; i++) {
                 if (this.selectedCustomers[i] === item.description) {
-                    this.selectedCustomers.splice(i, 1);
-                    i--;
+                    this.selectedCustomers.splice(i, 1)
+                    i--
                     element.classList.remove('active')
                     break
                 }
@@ -96,30 +94,34 @@ export class TransferListComponent implements OnInit, AfterViewInit {
             element.classList.add('active')
             this.selectedCustomers.push(item.description)
         }
-        this.filterByCustomer()
-    };
+        this.filterByCriteria()
+    }
 
     selectDestinations() {
+        this.selectedDestinations = []
         setTimeout(() => {
             let elements = document.getElementsByClassName("item destination")
             for (let index = 0; index < elements.length; index++) {
-                const element = elements[index];
+                const element = elements[index]
                 element.classList.add('active')
                 this.selectedDestinations.push(element.id)
             }
-        }, (1000));
-    };
+        }, (1000))
+        console.log(this.selectedDestinations)
+    }
 
     selectCustomers() {
+        this.selectedCustomers = []
         setTimeout(() => {
             let elements = document.getElementsByClassName("item customer")
             for (let index = 0; index < elements.length; index++) {
-                const element = elements[index];
+                const element = elements[index]
                 element.classList.add('active')
                 this.selectedCustomers.push(element.id)
             }
-        }, (1000));
-    };
+        }, (1000))
+        console.log(this.selectedCustomers)
+    }
 
     ISODate() {
         return moment(this.form.value.dateIn, 'DD/MM/YYYY').toISOString()
