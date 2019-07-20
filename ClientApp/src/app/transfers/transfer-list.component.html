@@ -74,7 +74,7 @@
                 <header>Destinations</header>
                 <header class="total">{{ queryResult.persons }}</header>
             </div>
-            <div *ngFor="let item of queryResult.personsPerDestination" (click)="toggleSelected(item)" class="item destination" [class.active]="item.isSelected" [id]="item.description">
+            <div *ngFor="let item of queryResult.personsPerDestination" (click)="toggleDestination(item)" class="item destination" [class.active]="item.isSelected" [id]="item.description">
                 <div class="description"> {{ item.description }} </div>
                 <div class="total"> {{ item.persons }} </div>
             </div>
@@ -84,38 +84,9 @@
                 <header>Customers</header>
                 <header class="total">{{ queryResult.persons }}</header>
             </div>
-            <div class="item" *ngFor="let item of queryResult.personsPerCustomer" (click)="toggleSelected(item)" class="item" [class.active]="item.isSelected">
+            <div class="item" *ngFor="let item of queryResult.personsPerCustomer" (click)="toggleCustomer(item)" class="item customer" [class.active]="item.isSelected" [id]="item.description">
                 <div class="description"> {{ item.description }} </div>
                 <div class="total"> {{ item.persons }} </div>
-            </div>
-        </div>
-        <div class="summaryBlock">
-            <div class="summaryHeader">
-                <header>Routes</header>
-                <header class="total">{{ queryResult.persons }}</header>
-            </div>
-            <div class="item" *ngFor="let item of queryResult.personsPerRoute" (click)="toggleSelected(item)" class="item" [class.active]="item.isSelected">
-                <div class="description"> {{ item.description }} </div>
-                <div class="total"> {{ item.persons }} </div>
-            </div>
-        </div>
-        <div class="summaryBlock">
-            <div class="summaryHeader">
-                <header>Drivers</header>
-                <header class="total">{{ queryResult.persons }}</header>
-            </div>
-            <div class="item" *ngFor="let item of queryResult.personsPerRoute">
-                <div class="description"> {{ item.description }} </div>
-                <div class="total"> {{ item.persons }} </div>
-            </div>
-        </div>
-        <div class="summaryBlock">
-            <div class="summaryHeader">
-                <header>Ports</header>
-                <header class="total">{{ queryResult.persons }}</header>
-            </div>
-            <div class="item" *ngFor="let item of queryResult.personsPerRoute">
-                <div class="description"> {{ item.description }} </div>
             </div>
         </div>
     </div>
