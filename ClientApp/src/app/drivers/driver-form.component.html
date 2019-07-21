@@ -1,0 +1,27 @@
+<div id="header">
+    <div>
+        <h2>Driver</h2>
+        <div id="close" [routerLink]="['/drivers']">X</div>
+        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
+    </div>
+    <div class="ui divider"></div>
+</div>
+
+<div id="content">
+    <form [formGroup]='form' class="ui form" autocomplete='off'>
+        <div id="left">
+            <div class="field" [class.error]="description.invalid && description.touched">
+                <label>Description</label>
+                <input type="text" formControlName="description">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="footer">
+    <div class="ui divider"></div>
+    <div id="buttons">
+        <button class="ui button secondary" (click)="delete()" [hidden]="!form.value.id">Delete</button>
+        <button class="ui button solid" (click)="save()" [disabled]="!form.valid">Save</button>
+    </div>
+</div>

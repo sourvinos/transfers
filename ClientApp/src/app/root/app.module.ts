@@ -17,12 +17,14 @@ import { RootComponent } from './root.component';
 import { SidebarComponent } from './../shared/sidebar/sidebar.component';
 
 // Routes
-import { HomeComponent } from './../home/home.component';
-import { LoginComponent } from '../login/login.component';
 import { CustomerFormComponent } from '../customers/customer-form.component';
 import { CustomerListComponent } from '../customers/customer-list.component';
 import { DestinationFormComponent } from '../destinations/destination-form.component';
 import { DestinationListComponent } from '../destinations/destination-list.component';
+import { DriverFormComponent } from './../drivers/driver-form.component';
+import { DriverListComponent } from './../drivers/driver-list.component';
+import { HomeComponent } from './../home/home.component';
+import { LoginComponent } from '../login/login.component';
 import { PickupPointFormComponent } from '../pickupPoints/pickupPoint-form.component';
 import { PickupPointListComponent } from './../pickupPoints/pickupPoint-list.component';
 import { RouteFormComponent } from '../routes/route-form.component';
@@ -48,6 +50,7 @@ import { InputFormatDirective } from '../directives/input-format.directive';
         LoginComponent,
         CustomerFormComponent, CustomerListComponent,
         DestinationFormComponent, DestinationListComponent,
+        DriverFormComponent, DriverListComponent,
         PickupPointFormComponent, PickupPointListComponent,
         RouteFormComponent, RouteListComponent,
         TaxOfficeFormComponent, TaxOfficeListComponent,

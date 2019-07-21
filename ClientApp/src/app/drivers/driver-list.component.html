@@ -1,0 +1,38 @@
+<div id="header">
+    <div id="title">
+        <h2>Drivers</h2>
+        <div id="close" [routerLink]="['/']">X</div>
+    </div>
+    <div class="ui divider"></div>
+    <div id="search-box">
+        <div class="ui icon input">
+            <i class="search icon"></i>
+            <input type="text" placeholder="Search..." #query (keyup)="filter(query.value)" autocomplete="off">
+        </div>
+    </div>
+</div>
+
+<div id="content">
+    <table class="ui sortable fixed table">
+        <thead>
+            <tr>
+                <th class="center aligned">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let driver of filteredDrivers" routerLink="/drivers/{{ driver.id }}">
+                <td>{{ driver.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<div id="footer">
+    <div id="buttons">
+        <button class="ui button" id="new" [routerLink]="['/drivers/new']">New</button>
+    </div>
+</div>

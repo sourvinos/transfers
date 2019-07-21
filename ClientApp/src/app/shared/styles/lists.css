@@ -46,7 +46,7 @@
     grid-area: "content";
     margin: 0 2rem;
     max-height: -webkit-fill-available;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 #footer {
