@@ -9,6 +9,17 @@
 			"port": 1433,
 			"server": "localhost",
 			"username": "sa"
+		},
+		{
+			"askForPassword": false,
+			"connectionTimeout": 30,
+			"database": "transfers",
+			"dialect": "MSSQL",
+			"name": "Transfers",
+			"password": "Ncc74656",
+			"port": 1433,
+			"server": "localhost",
+			"username": "sa"
 		}
 	]
 }

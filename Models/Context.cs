@@ -12,6 +12,7 @@ namespace Transfers.Models
 		public DbSet<Destination> Destinations { get; set; }
 		public DbSet<Driver> Drivers { get; set; }
 		public DbSet<PickupPoint> PickupPoints { get; set; }
+		public DbSet<Port> Ports { get; set; }
 		public DbSet<Route> Routes { get; set; }
 		public DbSet<TaxOffice> TaxOffices { get; set; }
 		public DbSet<Transfer> Transfers { get; set; }
