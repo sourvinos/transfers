@@ -1,5 +1,4 @@
 using AutoMapper;
-using Transfers.Models;
 using Transfers.Resources;
 
 namespace Transfers.Mappings
