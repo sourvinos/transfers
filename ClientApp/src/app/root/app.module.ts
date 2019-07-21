@@ -27,6 +27,8 @@ import { HomeComponent } from './../home/home.component';
 import { LoginComponent } from '../login/login.component';
 import { PickupPointFormComponent } from '../pickupPoints/pickupPoint-form.component';
 import { PickupPointListComponent } from './../pickupPoints/pickupPoint-list.component';
+import { PortFormComponent } from './../ports/port-form.component';
+import { PortListComponent } from './../ports/port-list.component';
 import { RouteFormComponent } from '../routes/route-form.component';
 import { RouteListComponent } from '../routes/route-list.component';
 import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component';
@@ -52,6 +54,7 @@ import { InputFormatDirective } from '../directives/input-format.directive';
         DestinationFormComponent, DestinationListComponent,
         DriverFormComponent, DriverListComponent,
         PickupPointFormComponent, PickupPointListComponent,
+        PortFormComponent, PortListComponent,
         RouteFormComponent, RouteListComponent,
         TaxOfficeFormComponent, TaxOfficeListComponent,
         TransferFormComponent, TransferListComponent,
