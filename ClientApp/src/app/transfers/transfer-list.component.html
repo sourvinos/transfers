@@ -36,7 +36,7 @@
                     <tr>
                         <th class='center aligned one wide'>Dest</th>
                         <th class='hidden'>Destination</th>
-                        <th class='center aligned one wide'>Route</th>
+                        <th class='center aligned two wide'>Route</th>
                         <th class='center aligned'>Customer</th>
                         <th class='center aligned two wide'>Pickup point</th>
                         <th class='center aligned one wide'>Time</th>
@@ -54,10 +54,10 @@
                         <td>{{ transfer.customer.description }}</td>
                         <td>{{ transfer.pickupPoint.exactPoint }}</td>
                         <td class="center aligned">{{ transfer.pickupPoint.time }}</td>
-                        <td class=' right aligned'>{{ transfer.adults }}</td>
-                        <td class='right aligned'>{{ transfer.kids }}</td>
-                        <td class='right aligned'>{{ transfer.free }}</td>
-                        <td class='right aligned'>{{ transfer.totalPersons }}</td>
+                        <td class="right aligned">{{ transfer.adults }}</td>
+                        <td class="right aligned">{{ transfer.kids }}</td>
+                        <td class="right aligned">{{ transfer.free }}</td>
+                        <td class="right aligned">{{ transfer.totalPersons }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -83,6 +83,16 @@
                 <header class="total">{{ queryResult.persons }}</header>
             </div>
             <div *ngFor="let item of queryResult.personsPerCustomer" (click)="toggleItem(item, this.selectedCustomers)" class="item customer" [class.active]="item.isSelected" [id]="item.description">
+                <div class="description"> {{ item.description }} </div>
+                <div class="total"> {{ item.persons }} </div>
+            </div>
+        </div>
+        <div class="summaryBlock">
+            <div class="summaryHeader">
+                <header>Routes</header>
+                <header class="total">{{ queryResult.routes }}</header>
+            </div>
+            <div *ngFor="let item of queryResult.personsPerRoute" (click)="toggleItem(item, this.selectedRoutes)" class="item route" [class.active]="item.isSelected" [id]="item.description">
                 <div class="description"> {{ item.description }} </div>
                 <div class="total"> {{ item.persons }} </div>
             </div>

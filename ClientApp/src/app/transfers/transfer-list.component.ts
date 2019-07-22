@@ -20,6 +20,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     selectedTransfer: ITransfer
     selectedDestinations: string[] = []
     selectedCustomers: string[] = []
+    selectedRoutes: string[] = []
 
     form = this.formBuilder.group({
         dateIn: ['', [Validators.required]]
@@ -39,29 +40,17 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     getTransfers() {
         this.updateLocalStorageWithDate()
-        this.service.getTransfers(this.ISODate()).subscribe(data => { this.queryResult = this.queryResultFiltered = data })
+        this.service.getTransfers(this.ISODate()).subscribe(data => {
+            this.queryResult = this.queryResultFiltered = data
+            console.log(this.queryResult)
+        })
         this.selectItems('item destination', this.selectedDestinations)
         this.selectItems('item customer', this.selectedCustomers)
+        this.selectItems('item route', this.selectedRoutes)
     }
 
     populateForm(transfer: ITransfer) {
         this.selectedTransfer = transfer
-    }
-
-    filterByCriteria() {
-        this.queryResultFiltered = []
-        this.queryResultFiltered.transfers = this.queryResult.transfers.filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) !== -1 }).filter((y: { customer: { description: string } }) => { return this.selectedCustomers.indexOf(y.customer.description) !== -1 })
-    }
-
-    selectItems(className: string, lookupArray: any) {
-        setTimeout(() => {
-            let elements = document.getElementsByClassName(className)
-            for (let index = 0; index < elements.length; index++) {
-                const element = elements[index]
-                element.classList.add('active')
-                eval(lookupArray).push(element.id)
-            }
-        }, (1000))
     }
 
     toggleItem(item: any, lookupArray: string) {
@@ -82,22 +71,41 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         this.filterByCriteria()
     }
 
-    ISODate() {
-        return moment(this.form.value.dateIn, 'DD/MM/YYYY').toISOString()
-    }
-
-    updateLocalStorageWithDate() {
-        localStorage.setItem('date', moment(this.form.value.dateIn, 'DD/MM/YYYY').format('DD/MM/YYYY'))
-    }
-
-    readDateFromLocalStorage() {
-        this.form.setValue({ 'dateIn': localStorage.getItem('date') })
-    }
-
-    focusOnElement(index: number) {
+    private focusOnElement(index: number) {
         var elements = document.getElementsByTagName('input')
         elements[index].select()
         elements[index].focus()
+    }
+
+    private filterByCriteria() {
+        this.queryResultFiltered = []
+        this.queryResultFiltered.transfers = this.queryResult.transfers
+            .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) !== -1 })
+            .filter((y: { customer: { description: string } }) => { return this.selectedCustomers.indexOf(y.customer.description) !== -1 })
+            .filter((z: { pickupPoint: { route: { description: string; }; }; }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.description) !== -1 })
+    }
+
+    private ISODate() {
+        return moment(this.form.value.dateIn, 'DD/MM/YYYY').toISOString()
+    }
+
+    private selectItems(className: string, lookupArray: any) {
+        setTimeout(() => {
+            let elements = document.getElementsByClassName(className)
+            for (let index = 0; index < elements.length; index++) {
+                const element = elements[index]
+                element.classList.add('active')
+                eval(lookupArray).push(element.id)
+            }
+        }, (1000))
+    }
+
+    private updateLocalStorageWithDate() {
+        localStorage.setItem('date', moment(this.form.value.dateIn, 'DD/MM/YYYY').format('DD/MM/YYYY'))
+    }
+
+    private readDateFromLocalStorage() {
+        this.form.setValue({ 'dateIn': localStorage.getItem('date') })
     }
 
 }
