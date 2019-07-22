@@ -65,7 +65,7 @@ export class CustomerFormComponent implements OnInit {
         )
     }
 
-    populateFields() {
+    private populateFields() {
         this.customerService.getCustomer(this.id).subscribe(
             result => {
                 this.form.setValue({

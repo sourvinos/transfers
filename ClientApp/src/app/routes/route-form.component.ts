@@ -1,7 +1,9 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormControl } from '@angular/forms';
+import { forkJoin } from 'rxjs'
 
+import { PortService } from '../services/port.service';
 import { RouteService } from '../services/route.service';
 import { Utils } from '../shared/classes/utils';
 
@@ -13,29 +15,42 @@ import { Utils } from '../shared/classes/utils';
 
 export class RouteFormComponent implements OnInit {
 
+    ports: any
+
     id: number = null;
 
     form = this.formBuilder.group({
         id: 0,
-        shortDescription: ['', [Validators.maxLength(5)]],
+        shortDescription: ['', [Validators.maxLength(10)]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
+        portId: [''],
+        portDescription: [''],
         user: ['']
     })
 
-    constructor(private routeService: RouteService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private routeService: RouteService, private portService: PortService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
     ngOnInit() {
+        let sources = []
+        sources.push(this.portService.getPorts())
         if (this.id) {
-            this.routeService.getRoute(this.id).subscribe(result => {
-                this.populateFields()
-            }, error => {
+            sources.push(this.routeService.getRoute(this.id))
+        }
+        return forkJoin(sources).subscribe(
+            result => {
+                this.ports = result[0]
+                if (this.id) {
+                    this.populateFields()
+                }
+            },
+            error => {
                 if (error.status == 404) {
                     this.router.navigate(['/error'])
                 }
-            });
-        }
+            }
+        )
     }
 
     populateFields() {
@@ -45,6 +60,8 @@ export class RouteFormComponent implements OnInit {
                     id: result.id,
                     shortDescription: result.shortDescription,
                     description: result.description,
+                    portId: result.port.id,
+                    portDescription: result.port.description,
                     user: result.user
                 })
             },
@@ -59,6 +76,14 @@ export class RouteFormComponent implements OnInit {
 
     get description() {
         return this.form.get('description');
+    }
+
+    get portId() {
+        return this.form.get('portId')
+    }
+
+    get portDescription() {
+        return this.form.get('portDescription')
     }
 
     getRequiredFieldMessage() {
@@ -89,6 +114,21 @@ export class RouteFormComponent implements OnInit {
 
     goBack() {
         this.router.navigate(['/routes']);
+    }
+
+    arrayLookup(lookupArray: any[], givenField: FormControl) {
+        for (let x of lookupArray) {
+            if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
+                return true
+            }
+        }
+    }
+    updatePortId(lookupArray: any[], e: { target: { value: any } }): void {
+
+        let name = e.target.value
+        let list = lookupArray.filter(x => x.description === name)[0]
+
+        this.form.patchValue({ portId: list ? list.id : '' })
     }
 
 }

@@ -23,13 +23,13 @@ namespace Transfers.Controllers
 		[HttpGet]
 		public async Task<IEnumerable<Route>> Get()
 		{
-			return await context.Routes.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+			return await context.Routes.Include(x => x.Port).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
 		}
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetRoute(int id)
 		{
-			Route route = await context.Routes.SingleOrDefaultAsync(m => m.Id == id);
+			Route route = await context.Routes.Include(x => x.Port).SingleOrDefaultAsync(m => m.Id == id);
 
 			if (route == null) return NotFound();
 

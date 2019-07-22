@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-
 namespace Transfers.Models
 {
 	public class Route
@@ -9,5 +6,9 @@ namespace Transfers.Models
 		public string ShortDescription { get; set; }
 		public string Description { get; set; }
 		public string User { get; set; }
+
+		public int PortId { get; set; }
+
+		public Port Port { get; set; }
 	}
 }

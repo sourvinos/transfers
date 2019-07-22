@@ -18,6 +18,15 @@
                 <label>Description</label>
                 <input type="text" formControlName="description">
             </div>
+            <div class="field" [class.error]='(portId.invalid && portDescription.invalid && portDescription.touched) || (portDescription.touched && !arrayLookup(ports, portDescription))'>
+                <label>Departure port</label>
+                <input type="text" list="portList" formControlName='portDescription' (change)="updatePortId(ports, $event)">
+                <datalist id="portList">
+                    <select>
+                        <option *ngFor='let port of ports' [value]="port.description"></option>
+                    </select>
+                </datalist>
+            </div>
         </div>
     </form>
 </div>

@@ -24,6 +24,11 @@ export class PickupPointListComponent implements OnInit {
             id: 0,
             shortDescription: '',
             description: '',
+            port: {
+                id: 0,
+                description: '',
+                user: ''
+            },
             isSelected: false,
             user: ''
         },
