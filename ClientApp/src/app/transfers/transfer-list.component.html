@@ -22,81 +22,121 @@
 
 <div id="content">
 
+    <!-- Tabs -->
+    <div class="ui top attached tabular menu">
+        <a class="item active" data-tab="first">Summary</a>
+        <a class="item" data-tab="second">Details</a>
+    </div>
+
+    <!-- Summaries and grid -->
+    <div class="ui bottom attached tab segment active" data-tab="first">
+
+        <!-- Empty -->
+        <div id="empty" [hidden]="!queryIsEmpty()">
+            <div class="ui icon header">
+                <i class="search icon"></i>
+                <h3>Nothing to show</h3>
+            </div>
+        </div>
+
+        <!-- Summaries and Grid -->
+        <div id="summariesAndGrid" [hidden]="queryIsEmpty()">
+            <!-- Summaries -->
+            <div id="summaries">
+                <div class="summaryBlock">
+                    <div class="summaryHeader">
+                        <header>Destinations</header>
+                        <header class="total">{{ queryResult.persons }}</header>
+                    </div>
+                    <div *ngFor="let item of queryResult.personsPerDestination" (click)="toggleItem(item, this.selectedDestinations)" class="item destination" [class.active]="item.isSelected" [id]="item.description">
+                        <div class="description"> {{ item.description }} </div>
+                        <div class="total"> {{ item.persons }} </div>
+                    </div>
+                </div>
+                <div class="summaryBlock">
+                    <div class="summaryHeader">
+                        <header>Customers</header>
+                        <header class="total">{{ queryResult.persons }}</header>
+                    </div>
+                    <div *ngFor="let item of queryResult.personsPerCustomer" (click)="toggleItem(item, this.selectedCustomers)" class="item customer" [class.active]="item.isSelected" [id]="item.description">
+                        <div class="description"> {{ item.description }} </div>
+                        <div class="total"> {{ item.persons }} </div>
+                    </div>
+                </div>
+                <div class="summaryBlock">
+                    <div class="summaryHeader">
+                        <header>Routes</header>
+                        <header class="total">{{ queryResult.persons }}</header>
+                    </div>
+                    <div *ngFor="let item of queryResult.personsPerRoute" (click)="toggleItem(item, this.selectedRoutes)" class="item route" [class.active]="item.isSelected" [id]="item.description">
+                        <div class="description"> {{ item.description }} </div>
+                        <div class="total"> {{ item.persons }} </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Grid -->
+            <div id='main-content'>
+                <table class='ui sortable fixed single line table'>
+                    <thead>
+                        <tr>
+                            <th class='center aligned one wide'>Dest</th>
+                            <th class='hidden'>Destination</th>
+                            <th class='center aligned two wide'>Route</th>
+                            <th class='center aligned'>Customer</th>
+                            <th class='center aligned two wide'>Pickup point</th>
+                            <th class='center aligned one wide'>Time</th>
+                            <th class='center aligned one wide'>Adults</th>
+                            <th class='center aligned one wide'>Kids</th>
+                            <th class='center aligned one wide'>Free</th>
+                            <th class='center aligned one wide'>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor='let transfer of queryResultFiltered.transfers' (click)='populateForm(transfer)'>
+                            <td class="center aligned">{{ transfer.destination.shortDescription }}</td>
+                            <td class="hidden">{{ transfer.destination.description }}</td>
+                            <td>{{ transfer.pickupPoint.route.shortDescription }}</td>
+                            <td>{{ transfer.customer.description }}</td>
+                            <td>{{ transfer.pickupPoint.exactPoint }}</td>
+                            <td class="center aligned">{{ transfer.pickupPoint.time }}</td>
+                            <td class="right aligned">{{ transfer.adults }}</td>
+                            <td class="right aligned">{{ transfer.kids }}</td>
+                            <td class="right aligned">{{ transfer.free }}</td>
+                            <td class="right aligned">{{ transfer.totalPersons }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
     <!-- Form -->
-    <div id="form">
-        <app-transfer-form [parentData]="selectedDate" [transfer]='selectedTransfer'></app-transfer-form>
-    </div>
+    <div class="ui bottom attached tab segment" data-tab="second">
 
-    <!-- Grid -->
-    <div id="grid">
-        <!-- Table -->
-        <div id='main-content'>
-            <table class='ui sortable fixed single line table'>
-                <thead>
-                    <tr>
-                        <th class='center aligned one wide'>Dest</th>
-                        <th class='hidden'>Destination</th>
-                        <th class='center aligned two wide'>Route</th>
-                        <th class='center aligned'>Customer</th>
-                        <th class='center aligned two wide'>Pickup point</th>
-                        <th class='center aligned one wide'>Time</th>
-                        <th class='center aligned one wide'>Adults</th>
-                        <th class='center aligned one wide'>Kids</th>
-                        <th class='center aligned one wide'>Free</th>
-                        <th class='center aligned one wide'>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor='let transfer of queryResultFiltered.transfers' (click)='populateForm(transfer)'>
-                        <td class="center aligned">{{ transfer.destination.shortDescription }}</td>
-                        <td class="hidden">{{ transfer.destination.description }}</td>
-                        <td>{{ transfer.pickupPoint.route.shortDescription }}</td>
-                        <td>{{ transfer.customer.description }}</td>
-                        <td>{{ transfer.pickupPoint.exactPoint }}</td>
-                        <td class="center aligned">{{ transfer.pickupPoint.time }}</td>
-                        <td class="right aligned">{{ transfer.adults }}</td>
-                        <td class="right aligned">{{ transfer.kids }}</td>
-                        <td class="right aligned">{{ transfer.free }}</td>
-                        <td class="right aligned">{{ transfer.totalPersons }}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Form -->
+        <div id="form">
+            <app-transfer-form [parentData]="selectedDate" [transfer]='selectedTransfer'></app-transfer-form>
+        </div>
+
+        <!-- Empty -->
+        <div id="empty" [hidden]="!queryIsEmpty()">
+            <div class="ui icon header">
+                <i class="search icon"></i>
+                <h3>Nothing to show</h3>
+            </div>
+        </div>
+
+        <!-- Grid -->
+        <div class="summary" [hidden]="queryIsEmpty()">
         </div>
 
     </div>
 
-    <!-- Summary -->
-    <div id="summary">
-        <div class="summaryBlock">
-            <div class="summaryHeader">
-                <header>Destinations</header>
-                <header class="total">{{ queryResult.persons }}</header>
-            </div>
-            <div *ngFor="let item of queryResult.personsPerDestination" (click)="toggleItem(item, this.selectedDestinations)" class="item destination" [class.active]="item.isSelected" [id]="item.description">
-                <div class="description"> {{ item.description }} </div>
-                <div class="total"> {{ item.persons }} </div>
-            </div>
-        </div>
-        <div class="summaryBlock">
-            <div class="summaryHeader">
-                <header>Customers</header>
-                <header class="total">{{ queryResult.persons }}</header>
-            </div>
-            <div *ngFor="let item of queryResult.personsPerCustomer" (click)="toggleItem(item, this.selectedCustomers)" class="item customer" [class.active]="item.isSelected" [id]="item.description">
-                <div class="description"> {{ item.description }} </div>
-                <div class="total"> {{ item.persons }} </div>
-            </div>
-        </div>
-        <div class="summaryBlock">
-            <div class="summaryHeader">
-                <header>Routes</header>
-                <header class="total">{{ queryResult.routes }}</header>
-            </div>
-            <div *ngFor="let item of queryResult.personsPerRoute" (click)="toggleItem(item, this.selectedRoutes)" class="item route" [class.active]="item.isSelected" [id]="item.description">
-                <div class="description"> {{ item.description }} </div>
-                <div class="total"> {{ item.persons }} </div>
-            </div>
-        </div>
-    </div>
+</div>
 
+<div id='footer'>
+    <div id='buttons'>
+        <button class='ui button solid' [routerLink]='["/transfers/new"]'>New </button>
+    </div>
 </div>

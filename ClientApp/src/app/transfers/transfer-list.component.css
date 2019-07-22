@@ -1,12 +1,14 @@
+#search-box {
+    margin: 0 1rem !important;
+}
+
 #content {
     display: grid;
     grid-template-areas:
-        "summary"
-        "grid"
-        "form";
-    grid-template-columns: min-content 1fr min-content;
-    grid-template-rows: 1fr;
-    margin: 2rem;
+        "tabs"
+        "main-content";
+    grid-template-rows: max-content 1fr;
+    margin-top: -0.9rem;
     overflow-y: hidden;
 }
 
@@ -17,31 +19,34 @@
     justify-content: center;
 }
 
-#header #search-box {
-    display: flex;
-    justify-content: flex-end;
-    margin: 0 1rem;
+.tab.segment {
+    margin: 0 !important;
 }
 
-button#go {
-    margin: 0 0 0 0.5rem;
-}
-
-#summary {
-    align-content: flex-start;
+#summariesAndGrid {
     display: grid;
-    grid-row-gap: 0.2rem;
+    grid-column-gap: 1rem;
+    grid-template-areas:
+        "summaries"
+        "grid";
+    grid-template-columns: 300px auto;
     height: 100%;
-    justify-content: flex-start;
     max-height: -webkit-fill-available;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
-#summary::-webkit-scrollbar, #grid::-webkit-scrollbar {
+#summaries {
+    display: grid;
+    height: -webkit-fill-available;
+    overflow-y: auto;
+    row-gap: 0.5rem;
+}
+
+#summaries::-webkit-scrollbar {
     width: 0.5rem;
 }
 
-#summary::-webkit-scrollbar-thumb, #grid::-webkit-scrollbar-thumb {
+#summaries::-webkit-scrollbar-thumb {
     background-color: #D67474;
     min-height: 6.25rem;
 }
@@ -56,7 +61,6 @@ button#go {
 .summaryHeader {
     display: flex;
     justify-content: space-between;
-    padding-right: 0.5rem;
 }
 
 .summaryBlock header {
@@ -76,10 +80,6 @@ button#go {
     line-height: 1.5rem;
     margin-bottom: 0.2rem;
     padding: 0 0.5rem;
-}
-
-.active {
-    border-left: 0.3rem solid #D67474 !important;
 }
 
 .summaryBlock .item:hover {
@@ -109,19 +109,25 @@ button#go {
     margin-top: 30px;
 }
 
-#content {
-    grid-area: "content";
-}
-
-#grid {
-    margin: 0 2rem;
+#main-content {
+    grid-area: "grid";
     overflow-y: auto;
 }
 
-#form {
-    overflow-x: hidden;
+#main-content::-webkit-scrollbar {
+    width: 0.5rem;
 }
 
-#footer {
-    margin: 1rem 2rem 2rem 2rem;
+#main-content::-webkit-scrollbar-thumb {
+    background-color: #D67474;
+    min-height: 6.25rem;
+}
+
+input.date {
+    margin-right: 0.25rem !important;
+}
+
+h3 {
+    color: #939393;
+    font-family: "Economica";
 }

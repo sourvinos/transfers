@@ -42,7 +42,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         this.updateLocalStorageWithDate()
         this.service.getTransfers(this.ISODate()).subscribe(data => {
             this.queryResult = this.queryResultFiltered = data
-            console.log(this.queryResult)
         })
         this.selectItems('item destination', this.selectedDestinations)
         this.selectItems('item customer', this.selectedCustomers)
@@ -69,6 +68,10 @@ export class TransferListComponent implements OnInit, AfterViewInit {
             eval(lookupArray).push(item.description)
         }
         this.filterByCriteria()
+    }
+
+    queryIsEmpty() {
+        return this.queryResult.transfers == undefined || this.queryResult.transfers.length == 0 ? true : false
     }
 
     private focusOnElement(index: number) {
