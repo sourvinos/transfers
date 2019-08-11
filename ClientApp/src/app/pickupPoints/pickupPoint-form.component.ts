@@ -26,7 +26,7 @@ export class PickupPointFormComponent implements OnInit {
         description: ['', [Validators.required, Validators.maxLength(100)]],
         exactPoint: ['', [Validators.maxLength(100)]],
         time: ['', [Validators.required, Validators.pattern("[0-9][0-9]:[0-9][0-9]")]],
-        user: ['']
+        userName: ['']
     })
 
     constructor(private routeService: RouteService, private pickupPointservice: PickupPointService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
@@ -64,7 +64,7 @@ export class PickupPointFormComponent implements OnInit {
                     description: result.description,
                     exactPoint: result.exactPoint,
                     time: result.time,
-                    user: result.user
+                    userName: result.userName
                 })
             },
             error => {

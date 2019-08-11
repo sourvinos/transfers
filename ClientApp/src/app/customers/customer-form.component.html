@@ -10,6 +10,7 @@
 <div id="content">
     <form [formGroup]='form' class="ui form" autocomplete='off'>
         <div id="left">
+            <input type="text" formControlName="userName">
             <div class="field" [class.error]="description.invalid && description.touched">
                 <label>Description</label>
                 <input type="text" formControlName="description">

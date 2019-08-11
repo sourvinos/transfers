@@ -10,7 +10,6 @@ using Transfers.Models;
 namespace Transfers.Controllers
 {
 	[Route("api/[controller]")]
-	[Authorize]
 	public class CustomersController : ControllerBase
 	{
 		private readonly IMapper mapper;

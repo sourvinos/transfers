@@ -34,7 +34,7 @@ namespace Transfers.Controllers
 				await userManager.AddToRoleAsync(user, "Admin");
 			}
 
-			return Ok(new { Username = user.UserName });
+			return Ok(new { UserName = user.UserName });
 		}
 
 		[HttpPost]
@@ -43,7 +43,7 @@ namespace Transfers.Controllers
 		{
 			var settings = configuration.GetSection("Jwt");
 
-			IdentityUser user = await userManager.FindByNameAsync(model.Username);
+			IdentityUser user = await userManager.FindByNameAsync(model.UserName);
 
 			if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
 			{

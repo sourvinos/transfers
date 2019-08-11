@@ -3,5 +3,5 @@ export interface IDestination {
     shortDescription: string
     description: string
     isSelected: boolean
-    user: string
+    userName: string
 }

@@ -35,7 +35,7 @@ export class CustomerFormComponent implements OnInit {
         email: ['', [Validators.maxLength(100)]],
         taxNo: ['', [Validators.maxLength(100)]],
         accountCode: ['', [Validators.maxLength(100)]],
-        user: ['']
+        userName: ['']
     })
 
     constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
@@ -82,7 +82,7 @@ export class CustomerFormComponent implements OnInit {
                     email: result.email,
                     taxNo: result.taxNo,
                     accountCode: result.accountCode,
-                    user: result.user
+                    userName: result.userName
                 })
             },
             error => {

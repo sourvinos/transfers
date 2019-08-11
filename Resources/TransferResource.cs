@@ -15,7 +15,7 @@ namespace Transfers.Resources
 		public int TotalPersons { get; set; }
 
 		public string Remarks { get; set; }
-		public string User { get; set; }
+		public string UserName { get; set; }
 
 		public CustomerResource Customer { get; set; }
 		public DestinationResource Destination { get; set; }

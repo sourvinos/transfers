@@ -29,14 +29,13 @@ namespace Transfers.Mappings
 				.ForMember(v => v.Id, opt => opt.Ignore())
 				.ForMember(v => v.DateIn, opt => opt.MapFrom(vr => vr.dateIn))
 				.ForMember(v => v.CustomerId, opt => opt.MapFrom(vr => vr.CustomerId))
-				.ForMember(v => v.TransferTypeId, opt => opt.MapFrom(vr => vr.TransferTypeId))
 				.ForMember(v => v.PickupPointId, opt => opt.MapFrom(vr => vr.PickupPointId))
 				.ForMember(v => v.Adults, opt => opt.MapFrom(vr => vr.Adults))
 				.ForMember(v => v.kids, opt => opt.MapFrom(vr => vr.Kids))
 				.ForMember(v => v.Free, opt => opt.MapFrom(vr => vr.Free))
 				.ForMember(v => v.DestinationId, opt => opt.MapFrom(vr => vr.DestinationId))
 				.ForMember(v => v.Remarks, opt => opt.MapFrom(vr => vr.Remarks))
-				.ForMember(v => v.User, opt => opt.MapFrom(vr => vr.User));
+				.ForMember(v => v.UserName, opt => opt.MapFrom(vr => vr.UserName));
 		}
 	}
 }

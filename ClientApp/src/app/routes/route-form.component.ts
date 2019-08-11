@@ -25,7 +25,7 @@ export class RouteFormComponent implements OnInit {
         description: ['', [Validators.required, Validators.maxLength(100)]],
         portId: [''],
         portDescription: [''],
-        user: ['']
+        userName: ['']
     })
 
     constructor(private routeService: RouteService, private portService: PortService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
@@ -62,7 +62,7 @@ export class RouteFormComponent implements OnInit {
                     description: result.description,
                     portId: result.port.id,
                     portDescription: result.port.description,
-                    user: result.user
+                    userName: result.userName
                 })
             },
             error => {

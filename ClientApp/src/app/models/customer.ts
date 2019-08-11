@@ -14,5 +14,5 @@ export interface ICustomer {
     taxNo: string
     accountCode: string
     isSelected: boolean
-    user: string
+    userName: string
 }

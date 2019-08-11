@@ -11,7 +11,7 @@
 		public string Email { get; set; }
 		public string TaxNo { get; set; }
 		public string AccountCode { get; set; }
-		public string User { get; set; }
+		public string UserName { get; set; }
 
 		public int TaxOfficeId { get; set; }
 		public int VATStateId { get; set; }

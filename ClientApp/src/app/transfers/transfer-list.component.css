@@ -131,3 +131,7 @@ h3 {
     color: #939393;
     font-family: "Economica";
 }
+
+.active {
+    border-left-color: #D67474 !important;
+}

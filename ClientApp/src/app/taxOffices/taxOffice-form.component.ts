@@ -18,7 +18,7 @@ export class TaxOfficeFormComponent implements OnInit {
     form = this.formBuilder.group({
         id: 0,
         description: ['', [Validators.required, Validators.maxLength(100)]],
-        user: ['']
+        userName: ['']
     })
 
     constructor(private taxOfficeService: TaxOfficeService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
@@ -43,7 +43,7 @@ export class TaxOfficeFormComponent implements OnInit {
                 this.form.setValue({
                     id: result.id,
                     description: result.description,
-                    user: result.user
+                    userName: result.userName
                 })
             },
             error => {

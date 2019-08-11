@@ -19,7 +19,7 @@ export class DestinationFormComponent implements OnInit {
         id: 0,
         shortDescription: ['', [Validators.maxLength(5)]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
-        user: ['']
+        userName: ['']
     })
 
     constructor(private destinationService: DestinationService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
@@ -45,7 +45,7 @@ export class DestinationFormComponent implements OnInit {
                     id: result.id,
                     shortDescription: result.shortDescription,
                     description: result.description,
-                    user: result.user
+                    userName: result.userName
                 })
             },
             error => {

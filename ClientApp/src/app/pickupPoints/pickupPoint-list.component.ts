@@ -27,15 +27,15 @@ export class PickupPointListComponent implements OnInit {
             port: {
                 id: 0,
                 description: '',
-                user: ''
+                userName: ''
             },
             isSelected: false,
-            user: ''
+            userName: ''
         },
         description: '',
         exactPoint: '',
         time: '',
-        user: '',
+        userName: '',
     }
 
     constructor(private routeService: RouteService, private pickupPointService: PickupPointService) { }

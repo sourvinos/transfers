@@ -13,10 +13,9 @@ namespace Transfers.Resources
 		public int Free { get; set; }
 
 		public string Remarks { get; set; }
-		public string User { get; set; }
+		public string UserName { get; set; }
 
 		public int CustomerId { get; set; }
-		public int TransferTypeId { get; set; }
 		public int PickupPointId { get; set; }
 		public int DestinationId { get; set; }
 	}

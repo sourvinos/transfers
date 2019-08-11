@@ -8,7 +8,7 @@ namespace Transfers.Models
 		public string Description { get; set; }
 		public string ExactPoint { get; set; }
 		public string Time { get; set; }
-		public string User { get; set; }
+		public string UserName { get; set; }
 
 		public int RouteId { get; set; }
 		public Route Route { get; set; }

@@ -6,5 +6,5 @@ export interface IPickupPoint {
     description: string
     exactPoint: string
     time: string
-    user: string
+    userName: string
 }

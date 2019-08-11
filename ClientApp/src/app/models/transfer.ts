@@ -23,5 +23,5 @@ export interface ITransfer {
     free: number;
     totalPersons: number;
     remarks: string;
-    user: string
+    userName: string
 }

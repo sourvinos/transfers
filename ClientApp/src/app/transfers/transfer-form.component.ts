@@ -48,7 +48,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         free: [0, Validators.required],
         totalPersons: 0,
         remarks: [''],
-        user: [this.getUserName()]
+        userName: [this.getUserName()]
     })
 
     ngOnInit() {
@@ -100,7 +100,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
             free: transfer.free,
             totalPersons: transfer.totalPersons,
             remarks: transfer.remarks,
-            user: transfer.user
+            userName: 'Me'
         })
     }
 
@@ -116,7 +116,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
             free: '',
             totalPersons: '',
             remarks: '',
-            user: ''
+            userName: ''
         })
     }
 

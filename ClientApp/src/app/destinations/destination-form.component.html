@@ -10,6 +10,7 @@
 <div id="content">
     <form [formGroup]='form' class="ui form" autocomplete='off'>
         <div id="left">
+            <input type="text" formControlName="userName">
             <div class="field" [class.error]="shortDescription.invalid && shortDescription.touched">
                 <label>Abbreviation</label>
                 <input type="text" formControlName="shortDescription">

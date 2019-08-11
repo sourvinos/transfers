@@ -6,5 +6,5 @@ export interface IRoute {
     description: string
     port: IPort
     isSelected: boolean
-    user: string
+    userName: string
 }
