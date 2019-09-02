@@ -7,44 +7,53 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Transfers.Identity;
 using Transfers.Models;
 using Transfers.Shared;
 
 namespace Transfers
 {
-	public class Startup
-	{
-		public Startup(IConfiguration configuration)
-		{
-			Configuration = configuration;
-		}
+    public class Startup
+    {
+        // Constructor
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
-		public IConfiguration Configuration { get; }
+        // Variables
+        public IConfiguration Configuration { get; }
 
-		public void ConfigureServices(IServiceCollection services)
-		{
-			Utils.AddIdentity(services);
-			Utils.AddAuthentication(Configuration, services);
+        // Add configurations
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddScoped<TokenModel>();
 
-			services.Configure<CookiePolicyOptions>(options => { options.CheckConsentNeeded = context => true; options.MinimumSameSitePolicy = SameSiteMode.None; });
-			services.AddAutoMapper();
-			services.AddDbContext<Context>(options => options.UseSqlServer(Configuration["ConnectionStrings:SqlServerConnection"]));
-			services.AddMvc(options => { options.SslPort = 44322; options.Filters.Add(new RequireHttpsAttribute()); });
-			services.AddAntiforgery(options => { options.Cookie.Name = "_af"; options.Cookie.HttpOnly = true; options.Cookie.SecurePolicy = CookieSecurePolicy.Always; options.HeaderName = "X-XSRF-TOKEN"; });
-			services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
-		}
+            Utils.AddIdentity(services);
+            Utils.AddAuthentication(Configuration, services);
+            Utils.AddAuthorization(services);
+            Utils.AddCors(services);
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-		{
-			if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); } else { app.UseExceptionHandler("/Error"); app.UseHsts(); }
+            services.AddAntiforgery(options => { options.Cookie.Name = "_af"; options.Cookie.HttpOnly = true; options.Cookie.SecurePolicy = CookieSecurePolicy.Always; options.HeaderName = "X-XSRF-TOKEN"; });
+            services.AddAutoMapper();
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:SqlServerConnection"]));
+            services.AddMvc(options => { options.SslPort = 44322; options.Filters.Add(new RequireHttpsAttribute()); });
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
+            services.Configure<CookiePolicyOptions>(options => { options.CheckConsentNeeded = context => true; options.MinimumSameSitePolicy = SameSiteMode.None; });
+        }
 
-			app.UseAuthentication();
-			app.UseHttpsRedirection();
-			app.UseSpaStaticFiles();
-			app.UseStaticFiles();
-			app.UseStatusCodePages();
-			app.UseMvc(routes => { routes.MapRoute(name: "default", template: "{controller}/{action=Index}/{id?}"); });
-			app.UseSpa(spa => { spa.Options.SourcePath = "ClientApp"; if (env.IsDevelopment()) { spa.UseAngularCliServer(npmScript: "start"); } });
-		}
-	}
+        // Use configurations
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); } else { app.UseExceptionHandler("/Error"); app.UseHsts(); }
+
+            app.UseAuthentication();
+            app.UseHttpsRedirection();
+            app.UseSpaStaticFiles();
+            app.UseStaticFiles();
+            app.UseStatusCodePages();
+            app.UseMvc(routes => { routes.MapRoute(name: "default", template: "{controller}/{action=Index}/{id?}"); });
+            app.UseSpa(spa => { spa.Options.SourcePath = "ClientApp"; if (env.IsDevelopment()) { spa.UseAngularCliServer(npmScript: "start"); } });
+        }
+    }
 }

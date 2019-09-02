@@ -8,82 +8,82 @@ using Transfers.Models;
 
 namespace Transfers.Controllers
 {
-	[Route("api/[controller]")]
-	public class DriversController : ControllerBase
-	{
-		private readonly IMapper mapper;
-		private readonly Context context;
+    [Route("api/[controller]")]
+    public class DriversController : ControllerBase
+    {
+        private readonly IMapper mapper;
+        private readonly ApplicationDbContext context;
 
-		public DriversController(IMapper mapper, Context context)
-		{
-			this.mapper = mapper;
-			this.context = context;
-		}
+        public DriversController(IMapper mapper, ApplicationDbContext context)
+        {
+            this.mapper = mapper;
+            this.context = context;
+        }
 
-		[HttpGet]
-		public async Task<IEnumerable<Driver>> Get()
-		{
-			return await context.Drivers.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
-		}
+        [HttpGet]
+        public async Task<IEnumerable<Driver>> Get()
+        {
+            return await context.Drivers.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+        }
 
-		[HttpGet("{id}")]
-		public async Task<IActionResult> GetDriver(int id)
-		{
-			Driver driver = await context.Drivers.SingleOrDefaultAsync(m => m.Id == id);
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDriver(int id)
+        {
+            Driver driver = await context.Drivers.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (driver == null) return NotFound();
+            if (driver == null) return NotFound();
 
-			return Ok(driver);
-		}
+            return Ok(driver);
+        }
 
-		[HttpPost]
-		public async Task<IActionResult> PostDriver([FromBody] Driver driver)
-		{
-			if (!ModelState.IsValid) return BadRequest(ModelState);
+        [HttpPost]
+        public async Task<IActionResult> PostDriver([FromBody] Driver driver)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-			context.Drivers.Add(driver);
+            context.Drivers.Add(driver);
 
-			await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
-			return Ok(driver);
-		}
+            return Ok(driver);
+        }
 
-		[HttpPut("{id}")]
-		public async Task<IActionResult> PutDriver([FromRoute] int id, [FromBody] Driver driver)
-		{
-			if (!ModelState.IsValid) return BadRequest(ModelState);
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutDriver([FromRoute] int id, [FromBody] Driver driver)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-			if (id != driver.Id) return BadRequest();
+            if (id != driver.Id) return BadRequest();
 
-			context.Entry(driver).State = EntityState.Modified;
+            context.Entry(driver).State = EntityState.Modified;
 
-			try
-			{
-				await context.SaveChangesAsync();
-			}
+            try
+            {
+                await context.SaveChangesAsync();
+            }
 
-			catch (DbUpdateConcurrencyException)
-			{
-				driver = await context.Drivers.SingleOrDefaultAsync(m => m.Id == id);
+            catch (DbUpdateConcurrencyException)
+            {
+                driver = await context.Drivers.SingleOrDefaultAsync(m => m.Id == id);
 
-				if (driver == null) return NotFound(); else throw;
-			}
+                if (driver == null) return NotFound(); else throw;
+            }
 
-			return Ok(driver);
-		}
+            return Ok(driver);
+        }
 
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteDriver([FromRoute] int id)
-		{
-			Driver driver = await context.Drivers.SingleOrDefaultAsync(m => m.Id == id);
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDriver([FromRoute] int id)
+        {
+            Driver driver = await context.Drivers.SingleOrDefaultAsync(m => m.Id == id);
 
-			if (driver == null) { return NotFound(); }
+            if (driver == null) { return NotFound(); }
 
-			context.Drivers.Remove(driver);
+            context.Drivers.Remove(driver);
 
-			await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
-			return NoContent();
-		}
-	}
+            return NoContent();
+        }
+    }
 }
