@@ -1,6 +1,7 @@
+// Base
 import { Component, OnInit } from '@angular/core';
 import { get } from 'scriptjs';
-
+// Custom
 import { IDestination } from '../models/destination';
 import { DestinationService } from '../services/destination.service';
 import { Utils } from '../shared/classes/utils';

@@ -1,10 +1,11 @@
+// Base
 import { Component, OnInit } from '@angular/core';
 import { get } from 'scriptjs';
-
-import { IRoute } from '../models/route';
+// Custom
 import { IPickupPoint } from '../models/pickupPoint';
-import { RouteService } from '../services/route.service';
+import { IRoute } from '../models/route';
 import { PickupPointService } from '../services/pickupPoint.service';
+import { RouteService } from '../services/route.service';
 import { Utils } from '../shared/classes/utils';
 
 @Component({

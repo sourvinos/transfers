@@ -1,8 +1,9 @@
-import { ActivatedRoute, Router } from '@angular/router';
+// Base
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormControl } from '@angular/forms';
-import { forkJoin } from 'rxjs'
-
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+// Custom
 import { PortService } from '../services/port.service';
 import { RouteService } from '../services/route.service';
 import { Utils } from '../shared/classes/utils';

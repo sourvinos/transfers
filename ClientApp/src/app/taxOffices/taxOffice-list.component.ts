@@ -1,9 +1,10 @@
+// Base
 import { Component, OnInit } from '@angular/core';
 import { get } from 'scriptjs';
-
-import { ITaxOffice } from './../models/taxOffice';
+// Custom
 import { TaxOfficeService } from '../services/taxOffice.service';
 import { Utils } from '../shared/classes/utils';
+import { ITaxOffice } from './../models/taxOffice';
 
 @Component({
     selector: 'taxOffice-list',

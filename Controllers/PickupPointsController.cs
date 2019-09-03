@@ -24,7 +24,7 @@ namespace Transfers.Controllers
             this.context = context;
         }
 
-        // GET: api/pickupPointsForRoute/5
+        // GET: api/pickupPoints/pickupPointsForRoute/5
         [HttpGet("pickupPointsForRoute/{routeId}")]
         public async Task<IEnumerable<PickupPoint>> Get(int routeId)
         {

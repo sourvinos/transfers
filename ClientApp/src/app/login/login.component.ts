@@ -1,7 +1,9 @@
-import { Component } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
-import { Router } from '@angular/router'
-import { AccountService } from '../services/account.service'
+// Base
+import { Component } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+// Custom
+import { AccountService } from '../services/account.service';
 
 @Component({
 	selector: 'app-login',
@@ -27,16 +29,12 @@ export class LoginComponent {
 
 	// Login
 	login() {
+
 		let userlogin = this.form.value
 
 		this.service.login(userlogin.userName, userlogin.password).subscribe(result => {
-
 			let token = (<any>result).authToken.token
-			console.log(token)
-			console.log(result.authToken.roles)
-			console.log("User Logged In Successfully")
 			this.invalidLogin = false
-			console.log(this.returnUrl)
 			this.router.navigateByUrl(this.returnUrl)
 		},
 			error => {

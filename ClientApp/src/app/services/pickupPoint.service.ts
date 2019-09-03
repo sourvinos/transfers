@@ -1,7 +1,8 @@
+// Base
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
+// Custom
 import { IPickupPoint } from '../models/pickupPoint';
 
 @Injectable({
@@ -10,16 +11,16 @@ import { IPickupPoint } from '../models/pickupPoint';
 
 export class PickupPointService {
 
-    private url: string = '/api/pickuppoints/';
+    private url: string = '/api/pickupPoints';
 
     constructor(private http: HttpClient) { }
 
     getPickupPoints(routeId: number): Observable<IPickupPoint[]> {
-        return this.http.get<IPickupPoint[]>(this.url + "route/" + routeId);
+        return this.http.get<IPickupPoint[]>(this.url + '/pickupPointsForRoute/' + routeId);
     }
 
     getPickupPoint(id: number): Observable<IPickupPoint> {
-        return this.http.get<IPickupPoint>(this.url + id);
+        return this.http.get<IPickupPoint>(this.url + '/' + id);
     }
 
     addPickupPoint(formData: IPickupPoint): Observable<IPickupPoint> {
@@ -27,11 +28,11 @@ export class PickupPointService {
     }
 
     updatePickupPoint(id: number, formData: IPickupPoint): Observable<IPickupPoint> {
-        return this.http.put<IPickupPoint>(this.url + id, formData);
+        return this.http.put<IPickupPoint>(this.url + '/' + id, formData);
     }
 
     deletePickupPoint(id: number): Observable<IPickupPoint> {
-        return this.http.delete<IPickupPoint>(this.url + id);
+        return this.http.delete<IPickupPoint>(this.url + '/' + id);
     }
 
 }

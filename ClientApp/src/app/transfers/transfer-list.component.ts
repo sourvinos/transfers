@@ -1,10 +1,11 @@
-import * as moment from 'moment'
-import { Component, OnInit, AfterViewInit } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
-import { get } from 'scriptjs'
-
-import { ITransfer } from './../models/transfer'
-import { TransferService } from '../services/transfer.service'
+// Base
+import * as moment from 'moment';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { get } from 'scriptjs';
+// Custom
+import { TransferService } from '../services/transfer.service';
+import { ITransfer } from './../models/transfer';
 
 @Component({
     selector: 'app-transfer-list',

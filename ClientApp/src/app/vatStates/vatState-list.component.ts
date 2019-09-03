@@ -1,6 +1,7 @@
+// Base
 import { Component, OnInit } from '@angular/core';
 import { get } from 'scriptjs';
-
+// Custom
 import { IVatState } from '../models/vatState';
 import { VatStateService } from '../services/vatState.service';
 import { Utils } from '../shared/classes/utils';

@@ -1,11 +1,12 @@
-import { ActivatedRoute, Router } from '@angular/router'
-import { Component, OnInit } from '@angular/core'
-import { FormBuilder, Validators, FormControl } from '@angular/forms'
-import { forkJoin } from 'rxjs'
-
-import { PickupPointService } from '../services/pickupPoint.service'
-import { RouteService } from '../services/route.service'
-import { Utils } from '../shared/classes/utils'
+// Base
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+// Custom
+import { PickupPointService } from '../services/pickupPoint.service';
+import { RouteService } from '../services/route.service';
+import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'pickupPoint-customer-form',

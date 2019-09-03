@@ -1,9 +1,10 @@
+// Base
 import { Component, OnInit } from '@angular/core';
 import { get } from 'scriptjs';
-
-import { IPort } from './../models/port';
-import { Utils } from '../shared/classes/utils';
+// Custom
 import { PortService } from '../services/port.service';
+import { Utils } from '../shared/classes/utils';
+import { IPort } from './../models/port';
 
 @Component({
     selector: 'port-list',

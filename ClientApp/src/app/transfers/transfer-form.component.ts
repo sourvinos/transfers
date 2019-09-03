@@ -1,18 +1,18 @@
-import * as moment from 'moment'
-import { Component, OnInit, AfterViewInit, Input } from '@angular/core'
-import { FormBuilder, Validators, FormControl } from '@angular/forms'
+// Base
+import * as moment from 'moment';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-
-import { AccountService } from '../services/account.service';
-import { TransferService } from '../services/transfer.service';
-
-import { ITransfer } from '../models/transfer';
-import { Utils } from '../shared/classes/utils'
 import { get } from 'scriptjs';
-import { DestinationService } from '../services/destination.service';
+// Custom
+import { ITransfer } from '../models/transfer';
+import { AccountService } from '../services/account.service';
 import { CustomerService } from '../services/customer.service';
+import { DestinationService } from '../services/destination.service';
 import { PickupPointService } from '../services/pickupPoint.service';
+import { TransferService } from '../services/transfer.service';
+import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'app-transfer-form',
