@@ -5,9 +5,7 @@ import { Observable } from 'rxjs';
 // Custom
 import { ITaxOffice } from '../models/taxOffice';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 
 export class TaxOfficeService {
 

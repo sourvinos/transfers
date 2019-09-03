@@ -5,9 +5,7 @@ import { Observable } from 'rxjs';
 // Custom
 import { IRoute } from '../models/route';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 
 export class RouteService {
 

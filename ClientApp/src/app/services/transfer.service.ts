@@ -6,9 +6,7 @@ import { Observable } from 'rxjs';
 import { ITransfer } from '../models/transfer';
 import { IQueryResult } from '../models/queryResult';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 
 export class TransferService {
 

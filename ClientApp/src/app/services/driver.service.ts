@@ -5,9 +5,7 @@ import { Observable } from 'rxjs';
 // Custom
 import { IDriver } from '../models/driver';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 
 export class DriverService {
 

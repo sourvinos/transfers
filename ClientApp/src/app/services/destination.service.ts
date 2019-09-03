@@ -5,9 +5,7 @@ import { Observable } from 'rxjs';
 // Custom
 import { IDestination } from '../models/destination';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 
 export class DestinationService {
 

@@ -5,9 +5,7 @@ import { Observable } from 'rxjs';
 // Custom
 import { IPort } from '../models/port';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 
 export class PortService {
 

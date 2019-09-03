@@ -5,9 +5,7 @@ import { Observable } from 'rxjs';
 // Custom
 import { IVatState } from '../models/vatState';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 
 export class VatStateService {
 

@@ -5,9 +5,7 @@ import { Observable } from 'rxjs';
 // Custom
 import { IPickupPoint } from '../models/pickupPoint';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 
 export class PickupPointService {
 
