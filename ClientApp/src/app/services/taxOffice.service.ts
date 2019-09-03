@@ -9,7 +9,7 @@ import { ITaxOffice } from '../models/taxOffice';
 
 export class TaxOfficeService {
 
-    private url: string = '/api/taxoffices/';
+    private url: string = '/api/taxoffices';
 
     constructor(private http: HttpClient) { }
 
@@ -18,7 +18,7 @@ export class TaxOfficeService {
     }
 
     getTaxOffice(id: number): Observable<ITaxOffice> {
-        return this.http.get<ITaxOffice>(this.url + id);
+        return this.http.get<ITaxOffice>(this.url + '/' + id);
     }
 
     addTaxOffice(formData: ITaxOffice): Observable<ITaxOffice> {
@@ -26,11 +26,11 @@ export class TaxOfficeService {
     }
 
     updateTaxOffice(id: number, formData: ITaxOffice): Observable<ITaxOffice> {
-        return this.http.put<ITaxOffice>(this.url + id, formData);
+        return this.http.put<ITaxOffice>(this.url + '/' + id, formData);
     }
 
     deleteTaxOffice(id: number): Observable<ITaxOffice> {
-        return this.http.delete<ITaxOffice>(this.url + id);
+        return this.http.delete<ITaxOffice>(this.url + '/' + id);
     }
 
 }

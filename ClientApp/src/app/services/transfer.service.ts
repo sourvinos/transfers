@@ -10,7 +10,7 @@ import { IQueryResult } from '../models/queryResult';
 
 export class TransferService {
 
-    private url: string = '/api/transfers/';
+    private url: string = '/api/transfers';
 
     constructor(private http: HttpClient) { }
 
@@ -19,7 +19,7 @@ export class TransferService {
     }
 
     getTransfer(id: number): Observable<ITransfer> {
-        return this.http.get<ITransfer>(this.url + id.toString());
+        return this.http.get<ITransfer>(this.url + '/' + id.toString());
     }
 
     addTransfer(formData: ITransfer): Observable<ITransfer> {
@@ -27,11 +27,11 @@ export class TransferService {
     }
 
     updateTransfer(id: number, formData: ITransfer): Observable<ITransfer> {
-        return this.http.put<ITransfer>(this.url + id, formData);
+        return this.http.put<ITransfer>(this.url + '/' + id, formData);
     }
 
     deleteTransfer(id: number): Observable<ITransfer> {
-        return this.http.delete<ITransfer>(this.url + id);
+        return this.http.delete<ITransfer>(this.url + '/' + id);
     }
 
 }

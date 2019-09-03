@@ -9,7 +9,7 @@ import { IDriver } from '../models/driver';
 
 export class DriverService {
 
-    private url: string = '/api/drivers/';
+    private url: string = '/api/drivers';
 
     constructor(private http: HttpClient) { }
 
@@ -18,7 +18,7 @@ export class DriverService {
     }
 
     getDriver(id: number): Observable<IDriver> {
-        return this.http.get<IDriver>(this.url + id);
+        return this.http.get<IDriver>(this.url + '/' + id);
     }
 
     addDriver(formData: IDriver): Observable<IDriver> {
@@ -26,11 +26,11 @@ export class DriverService {
     }
 
     updateDriver(id: number, formData: IDriver): Observable<IDriver> {
-        return this.http.put<IDriver>(this.url + id, formData);
+        return this.http.put<IDriver>(this.url + '/' + id, formData);
     }
 
     deleteDriver(id: number): Observable<IDriver> {
-        return this.http.delete<IDriver>(this.url + id);
+        return this.http.delete<IDriver>(this.url + '/' + id);
     }
 
 }

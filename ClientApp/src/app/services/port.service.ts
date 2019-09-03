@@ -9,7 +9,7 @@ import { IPort } from '../models/port';
 
 export class PortService {
 
-    private url: string = '/api/ports/';
+    private url: string = '/api/ports';
 
     constructor(private http: HttpClient) { }
 
@@ -18,7 +18,7 @@ export class PortService {
     }
 
     getPort(id: number): Observable<IPort> {
-        return this.http.get<IPort>(this.url + id);
+        return this.http.get<IPort>(this.url + '/' + id);
     }
 
     addPort(formData: IPort): Observable<IPort> {
@@ -26,11 +26,11 @@ export class PortService {
     }
 
     updatePort(id: number, formData: IPort): Observable<IPort> {
-        return this.http.put<IPort>(this.url + id, formData);
+        return this.http.put<IPort>(this.url + '/' + id, formData);
     }
 
     deletePort(id: number): Observable<IPort> {
-        return this.http.delete<IPort>(this.url + id);
+        return this.http.delete<IPort>(this.url + '/' + id);
     }
 
 }

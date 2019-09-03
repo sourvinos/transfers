@@ -9,7 +9,7 @@ import { IVatState } from '../models/vatState';
 
 export class VatStateService {
 
-    private url: string = '/api/vatStates/';
+    private url: string = '/api/vatStates';
 
     constructor(private http: HttpClient) { }
 
@@ -18,7 +18,7 @@ export class VatStateService {
     }
 
     getVatState(id: number): Observable<IVatState> {
-        return this.http.get<IVatState>(this.url + id);
+        return this.http.get<IVatState>(this.url + '/' + id);
     }
 
     addVatState(formData: IVatState): Observable<IVatState> {
@@ -26,11 +26,11 @@ export class VatStateService {
     }
 
     updateVatState(id: number, formData: IVatState): Observable<IVatState> {
-        return this.http.put<IVatState>(this.url + id, formData);
+        return this.http.put<IVatState>(this.url + '/' + id, formData);
     }
 
     deleteVatState(id: number): Observable<IVatState> {
-        return this.http.delete<IVatState>(this.url + id);
+        return this.http.delete<IVatState>(this.url + '/' + id);
     }
 
 }
