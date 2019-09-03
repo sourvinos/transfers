@@ -10,7 +10,7 @@ import { IRoute } from '../models/route';
 
 export class RouteService {
 
-    private url: string = 'https://localhost:44322/api/routes';
+    private url: string = '/api/routes';
 
     constructor(private http: HttpClient) { }
 

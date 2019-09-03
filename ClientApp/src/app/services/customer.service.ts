@@ -4,13 +4,11 @@ import { Observable } from 'rxjs';
 
 import { ICustomer } from '../models/customer';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 
 export class CustomerService {
 
-    private url: string = 'https://localhost:44322/api/customers/';
+    private url: string = '/api/customers';
 
     constructor(private http: HttpClient) { }
 
@@ -19,7 +17,7 @@ export class CustomerService {
     }
 
     getCustomer(id: number): Observable<ICustomer> {
-        return this.http.get<ICustomer>(this.url + id)
+        return this.http.get<ICustomer>(this.url + '/' + id)
     }
 
     addCustomer(formData: ICustomer): Observable<ICustomer> {
@@ -27,11 +25,11 @@ export class CustomerService {
     }
 
     updateCustomer(id: number, formData: ICustomer): Observable<ICustomer> {
-        return this.http.put<ICustomer>(this.url + id, formData);
+        return this.http.put<ICustomer>(this.url + '/' + id, formData);
     }
 
     deleteCustomer(id: number): Observable<ICustomer> {
-        return this.http.delete<ICustomer>(this.url + id);
+        return this.http.delete<ICustomer>(this.url + '/' + id);
     }
 
 }

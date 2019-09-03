@@ -11,7 +11,7 @@ import { IQueryResult } from '../models/queryResult';
 
 export class TransferService {
 
-    private url: string = 'https://localhost:44322/api/transfers/';
+    private url: string = '/api/transfers/';
 
     constructor(private http: HttpClient) { }
 

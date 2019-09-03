@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,17 +11,21 @@ using Transfers.Resources;
 namespace Transfers.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "RequireLoggedIn")]
     public class TransfersController : ControllerBase
     {
+        // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
+        // Constructor
         public TransfersController(IMapper mapper, ApplicationDbContext context)
         {
             this.mapper = mapper;
             this.context = context;
         }
 
+        // GET: api/transfers/getByDate/01-01-1970
         [HttpGet("getByDate/{dateIn}")]
         public TransferGroupResultResource<TransferResource> getTransfers(DateTime dateIn)
         {
@@ -45,6 +50,7 @@ namespace Transfers.Controllers
             return mapper.Map<TransferGroupResult<Transfer>, TransferGroupResultResource<TransferResource>>(groupResult);
         }
 
+        // GET: api/transfers/5
         [HttpGet("{id}")]
         public async Task<TransferResource> GetTransfer(int id)
         {
@@ -58,6 +64,7 @@ namespace Transfers.Controllers
             return mapper.Map<Transfer, TransferResource>(transfer);
         }
 
+        // POST: api/transfers
         [HttpPost]
         public async Task<IActionResult> PostTransfer([FromBody] Transfer transfer)
         {
@@ -70,6 +77,7 @@ namespace Transfers.Controllers
             return Ok(transfer);
         }
 
+        // PUT: api/transfers/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTransfer([FromRoute] int id, [FromBody] SaveTransferResource transferResource)
         {
@@ -98,6 +106,7 @@ namespace Transfers.Controllers
             return Ok();
         }
 
+        // DELETE: api/transfers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTransfer([FromRoute] int id)
         {

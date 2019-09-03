@@ -1,9 +1,14 @@
 <div id="sidebar">
 	<div id="userInfo">
-		<div *ngIf="this.service.isLoggedIn() && !this.service.isTokenExpired()">Hello, {{ userName() }}</div>
-		<div *ngIf="!this.service.isLoggedIn() || this.service.isTokenExpired()">You are not connected</div>
+		<div *ngIf="(loginStatus | async); then loggedIn; else notLoggedIn"></div>
+		<ng-template #loggedIn>
+			<div>Hello, {{ userName | async }}!</div>
+		</ng-template>
+		<ng-template #notLoggedIn>
+			<div>You are not connected!</div>
+		</ng-template>
 	</div>
-	<div id="logo">
+	<div id="logo" [routerLink]="['/']">
 		<div>People</div>
 		<div>movers</div>
 	</div>
@@ -12,17 +17,16 @@
 	</div>
 	<div id="menu">
 		<ul id="menuItems" (click)="closeSidebar()">
-			<li [routerLink]="['/customers']" routerLinkActive="active">Customers</li>
-			<li [routerLink]="['/destinations']" routerLinkActive="active">Destinations</li>
-			<li [routerLink]="['/drivers']" routerLinkActive="active">Drivers</li>
-			<li [routerLink]="['/pickuppoints/']" routerLinkActive="active">Pickup points</li>
-			<li [routerLink]="['/ports/']" routerLinkActive="active">Ports</li>
-			<li [routerLink]="['/routes/']" routerLinkActive="active">Routes</li>
-			<li [routerLink]="['/taxOffices/']" routerLinkActive="active">Tax Offices</li>
-			<li [routerLink]="['/vatStates/']" routerLinkActive="active">VAT Regimes</li>
-			<li [routerLink]="['/transfers/']" routerLinkActive="active">Transfers</li>
-			<li *ngIf="!this.service.isLoggedIn() || this.service.isTokenExpired()" [routerLink]="['/login']" routerLinkActive="active">Login</li>
-			<li *ngIf="this.service.isLoggedIn() && !this.service.isTokenExpired()" (click)="logout()" routerLinkActive="active">Logout</li>
+			<li *ngIf="(loginStatus | async)" [routerLink]="['/customers']" routerLinkActive="active">Customers</li>
+			<li *ngIf="(loginStatus | async)" [routerLink]="['/destinations']" routerLinkActive="active">Destinations</li>
+			<li *ngIf="(loginStatus | async)" [routerLink]="['/drivers']" routerLinkActive="active">Drivers</li>
+			<li *ngIf="(loginStatus | async)" [routerLink]="['/pickuppoints/']" routerLinkActive="active">Pickup points</li>
+			<li *ngIf="(loginStatus | async)" [routerLink]="['/ports/']" routerLinkActive="active">Ports</li>
+			<li *ngIf="(loginStatus | async)" [routerLink]="['/routes/']" routerLinkActive="active">Routes</li>
+			<li *ngIf="(loginStatus | async)" [routerLink]="['/taxOffices/']" routerLinkActive="active">Tax Offices</li>
+			<li *ngIf="(loginStatus | async)" [routerLink]="['/vatStates/']" routerLinkActive="active">VAT Regimes</li>
+			<li *ngIf="(loginStatus | async)" [routerLink]="['/transfers/']" routerLinkActive="active">Transfers</li>
+			<li *ngIf="(loginStatus | async)" (click)="logout()" routerLinkActive="active">Logout</li>
 		</ul>
 	</div>
 	<div id="copyright">Created with .NET Core<br />and Angular</div>

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -9,23 +10,28 @@ using Transfers.Models;
 namespace Transfers.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "RequireLoggedIn")]
     public class TaxOfficesController : ControllerBase
     {
+        // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
+        // Constructor
         public TaxOfficesController(IMapper mapper, ApplicationDbContext context)
         {
             this.mapper = mapper;
             this.context = context;
         }
 
+        // GET: api/taxOffices
         [HttpGet]
         public async Task<IEnumerable<TaxOffice>> Get()
         {
             return await context.TaxOffices.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
         }
 
+        // GET: api/taxOffices/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTaxOffice(int id)
         {
@@ -36,6 +42,7 @@ namespace Transfers.Controllers
             return Ok(taxOffice);
         }
 
+        // POST: api/taxOffices
         [HttpPost]
         public async Task<IActionResult> PostTaxOffice([FromBody] TaxOffice taxOffice)
         {
@@ -48,6 +55,7 @@ namespace Transfers.Controllers
             return Ok(taxOffice);
         }
 
+        // PUT: api/taxOffices/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTaxOffice([FromRoute] int id, [FromBody] TaxOffice taxOffice)
         {
@@ -72,6 +80,7 @@ namespace Transfers.Controllers
             return Ok(taxOffice);
         }
 
+        // DELETE: api/taxOffices/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTaxOffice([FromRoute] int id)
         {

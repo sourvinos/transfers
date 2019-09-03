@@ -10,7 +10,7 @@ import { IDriver } from '../models/driver';
 
 export class DriverService {
 
-    private url: string = 'https://localhost:44322/api/drivers/';
+    private url: string = '/api/drivers/';
 
     constructor(private http: HttpClient) { }
 

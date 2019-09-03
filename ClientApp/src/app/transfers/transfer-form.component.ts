@@ -4,7 +4,7 @@ import { FormBuilder, Validators, FormControl } from '@angular/forms'
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
-import { AuthService } from '../services/auth.service';
+import { AccountService } from '../services/account.service';
 import { TransferService } from '../services/transfer.service';
 
 import { ITransfer } from '../models/transfer';
@@ -22,7 +22,7 @@ import { PickupPointService } from '../services/pickupPoint.service';
 
 export class TransferFormComponent implements OnInit, AfterViewInit {
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private transferService: TransferService, private authService: AuthService, private formBuilder: FormBuilder, private router: Router) { }
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private transferService: TransferService, private accountService: AccountService, private formBuilder: FormBuilder, private router: Router) { }
 
     @Input() set transfer(transfer: ITransfer) { if (transfer) this.populateFields(transfer) }
 
@@ -182,10 +182,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     }
 
     getUserName() {
-        let token = this.authService.getDecodedToken();
-        let userName = token['sub'];
-
-        return userName;
+        return 'Temp username';
     }
 
     updateISODate() {

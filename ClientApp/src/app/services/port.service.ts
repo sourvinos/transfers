@@ -10,7 +10,7 @@ import { IPort } from '../models/port';
 
 export class PortService {
 
-    private url: string = 'https://localhost:44322/api/ports/';
+    private url: string = '/api/ports/';
 
     constructor(private http: HttpClient) { }
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -9,23 +10,28 @@ using Transfers.Models;
 namespace Transfers.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "RequireLoggedIn")]
     public class VATStatesController : ControllerBase
     {
+        // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
+        // Constructor
         public VATStatesController(IMapper mapper, ApplicationDbContext context)
         {
             this.mapper = mapper;
             this.context = context;
         }
 
+        // GET: api/vatStates
         [HttpGet]
         public async Task<IEnumerable<VATState>> Get()
         {
             return await context.VATStates.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
         }
 
+        // GET: api/vatStates/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVATState(int id)
         {
@@ -36,6 +42,7 @@ namespace Transfers.Controllers
             return Ok(vatState);
         }
 
+        // POST: api/vatStates
         [HttpPost]
         public async Task<IActionResult> PostVATState([FromBody] VATState vatState)
         {
@@ -48,6 +55,7 @@ namespace Transfers.Controllers
             return Ok(vatState);
         }
 
+        // PUT: api/vatStates/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVATState([FromRoute] int id, [FromBody] VATState vatState)
         {
@@ -72,6 +80,7 @@ namespace Transfers.Controllers
             return Ok(vatState);
         }
 
+        // DELETE: api/vatStates/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVATState([FromRoute] int id)
         {

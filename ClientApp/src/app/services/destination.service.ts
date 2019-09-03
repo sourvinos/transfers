@@ -10,7 +10,7 @@ import { IDestination } from '../models/destination';
 
 export class DestinationService {
 
-	private url: string = 'https://localhost:44322/api/destinations';
+	private url: string = '/api/destinations';
 
 	constructor(private http: HttpClient) { }
 

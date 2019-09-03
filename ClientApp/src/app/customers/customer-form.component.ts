@@ -1,12 +1,12 @@
-import { ActivatedRoute, Router } from '@angular/router'
-import { Component, OnInit } from '@angular/core'
-import { FormBuilder, Validators, FormControl } from '@angular/forms'
-import { forkJoin } from 'rxjs'
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
-import { CustomerService } from '../services/customer.service'
-import { TaxOfficeService } from '../services/taxOffice.service'
-import { VatStateService } from '../services/vatState.service'
-import { Utils } from '../shared/classes/utils'
+import { CustomerService } from '../services/customer.service';
+import { TaxOfficeService } from '../services/taxOffice.service';
+import { VatStateService } from '../services/vatState.service';
+import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'app-customer-form',
@@ -35,7 +35,7 @@ export class CustomerFormComponent implements OnInit {
         email: ['', [Validators.maxLength(100)]],
         taxNo: ['', [Validators.maxLength(100)]],
         accountCode: ['', [Validators.maxLength(100)]],
-        userName: ['']
+        userName: [this.getUserNameFromLocalStorage(), [Validators.required]]
     })
 
     constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
@@ -188,6 +188,10 @@ export class CustomerFormComponent implements OnInit {
         let list = lookupArray.filter(x => x.description === name)[0]
 
         this.form.patchValue({ vatStateId: list ? list.id : '' })
+    }
+
+    getUserNameFromLocalStorage() {
+        return localStorage.getItem('username')
     }
 
 }

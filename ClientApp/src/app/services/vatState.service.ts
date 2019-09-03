@@ -11,7 +11,7 @@ import { IVatState } from '../models/vatState';
 
 export class VatStateService {
 
-    private url: string = 'https://localhost:44322/api/vatStates/';
+    private url: string = '/api/vatStates/';
 
     constructor(private http: HttpClient) { }
 

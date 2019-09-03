@@ -10,7 +10,7 @@ import { ITaxOffice } from '../models/taxOffice';
 
 export class TaxOfficeService {
 
-    private url: string = 'https://localhost:44322/api/taxoffices/';
+    private url: string = '/api/taxoffices/';
 
     constructor(private http: HttpClient) { }
 

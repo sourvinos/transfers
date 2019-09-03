@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -9,23 +10,28 @@ using Transfers.Models;
 namespace Transfers.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "RequireLoggedIn")]
     public class PickupPointsController : ControllerBase
     {
+        // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
+        // Constructor
         public PickupPointsController(IMapper mapper, ApplicationDbContext context)
         {
             this.mapper = mapper;
             this.context = context;
         }
 
-        [HttpGet("route/{routeId}")]
+        // GET: api/pickupPointsForRoute/5
+        [HttpGet("pickupPointsForRoute/{routeId}")]
         public async Task<IEnumerable<PickupPoint>> Get(int routeId)
         {
             return await context.PickupPoints.Include(x => x.Route).Where(m => m.RouteId == routeId).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
         }
 
+        // GET: api/pickupPoints/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPickupPoint(int id)
         {
@@ -36,6 +42,7 @@ namespace Transfers.Controllers
             return Ok(pickupPoint);
         }
 
+        // POST: api/pickupPoints
         [HttpPost]
         public async Task<IActionResult> PostPickupPoint([FromBody] PickupPoint pickupPoint)
         {
@@ -48,6 +55,7 @@ namespace Transfers.Controllers
             return Ok(pickupPoint);
         }
 
+        // PUT: api/pickupPoints/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPickupPoint([FromRoute] int id, [FromBody] PickupPoint pickupPoint)
         {
@@ -72,6 +80,7 @@ namespace Transfers.Controllers
             return Ok(pickupPoint);
         }
 
+        // DELETE: api/pickupPoints/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePickupPoint([FromRoute] int id)
         {

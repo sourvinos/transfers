@@ -1,46 +1,65 @@
-import { AuthService } from '../services/auth.service';
-import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core'
+import { FormBuilder, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
+import { AccountService } from '../services/account.service'
 
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent {
 
-	validLogin: boolean = true;
+	// Variables
+	invalidLogin: boolean
+	returnUrl: string
+	ErrorMessage: string
 
-	constructor(private formBuilder: FormBuilder, private service: AuthService, private router: Router) { }
-
+	// Form fields
 	form = this.formBuilder.group({
 		userName: ['', Validators.required],
 		password: ['', Validators.required]
 	})
 
-	get userName() {
-		return this.form.get('userName');
-	}
+	// Constructor
+	constructor(private service: AccountService, private router: Router, private formBuilder: FormBuilder) { }
 
-	get password() {
-		return this.form.get('password');
-	}
-
-	getErrorMessage() {
-		return 'This field is required!';
-	}
-
+	// Login
 	login() {
-		this.service.login(this.form.value).subscribe((response: any) => {
-			if (response && response.token) {
-				this.validLogin = true;
-				this.router.navigate(['/'])
-				localStorage.setItem('token', response.token);
-			}
-		}, () => {
-			this.validLogin = false;
-		});
+		let userlogin = this.form.value
+
+		this.service.login(userlogin.userName, userlogin.password).subscribe(result => {
+
+			let token = (<any>result).authToken.token
+			console.log(token)
+			console.log(result.authToken.roles)
+			console.log("User Logged In Successfully")
+			this.invalidLogin = false
+			console.log(this.returnUrl)
+			this.router.navigateByUrl(this.returnUrl)
+		},
+			error => {
+				this.invalidLogin = true
+				this.ErrorMessage = error.error.loginError
+				console.log(this.ErrorMessage)
+			})
+
+	}
+
+	// Property
+	get userName() {
+		return this.form.get('userName')
+	}
+
+	// Property
+	get password() {
+		return this.form.get('password')
+	}
+
+	// Property
+	getErrorMessage() {
+		return 'This field is required!'
 	}
 
 }

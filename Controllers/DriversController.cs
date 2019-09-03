@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -9,23 +10,28 @@ using Transfers.Models;
 namespace Transfers.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "RequireLoggedIn")]
     public class DriversController : ControllerBase
     {
+        // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
+        // Constructor
         public DriversController(IMapper mapper, ApplicationDbContext context)
         {
             this.mapper = mapper;
             this.context = context;
         }
 
+        // GET: api/drivers
         [HttpGet]
         public async Task<IEnumerable<Driver>> Get()
         {
             return await context.Drivers.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
         }
 
+        // GET: api/drivers/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDriver(int id)
         {
@@ -36,6 +42,7 @@ namespace Transfers.Controllers
             return Ok(driver);
         }
 
+        // POST: api/drivers
         [HttpPost]
         public async Task<IActionResult> PostDriver([FromBody] Driver driver)
         {
@@ -48,6 +55,7 @@ namespace Transfers.Controllers
             return Ok(driver);
         }
 
+        // PUT: api/drivers/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDriver([FromRoute] int id, [FromBody] Driver driver)
         {
@@ -72,6 +80,7 @@ namespace Transfers.Controllers
             return Ok(driver);
         }
 
+        // DELETE: api/drivers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDriver([FromRoute] int id)
         {

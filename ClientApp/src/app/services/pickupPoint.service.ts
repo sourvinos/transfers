@@ -10,7 +10,7 @@ import { IPickupPoint } from '../models/pickupPoint';
 
 export class PickupPointService {
 
-    private url: string = 'https://localhost:44322/api/pickuppoints/';
+    private url: string = '/api/pickuppoints/';
 
     constructor(private http: HttpClient) { }
 

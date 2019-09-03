@@ -10,23 +10,28 @@ using Transfers.Models;
 namespace Transfers.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "RequireLoggedIn")]
     public class CustomersController : ControllerBase
     {
+        // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
+        // Constructor
         public CustomersController(IMapper mapper, ApplicationDbContext context)
         {
             this.mapper = mapper;
             this.context = context;
         }
 
+        // GET: api/customers
         [HttpGet]
         public async Task<IEnumerable<Customer>> Get()
         {
             return await context.Customers.Include(x => x.TaxOffice).Include(x => x.VATState).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
         }
 
+        // GET: api/customers/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomer(int id)
         {
@@ -37,6 +42,7 @@ namespace Transfers.Controllers
             return Ok(customer);
         }
 
+        // POST: api/customers
         [HttpPost]
         public async Task<IActionResult> PostCustomer([FromBody] Customer customer)
         {
@@ -49,6 +55,7 @@ namespace Transfers.Controllers
             return Ok(customer);
         }
 
+        // PUT: api/customers/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer([FromRoute] int id, [FromBody] Customer customer)
         {
@@ -73,6 +80,7 @@ namespace Transfers.Controllers
             return Ok(customer);
         }
 
+        // DELETE: api/customers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer([FromRoute] int id)
         {

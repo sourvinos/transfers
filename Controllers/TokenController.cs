@@ -16,11 +16,13 @@ namespace Transfers
     [Route("api/[controller]")]
     public class TokenController : Controller
     {
+        // Variables
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppSettings _appSettings;
         private readonly TokenModel _token;
         private readonly ApplicationDbContext _db;
 
+        // Constructor
         public TokenController(UserManager<ApplicationUser> userManager, IOptions<AppSettings> appSettings, TokenModel token, ApplicationDbContext db)
         {
             _userManager = userManager;
@@ -29,8 +31,8 @@ namespace Transfers
             _db = db;
         }
 
-        [HttpPost("[action]")]
         // api/token/login
+        [HttpPost("[action]")]
         public async Task<IActionResult> Login([FromBody] TokenRequestModel model)
         {
             if (model == null) return new StatusCodeResult(500);
@@ -46,7 +48,7 @@ namespace Transfers
             }
         }
 
-        // Helper
+        // Private
         private async Task<IActionResult> GenerateNewToken(TokenRequestModel model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
@@ -78,7 +80,7 @@ namespace Transfers
 
         }
 
-        // Helper
+        // Private
         private async Task<TokenResponseModel> CreateAccessToken(ApplicationUser user, string refreshToken)
         {
             double tokenExpiryTime = Convert.ToDouble(_appSettings.ExpireTime);
@@ -115,7 +117,7 @@ namespace Transfers
 
         }
 
-        // Helper
+        // Private
         private TokenModel CreateRefreshToken(string clientId, string userId)
         {
             return new TokenModel()
@@ -128,7 +130,7 @@ namespace Transfers
             };
         }
 
-        // Helper
+        // Private
         private async Task<IActionResult> RefreshToken(TokenRequestModel model)
         {
             try

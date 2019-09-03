@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -9,23 +10,28 @@ using Transfers.Models;
 namespace Transfers.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "RequireLoggedIn")]
     public class DestinationsController : ControllerBase
     {
+        // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
+        // Constructor
         public DestinationsController(IMapper mapper, ApplicationDbContext context)
         {
             this.mapper = mapper;
             this.context = context;
         }
 
+        // GET: api/destinations
         [HttpGet]
         public async Task<IEnumerable<Destination>> Get()
         {
             return await context.Destinations.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
         }
 
+        // GET: api/destinations/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDestination(int id)
         {
@@ -36,6 +42,7 @@ namespace Transfers.Controllers
             return Ok(destination);
         }
 
+        // POST: api/destinations
         [HttpPost]
         public async Task<IActionResult> PostDestination([FromBody] Destination destination)
         {
@@ -48,6 +55,7 @@ namespace Transfers.Controllers
             return Ok(destination);
         }
 
+        // PUT: api/destinations/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDestination([FromRoute] int id, [FromBody] Destination destination)
         {
@@ -72,6 +80,7 @@ namespace Transfers.Controllers
             return Ok(destination);
         }
 
+        // DELETE: api/destinations/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDestination([FromRoute] int id)
         {

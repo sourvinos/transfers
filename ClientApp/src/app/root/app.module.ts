@@ -8,8 +8,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Services
-import { AuthInterceptor } from '../services/auth.interceptor';
-import { AuthGuard } from './../services/auth.guard';
+import { JwtInterceptor } from '../services/jwt.interceptor';
 
 // Common
 import { MainComponent } from './../shared/components/main/main.component';
@@ -71,7 +70,7 @@ import { InputFormatDirective } from '../directives/input-format.directive';
         ReactiveFormsModule
     ],
     entryComponents: [],
-    providers: [AuthGuard, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+    providers: [{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
     bootstrap: [RootComponent]
 })
 
