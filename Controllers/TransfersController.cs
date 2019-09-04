@@ -25,7 +25,7 @@ namespace Transfers.Controllers
             this.context = context;
         }
 
-        // GET: api/transfers/getByDate/YYYY-MM-DD
+        // GET: api/transfers/getByDate/YYYY-MM-DDT00:00:00
         [HttpGet("getByDate/{dateIn}")]
         public TransferGroupResultResource<TransferResource> getTransfers(DateTime dateIn)
         {

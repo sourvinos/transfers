@@ -67,7 +67,7 @@
                         <header>Routes</header>
                         <header class="total">{{ queryResult.persons }}</header>
                     </div>
-                    <div *ngFor="let item of queryResult.personsPerRoute" (click)="toggleItem(item, this.selectedRoutes)" class="item route" [class.active]="item.isSelected" [id]="item.description">
+                    <div *ngFor="let item of queryResult.personsPerRoute" (click)="toggleItem(item, this.selectedRoutes)" class="item route" [class.activeItem]="item.isSelected" [id]="item.description">
                         <div class="description"> {{ item.description }} </div>
                         <div class="total"> {{ item.persons }} </div>
                     </div>

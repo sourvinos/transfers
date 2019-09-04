@@ -132,6 +132,10 @@ h3 {
     font-family: "Economica";
 }
 
-.active {
+.tab.segment.active {
+    border-left-color: #d3d0d0 !important;
+}
+
+.activeItem {
     border-left-color: #D67474 !important;
 }

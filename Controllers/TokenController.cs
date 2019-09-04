@@ -77,7 +77,6 @@ namespace Transfers
             ModelState.AddModelError("", "Username/Password was not Found");
             return Unauthorized(new { LoginError = "Please Check the Login Credentials - Ivalid Username/Password was entered" });
 
-
         }
 
         // Private
@@ -126,7 +125,7 @@ namespace Transfers
                 UserId = userId,
                 Value = Guid.NewGuid().ToString("N"),
                 CreatedDate = DateTime.UtcNow,
-                ExpiryTime = DateTime.UtcNow.AddMinutes(90)
+                ExpiryTime = DateTime.UtcNow.AddMinutes(30)
             };
         }
 
@@ -135,20 +134,10 @@ namespace Transfers
         {
             try
             {
-                var rt = _db.Tokens
-                    .FirstOrDefault(t =>
-                    t.ClientId == _appSettings.ClientId
-                    && t.Value == model.RefreshToken.ToString());
+                var rt = _db.Tokens.FirstOrDefault(t => t.ClientId == _appSettings.ClientId && t.Value == model.RefreshToken.ToString());
 
-                if (rt == null)
-                {
-                    return new UnauthorizedResult();
-                }
-
-                if (rt.ExpiryTime < DateTime.UtcNow)
-                {
-                    return new UnauthorizedResult();
-                }
+                if (rt == null) return new UnauthorizedResult();
+                if (rt.ExpiryTime < DateTime.UtcNow) return new UnauthorizedResult();
 
                 var user = await _userManager.FindByIdAsync(rt.UserId);
 
@@ -163,7 +152,6 @@ namespace Transfers
                 var response = await CreateAccessToken(user, rtNew.Value);
 
                 return Ok(new { authToken = response });
-
             }
             catch (Exception ex)
             {

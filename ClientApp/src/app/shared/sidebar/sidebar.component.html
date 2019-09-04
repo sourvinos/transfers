@@ -3,6 +3,7 @@
 		<div *ngIf="(loginStatus | async); then loggedIn; else notLoggedIn"></div>
 		<ng-template #loggedIn>
 			<div>Hello, {{ userName | async }}!</div>
+			<small>Logout in: {{ countdown }}</small>
 		</ng-template>
 		<ng-template #notLoggedIn>
 			<div>You are not connected!</div>

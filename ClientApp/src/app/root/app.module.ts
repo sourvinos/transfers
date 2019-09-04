@@ -39,6 +39,7 @@ import { VatStateListComponent } from '../vatStates/vatState-list.component';
 
 // Directives
 import { InputFormatDirective } from '../directives/input-format.directive';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 
 @NgModule({
     declarations: [
@@ -67,7 +68,8 @@ import { InputFormatDirective } from '../directives/input-format.directive';
         BrowserModule,
         FormsModule,
         HttpClientModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        NgIdleKeepaliveModule.forRoot(),
     ],
     entryComponents: [],
     providers: [{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],

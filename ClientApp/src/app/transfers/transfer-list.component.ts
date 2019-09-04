@@ -55,17 +55,17 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     toggleItem(item: any, lookupArray: string) {
         var element = document.getElementById(item.description)
-        if (element.classList.contains('active')) {
+        if (element.classList.contains('activeItem')) {
             for (var i = 0; i < eval(lookupArray).length; i++) {
                 if (eval(lookupArray)[i] === item.description) {
                     eval(lookupArray).splice(i, 1)
                     i--
-                    element.classList.remove('active')
+                    element.classList.remove('activeItem')
                     break
                 }
             }
         } else {
-            element.classList.add('active')
+            element.classList.add('activeItem')
             eval(lookupArray).push(item.description)
         }
         this.filterByCriteria()
@@ -98,7 +98,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
             let elements = document.getElementsByClassName(className)
             for (let index = 0; index < elements.length; index++) {
                 const element = elements[index]
-                element.classList.add('active')
+                element.classList.add('activeItem')
                 eval(lookupArray).push(element.id)
             }
         }, (1000))
