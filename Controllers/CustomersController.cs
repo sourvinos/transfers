@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Transfers.Models;
+using Transfers.Utils;
 
 namespace Transfers.Controllers
 {
@@ -16,12 +20,14 @@ namespace Transfers.Controllers
         // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
+        private readonly IConverter converter;
 
         // Constructor
-        public CustomersController(IMapper mapper, ApplicationDbContext context)
+        public CustomersController(IMapper mapper, ApplicationDbContext context, IConverter converter)
         {
             this.mapper = mapper;
             this.context = context;
+            this.converter = converter;
         }
 
         // GET: api/customers

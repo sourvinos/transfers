@@ -9,7 +9,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Transfers.Identity;
 using Transfers.Models;
-using Transfers.Shared;
+using Transfers.Utils;
+using DinkToPdf;
+using DinkToPdf.Contracts;
+using RazorLight;
+using System.IO;
+using System.Reflection;
 
 namespace Transfers
 {
@@ -29,15 +34,25 @@ namespace Transfers
         {
             services.AddScoped<TokenModel>();
 
-            Utils.AddIdentity(services);
-            Utils.AddAuthentication(Configuration, services);
-            Utils.AddAuthorization(services);
-            Utils.AddCors(services);
+            Extensions.AddIdentity(services);
+            Extensions.AddAuthentication(Configuration, services);
+            Extensions.AddAuthorization(services);
+            Extensions.AddCors(services);
+            Extensions.AddLibraryForPDF();
 
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             services.AddAntiforgery(options => { options.Cookie.Name = "_af"; options.Cookie.HttpOnly = true; options.Cookie.SecurePolicy = CookieSecurePolicy.Always; options.HeaderName = "X-XSRF-TOKEN"; });
             services.AddAutoMapper();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:SqlServerConnection"]));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddScoped<IRazorLightEngine>(sp =>
+            {
+                var engine = new RazorLightEngineBuilder()
+                    .UseFilesystemProject(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location))
+                    .UseMemoryCachingProvider()
+                    .Build();
+                return engine;
+            });
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
             services.Configure<CookiePolicyOptions>(options => { options.CheckConsentNeeded = context => true; options.MinimumSameSitePolicy = SameSiteMode.None; });
         }

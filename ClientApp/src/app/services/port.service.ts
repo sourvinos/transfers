@@ -1,5 +1,5 @@
 // Base
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 // Custom
@@ -13,8 +13,9 @@ export class PortService {
 
     constructor(private http: HttpClient) { }
 
-    getPorts(): Observable<IPort[]> {
-        return this.http.get<IPort[]>(this.url);
+    getPorts(): Observable<any> {
+        return this.http.get<any>(this.url);
+        // return this.http.get<IPort[]>(this.url);
     }
 
     getPort(id: number): Observable<IPort> {
@@ -33,4 +34,14 @@ export class PortService {
         return this.http.delete<IPort>(this.url + '/' + id);
     }
 
+    createPDF(): Observable<HttpResponse<Blob>> {
+        return this.http.get(this.url + '/' + 'pdf', { responseType: 'blob', observe: 'response' })
+    }
+
+    // getPortsPDF(): Observable<IPort[]> {
+    //     return this.http.get<IPort[]>(this.url + '/pdf');
+    // }
 }
+
+
+
