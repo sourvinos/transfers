@@ -12,7 +12,7 @@
     margin: 5px;
     width: 30px;
     height: 5px;
-    background-color: #aaaaaa;
+    background-color: var(--color-hamburger);
     display: block;
     transition: transform 1000ms;
     cursor: pointer;

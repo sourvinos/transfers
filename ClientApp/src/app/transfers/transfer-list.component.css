@@ -47,12 +47,12 @@
 }
 
 #summaries::-webkit-scrollbar-thumb {
-    background-color: #D67474;
+    background-color:var(--color-scrollbar);
     min-height: 6.25rem;
 }
 
 .summaryBlock {
-    background-color: #f5f5f5;
+    background-color: var(--color-summary-block-background);
     height: fit-content;
     padding: 30px;
     width: 300px;
@@ -64,15 +64,15 @@
 }
 
 .summaryBlock header {
-    color: #D67474;
+    color: var(--color-master-dark);
     font-family: "Economica";
     font-size: 1.6rem;
     margin-bottom: 15px;
 }
 
 .summaryBlock .item {
-    border-left: 0.3rem solid #d3d0d0;
-    color: #939393;
+    border-left: 0.3rem solid var(--color-summary-block-border-inactive);
+    color: var(--color-summary-block-item);
     display: flex;
     font-family: "Play";
     font-size: 1rem;
@@ -83,7 +83,7 @@
 }
 
 .summaryBlock .item:hover {
-    background-color: #ffffff;
+    background-color: var(--color-summary-block-item-hover);
     cursor: pointer;
 }
 
@@ -99,16 +99,6 @@
     display: flex;
 }
 
-.summaryBlock footer {
-    color: #939393;
-    display: flex;
-    font-family: "Play";
-    font-size: 12px;
-    font-weight: bold;
-    justify-content: space-between;
-    margin-top: 30px;
-}
-
 #main-content {
     grid-area: "grid";
     overflow-y: auto;
@@ -119,7 +109,7 @@
 }
 
 #main-content::-webkit-scrollbar-thumb {
-    background-color: #D67474;
+    background-color: var(--color-scrollbar);
     min-height: 6.25rem;
 }
 
@@ -127,15 +117,10 @@ input.date {
     margin-right: 0.25rem !important;
 }
 
-h3 {
-    color: #939393;
-    font-family: "Economica";
-}
-
 .tab.segment.active {
-    border-left-color: #d3d0d0 !important;
+    border-left-color:var(--color-tab-left-border) !important;
 }
 
 .activeItem {
-    border-left-color: #D67474 !important;
+    border-left-color:var(--color-summary-block-border-active) !important;
 }

@@ -17,7 +17,7 @@ import { Utils } from '../shared/classes/utils';
 @Component({
     selector: 'app-transfer-form',
     templateUrl: './transfer-form.component.html',
-    styleUrls: ['../shared/styles/forms.css', './transfer-form.component.css']
+    styleUrls: ['../shared/styles/forms.css']
 })
 
 export class TransferFormComponent implements OnInit, AfterViewInit {
