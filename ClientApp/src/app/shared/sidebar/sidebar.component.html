@@ -1,34 +1,34 @@
 <div id="sidebar">
-	<div id="userInfo">
-		<div *ngIf="(loginStatus | async); then loggedIn; else notLoggedIn"></div>
-		<ng-template #loggedIn>
-			<div>Hello, {{ userName | async }}!</div>
-			<small>Logout in: {{ countdown }}</small>
-		</ng-template>
-		<ng-template #notLoggedIn>
-			<div>You are not connected!</div>
-		</ng-template>
-	</div>
-	<div id="logo" [routerLink]="['/']">
-		<div>People</div>
-		<div>movers</div>
-	</div>
-	<div id="image">
-		<img src="1.png">
-	</div>
-	<div id="menu">
-		<ul id="menuItems" (click)="closeSidebar()">
-			<li *ngIf="(loginStatus | async)" [routerLink]="['/customers']" routerLinkActive="active">Customers</li>
-			<li *ngIf="(loginStatus | async)" [routerLink]="['/destinations']" routerLinkActive="active">Destinations</li>
-			<li *ngIf="(loginStatus | async)" [routerLink]="['/drivers']" routerLinkActive="active">Drivers</li>
-			<li *ngIf="(loginStatus | async)" [routerLink]="['/pickuppoints/']" routerLinkActive="active">Pickup points</li>
-			<li *ngIf="(loginStatus | async)" [routerLink]="['/ports/']" routerLinkActive="active">Ports</li>
-			<li *ngIf="(loginStatus | async)" [routerLink]="['/routes/']" routerLinkActive="active">Routes</li>
-			<li *ngIf="(loginStatus | async)" [routerLink]="['/taxOffices/']" routerLinkActive="active">Tax Offices</li>
-			<li *ngIf="(loginStatus | async)" [routerLink]="['/vatStates/']" routerLinkActive="active">VAT Regimes</li>
-			<li *ngIf="(loginStatus | async)" [routerLink]="['/transfers/']" routerLinkActive="active">Transfers</li>
-			<li *ngIf="(loginStatus | async)" (click)="logout()" routerLinkActive="active">Logout</li>
-		</ul>
-	</div>
-	<div id="copyright">Created with .NET Core<br />and Angular</div>
+    <div id="userInfo">
+        <div *ngIf="(loginStatus | async); then loggedIn; else notLoggedIn"></div>
+        <ng-template #loggedIn>
+            <div>Hello, {{ userName | async }}!</div>
+            <small>Logout in: {{ countdown }}</small>
+        </ng-template>
+        <ng-template #notLoggedIn>
+            <div>You are not connected!</div>
+        </ng-template>
+    </div>
+    <div id="logo" [routerLink]="['/']">
+        <div>People</div>
+        <div>movers</div>
+    </div>
+    <div id="image" [routerLink]="['/']">
+        <img src="1.png">
+    </div>
+    <div id="menu">
+        <ul id="menuItems" (click)="closeSidebar()">
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/customers']" routerLinkActive="active">Customers</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/destinations']" routerLinkActive="active">Destinations</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/drivers']" routerLinkActive="active">Drivers</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/pickuppoints/']" routerLinkActive="active">Pickup points</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/ports/']" routerLinkActive="active">Ports</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/routes/']" routerLinkActive="active">Routes</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/taxOffices/']" routerLinkActive="active">Tax Offices</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/vatStates/']" routerLinkActive="active">VAT Regimes</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/transfers/']" routerLinkActive="active">Transfers</li>
+            <li *ngIf="(loginStatus | async)" (click)="logout()" routerLinkActive="active">Logout</li>
+        </ul>
+    </div>
+    <div id="copyright">Created with .NET Core<br />and Angular</div>
 </div>

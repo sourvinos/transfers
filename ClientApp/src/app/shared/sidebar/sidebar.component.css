@@ -1,12 +1,7 @@
 #sidebar {
-    background-color: #f5f5f5;
+    background-color: var( --color-sidebar-background);
     display: grid;
-    grid-template-areas:
-        "userInfo"
-        "logo"
-        "image"
-        "menu"
-        "copyright";
+    grid-template-areas: "userInfo" "logo" "image" "menu" "copyright";
     grid-template-rows: min-content min-content min-content auto min-content;
     height: 100vh;
     overflow-x: hidden;
@@ -14,7 +9,7 @@
 }
 
 #userInfo {
-    color: #aa654b;
+    color: var(--color-master-dark);
     font-family: "Economica";
     font-size: 1.2rem;
     margin: 1.5rem auto 0;
@@ -22,24 +17,22 @@
 }
 
 #logo {
-    color: #aa654b;
     cursor: pointer;
-    font-family: "Orbitron";
     margin: 1rem auto 1.6rem;
     outline: 0;
     text-align: center;
 }
 
-#logo > :first-child {
-    color: #aa654b;
+#logo> :first-child {
+    color: var(--color-master-dark);
     font-family: "Anton";
     font-size: 4.375rem;
     font-weight: normal;
     margin: 0;
 }
 
-#logo > :last-child {
-    color: #d47e5e;
+#logo> :last-child {
+    color: var(--color-master-light);
     font-family: "Anton";
     font-size: 2.5rem;
     font-weight: normal;
@@ -47,7 +40,9 @@
 }
 
 #image {
+    cursor: pointer;
     margin: 0.625rem auto;
+    outline: 0;
     text-align: center;
     width: 10rem;
 }
@@ -64,7 +59,7 @@
 }
 
 #menu ul {
-    color: #939393;
+    color: var(--color-menu-list-items);
     display: flex;
     flex-direction: column;
     font-family: "Economica";
@@ -76,26 +71,25 @@
     text-align: center;
 }
 
-#menu ul > li {
+#menu ul>li {
     outline: 0;
     transition: font-size;
     transition-duration: 200ms;
 }
 
-#menu ul > li:last-child {
+#menu ul>li:last-child {
     margin-top: auto;
 }
 
-#menu ul > li:hover,
-#menu ul > li.active {
-    color: #aa654b;
+#menu ul>li:hover, #menu ul>li.active {
+    color: var(--color-menu-active-items);
     cursor: pointer;
     font-size: 1.8rem;
     font-weight: bolder;
 }
 
 #copyright {
-    color: #aa654b;
+    color: var(--color-master-dark);
     font-family: "Economica";
     font-size: 1rem;
     margin: 0 auto 1.5rem;
@@ -105,36 +99,33 @@
 @media only screen and (max-height: 720px) {
     /* Small heights = hide circle */
     #sidebar {
-        grid-template-areas:
-            "userInfo"
-            "logo"
-            "menu"
-            "copyright";
+        grid-template-areas: "userInfo" "logo" "menu" "copyright";
         grid-template-rows: min-content min-content auto min-content;
     }
-
     #image {
         display: none;
     }
 }
 
+
 /* Wide = menu always visible */
+
 @media only screen and (min-width: 1281px) {
     #sidebar {
         width: 250px !important;
     }
-
     #section {
         margin-left: 250px !important;
     }
 }
 
+
 /* Narrow = menu always hidden */
+
 @media only screen and (max-width: 1280px) {
     #sidebar {
         width: 0;
     }
-
     #section {
         margin-left: 0;
     }
