@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Anton");
 @import url("https://fonts.googleapis.com/css?family=Orbitron");
 @import url('https://fonts.googleapis.com/css?family=Play');
+
 * {
     box-sizing: border-box !important;
 }
@@ -79,4 +80,19 @@ button.secondary {
     background-color: var(--color-button-secondary-background)!important;
     border: 1px solid var(--color-button-border) !important;
     color: var(--color-button-secondary-text) !important;
+}
+
+h2 {
+    color: var(--color-master-dark);
+    font-family: "Economica";
+    font-size: 35px;
+    font-weight: bold;
+}
+
+#section-one {
+    grid-area: "section-one"
+}
+
+#section-two {
+    grid-area: "section-two"
 }
