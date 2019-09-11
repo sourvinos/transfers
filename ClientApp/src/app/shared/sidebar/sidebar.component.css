@@ -14,7 +14,7 @@
 }
 
 #userInfo {
-    color: #d67474;
+    color: #aa654b;
     font-family: "Economica";
     font-size: 1.2rem;
     margin: 1.5rem auto 0;
@@ -22,7 +22,7 @@
 }
 
 #logo {
-    color: #d67474;
+    color: #aa654b;
     cursor: pointer;
     font-family: "Orbitron";
     margin: 1rem auto 1.6rem;
@@ -31,7 +31,7 @@
 }
 
 #logo > :first-child {
-    color: #e80e0e;
+    color: #aa654b;
     font-family: "Anton";
     font-size: 4.375rem;
     font-weight: normal;
@@ -39,7 +39,7 @@
 }
 
 #logo > :last-child {
-    color: #d67474;
+    color: #d47e5e;
     font-family: "Anton";
     font-size: 2.5rem;
     font-weight: normal;
@@ -88,14 +88,14 @@
 
 #menu ul > li:hover,
 #menu ul > li.active {
-    color: #d67474;
+    color: #aa654b;
     cursor: pointer;
     font-size: 1.8rem;
     font-weight: bolder;
 }
 
 #copyright {
-    color: #d67474;
+    color: #aa654b;
     font-family: "Economica";
     font-size: 1rem;
     margin: 0 auto 1.5rem;

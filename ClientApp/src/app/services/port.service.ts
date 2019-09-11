@@ -14,8 +14,7 @@ export class PortService {
     constructor(private http: HttpClient) { }
 
     getPorts(): Observable<any> {
-        return this.http.get<any>(this.url);
-        // return this.http.get<IPort[]>(this.url);
+        return this.http.get<IPort[]>(this.url);
     }
 
     getPort(id: number): Observable<IPort> {
@@ -35,12 +34,8 @@ export class PortService {
     }
 
     createPDF(): Observable<HttpResponse<Blob>> {
-        return this.http.get(this.url + '/' + 'pdf', { responseType: 'blob', observe: 'response' })
+        return this.http.get('pdf/create', { responseType: 'blob', observe: 'response' })
     }
-
-    // getPortsPDF(): Observable<IPort[]> {
-    //     return this.http.get<IPort[]>(this.url + '/pdf');
-    // }
 }
 
 
