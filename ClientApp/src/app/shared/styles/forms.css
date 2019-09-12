@@ -13,7 +13,7 @@
 #header div {
 	align-items: center;
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-start;
 }
 
 #content {
@@ -47,4 +47,11 @@
 
 .field {
 	width: 25rem;
+}
+
+.icon {
+	color: var(--color-icon);
+	cursor: pointer;
+	margin-top: 1px;
+	outline: 0;
 }

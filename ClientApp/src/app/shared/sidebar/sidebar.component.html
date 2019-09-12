@@ -21,12 +21,12 @@
             <li *ngIf="(loginStatus | async)" [routerLink]="['/customers']" routerLinkActive="active">Customers</li>
             <li *ngIf="(loginStatus | async)" [routerLink]="['/destinations']" routerLinkActive="active">Destinations</li>
             <li *ngIf="(loginStatus | async)" [routerLink]="['/drivers']" routerLinkActive="active">Drivers</li>
-            <li *ngIf="(loginStatus | async)" [routerLink]="['/pickuppoints/']" routerLinkActive="active">Pickup points</li>
-            <li *ngIf="(loginStatus | async)" [routerLink]="['/ports/']" routerLinkActive="active">Ports</li>
-            <li *ngIf="(loginStatus | async)" [routerLink]="['/routes/']" routerLinkActive="active">Routes</li>
-            <li *ngIf="(loginStatus | async)" [routerLink]="['/taxOffices/']" routerLinkActive="active">Tax Offices</li>
-            <li *ngIf="(loginStatus | async)" [routerLink]="['/vatStates/']" routerLinkActive="active">VAT Regimes</li>
-            <li *ngIf="(loginStatus | async)" [routerLink]="['/transfers/']" routerLinkActive="active">Transfers</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/pickupPoints']" routerLinkActive="active">Pickup points</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/ports']" routerLinkActive="active">Ports</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/routes']" routerLinkActive="active">Routes</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/taxOffices']" routerLinkActive="active">Tax Offices</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/vatStates']" routerLinkActive="active">VAT Regimes</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/transfers']" routerLinkActive="active">Transfers</li>
             <li *ngIf="(loginStatus | async)" (click)="logout()" routerLinkActive="active">Logout</li>
         </ul>
     </div>
