@@ -21,5 +21,6 @@
 			"server": "localhost",
 			"username": "sa"
 		}
-	]
+	],
+	"better-comments.highlightPlainText": true
 }
