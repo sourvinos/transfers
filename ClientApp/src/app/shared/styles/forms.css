@@ -1,54 +1,50 @@
 :host {
-    display: grid;
-    grid-template-areas:
-        "header"
-        "content"
-        "footer";
-    grid-template-rows: max-content 1fr max-content;
-    height: 100%;
+	display: grid;
+	grid-template-areas: "header" "content" "footer";
+	grid-template-rows: max-content 1fr max-content;
+	height: 100%;
 }
 
 #header {
-    grid-area: "header";
-    margin: 2rem 2rem 0 2rem;
+	grid-area: "header";
+	margin: 2rem 2rem 0 2rem;
 }
 
 #header div {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
 }
 
 #content {
-    display: grid;
-    grid-area: "content";
-    justify-content: center;
-    margin: 0 2rem;
+	display: grid;
+	grid-area: "content";
+	justify-content: center;
+	margin: 0 2rem;
 }
 
 #content form {
-    display: grid;
-    grid-gap: 0.625rem;
-    grid-template-areas: "section-one section-two";
-    grid-template-columns: 1fr, 1fr;
-    height: 100%;
+	display: grid;
+	grid-gap: 0.625rem;
+	grid-template-areas: "section-one section-two";
+	grid-template-columns: 1fr, 1fr;
+	height: 100%;
 }
 
 #footer {
-    grid-area: "footer";
-    margin: 0 2rem 2rem 2rem;
-    text-align: right;
+	grid-area: "footer";
+	margin: 0 2rem 2rem 2rem;
+	text-align: right;
 }
 
 #footer #buttons {
-    margin-right: 1rem;
+	margin-right: 1rem;
 }
 
 .ui.divider {
-    margin: 2rem 0 2rem 0;
+	margin: 1.8rem 0 2rem 0;
 }
 
 .field {
-    width: 400px;
+	width: 25rem;
 }
-

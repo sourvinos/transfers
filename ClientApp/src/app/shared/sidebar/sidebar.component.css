@@ -82,7 +82,7 @@
 
 #menu ul > li:hover,
 #menu ul > li.active {
-	color: var(--color-menu-active-items);
+	color: var(--color-menu-active-item);
 	cursor: pointer;
 	font-size: var(--font-size-menu-list-item-active);
 	font-weight: bolder;
@@ -96,8 +96,8 @@
 	text-align: center;
 }
 
-/* ! Small heights = hide circle */
-@media only screen and (max-height: 720px) {
+/* ! Small heights = hide bus circle */
+@media only screen and (max-height: 60rem) {
 	#sidebar {
 		grid-template-areas: "userInfo" "logo" "menu" "copyright";
 		grid-template-rows: min-content min-content auto min-content;
@@ -108,17 +108,17 @@
 }
 
 /* ! Wide = menu always visible */
-@media only screen and (min-width: 1281px) {
+@media only screen and (min-width: 80.0625rem) {
 	#sidebar {
-		width: 250px !important;
+		width: 16rem !important;
 	}
 	#section {
-		margin-left: 250px !important;
+		margin-left: 16rem !important;
 	}
 }
 
 /* ! Narrow = menu always hidden */
-@media only screen and (max-width: 1280px) {
+@media only screen and (max-width: 80rem) {
 	#sidebar {
 		width: 0;
 	}

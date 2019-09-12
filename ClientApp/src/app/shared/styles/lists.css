@@ -50,7 +50,7 @@
 }
 
 .ui.divider {
-	margin: 1rem 0 2rem 0;
+	margin: 1.8rem 0 2rem 0;
 }
 
 table {
@@ -72,10 +72,10 @@ table tr:hover {
 }
 
 .ui.icon.input {
-	width: 400px;
+	width: 25rem;
 }
 
-@media only screen and (max-width: 1280px) {
+@media only screen and (max-width: 80rem) {
 	h2 {
 		margin-left: 3rem !important;
 	}

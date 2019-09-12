@@ -25,7 +25,7 @@
 	display: grid;
 	grid-column-gap: 1rem;
 	grid-template-areas: "summaries" "grid";
-	grid-template-columns: 300px auto;
+	grid-template-columns: 19rem auto;
 	height: 100%;
 	max-height: -webkit-fill-available;
 	overflow-y: hidden;
@@ -50,8 +50,8 @@
 .summaryBlock {
 	background-color: var(--color-summary-block-background);
 	height: fit-content;
-	padding: 30px;
-	width: 300px;
+	padding: 1.9rem;
+	width: 19rem;
 }
 
 .summaryHeader {
@@ -63,7 +63,7 @@
 	color: var(--color-master-dark);
 	font-family: var(--font-family-summary-block-header);
 	font-size: var(--font-size-summary-block-header);
-	margin-bottom: 15px;
+	margin-bottom: 1rem;
 }
 
 .summaryBlock .item {
@@ -84,7 +84,7 @@
 }
 
 .summaryBlock .item .description {
-	max-width: 210px;
+	max-width: 13rem;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

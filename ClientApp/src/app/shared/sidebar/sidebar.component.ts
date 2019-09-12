@@ -38,10 +38,10 @@ export class SidebarComponent implements OnInit {
     }
 
     closeSidebar() {
-        var slide = document.getElementById("slide");
+        var hamburger = document.getElementById("hamburger");
 
-        if (slide.className == "open") {
-            this.triggerEvent(slide, "click");
+        if (hamburger.className == "open") {
+            this.triggerEvent(hamburger, "click");
         };
     }
 }
