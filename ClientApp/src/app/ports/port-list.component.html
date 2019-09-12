@@ -16,11 +16,13 @@
         <thead>
             <tr>
                 <th class="center aligned">Description</th>
+                <th class="center aligned two wide">User</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let port of filteredPorts" routerLink="/ports/{{ port.id }}">
                 <td>{{ port.description }}</td>
+                <td>{{ port.userName }}</td>
             </tr>
         </tbody>
     </table>

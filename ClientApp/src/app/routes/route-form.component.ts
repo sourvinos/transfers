@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { HelperService } from '../services/helper.service';
 // Custom
 import { PortService } from '../services/port.service';
 import { RouteService } from '../services/route.service';
@@ -25,11 +26,10 @@ export class RouteFormComponent implements OnInit {
         shortDescription: ['', [Validators.maxLength(10)]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
         portId: [''],
-        portDescription: [''],
-        userName: ['']
+        portDescription: ['']
     })
 
-    constructor(private routeService: RouteService, private portService: PortService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
@@ -62,8 +62,7 @@ export class RouteFormComponent implements OnInit {
                     shortDescription: result.shortDescription,
                     description: result.description,
                     portId: result.port.id,
-                    portDescription: result.port.description,
-                    userName: result.userName
+                    portDescription: result.port.description
                 })
             },
             error => {
@@ -97,6 +96,7 @@ export class RouteFormComponent implements OnInit {
 
     save() {
         if (!this.form.valid) return
+        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
             this.routeService.addRoute(this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error));
         }

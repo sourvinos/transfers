@@ -16,11 +16,13 @@
         <thead>
             <tr>
                 <th class="center aligned">Description</th>
+                <th class="center aligned two wide">User</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let vatRegime of filteredVatStates" routerLink="/vatStates/{{ vatRegime.id }}">
                 <td>{{ vatRegime.description }}</td>
+                <td>{{ vatRegime.userName }}</td>
             </tr>
         </tbody>
     </table>

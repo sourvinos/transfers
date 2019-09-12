@@ -6,15 +6,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
-
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor';
-
 // Common
 import { MainComponent } from './../shared/components/main/main.component';
 import { RootComponent } from './root.component';
 import { SidebarComponent } from './../shared/sidebar/sidebar.component';
-
 // Routes
 import { CustomerFormComponent } from '../customers/customer-form.component';
 import { CustomerListComponent } from '../customers/customer-list.component';
@@ -36,7 +33,6 @@ import { TransferFormComponent } from '../transfers/transfer-form.component';
 import { TransferListComponent } from '../transfers/transfer-list.component';
 import { VatStateFormComponent } from '../vatStates/vatState-form.component';
 import { VatStateListComponent } from '../vatStates/vatState-list.component';
-
 // Directives
 import { InputFormatDirective } from '../directives/input-format.directive';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';

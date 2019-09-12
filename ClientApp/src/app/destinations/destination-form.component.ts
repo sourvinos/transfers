@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 // Custom
 import { DestinationService } from '../services/destination.service';
+import { HelperService } from '../services/helper.service';
 import { Utils } from '../shared/classes/utils';
 
 @Component({
@@ -19,11 +20,10 @@ export class DestinationFormComponent implements OnInit {
     form = this.formBuilder.group({
         id: 0,
         shortDescription: ['', [Validators.maxLength(5)]],
-        description: ['', [Validators.required, Validators.maxLength(100)]],
-        userName: ['']
+        description: ['', [Validators.required, Validators.maxLength(100)]]
     })
 
-    constructor(private destinationService: DestinationService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private destinationService: DestinationService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
@@ -45,8 +45,7 @@ export class DestinationFormComponent implements OnInit {
                 this.form.setValue({
                     id: result.id,
                     shortDescription: result.shortDescription,
-                    description: result.description,
-                    userName: result.userName
+                    description: result.description
                 })
             },
             error => {
@@ -72,6 +71,7 @@ export class DestinationFormComponent implements OnInit {
 
     save() {
         if (!this.form.valid) return
+        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
             this.destinationService.addDestination(this.form.value).subscribe(data => this.router.navigate(['/destinations']), error => Utils.ErrorLogger(error));
         }

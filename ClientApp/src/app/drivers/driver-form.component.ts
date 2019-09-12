@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 // Custom
 import { DriverService } from '../services/driver.service';
+import { HelperService } from '../services/helper.service';
 import { Utils } from '../shared/classes/utils';
 
 @Component({
@@ -18,11 +19,10 @@ export class DriverFormComponent implements OnInit {
 
     form = this.formBuilder.group({
         id: 0,
-        description: ['', [Validators.required, Validators.maxLength(100)]],
-        userName: ['']
+        description: ['', [Validators.required, Validators.maxLength(100)]]
     })
 
-    constructor(private driverService: DriverService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private driverService: DriverService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
@@ -43,8 +43,7 @@ export class DriverFormComponent implements OnInit {
             result => {
                 this.form.setValue({
                     id: result.id,
-                    description: result.description,
-                    userName: result.userName
+                    description: result.description
                 })
             },
             error => {
@@ -66,6 +65,7 @@ export class DriverFormComponent implements OnInit {
 
     save() {
         if (!this.form.valid) return
+        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
             this.driverService.addDriver(this.form.value).subscribe(data => this.router.navigate(['/drivers']), error => Utils.ErrorLogger(error));
         }

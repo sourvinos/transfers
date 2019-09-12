@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HelperService } from '../services/helper.service';
 // Custom
 import { VatStateService } from '../services/vatState.service';
 import { Utils } from '../shared/classes/utils';
@@ -18,11 +19,10 @@ export class VatStateFormComponent implements OnInit {
 
     form = this.formBuilder.group({
         id: 0,
-        description: ['', [Validators.required, Validators.maxLength(100)]],
-        userName: ['']
+        description: ['', [Validators.required, Validators.maxLength(100)]]
     })
 
-    constructor(private vatStateService: VatStateService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
@@ -43,8 +43,7 @@ export class VatStateFormComponent implements OnInit {
             result => {
                 this.form.setValue({
                     id: result.id,
-                    description: result.description,
-                    userName: result.userName
+                    description: result.description
                 })
             },
             error => {
@@ -66,6 +65,7 @@ export class VatStateFormComponent implements OnInit {
 
     save() {
         if (!this.form.valid) return
+        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
             this.vatStateService.addVatState(this.form.value).subscribe(data => this.router.navigate(['/vatStates']), error => Utils.ErrorLogger(error));
         }

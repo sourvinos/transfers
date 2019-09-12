@@ -1,6 +1,5 @@
 <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
 <form [formGroup]='form' class="ui form" autocomplete='off'>
-    <input type="text" formControlName="userName">
     <div class="field" class="hidden">
         <label>Date</label>
         <input type="text" formControlName='dateInput' (change)='updateISODate()' [appInputFormat]="'date'" tabindex='1'>

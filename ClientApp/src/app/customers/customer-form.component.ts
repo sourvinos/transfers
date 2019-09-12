@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 // Custom
 import { CustomerService } from '../services/customer.service';
+import { HelperService } from '../services/helper.service';
 import { TaxOfficeService } from '../services/taxOffice.service';
 import { VatStateService } from '../services/vatState.service';
 import { Utils } from '../shared/classes/utils';
@@ -35,11 +36,10 @@ export class CustomerFormComponent implements OnInit {
         personInCharge: ['', [Validators.maxLength(100)]],
         email: ['', [Validators.maxLength(100)]],
         taxNo: ['', [Validators.maxLength(100)]],
-        accountCode: ['', [Validators.maxLength(100)]],
-        userName: [this.getUserNameFromLocalStorage(), [Validators.required]]
+        accountCode: ['', [Validators.maxLength(100)]]
     })
 
-    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => (this.id = p['id']))
     }
 
@@ -82,8 +82,7 @@ export class CustomerFormComponent implements OnInit {
                     personInCharge: result.personInCharge,
                     email: result.email,
                     taxNo: result.taxNo,
-                    accountCode: result.accountCode,
-                    userName: result.userName
+                    accountCode: result.accountCode
                 })
             },
             error => {
@@ -149,6 +148,7 @@ export class CustomerFormComponent implements OnInit {
 
     save() {
         if (!this.form.valid) return
+        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
             this.customerService.addCustomer(this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
         }
@@ -189,10 +189,6 @@ export class CustomerFormComponent implements OnInit {
         let list = lookupArray.filter(x => x.description === name)[0]
 
         this.form.patchValue({ vatStateId: list ? list.id : '' })
-    }
-
-    getUserNameFromLocalStorage() {
-        return localStorage.getItem('username')
     }
 
 }

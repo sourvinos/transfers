@@ -16,11 +16,13 @@
         <thead>
             <tr>
                 <th class="center aligned">Description</th>
+                <th class="center aligned two wide">User</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let taxOffice of filteredTaxOffices" routerLink="/taxOffices/{{ taxOffice.id }}">
                 <td>{{ taxOffice.description }}</td>
+                <td>{{ taxOffice.userName }}</td>
             </tr>
         </tbody>
     </table>

@@ -1,15 +1,15 @@
 // Base
-import * as moment from 'moment';
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 import { forkJoin } from 'rxjs';
 import { get } from 'scriptjs';
 // Custom
 import { ITransfer } from '../models/transfer';
-import { AccountService } from '../services/account.service';
 import { CustomerService } from '../services/customer.service';
 import { DestinationService } from '../services/destination.service';
+import { HelperService } from '../services/helper.service';
 import { PickupPointService } from '../services/pickupPoint.service';
 import { TransferService } from '../services/transfer.service';
 import { Utils } from '../shared/classes/utils';
@@ -22,7 +22,7 @@ import { Utils } from '../shared/classes/utils';
 
 export class TransferFormComponent implements OnInit, AfterViewInit {
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private transferService: TransferService, private accountService: AccountService, private formBuilder: FormBuilder, private router: Router) { }
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router) { }
 
     @Input() set transfer(transfer: ITransfer) { if (transfer) this.populateFields(transfer) }
 
@@ -47,8 +47,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         kids: [0, Validators.required],
         free: [0, Validators.required],
         totalPersons: 0,
-        remarks: [''],
-        userName: [this.getUserName()]
+        remarks: ['']
     })
 
     ngOnInit() {
@@ -99,8 +98,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
             kids: transfer.kids,
             free: transfer.free,
             totalPersons: transfer.totalPersons,
-            remarks: transfer.remarks,
-            userName: 'Me'
+            remarks: transfer.remarks
         })
     }
 
@@ -115,8 +113,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
             kids: '',
             free: '',
             totalPersons: '',
-            remarks: '',
-            userName: ''
+            remarks: ''
         })
     }
 
@@ -130,20 +127,21 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
 
     save() {
         if (!this.form.valid) return
+        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.form.value.id == null) {
             console.log("Saving...")
-            this.transferService.addTransfer(this.form.value).subscribe(data => { this.router.navigate(['/transfers']) }, error => Utils.ErrorLogger(error))
+            this.transferService.addTransfer(this.form.value).subscribe(() => { this.router.navigate(['/transfers']) }, error => Utils.ErrorLogger(error))
         }
         else {
             console.log("Updating...")
-            this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(data => { this.router.navigate(['/transfers']), this.clearFields() }, error => Utils.ErrorLogger(error))
+            this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => { this.router.navigate(['/transfers']), this.clearFields() }, error => Utils.ErrorLogger(error))
         }
     }
 
     delete() {
         if (this.form.value.id != null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.transferService.deleteTransfer(this.form.value.id).subscribe(data => this.router.navigate(['/transfers']), error => Utils.ErrorLogger(error))
+                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => this.router.navigate(['/transfers']), error => Utils.ErrorLogger(error))
             }
         }
     }
@@ -179,10 +177,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         let list = lookupArray.filter(x => x.description === name)[0]
 
         this.form.patchValue({ pickupPointId: list ? list.id : '' })
-    }
-
-    getUserName() {
-        return 'Temp username';
     }
 
     updateISODate() {

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { HelperService } from '../services/helper.service';
 // Custom
 import { PickupPointService } from '../services/pickupPoint.service';
 import { RouteService } from '../services/route.service';
@@ -26,11 +27,10 @@ export class PickupPointFormComponent implements OnInit {
         routeDescription: ['', [Validators.required]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
         exactPoint: ['', [Validators.maxLength(100)]],
-        time: ['', [Validators.required, Validators.pattern("[0-9][0-9]:[0-9][0-9]")]],
-        userName: ['']
+        time: ['', [Validators.required, Validators.pattern("[0-9][0-9]:[0-9][0-9]")]]
     })
 
-    constructor(private routeService: RouteService, private pickupPointservice: PickupPointService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private routeService: RouteService, private pickupPointservice: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
         route.params.subscribe(p => this.id = p['id'])
     }
 
@@ -64,8 +64,7 @@ export class PickupPointFormComponent implements OnInit {
                     routeDescription: result.route.description,
                     description: result.description,
                     exactPoint: result.exactPoint,
-                    time: result.time,
-                    userName: result.userName
+                    time: result.time
                 })
             },
             error => {
@@ -103,6 +102,7 @@ export class PickupPointFormComponent implements OnInit {
 
     save() {
         if (!this.form.valid) return
+        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
             this.pickupPointservice.addPickupPoint(this.form.value).subscribe(data => this.router.navigate(['/pickuppoints']), (error: Response) => Utils.ErrorLogger(error))
         }

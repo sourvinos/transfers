@@ -17,12 +17,14 @@
             <tr>
                 <th class="center aligned">Description</th>
                 <th class="center aligned two wide">Time</th>
+                <th class="center aligned two wide">User</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let pickupPoint of pickupPoints" routerLink="/pickuppoints/{{ pickupPoint.id }}">
                 <td>{{ pickupPoint.description }}</td>
                 <td class="center aligned">{{ pickupPoint.time }}</td>
+                <td>{{ pickupPoint.userName }}</td>
             </tr>
         </tbody>
     </table>
