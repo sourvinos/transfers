@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 // Custom
 import { AccountService } from '../services/account.service';
+import { CountdownService } from '../services/countdown.service';
 
 @Component({
 	selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent {
 	invalidLogin: boolean
 	returnUrl: string
 	ErrorMessage: string
+	countdown: number = 0
 
 	// Form fields
 	form = this.formBuilder.group({
@@ -25,7 +27,7 @@ export class LoginComponent {
 	})
 
 	// Constructor
-	constructor(private service: AccountService, private router: Router, private formBuilder: FormBuilder) { }
+	constructor(private service: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder) { }
 
 	// Login
 	login() {
@@ -36,6 +38,8 @@ export class LoginComponent {
 			let token = (<any>result).authToken.token
 			this.invalidLogin = false
 			this.router.navigateByUrl(this.returnUrl)
+			this.countdownService.reset()
+			this.countdownService.countdown.subscribe(data => { this.countdown = data })
 		},
 			error => {
 				this.invalidLogin = true

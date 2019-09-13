@@ -39,7 +39,6 @@ export class SidebarComponent implements OnInit {
 
     closeSidebar() {
         var hamburger = document.getElementById("hamburger");
-
         if (hamburger.className == "open") {
             this.triggerEvent(hamburger, "click");
         };

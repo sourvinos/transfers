@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { AccountService } from './../services/account.service';
 
 @Component({
     selector: 'root',
@@ -7,6 +8,12 @@ import { Component, HostListener } from '@angular/core';
 })
 
 export class RootComponent {
+
+    constructor(private accountService: AccountService) { }
+
+    @HostListener('window:beforeunload', ['$event']) beforeUnloadHander() {
+        this.accountService.logout()
+    }
 
     @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void; }; }; }) {
         if (event.key == 'Enter' || event.key == 'ArrowDown') {

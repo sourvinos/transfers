@@ -9,6 +9,7 @@ import { HelperService } from '../services/helper.service';
 import { TaxOfficeService } from '../services/taxOffice.service';
 import { VatStateService } from '../services/vatState.service';
 import { Utils } from '../shared/classes/utils';
+import { CanComponentDeactivate } from '../services/auth-guard.service';
 
 @Component({
     selector: 'app-customer-form',
@@ -16,7 +17,7 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class CustomerFormComponent implements OnInit {
+export class CustomerFormComponent implements OnInit, CanComponentDeactivate {
 
     taxOffices: any
     vatStates: any
@@ -189,6 +190,10 @@ export class CustomerFormComponent implements OnInit {
         let list = lookupArray.filter(x => x.description === name)[0]
 
         this.form.patchValue({ vatStateId: list ? list.id : '' })
+    }
+
+    confirm() {
+        return confirm('Are you sure?')
     }
 
 }
