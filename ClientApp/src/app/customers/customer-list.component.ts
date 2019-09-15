@@ -20,7 +20,7 @@ export class CustomerListComponent implements OnInit {
     constructor(private service: CustomerService) { }
 
     ngOnInit() {
-        get('script.js', () => { });
+        // get('./script.js', () => { });
         this.service.getCustomers().subscribe(data => this.filteredCustomers = this.customers = data, error => Utils.ErrorLogger(error));
     }
 

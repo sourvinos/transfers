@@ -51,7 +51,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     })
 
     ngOnInit() {
-        get('script.js', () => { });
+        // get('script.js', () => { });
         this.populateDropDowns()
         this.canCreate = true
         this.canSave = false

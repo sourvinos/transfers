@@ -30,7 +30,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     constructor(private service: TransferService, private formBuilder: FormBuilder) { }
 
     ngOnInit() {
-        get('script.js', () => { })
+        get('custom.js', () => { })
         this.readDateFromLocalStorage()
         this.selectedDate = this.form.value.dateIn
     }
@@ -43,6 +43,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         this.updateLocalStorageWithDate()
         this.service.getTransfers(this.ISODate()).subscribe(data => {
             this.queryResult = this.queryResultFiltered = data
+            console.log(this.queryResult)
         })
         this.selectItems('item destination', this.selectedDestinations)
         this.selectItems('item customer', this.selectedCustomers)

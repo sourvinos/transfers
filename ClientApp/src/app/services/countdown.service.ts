@@ -17,7 +17,7 @@ export class CountdownService {
     constructor(private idle: Idle, private keepalive: Keepalive, private accountService: AccountService) {
 
         idle.setIdle(1);
-        idle.setTimeout(60);
+        idle.setTimeout(3600);
         idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 
         idle.onTimeout.subscribe(() => { this.timedOut = true; this.accountService.logout() });

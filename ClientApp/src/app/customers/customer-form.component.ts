@@ -3,13 +3,16 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { get } from 'scriptjs';
+import { CanComponentDeactivate } from '../services/auth-guard.service';
 // Custom
 import { CustomerService } from '../services/customer.service';
 import { HelperService } from '../services/helper.service';
 import { TaxOfficeService } from '../services/taxOffice.service';
 import { VatStateService } from '../services/vatState.service';
 import { Utils } from '../shared/classes/utils';
-import { CanComponentDeactivate } from '../services/auth-guard.service';
+
+declare var $: any
 
 @Component({
     selector: 'app-customer-form',
@@ -45,6 +48,7 @@ export class CustomerFormComponent implements OnInit, CanComponentDeactivate {
     }
 
     ngOnInit() {
+        // get('script.js', () => { });
         let sources = []
         sources.push(this.taxOfficeService.getTaxOffices())
         sources.push(this.vatStateService.getVatStates())
@@ -194,6 +198,12 @@ export class CustomerFormComponent implements OnInit, CanComponentDeactivate {
 
     confirm() {
         return confirm('Are you sure?')
+    }
+
+    deleteTest() {
+        $('.ui.modal').modal('show')
+        // if (confirm("Confirm deletion of record"))
+        //     alert("Deleting...")
     }
 
 }

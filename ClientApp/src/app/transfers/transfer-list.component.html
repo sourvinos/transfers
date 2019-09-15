@@ -31,15 +31,15 @@
     <div class="ui bottom attached tab segment active" data-tab="first">
 
         <!-- Empty -->
-        <div id="empty" [hidden]="!queryIsEmpty()">
-            <div class="ui icon header">
+        <div id="empty" [ngClass]="{hidden: !queryIsEmpty()}">
+            <div class=" ui icon header">
                 <i class="search icon"></i>
                 <h3>Nothing to show</h3>
             </div>
         </div>
 
         <!-- Summaries and Grid -->
-        <div id="summariesAndGrid" [hidden]="queryIsEmpty()">
+        <div id="summariesAndGrid" [ngClass]="{hidden: queryIsEmpty()}">
             <!-- Summaries -->
             <div id="summaries">
                 <div class="summaryBlock">
@@ -75,7 +75,7 @@
             </div>
             <!-- Grid -->
             <div id='main-content'>
-                <table class='ui sortable fixed single line table'>
+                <table class='ui table'>
                     <thead>
                         <tr>
                             <th class='center aligned one wide'>Dest</th>
