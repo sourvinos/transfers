@@ -1,10 +1,11 @@
-// Base
+// !Base
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+// !Custom
+import { CanComponentDeactivate } from '../services/auth-guard.service';
 import { HelperService } from '../services/helper.service';
-// Custom
 import { PickupPointService } from '../services/pickupPoint.service';
 import { RouteService } from '../services/route.service';
 import { Utils } from '../shared/classes/utils';
@@ -15,7 +16,7 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class PickupPointFormComponent implements OnInit {
+export class PickupPointFormComponent implements OnInit, CanComponentDeactivate {
 
     routes: any
 
@@ -100,30 +101,6 @@ export class PickupPointFormComponent implements OnInit {
         return 'This field must not be longer than '
     }
 
-    save() {
-        if (!this.form.valid) return
-        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
-        if (this.id == null) {
-            this.pickupPointservice.addPickupPoint(this.form.value).subscribe(data => this.router.navigate(['/pickuppoints']), (error: Response) => Utils.ErrorLogger(error))
-        }
-        else {
-            this.pickupPointservice.updatePickupPoint(this.id, this.form.value).subscribe(data => this.router.navigate(['/pickuppoints']), (error: Response) => Utils.ErrorLogger(error))
-        }
-    }
-
-    // 
-    delete() {
-        if (this.id != null) {
-            if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.pickupPointservice.deletePickupPoint(this.id).subscribe(data => this.router.navigate(['/pickuppoints']), error => Utils.ErrorLogger(error))
-            }
-        }
-    }
-
-    goBack() {
-        this.router.navigate(['/pickuppoints'])
-    }
-
     arrayLookup(lookupArray: any[], givenField: FormControl) {
         for (let x of lookupArray) {
             if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
@@ -137,6 +114,29 @@ export class PickupPointFormComponent implements OnInit {
         let list = lookupArray.filter(x => x.description === name)[0];
 
         this.form.patchValue({ routeId: list ? list.id : '' })
+    }
+
+    save() {
+        if (!this.form.valid) return
+        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
+        if (this.id == null) {
+            this.pickupPointservice.addPickupPoint(this.form.value).subscribe(data => this.router.navigate(['/pickuppoints']), (error: Response) => Utils.ErrorLogger(error))
+        }
+        else {
+            this.pickupPointservice.updatePickupPoint(this.id, this.form.value).subscribe(data => this.router.navigate(['/pickuppoints']), (error: Response) => Utils.ErrorLogger(error))
+        }
+    }
+
+    delete() {
+        if (this.id != null) {
+            if (confirm('This record will permanently be deleted. Are you sure?')) {
+                this.pickupPointservice.deletePickupPoint(this.id).subscribe(data => this.router.navigate(['/pickuppoints']), error => Utils.ErrorLogger(error))
+            }
+        }
+    }
+
+    confirm() {
+        return confirm('Are you sure?')
     }
 
 }

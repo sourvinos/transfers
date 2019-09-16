@@ -1,11 +1,12 @@
-// Base
+// !Base
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+// !Custom
+import { CanComponentDeactivate } from './../services/auth-guard.service';
 import { HelperService } from '../services/helper.service';
-// Custom
-import { VatStateService } from '../services/vatState.service';
 import { Utils } from '../shared/classes/utils';
+import { VatStateService } from '../services/vatState.service';
 
 @Component({
     selector: 'app-vatState-form',
@@ -13,7 +14,7 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class VatStateFormComponent implements OnInit {
+export class VatStateFormComponent implements OnInit, CanComponentDeactivate {
 
     id: number = null;
 
@@ -82,8 +83,8 @@ export class VatStateFormComponent implements OnInit {
         }
     }
 
-    goBack() {
-        this.router.navigate(['/vatStates']);
+    confirm() {
+        return confirm('Are you sure?')
     }
 
 }

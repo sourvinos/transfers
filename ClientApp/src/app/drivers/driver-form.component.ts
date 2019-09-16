@@ -1,8 +1,9 @@
-// Base
+// !Base
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-// Custom
+// !Custom
+import { CanComponentDeactivate } from '../services/auth-guard.service';
 import { DriverService } from '../services/driver.service';
 import { HelperService } from '../services/helper.service';
 import { Utils } from '../shared/classes/utils';
@@ -13,7 +14,7 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class DriverFormComponent implements OnInit {
+export class DriverFormComponent implements OnInit, CanComponentDeactivate {
 
     id: number = null;
 
@@ -82,8 +83,8 @@ export class DriverFormComponent implements OnInit {
         }
     }
 
-    goBack() {
-        this.router.navigate(['/drivers']);
+    confirm() {
+        return confirm('Are you sure?')
     }
 
 }

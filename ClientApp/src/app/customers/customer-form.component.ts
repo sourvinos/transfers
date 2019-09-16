@@ -1,18 +1,15 @@
-// Base
+// !Base
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { get } from 'scriptjs';
+// !Custom
 import { CanComponentDeactivate } from '../services/auth-guard.service';
-// Custom
 import { CustomerService } from '../services/customer.service';
 import { HelperService } from '../services/helper.service';
 import { TaxOfficeService } from '../services/taxOffice.service';
-import { VatStateService } from '../services/vatState.service';
 import { Utils } from '../shared/classes/utils';
-
-declare var $: any
+import { VatStateService } from '../services/vatState.service';
 
 @Component({
     selector: 'app-customer-form',
@@ -48,7 +45,6 @@ export class CustomerFormComponent implements OnInit, CanComponentDeactivate {
     }
 
     ngOnInit() {
-        // get('script.js', () => { });
         let sources = []
         sources.push(this.taxOfficeService.getTaxOffices())
         sources.push(this.vatStateService.getVatStates())
@@ -151,29 +147,6 @@ export class CustomerFormComponent implements OnInit, CanComponentDeactivate {
         return 'This field must not be longer than '
     }
 
-    save() {
-        if (!this.form.valid) return
-        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
-        if (this.id == null) {
-            this.customerService.addCustomer(this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
-        }
-        else {
-            this.customerService.updateCustomer(this.form.value.id, this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
-        }
-    }
-
-    delete() {
-        if (this.id != null) {
-            if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.customerService.deleteCustomer(this.id).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
-            }
-        }
-    }
-
-    goBack() {
-        this.router.navigate(['/customers'])
-    }
-
     arrayLookup(lookupArray: any[], givenField: FormControl) {
         for (let x of lookupArray) {
             if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
@@ -196,14 +169,27 @@ export class CustomerFormComponent implements OnInit, CanComponentDeactivate {
         this.form.patchValue({ vatStateId: list ? list.id : '' })
     }
 
-    confirm() {
-        return confirm('Are you sure?')
+    save() {
+        if (!this.form.valid) return
+        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
+        if (this.id == null) {
+            this.customerService.addCustomer(this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
+        }
+        else {
+            this.customerService.updateCustomer(this.form.value.id, this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
+        }
     }
 
-    deleteTest() {
-        $('.ui.modal').modal('show')
-        // if (confirm("Confirm deletion of record"))
-        //     alert("Deleting...")
+    delete() {
+        if (this.id != null) {
+            if (confirm('This record will permanently be deleted. Are you sure?')) {
+                this.customerService.deleteCustomer(this.id).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
+            }
+        }
+    }
+
+    confirm() {
+        return confirm('Are you sure?')
     }
 
 }

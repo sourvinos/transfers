@@ -1,10 +1,11 @@
-// Base
+// !Base
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+// !Custom
+import { CanComponentDeactivate } from './../services/auth-guard.service';
 import { HelperService } from '../services/helper.service';
-// Custom
 import { PortService } from '../services/port.service';
 import { RouteService } from '../services/route.service';
 import { Utils } from '../shared/classes/utils';
@@ -15,7 +16,7 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class RouteFormComponent implements OnInit {
+export class RouteFormComponent implements OnInit, CanComponentDeactivate {
 
     ports: any
 
@@ -94,6 +95,21 @@ export class RouteFormComponent implements OnInit {
         return 'This field must not be longer than '
     }
 
+    arrayLookup(lookupArray: any[], givenField: FormControl) {
+        for (let x of lookupArray) {
+            if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
+                return true
+            }
+        }
+    }
+
+    updatePortId(lookupArray: any[], e: { target: { value: any } }): void {
+        let name = e.target.value
+        let list = lookupArray.filter(x => x.description === name)[0]
+
+        this.form.patchValue({ portId: list ? list.id : '' })
+    }
+
     save() {
         if (!this.form.valid) return
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
@@ -113,23 +129,8 @@ export class RouteFormComponent implements OnInit {
         }
     }
 
-    goBack() {
-        this.router.navigate(['/routes']);
-    }
-
-    arrayLookup(lookupArray: any[], givenField: FormControl) {
-        for (let x of lookupArray) {
-            if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
-                return true
-            }
-        }
-    }
-    updatePortId(lookupArray: any[], e: { target: { value: any } }): void {
-
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ portId: list ? list.id : '' })
+    confirm() {
+        return confirm('Are you sure?')
     }
 
 }

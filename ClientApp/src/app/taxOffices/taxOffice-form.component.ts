@@ -1,9 +1,10 @@
-// Base
+// !Base
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+// !Custom
+import { CanComponentDeactivate } from './../services/auth-guard.service';
 import { HelperService } from '../services/helper.service';
-// Custom
 import { TaxOfficeService } from '../services/taxOffice.service';
 import { Utils } from '../shared/classes/utils';
 
@@ -13,7 +14,7 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class TaxOfficeFormComponent implements OnInit {
+export class TaxOfficeFormComponent implements OnInit, CanComponentDeactivate {
 
     id: number = null;
 
@@ -82,8 +83,8 @@ export class TaxOfficeFormComponent implements OnInit {
         }
     }
 
-    goBack() {
-        this.router.navigate(['/taxOffices']);
+    confirm() {
+        return confirm('Are you sure?')
     }
 
 }
