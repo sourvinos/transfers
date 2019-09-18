@@ -17,7 +17,15 @@ export interface ITransfer {
         id: number
         shortDescription: string
         description: string
-    }
+    },
+    driver: {
+        id: number,
+        description: string
+    },
+    port: {
+        id: number,
+        description: string
+    },
     adults: number;
     kids: number;
     free: number;

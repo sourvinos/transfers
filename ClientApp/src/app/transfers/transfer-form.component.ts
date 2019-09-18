@@ -11,6 +11,8 @@ import { DestinationService } from '../services/destination.service';
 import { HelperService } from '../services/helper.service';
 import { ITransfer } from '../models/transfer';
 import { PickupPointService } from '../services/pickupPoint.service';
+import { DriverService } from '../services/driver.service';
+import { PortService } from '../services/port.service';
 import { TransferService } from '../services/transfer.service';
 import { Utils } from '../shared/classes/utils';
 
@@ -22,13 +24,15 @@ import { Utils } from '../shared/classes/utils';
 
 export class TransferFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router) { }
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router) { }
 
     @Input() set transfer(transfer: ITransfer) { if (transfer) this.populateFields(transfer) }
 
     destinations: any
     customers: any
     pickupPoints: any
+    drivers: any
+    ports: any
 
     canCreate: boolean = false
     canSave: boolean = false
@@ -39,10 +43,12 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
 
     form = this.formBuilder.group({
         id: 0,
-        dateIn: [this.parentData], dateInput: [this.parentData],
+        dateIn: [this.parentData],
         destinationId: [0, Validators.required], destinationDescription: ['', Validators.required],
         customerId: [0, Validators.required], customerDescription: ['', Validators.required],
         pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
+        driverId: ['', Validators.required], driverDescription: ['', Validators.required],
+        portId: ['', Validators.required], portDescription: ['', Validators.required],
         adults: [0, Validators.required],
         kids: [0, Validators.required],
         free: [0, Validators.required],
@@ -51,7 +57,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
     })
 
     ngOnInit() {
-        // get('script.js', () => { });
         this.populateDropDowns()
         this.canCreate = true
         this.canSave = false
@@ -70,11 +75,15 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
         sources.push(this.destinationService.getDestinations())
         sources.push(this.customerService.getCustomers())
         sources.push(this.pickupPointService.getPickupPoints(2))
+        sources.push(this.driverService.getDrivers())
+        sources.push(this.portService.getPorts())
         return forkJoin(sources).subscribe(
             result => {
                 this.destinations = result[0]
                 this.customers = result[1]
                 this.pickupPoints = result[2]
+                this.drivers = result[3]
+                this.ports = result[4]
             },
             error => {
                 if (error.status == 404) {
@@ -84,16 +93,59 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
         )
     }
 
+    get destinationId() {
+        return this.form.get('destinationId')
+    }
+
+    get destinationDescription() {
+        return this.form.get('destinationDescription')
+    }
+
+    get customerId() {
+        return this.form.get('customerId')
+    }
+
+    get customerDescription() {
+        return this.form.get('customerDescription')
+    }
+
+    get pickupPointId() {
+        return this.form.get('pickupPointId')
+    }
+
+    get pickupPointDescription() {
+        return this.form.get('pickupPointDescription')
+    }
+
+    get driverId() {
+        return this.form.get('driverId')
+    }
+
+    get driverDescription() {
+        return this.form.get('driverDescription')
+    }
+
+    get portId() {
+        return this.form.get('portId')
+    }
+
+    get portDescription() {
+        return this.form.get('portDescription')
+    }
+
     disableFields() {
         this.form.controls
     }
+
     populateFields(transfer: ITransfer) {
         this.form.setValue({
             id: transfer.id,
-            dateIn: transfer.dateIn, dateInput: moment(transfer.dateIn).format('DD/MM/YYYY'),
+            dateIn: transfer.dateIn,
             destinationId: transfer.destination.id, destinationDescription: transfer.destination.description,
             customerId: transfer.customer.id, customerDescription: transfer.customer.description,
             pickupPointId: transfer.pickupPoint.id, pickupPointDescription: transfer.pickupPoint.description,
+            driverId: transfer.driver.id, driverDescription: transfer.driver.description,
+            portId: transfer.port.id, portDescription: transfer.port.description,
             adults: transfer.adults,
             kids: transfer.kids,
             free: transfer.free,
@@ -109,6 +161,8 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
             destinationId: 0, destinationDescription: '',
             customerId: 0, customerDescription: '',
             pickupPointId: 0, pickupPointDescription: '',
+            driverId: 0, driverDescription: '',
+            portId: 0, portDescription: '',
             adults: '',
             kids: '',
             free: '',
@@ -154,6 +208,20 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
         this.form.patchValue({ pickupPointId: list ? list.id : '' })
     }
 
+    updateDriverId(lookupArray: any[], e: { target: { value: any } }): void {
+        let name = e.target.value
+        let list = lookupArray.filter(x => x.description === name)[0]
+
+        this.form.patchValue({ driverId: list ? list.id : '' })
+    }
+
+    updatePortId(lookupArray: any[], e: { target: { value: any } }): void {
+        let name = e.target.value
+        let list = lookupArray.filter(x => x.description === name)[0]
+
+        this.form.patchValue({ portId: list ? list.id : '' })
+    }
+
     updateISODate() {
         this.form.patchValue({ dateIn: moment(this.form.value.dateInput, 'DD-MM-YYYY').toISOString(true) })
     }
@@ -172,12 +240,13 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
         if (!this.form.valid) return
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.form.value.id == null) {
-            console.log("Saving...")
             this.transferService.addTransfer(this.form.value).subscribe(() => { this.router.navigate(['/transfers']) }, error => Utils.ErrorLogger(error))
         }
         else {
-            console.log("Updating...")
-            this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => { this.router.navigate(['/transfers']), this.clearFields() }, error => Utils.ErrorLogger(error))
+            this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
+                this.router.navigate(['/transfers'])
+                this.clearFields()
+            }, error => Utils.ErrorLogger(error))
         }
     }
 

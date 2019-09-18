@@ -17,8 +17,10 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     queryResult: any = {}
     queryResultFiltered: any = {}
+
     selectedDate: string
     selectedTransfer: ITransfer
+
     selectedDestinations: string[] = []
     selectedCustomers: string[] = []
     selectedRoutes: string[] = []
@@ -43,7 +45,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         this.updateLocalStorageWithDate()
         this.service.getTransfers(this.ISODate()).subscribe(data => {
             this.queryResult = this.queryResultFiltered = data
-            console.log(this.queryResult)
         })
         this.selectItems('item destination', this.selectedDestinations)
         this.selectItems('item customer', this.selectedCustomers)

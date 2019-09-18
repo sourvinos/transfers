@@ -1,24 +1,26 @@
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
+using Transfers.Models;
 
 namespace Transfers.Resources
 {
-	public class TransferResource
-	{
-		public int Id { get; set; }
+    public class TransferResource
+    {
+        public int Id { get; set; }
 
-		public DateTime dateIn { get; set; }
+        public DateTime dateIn { get; set; }
 
-		public int Adults { get; set; }
-		public int Kids { get; set; }
-		public int Free { get; set; }
-		public int TotalPersons { get; set; }
+        public int Adults { get; set; }
+        public int Kids { get; set; }
+        public int Free { get; set; }
+        public int TotalPersons { get; set; }
 
-		public string Remarks { get; set; }
-		public string UserName { get; set; }
+        public string Remarks { get; set; }
+        public string UserName { get; set; }
 
-		public CustomerResource Customer { get; set; }
-		public DestinationResource Destination { get; set; }
-		public PickupPointResource PickupPoint { get; set; }
-	}
+        public CustomerResource Customer { get; set; }
+        public DestinationResource Destination { get; set; }
+        public PickupPointResource PickupPoint { get; set; }
+        public Driver Driver { get; set; }
+        public Port Port { get; set; }
+    }
 }

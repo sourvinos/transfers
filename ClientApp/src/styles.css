@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Anton&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Economica&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Play&display=swap');
 
 * {
@@ -7,7 +8,7 @@
 }
 
 * {
-    --font-size-copyright: 1.2rem;
+    --font-size-copyright: 1rem;
     --font-size-headers: 2.2rem;
     --font-size-logo-firstChild: 4.375rem;
     --font-size-logo-secondChild: 2.5rem;
@@ -20,15 +21,16 @@
 
 * {
     --font-family-headers: "Ubuntu";
-    --font-family-copyright: "Economica";
+    --font-family-copyright: "Ubuntu Condensed";
     --font-family-dropdowns: "Play";
-    --font-family-headers: "Economica";
+    --font-family-headers: "Ubuntu Condensed";
     --font-family-logo: "Anton";
-    --font-family-menu-list-items: "Economica";
-    --font-family-summary-block-header: "Economica";
+    --font-family-menu-list-items: "Roboto Condensed";
+    --font-family-summary-block-header: "Ubuntu Condensed";
     --font-family-summary-block-item: "Play";
     --font-family-table: "Play";
-    --font-family-userInfo: "Economica";
+    --font-family-userInfo: "Ubuntu Condensed";
+    --font-family-buttons: "Ubuntu Condensed"
 }
 
 * {
@@ -68,6 +70,7 @@ h1,
 h2,
 h3 {
     color: var(--color-headers) !important;
+    font-size: var(--font-size-headers) !important;
     font-family: var(--font-family-headers) !important;
 }
 
@@ -90,6 +93,7 @@ h3 {
 }
 
 button.solid {
+    font-family: var(--font-family-buttons) !important;
     background-color: var(--color-button-background) !important;
     border: 1px solid var(--color-button-border) !important;
     color: var(--color-button-text) !important;

@@ -173,17 +173,17 @@ export class CustomerFormComponent implements OnInit, CanComponentDeactivate {
         if (!this.form.valid) return
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.customerService.addCustomer(this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
+            this.customerService.addCustomer(this.form.value).subscribe(() => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
         }
         else {
-            this.customerService.updateCustomer(this.form.value.id, this.form.value).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
+            this.customerService.updateCustomer(this.form.value.id, this.form.value).subscribe(() => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
         }
     }
 
     delete() {
         if (this.id != null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.customerService.deleteCustomer(this.id).subscribe(data => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
+                this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
             }
         }
     }

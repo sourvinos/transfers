@@ -14,18 +14,18 @@ namespace Transfers.Controllers
     [Authorize(Policy = "RequireLoggedIn")]
     public class TransfersController : ControllerBase
     {
-        // Variables
+        // !Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
-        // Constructor
+        // !Constructor
         public TransfersController(IMapper mapper, ApplicationDbContext context)
         {
             this.mapper = mapper;
             this.context = context;
         }
 
-        // GET: api/transfers/getByDate/YYYY-MM-DDT00:00:00
+        // !GET: api/transfers/getByDate/YYYY-MM-DDT00:00:00
         [HttpGet("getByDate/{dateIn}")]
         public TransferGroupResultResource<TransferResource> getTransfers(DateTime dateIn)
         {
@@ -33,6 +33,8 @@ namespace Transfers.Controllers
                 .Include(x => x.Customer)
                 .Include(x => x.PickupPoint).ThenInclude(x => x.Route).ThenInclude(x => x.Port)
                 .Include(x => x.Destination)
+                .Include(x => x.Driver)
+                .Include(x => x.Port)
                 .Where(x => x.DateIn == dateIn).OrderBy(x => x.PickupPoint.Route.Description);
             var totalPersonsPerCustomer = context.Transfers.Include(x => x.Customer).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.Customer.Description }).Select(x => new TotalPersonsPerCustomer { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
             var TotalPersonsPerDestination = context.Transfers.Include(x => x.Destination).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.Destination.Description }).Select(x => new TotalPersonsPerDestination { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
@@ -50,7 +52,7 @@ namespace Transfers.Controllers
             return mapper.Map<TransferGroupResult<Transfer>, TransferGroupResultResource<TransferResource>>(groupResult);
         }
 
-        // GET: api/transfers/5
+        // !GET: api/transfers/5
         [HttpGet("{id}")]
         public async Task<TransferResource> GetTransfer(int id)
         {
@@ -59,12 +61,14 @@ namespace Transfers.Controllers
                 .Include(x => x.PickupPoint)
                     .ThenInclude(x => x.Route)
                 .Include(x => x.Destination)
+                .Include(x => x.Driver)
+                .Include(x => x.Port)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             return mapper.Map<Transfer, TransferResource>(transfer);
         }
 
-        // POST: api/transfers
+        // !POST: api/transfers
         [HttpPost]
         public async Task<IActionResult> PostTransfer([FromBody] Transfer transfer)
         {
