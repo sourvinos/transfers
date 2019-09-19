@@ -1,25 +1,20 @@
-// Base
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CountdownService } from './countdown.service';
 
 @Injectable({ providedIn: 'root' })
 
 export class AccountService {
 
-    // Variables
     private baseUrlToken: string = "/api/token/login"
     private UserName = new BehaviorSubject<string>(localStorage.getItem('username'))
     private UserRole = new BehaviorSubject<string>(localStorage.getItem('userRole'))
     private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus())
 
-    // Constructor
     constructor(private router: Router, private http: HttpClient) { }
 
-    // Login
     login(username: string, password: string) {
 
         const grantType = "password"
@@ -42,7 +37,6 @@ export class AccountService {
         )
     }
 
-    // Logout
     logout() {
 
         this.loginStatus.next(false)
@@ -57,7 +51,6 @@ export class AccountService {
 
     }
 
-    // Helper: Called from jwt.interceptor.ts
     getNewRefreshToken(): Observable<any> {
 
         let username = localStorage.getItem('username')
@@ -82,7 +75,6 @@ export class AccountService {
 
     }
 
-    // Private
     private checkLoginStatus(): boolean {
 
         var loginCookie = localStorage.getItem("loginStatus")
@@ -97,17 +89,14 @@ export class AccountService {
 
     }
 
-    // Property
     get isLoggedIn() {
         return this.loginStatus.asObservable()
     }
 
-    // Property
     get currentUserName() {
         return this.UserName.asObservable()
     }
 
-    // Property
     get currentUserRole() {
         return this.UserRole.asObservable()
     }

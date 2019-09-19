@@ -1,10 +1,9 @@
-// Base
 import { Component, OnInit } from '@angular/core';
 import { get } from 'scriptjs';
-// Custom
+
 import { DriverService } from '../services/driver.service';
-import { Utils } from '../shared/classes/utils';
 import { IDriver } from './../models/driver';
+import { Utils } from '../shared/classes/utils';
 
 @Component({
     selector: 'driver-list',

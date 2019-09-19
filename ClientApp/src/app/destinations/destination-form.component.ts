@@ -1,8 +1,7 @@
-// !Base
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-// !Custom
+
 import { CanComponentDeactivate } from '../services/auth-guard.service';
 import { DestinationService } from '../services/destination.service';
 import { HelperService } from '../services/helper.service';

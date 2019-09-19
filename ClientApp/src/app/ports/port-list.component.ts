@@ -1,11 +1,10 @@
-// Base
-import { HttpResponse } from '@angular/common/http'
 import { Component, OnInit } from '@angular/core'
+import { HttpResponse } from '@angular/common/http'
 import { get } from 'scriptjs'
-// Custom
+
+import { IPort } from './../models/port'
 import { PortService } from '../services/port.service'
 import { Utils } from '../shared/classes/utils'
-import { IPort } from './../models/port'
 
 @Component({
     selector: 'port-list',

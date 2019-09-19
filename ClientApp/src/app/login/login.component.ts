@@ -1,8 +1,7 @@
-// Base
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-// Custom
+
 import { AccountService } from '../services/account.service';
 import { CountdownService } from '../services/countdown.service';
 
@@ -14,22 +13,18 @@ import { CountdownService } from '../services/countdown.service';
 
 export class LoginComponent {
 
-	// Variables
 	invalidLogin: boolean
 	returnUrl: string
 	ErrorMessage: string
 	countdown: number = 0
 
-	// Form fields
 	form = this.formBuilder.group({
 		userName: ['', Validators.required],
 		password: ['', Validators.required]
 	})
 
-	// Constructor
 	constructor(private service: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder) { }
 
-	// Login
 	login() {
 
 		let userlogin = this.form.value
@@ -49,17 +44,14 @@ export class LoginComponent {
 
 	}
 
-	// Property
 	get userName() {
 		return this.form.get('userName')
 	}
 
-	// Property
 	get password() {
 		return this.form.get('password')
 	}
 
-	// Property
 	getErrorMessage() {
 		return 'This field is required!'
 	}

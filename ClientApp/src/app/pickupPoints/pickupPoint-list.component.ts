@@ -1,7 +1,6 @@
-// Base
 import { Component, OnInit } from '@angular/core';
 import { get } from 'scriptjs';
-// Custom
+
 import { IPickupPoint } from '../models/pickupPoint';
 import { IRoute } from '../models/route';
 import { PickupPointService } from '../services/pickupPoint.service';

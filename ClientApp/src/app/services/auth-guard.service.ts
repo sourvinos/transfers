@@ -1,9 +1,8 @@
-// Base
-import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-// Custom
+
 import { AccountService } from './account.service';
 import { CanDeactivate } from '@angular/router';
 

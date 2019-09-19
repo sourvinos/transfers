@@ -1,9 +1,8 @@
-// Base
-import { Injectable } from '@angular/core';
-import { DEFAULT_INTERRUPTSOURCES, Idle } from '@ng-idle/core';
-import { Keepalive } from '@ng-idle/keepalive';
 import { BehaviorSubject } from 'rxjs';
-// Custom
+import { DEFAULT_INTERRUPTSOURCES, Idle } from '@ng-idle/core';
+import { Injectable } from '@angular/core';
+import { Keepalive } from '@ng-idle/keepalive';
+
 import { AccountService } from './account.service';
 
 @Injectable({ providedIn: 'root' })

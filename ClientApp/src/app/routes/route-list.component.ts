@@ -1,7 +1,6 @@
-// Base
 import { Component, OnInit } from '@angular/core';
 import { get } from 'scriptjs';
-// Custom
+
 import { IRoute } from '../models/route';
 import { RouteService } from '../services/route.service';
 import { Utils } from '../shared/classes/utils';

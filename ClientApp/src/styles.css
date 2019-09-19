@@ -2,35 +2,37 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Play&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+
+/*  */
 
 * {
     box-sizing: border-box !important;
 }
 
 * {
-    --font-size-copyright: 1rem;
+    --font-size-copyright: 0.8rem;
     --font-size-headers: 2.2rem;
     --font-size-logo-firstChild: 4.375rem;
     --font-size-logo-secondChild: 2.5rem;
-    --font-size-menu-list-item-active: 1.8rem;
-    --font-size-menu-list-items: 1.6rem;
+    --font-size-menu-list-item-active: 1.6rem;
+    --font-size-menu-list-items: 1.4rem;
     --font-size-summary-block-header: 1.6rem;
     --font-size-summary-block-item: 1rem;
     --font-size-userInfo: 1.2rem;
 }
 
 * {
-    --font-family-headers: "Ubuntu";
-    --font-family-copyright: "Ubuntu Condensed";
+    --font-family-copyright: "Lato";
+    --font-family-buttons: "Ubuntu Condensed";
     --font-family-dropdowns: "Play";
     --font-family-headers: "Ubuntu Condensed";
     --font-family-logo: "Anton";
-    --font-family-menu-list-items: "Roboto Condensed";
+    --font-family-menu-list-items: "Tahoma";
     --font-family-summary-block-header: "Ubuntu Condensed";
     --font-family-summary-block-item: "Play";
     --font-family-table: "Play";
-    --font-family-userInfo: "Ubuntu Condensed";
-    --font-family-buttons: "Ubuntu Condensed"
+    --font-family-userInfo: "Lato";
 }
 
 * {
@@ -41,6 +43,7 @@
     --color-button-text: #ffffff;
     --color-hamburger: #aaaaaa;
     --color-headers: #939393;
+    --color-icon: #939393;
     --color-master-dark: #aa654b;
     --color-master-light: #d47e5e;
     --color-menu-active-item: #aa654b;
@@ -56,19 +59,13 @@
     --color-table-header-background: #f5f5f5;
     --color-table-header-text: #939393;
     --color-table-row-hover: #f5f5f5;
-    --color-icon: #939393;
 }
 
-body,
-h1,
-h2,
-h3 {
+body, h1, h2, h3 {
     margin: 0 !important;
 }
 
-h1,
-h2,
-h3 {
+h1, h2, h3 {
     color: var(--color-headers) !important;
     font-size: var(--font-size-headers) !important;
     font-family: var(--font-family-headers) !important;
@@ -105,8 +102,7 @@ button.secondary {
     color: var(--color-button-secondary-text) !important;
 }
 
-h1,
-h2 {
+h1, h2 {
     color: var(--color-master-dark);
     font-family: var(--font-family-headers);
     font-size: var(--font-size-headers);

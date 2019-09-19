@@ -1,17 +1,16 @@
-// !Base
+import * as moment from 'moment';
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import * as moment from 'moment';
-// !Custom
+
 import { CanComponentDeactivate } from './../services/auth-guard.service';
 import { CustomerService } from '../services/customer.service';
 import { DestinationService } from '../services/destination.service';
+import { DriverService } from '../services/driver.service';
 import { HelperService } from '../services/helper.service';
 import { ITransfer } from '../models/transfer';
 import { PickupPointService } from '../services/pickupPoint.service';
-import { DriverService } from '../services/driver.service';
 import { PortService } from '../services/port.service';
 import { TransferService } from '../services/transfer.service';
 import { Utils } from '../shared/classes/utils';

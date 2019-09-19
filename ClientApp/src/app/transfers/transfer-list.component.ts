@@ -1,9 +1,8 @@
-// Base
 import * as moment from 'moment';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { get } from 'scriptjs';
-// Custom
+
 import { TransferService } from '../services/transfer.service';
 import { ITransfer } from './../models/transfer';
 
@@ -43,9 +42,8 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     getTransfers() {
         this.updateLocalStorageWithDate()
-        this.service.getTransfers(this.ISODate()).subscribe(data => {
-            this.queryResult = this.queryResultFiltered = data
-        })
+        this.getFilteredTransfers()
+        this.service.refreshNeeded.subscribe(() => { this.getFilteredTransfers() })
         this.selectItems('item destination', this.selectedDestinations)
         this.selectItems('item customer', this.selectedCustomers)
         this.selectItems('item route', this.selectedRoutes)
@@ -112,6 +110,12 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     private readDateFromLocalStorage() {
         this.form.setValue({ 'dateIn': localStorage.getItem('date') })
+    }
+
+    private getFilteredTransfers() {
+        this.service.getTransfers(this.ISODate()).subscribe((data: any) => {
+            this.queryResult = this.queryResultFiltered = data
+        })
     }
 
 }

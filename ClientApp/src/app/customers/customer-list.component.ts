@@ -1,9 +1,7 @@
-// Base
 import { Component, OnInit } from '@angular/core';
-import { get } from 'scriptjs';
-// Custom
-import { ICustomer } from '../models/customer';
+
 import { CustomerService } from '../services/customer.service';
+import { ICustomer } from '../models/customer';
 import { Utils } from '../shared/classes/utils';
 
 @Component({
@@ -20,12 +18,16 @@ export class CustomerListComponent implements OnInit {
     constructor(private service: CustomerService) { }
 
     ngOnInit() {
-        // get('./script.js', () => { });
-        this.service.getCustomers().subscribe(data => this.filteredCustomers = this.customers = data, error => Utils.ErrorLogger(error));
+        this.getAllCustomers()
+        this.service.refreshNeeded.subscribe(() => { this.getAllCustomers() })
     }
 
     filter(query: string) {
         this.filteredCustomers = query ? this.customers.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.customers;
+    }
+
+    private getAllCustomers() {
+        this.service.getCustomers().subscribe(data => this.filteredCustomers = this.customers = data, error => Utils.ErrorLogger(error));
     }
 
 }

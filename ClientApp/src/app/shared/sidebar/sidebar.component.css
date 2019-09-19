@@ -1,12 +1,7 @@
 #sidebar {
     background-color: var(--color-sidebar-background);
     display: grid;
-    grid-template-areas:
-        "userInfo"
-        "companyLogo"
-        "image"
-        "menu"
-        "copyright";
+    grid-template-areas: "userInfo""companyLogo""image""menu""copyright";
     grid-template-rows: min-content min-content min-content auto min-content;
     height: 100vh;
     overflow-x: hidden;
@@ -85,8 +80,7 @@
     margin-top: auto;
 }
 
-#menu ul>li:hover,
-#menu ul>li.active {
+#menu ul>li:hover, #menu ul>li.active {
     color: var(--color-menu-active-item);
     cursor: pointer;
     font-size: var(--font-size-menu-list-item-active);
@@ -101,44 +95,41 @@
     text-align: center;
 }
 
+
 /* ! Small heights = hide bus circle */
+
 @media only screen and (max-height: 60rem) {
     #sidebar {
-        grid-template-areas:
-            "userInfo"
-            "companyLogo"
-            "menu"
-            "copyright";
+        grid-template-areas: "userInfo""companyLogo""menu""copyright";
         grid-template-rows: min-content min-content auto min-content;
     }
-
-    #image,
-    #copyright {
+    #image, #copyright {
         display: none;
     }
-
     #menu {
         padding: 0 0 1rem 0;
     }
 }
 
+
 /* ! Wide = menu always visible */
+
 @media only screen and (min-width: 80.0625rem) {
     #sidebar {
-        width: 16rem !important;
+        width: 18rem !important;
     }
-
     #section {
-        margin-left: 16rem !important;
+        margin-left: 18rem !important;
     }
 }
 
+
 /* ! Narrow = menu always hidden */
+
 @media only screen and (max-width: 80rem) {
     #sidebar {
         width: 0;
     }
-
     #section {
         margin-left: 0;
     }
