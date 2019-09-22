@@ -19,7 +19,6 @@ export class CustomerListComponent implements OnInit {
 
     ngOnInit() {
         this.getAllCustomers()
-        this.service.refreshNeeded.subscribe(() => { this.getAllCustomers() })
     }
 
     filter(query: string) {

@@ -238,7 +238,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
     save() {
         if (!this.form.valid) return
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
-        if (this.form.value.id == null) {
+        if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => { this.router.navigate(['/transfers']) }, error => Utils.ErrorLogger(error))
         }
         else {

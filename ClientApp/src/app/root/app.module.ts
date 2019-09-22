@@ -11,7 +11,7 @@ import { JwtInterceptor } from '../services/jwt.interceptor';
 // Common
 import { MainComponent } from './../shared/components/main/main.component';
 import { RootComponent } from './root.component';
-import { SidebarComponent } from './../shared/sidebar/sidebar.component';
+import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
 // Routes
 import { CustomerFormComponent } from '../customers/customer-form.component';
 import { CustomerListComponent } from '../customers/customer-list.component';
