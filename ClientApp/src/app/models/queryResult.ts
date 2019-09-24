@@ -1,4 +1,4 @@
-import { ITransfer } from "./transfer";
+import { ITransfer } from"./transfer";
 
 export interface IQueryResult {
 	persons: number

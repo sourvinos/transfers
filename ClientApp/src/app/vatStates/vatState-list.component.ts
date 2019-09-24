@@ -19,7 +19,6 @@ export class VatStateListComponent implements OnInit {
     constructor(private service: VatStateService) { }
 
     ngOnInit() {
-        get('script.js', () => { });
         this.service.getVatStates().subscribe(data => this.filteredVatStates = this.vatStates = data, error => Utils.ErrorLogger(error));
     }
 

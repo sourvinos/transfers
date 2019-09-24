@@ -54,7 +54,7 @@ export class JwtInterceptor implements HttpInterceptor {
         let errorMsg: string;
 
         if (errorResponse.error instanceof Error) {
-            errorMsg = "An error occured : " + errorResponse.error.message;
+            errorMsg ="An error occured :" + errorResponse.error.message;
         } else {
             errorMsg = `Backend returned code ${errorResponse.status}, body was: ${errorResponse.error}`;
         }

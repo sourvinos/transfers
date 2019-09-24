@@ -31,6 +31,7 @@
 }
 
 /* ! Wide screen */
+
 @media only screen and (min-width: 80.0625rem) {
 	#hamburger {
 		display: none;
@@ -38,8 +39,15 @@
 }
 
 /* ! Narrow screen */
+
 @media only screen and (max-width: 80rem) {
 	#hamburger {
 		display: block;
 	}
+}
+
+#content {
+	display: flex;
+	height: 100%;
+	transition: 0.2s ease-out;
 }

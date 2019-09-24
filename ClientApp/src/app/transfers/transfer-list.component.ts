@@ -1,15 +1,16 @@
 import * as moment from 'moment';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { get } from 'scriptjs';
 
 import { TransferService } from '../services/transfer.service';
 import { ITransfer } from './../models/transfer';
 
+declare var $: any
+
 @Component({
     selector: 'app-transfer-list',
     templateUrl: './transfer-list.component.html',
-    styleUrls: ['../shared/styles/lists.css', 'transfer-list.component.css']
+    styleUrls: ['../shared/styles/lists.css', './transfer-list.component.css']
 })
 
 export class TransferListComponent implements OnInit, AfterViewInit {
@@ -17,7 +18,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     queryResult: any = {}
     queryResultFiltered: any = {}
 
-    selectedDate: string
     selectedTransfer: ITransfer
 
     selectedDestinations: string[] = []
@@ -31,9 +31,8 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     constructor(private service: TransferService, private formBuilder: FormBuilder) { }
 
     ngOnInit() {
-        get('custom.js', () => { })
         this.readDateFromLocalStorage()
-        this.selectedDate = this.form.value.dateIn
+        this.setWidthsForScrollableElements()
     }
 
     ngAfterViewInit(): void {
@@ -41,16 +40,16 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     getTransfers() {
-        this.updateLocalStorageWithDate()
         this.getFilteredTransfers()
-        this.service.refreshNeeded.subscribe(() => { this.getFilteredTransfers() })
-        this.selectItems('item destination', this.selectedDestinations)
-        this.selectItems('item customer', this.selectedCustomers)
-        this.selectItems('item route', this.selectedRoutes)
+        this.selectGroupItems()
+        this.isRefreshNeeded()
+        this.scrollToList()
+        this.updateLocalStorageWithDate()
     }
 
     populateForm(transfer: ITransfer) {
         this.selectedTransfer = transfer
+        this.scrollToForm()
     }
 
     toggleItem(item: any, lookupArray: string) {
@@ -93,6 +92,12 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         return moment(this.form.value.dateIn, 'DD/MM/YYYY').toISOString()
     }
 
+    private selectGroupItems() {
+        this.selectItems('item destination', this.selectedDestinations)
+        this.selectItems('item customer', this.selectedCustomers)
+        this.selectItems('item route', this.selectedRoutes)
+    }
+
     private selectItems(className: string, lookupArray: any) {
         setTimeout(() => {
             let elements = document.getElementsByClassName(className)
@@ -115,7 +120,43 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     private getFilteredTransfers() {
         this.service.getTransfers(this.ISODate()).subscribe((data: any) => {
             this.queryResult = this.queryResultFiltered = data
+            document.getElementById("scrollable").style.marginLeft = - this.boxWidth + 'px'
         })
+    }
+
+    private setWidthsForScrollableElements() {
+        let boxWidth = document.body.clientWidth - Number(document.getElementById('sidebar').clientWidth)
+        document.getElementById('header').style.width = boxWidth + 'px'
+        document.getElementById('empty').style.minWidth = boxWidth + 'px'
+        document.getElementById('summariesGrid').style.minWidth = boxWidth + 'px'
+        document.getElementById('form').style.minWidth = boxWidth + 'px'
+        document.getElementById('footer').style.width = boxWidth + 'px'
+    }
+
+    private isRefreshNeeded() {
+        this.service.refreshNeeded.subscribe(() => { this.getFilteredTransfers() })
+    }
+
+    scrollToHome() {
+        document.getElementById('scrollable').style.marginLeft = '0px'
+    }
+
+    private scrollToList() {
+        document.getElementById('scrollable').style.marginLeft = - this.boxWidth + 'px'
+    }
+
+    private scrollToForm() {
+        document.getElementById('scrollable').style.marginLeft = - this.boxWidth * 2 + 'px'
+    }
+
+    get boxWidth() {
+        return document.body.clientWidth - Number(document.getElementById('sidebar').clientWidth)
+    }
+
+    get isFormVisible() {
+        let marginLeft = document.getElementById('scrollable').style.marginLeft
+        let result = Number(marginLeft.substring(0, marginLeft.length - 2))
+        return result == -3336
     }
 
 }

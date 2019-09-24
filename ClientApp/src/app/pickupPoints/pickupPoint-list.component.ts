@@ -41,7 +41,6 @@ export class PickupPointListComponent implements OnInit {
     constructor(private routeService: RouteService, private pickupPointService: PickupPointService) { }
 
     ngOnInit() {
-        get('script.js', () => { });
         this.routeService.getRoutes().subscribe(data => this.routes = data, error => Utils.ErrorLogger(error))
     }
 

@@ -20,7 +20,6 @@ export class PortListComponent implements OnInit {
     constructor(private service: PortService) { }
 
     ngOnInit() {
-        get('script.js', () => { })
         this.service.getPorts().subscribe(data => this.filteredPorts = this.ports = data, error => Utils.ErrorLogger(error))
     }
 

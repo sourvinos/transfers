@@ -1,11 +1,13 @@
 #sidebar {
     background-color: var(--color-sidebar-background);
     display: grid;
-    grid-template-areas: "userInfo""companyLogo""image""menu""copyright";
+    grid-template-areas: "userInfo" "companyLogo" "image" "menu" "copyright";
     grid-template-rows: min-content min-content min-content auto min-content;
     height: 100vh;
     overflow-x: hidden;
+    position: sticky;
     transition: 0.7s;
+    z-index: 1;
 }
 
 #userInfo {
@@ -84,7 +86,6 @@
     color: var(--color-menu-active-item);
     cursor: pointer;
     font-size: var(--font-size-menu-list-item-active);
-    font-weight: bolder;
 }
 
 #copyright {
@@ -94,7 +95,6 @@
     margin: 0 auto 1.5rem;
     text-align: center;
 }
-
 
 /* ! Small heights = hide bus circle */
 
@@ -111,7 +111,6 @@
     }
 }
 
-
 /* ! Wide = menu always visible */
 
 @media only screen and (min-width: 80.0625rem) {
@@ -122,7 +121,6 @@
         margin-left: 18rem !important;
     }
 }
-
 
 /* ! Narrow = menu always hidden */
 

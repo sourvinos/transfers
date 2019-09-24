@@ -19,7 +19,6 @@ export class TaxOfficeListComponent implements OnInit {
     constructor(private service: TaxOfficeService) { }
 
     ngOnInit() {
-        get('script.js', () => { });
         this.service.getTaxOffices().subscribe(data => this.filteredTaxOffices = this.taxOffices = data, error => Utils.ErrorLogger(error));
     }
 

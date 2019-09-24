@@ -1,5 +1,5 @@
-import { ITaxOffice } from "./taxOffice";
-import { IVatState } from "./vatState";
+import { ITaxOffice } from"./taxOffice";
+import { IVatState } from"./vatState";
 
 export interface ICustomer {
     id: number

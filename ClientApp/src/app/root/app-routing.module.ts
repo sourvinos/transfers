@@ -27,6 +27,7 @@ const appRoutes: Routes = [
 	{ path: 'taxOffices', component: TaxOfficeListComponent, canActivate: [AuthGuardService] }, { path: 'taxOffices/new', component: TaxOfficeFormComponent, canActivate: [AuthGuardService], canDeactivate: [AuthGuardService] }, { path: 'taxOffices/:id', component: TaxOfficeFormComponent, canActivate: [AuthGuardService], canDeactivate: [AuthGuardService] },
 	{ path: 'transfers', component: TransferListComponent, canActivate: [AuthGuardService] }, { path: 'transfers/new', component: TransferFormComponent, canActivate: [AuthGuardService], canDeactivate: [AuthGuardService] }, { path: 'transfers/:id', component: TransferFormComponent, canActivate: [AuthGuardService], canDeactivate: [AuthGuardService] },
 	{ path: 'vatStates', component: VatStateListComponent, canActivate: [AuthGuardService] }, { path: 'vatStates/new', component: VatStateFormComponent, canActivate: [AuthGuardService], canDeactivate: [AuthGuardService] }, { path: 'vatStates/:id', component: VatStateFormComponent, canActivate: [AuthGuardService], canDeactivate: [AuthGuardService] },
+
 ];
 
 @NgModule({

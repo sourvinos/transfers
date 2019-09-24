@@ -18,13 +18,14 @@ import { Utils } from '../shared/classes/utils';
 @Component({
     selector: 'app-transfer-form',
     templateUrl: './transfer-form.component.html',
-    styleUrls: ['../shared/styles/forms.css']
+    styleUrls: ['../shared/styles/forms.css', './transfer-form.component.css']
 })
 
 export class TransferFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
 
     constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router) { }
 
+    @Input() public parentData: string
     @Input() set transfer(transfer: ITransfer) { if (transfer) this.populateFields(transfer) }
 
     destinations: any
@@ -37,8 +38,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
     canSave: boolean = false
     canDelete: boolean = false
     canAbort: boolean = false
-
-    @Input() public parentData: string
 
     form = this.formBuilder.group({
         id: 0,
@@ -239,6 +238,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
         if (!this.form.valid) return
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.form.value.id == 0) {
+            // this.transferService.addTransfer(this.form.value).subscribe(() => { this.router.navigate(['/transfers']) }, error => Utils.ErrorLogger(error))
             this.transferService.addTransfer(this.form.value).subscribe(() => { this.router.navigate(['/transfers']) }, error => Utils.ErrorLogger(error))
         }
         else {
@@ -260,5 +260,17 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
     confirm() {
         return confirm('Are you sure?')
     }
+
+    showList() {
+        document.getElementById("scrollable").style.marginLeft = - this.boxWidth + 'px'
+    }
+
+    get boxWidth() {
+        let windowWidth = document.body.clientWidth
+        let sidebarWidth = Number(document.getElementById('sidebar').clientWidth)
+
+        return windowWidth - sidebarWidth
+    }
+
 
 }

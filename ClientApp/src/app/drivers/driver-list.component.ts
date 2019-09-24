@@ -19,7 +19,6 @@ export class DriverListComponent implements OnInit {
     constructor(private service: DriverService) { }
 
     ngOnInit() {
-        get('script.js', () => { });
         this.service.getDrivers().subscribe(data => this.filteredDrivers = this.drivers = data, error => Utils.ErrorLogger(error));
     }
 

@@ -47,25 +47,25 @@ export class InputFormatDirective {
                         day = parseInt(value.split("/")[0]) < 32 ? parseInt(value.split("/")[0]) : 0
                         month = parseInt(moment().format("MM"))
                         year = parseInt(moment().format("YYYY"))
-                        newDate = moment(day + "-" + month + "-" + year, 'DD/MM/YYYY')
-                        this.el.nativeElement.value = newDate.isValid() ? newDate.format("DD/MM/YYYY") : ""
+                        newDate = moment(day +"-" + month +"-" + year, 'DD/MM/YYYY')
+                        this.el.nativeElement.value = newDate.isValid() ? newDate.format("DD/MM/YYYY") :""
                         break
                     case 1:
                         day = parseInt(value.split("/")[0]) < 32 ? parseInt(value.split("/")[0]) : 0
                         month = parseInt(value.split("/")[1])
                         year = parseInt(moment().format("YYYY"))
-                        newDate = moment(day + "-" + month + "-" + year, 'DD/MM/YYYY')
-                        this.el.nativeElement.value = newDate.isValid() ? newDate.format("DD/MM/YYYY") : ""
+                        newDate = moment(day +"-" + month +"-" + year, 'DD/MM/YYYY')
+                        this.el.nativeElement.value = newDate.isValid() ? newDate.format("DD/MM/YYYY") :""
                         break
                     case 2:
                         day = parseInt(value.split("/")[0])
                         month = parseInt(value.split("/")[1])
                         year = parseInt(value.split("/")[2])
-                        newDate = moment(day + "-" + month + "-" + year, 'DD/MM/YYYY')
-                        this.el.nativeElement.value = newDate.isValid() ? newDate.format("DD/MM/YYYY") : ""
+                        newDate = moment(day +"-" + month +"-" + year, 'DD/MM/YYYY')
+                        this.el.nativeElement.value = newDate.isValid() ? newDate.format("DD/MM/YYYY") :""
                         break
                     default:
-                        this.el.nativeElement.value = ""
+                        this.el.nativeElement.value =""
                 }
             }
 

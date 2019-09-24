@@ -1,0 +1,16 @@
+#content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.numeric {
+    width: 80px;
+}
+
+.numeric.total {
+    width: 100px;
+}
+
+.numeric .number {
+    text-align: right;
+}

@@ -43,14 +43,14 @@ namespace Transfers.Controllers
                 Orientation = Orientation.Landscape,
                 PaperSize = PaperKind.A5,
                 Margins = new MarginSettings { Top = 10, Bottom = 10 },
-                DocumentTitle = "PDF Report"
+                DocumentTitle ="PDF Report"
             };
 
             var objectSettings = new ObjectSettings
             {
                 PagesCount = true,
                 HtmlContent = template,
-                WebSettings = { DefaultEncoding = "utf-8" },
+                WebSettings = { DefaultEncoding ="utf-8" },
             };
 
             var pdf = new HtmlToPdfDocument()
@@ -61,7 +61,7 @@ namespace Transfers.Controllers
 
             byte[] file = converter.Convert(pdf);
 
-            return File(file, "application/pdf");
+            return File(file,"application/pdf");
         }
     }
 }

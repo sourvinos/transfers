@@ -1,8 +1,6 @@
 section {
     display: grid;
-    grid-template-areas:
-        "sidebar"
-        "main";
+    grid-template-areas: "sidebar" "main";
     grid-template-columns: auto 1fr;
     height: 100vh;
     transition: margin-left 0.7s;

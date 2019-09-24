@@ -1,12 +1,10 @@
 <div id='header'>
-
     <div id='title'>
+        <i *ngIf="isFormVisible" class="big arrow alternate circle left outline icon" (click)="scrollToList()"></i>
         <h2>Transfers</h2>
         <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
     </div>
-    <div class='ui divider'>
-    </div>
-
+    <div class='ui divider'></div>
     <div id='search-box'>
         <form [formGroup]='form' class="ui form" autocomplete='off'>
             <div class="field">
@@ -16,31 +14,17 @@
             </div>
         </form>
     </div>
-
 </div>
 
 <div id="content">
-
-    <!-- Tabs -->
-    <div class="ui top attached tabular menu">
-        <a class="item active" data-tab="first">Summary</a>
-        <a class="item" data-tab="second">Details</a>
-    </div>
-
-    <!-- Summaries and grid -->
-    <div class="ui bottom attached tab segment active" data-tab="first">
-
-        <!-- Empty -->
-        <div id="empty" [ngClass]="{hidden: !queryIsEmpty()}">
+    <div id="scrollable">
+        <div id="empty" class="scrollableItem">
             <div class=" ui icon header">
                 <i class="search icon"></i>
                 <h3>Nothing to show</h3>
             </div>
         </div>
-
-        <!-- Summaries and Grid -->
-        <div id="summariesAndGrid" [ngClass]="{hidden: queryIsEmpty()}">
-            <!-- Summaries -->
+        <div id="summariesGrid" class="scrollableItem">
             <div id="summaries">
                 <div class="summaryBlock">
                     <div class="summaryHeader">
@@ -73,7 +57,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Grid -->
             <div id='main-content'>
                 <table class='ui table'>
                     <thead>
@@ -109,35 +92,15 @@
                 </table>
             </div>
         </div>
-
-    </div>
-
-    <!-- Form -->
-    <div class="ui bottom attached tab segment" data-tab="second">
-
-        <!-- Form -->
-        <div id="form">
+        <div id="form" class="scrollableItem">
             <app-transfer-form [parentData]="selectedDate" [transfer]='selectedTransfer'></app-transfer-form>
         </div>
-
-        <!-- Empty -->
-        <div id="empty" [hidden]="!queryIsEmpty()">
-            <div class="ui icon header">
-                <i class="search icon"></i>
-                <h3>Nothing to show</h3>
-            </div>
-        </div>
-
-        <!-- Grid -->
-        <div class="summary" [hidden]="queryIsEmpty()">
-        </div>
-
     </div>
-
 </div>
 
 <div id='footer'>
+    <div class='ui divider'></div>
     <div id='buttons'>
-        <button class='ui button solid' [routerLink]='["/transfers/new"]'>New </button>
+        <button class='ui button solid' (click)="showForm()">New</button>
     </div>
 </div>

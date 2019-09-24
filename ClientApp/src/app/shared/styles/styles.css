@@ -3,9 +3,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Play&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
-
-/*  */
-
 * {
     box-sizing: border-box !important;
 }
@@ -106,6 +103,13 @@ h1, h2 {
     color: var(--color-master-dark);
     font-family: var(--font-family-headers);
     font-size: var(--font-size-headers);
+}
+
+.icon {
+    color: var(--color-icon);
+    cursor: pointer;
+    margin-top: 1px;
+    outline: 0;
 }
 
 #section-one {
