@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import { Idle } from '@ng-idle/core';
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -25,7 +25,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
 
     constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router) { }
 
-    @Input() public parentData: string
     @Input() set transfer(transfer: ITransfer) { if (transfer) this.populateFields(transfer) }
 
     destinations: any
@@ -34,14 +33,9 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
     drivers: any
     ports: any
 
-    canCreate: boolean = false
-    canSave: boolean = false
-    canDelete: boolean = false
-    canAbort: boolean = false
-
     form = this.formBuilder.group({
         id: 0,
-        dateIn: [this.parentData],
+        dateIn: [this.helperService.getDateFromLocalStorage()],
         destinationId: [0, Validators.required], destinationDescription: ['', Validators.required],
         customerId: [0, Validators.required], customerDescription: ['', Validators.required],
         pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
@@ -51,17 +45,12 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
         kids: [0, Validators.required],
         free: [0, Validators.required],
         totalPersons: 0,
-        remarks: ['']
+        remarks: [''],
+        userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
     ngOnInit() {
         this.populateDropDowns()
-        this.canCreate = true
-        this.canSave = false
-        this.canDelete = false
-        this.canAbort = false
-        this.form.patchValue({ dateInput: this.parentData })
-        this.updateISODate()
     }
 
     ngAfterViewInit(): void {
@@ -148,24 +137,26 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
             kids: transfer.kids,
             free: transfer.free,
             totalPersons: transfer.totalPersons,
-            remarks: transfer.remarks
+            remarks: transfer.remarks,
+            userName: transfer.userName
         })
     }
 
     clearFields() {
         this.form.setValue({
             id: 0,
-            dateIn: this.parentData,
+            dateIn: this.helperService.getDateFromLocalStorage(),
             destinationId: 0, destinationDescription: '',
             customerId: 0, customerDescription: '',
             pickupPointId: 0, pickupPointDescription: '',
             driverId: 0, driverDescription: '',
             portId: 0, portDescription: '',
-            adults: '',
-            kids: '',
-            free: '',
-            totalPersons: '',
-            remarks: ''
+            adults: '0',
+            kids: '0',
+            free: '0',
+            totalPersons: '0',
+            remarks: '',
+            userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
 
@@ -220,10 +211,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
         this.form.patchValue({ portId: list ? list.id : '' })
     }
 
-    updateISODate() {
-        this.form.patchValue({ dateIn: moment(this.form.value.dateInput, 'DD-MM-YYYY').toISOString(true) })
-    }
-
     focusOnElement(index: number) {
         var elements = document.getElementsByTagName('input')
         elements[index].select()
@@ -234,35 +221,41 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
         this.form.patchValue({ totalPersons: parseInt(this.form.value.adults) + parseInt(this.form.value.kids) + parseInt(this.form.value.free) })
     }
 
+    new() {
+        this.clearFields()
+        document.getElementById('scrollable').style.marginLeft = - this.boxWidth * 2 + 'px'
+    }
+
     save() {
         if (!this.form.valid) return
-        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.form.value.id == 0) {
-            // this.transferService.addTransfer(this.form.value).subscribe(() => { this.router.navigate(['/transfers']) }, error => Utils.ErrorLogger(error))
-            this.transferService.addTransfer(this.form.value).subscribe(() => { this.router.navigate(['/transfers']) }, error => Utils.ErrorLogger(error))
+            this.transferService.addTransfer(this.form.value).subscribe(() => {
+                console.log("New record saved")
+                this.clearFields()
+            }, error => Utils.ErrorLogger(error))
         }
         else {
             this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
-                this.router.navigate(['/transfers'])
+                console.log("Record updated")
                 this.clearFields()
             }, error => Utils.ErrorLogger(error))
         }
     }
 
     delete() {
-        if (this.form.value.id != null) {
+        if (this.form.value.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.transferService.deleteTransfer(this.form.value.id).subscribe(() => this.router.navigate(['/transfers']), error => Utils.ErrorLogger(error))
             }
         }
     }
 
-    confirm() {
-        return confirm('Are you sure?')
+    get canDelete() {
+        return this.form.value.id !== 0 ? true : false
     }
 
-    showList() {
-        document.getElementById("scrollable").style.marginLeft = - this.boxWidth + 'px'
+    confirm() {
+        return confirm('Are you sure?')
     }
 
     get boxWidth() {
@@ -271,6 +264,5 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
 
         return windowWidth - sidebarWidth
     }
-
 
 }

@@ -39,9 +39,9 @@ namespace Transfers
 
             switch (model.GrantType)
             {
-                case"password":
+                case "password":
                     return await GenerateNewToken(model);
-                case"refresh_token":
+                case "refresh_token":
                     return await RefreshToken(model);
                 default:
                     return new UnauthorizedResult();
@@ -74,8 +74,8 @@ namespace Transfers
                 return Ok(new { authToken = accessToken });
             }
 
-            ModelState.AddModelError("","Username/Password was not Found");
-            return Unauthorized(new { LoginError ="Please Check the Login Credentials - Ivalid Username/Password was entered" });
+            ModelState.AddModelError("", "Username/Password was not Found");
+            return Unauthorized(new { LoginError = "Please Check the Login Credentials - Ivalid Username/Password was entered" });
 
         }
 

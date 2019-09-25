@@ -121,7 +121,7 @@ export class RouteFormComponent implements OnInit, CanComponentDeactivate {
     }
 
     delete() {
-        if (this.id != null) {
+        if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.routeService.deleteRoute(this.id).subscribe(data => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error));
             }

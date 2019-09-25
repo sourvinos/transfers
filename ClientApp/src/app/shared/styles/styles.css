@@ -40,7 +40,7 @@
     --color-button-text: #ffffff;
     --color-hamburger: #aaaaaa;
     --color-headers: #939393;
-    --color-icon: #939393;
+    --color-icon: #aa654b;
     --color-master-dark: #aa654b;
     --color-master-light: #d47e5e;
     --color-menu-active-item: #aa654b;
@@ -86,6 +86,10 @@ h1, h2, h3 {
     font-family: var(--font-family-dropdowns);
 }
 
+button {
+    margin-left: 0.5rem !important;
+}
+
 button.solid {
     font-family: var(--font-family-buttons) !important;
     background-color: var(--color-button-background) !important;
@@ -108,8 +112,8 @@ h1, h2 {
 .icon {
     color: var(--color-icon);
     cursor: pointer;
-    margin-top: 1px;
     outline: 0;
+    margin-top: 2px !important;
 }
 
 #section-one {

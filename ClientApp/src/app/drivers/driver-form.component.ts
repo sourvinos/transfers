@@ -75,7 +75,7 @@ export class DriverFormComponent implements OnInit, CanComponentDeactivate {
     }
 
     delete() {
-        if (this.id != null) {
+        if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.driverService.deleteDriver(this.id).subscribe(data => this.router.navigate(['/drivers']), error => Utils.ErrorLogger(error));
             }

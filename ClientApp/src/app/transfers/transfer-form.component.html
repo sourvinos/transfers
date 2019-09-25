@@ -7,6 +7,10 @@
             <input type="text" formControlName="id">
         </div>
         <div class="field hidden">
+            <label>Username</label>
+            <input type="text" formControlName="userName">
+        </div>
+        <div class="field hidden">
             <label>Date</label>
             <input type="text" formControlName="dateIn">
         </div>
@@ -78,11 +82,11 @@
             <input type="text" formControlName="remarks" tabindex="11">
         </div>
     </form>
+    <!-- <div id="buttons">
+        <button class="ui button secondary" (click)="delete()" [hidden]="form.value.id !== 0">Delete</button>
+        <button class="ui button solid" (click)="save()" [disabled]="!form.valid">Save</button>
+    </div> -->
 </div>
 
 <!-- <div id="footer">
-    <div id="buttons">
-        <button class="ui button secondary" (click)="delete()" [hidden]="form.value.id != 0">Delete</button>
-        <button class="ui button solid" (click)="save()" [disabled]="!form.valid">Save</button>
-    </div>
 </div> -->

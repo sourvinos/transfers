@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor';
 // Common
@@ -35,7 +36,6 @@ import { VatStateFormComponent } from '../vatStates/vatState-form.component';
 import { VatStateListComponent } from '../vatStates/vatState-list.component';
 // Directives
 import { InputFormatDirective } from '../directives/input-format.directive';
-import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 
 @NgModule({
     declarations: [
@@ -68,7 +68,7 @@ import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
         NgIdleKeepaliveModule.forRoot(),
     ],
     entryComponents: [],
-    providers: [{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
+    providers: [],
     bootstrap: [RootComponent]
 })
 

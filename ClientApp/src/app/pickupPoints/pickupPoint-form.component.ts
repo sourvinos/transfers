@@ -127,7 +127,7 @@ export class PickupPointFormComponent implements OnInit, CanComponentDeactivate 
     }
 
     delete() {
-        if (this.id != null) {
+        if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.pickupPointservice.deletePickupPoint(this.id).subscribe(data => this.router.navigate(['/pickuppoints']), error => Utils.ErrorLogger(error))
             }

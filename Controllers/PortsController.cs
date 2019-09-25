@@ -12,7 +12,7 @@ using Transfers.Models;
 namespace Transfers.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Policy = "RequireLoggedIn")]
+    // [Authorize(Policy = "RequireLoggedIn")]
     public class PortsController : ControllerBase
     {
         // Variables

@@ -81,7 +81,7 @@ export class DestinationFormComponent implements OnInit, CanComponentDeactivate 
     }
 
     delete() {
-        if (this.id != null) {
+        if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.destinationService.deleteDestination(this.id).subscribe(data => this.router.navigate(['/destinations']), error => Utils.ErrorLogger(error));
             }

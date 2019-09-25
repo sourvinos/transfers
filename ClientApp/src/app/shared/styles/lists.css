@@ -19,23 +19,19 @@
 #header #search-box {
     display: flex;
     justify-content: flex-end;
-    margin: 0 1rem 0 1rem;
+    margin: 0 0 0 1rem;
 }
 
 #content {
     display: flex;
-    /* padding: 0 2rem; */
+    padding: 0 2rem;
     max-height: -webkit-fill-available;
 }
 
 #footer {
     grid-area: "footer";
-    margin: 0 2rem 2rem 2rem;
+    margin: 0 0 2rem 2rem;
     text-align: right;
-}
-
-#footer #buttons {
-    margin-right: 1rem;
 }
 
 #content::-webkit-scrollbar {
@@ -58,6 +54,7 @@ table {
 
 table th {
     background-color: var(--color-table-header-background) !important;
+    border: 0 !important;
     color: var(--color-table-header-text);
     position: sticky;
     top: 0;

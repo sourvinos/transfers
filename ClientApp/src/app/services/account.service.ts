@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 
 export class AccountService {
 
-    private baseUrlToken: string ="/api/token/login"
+    private baseUrlToken: string = "/api/token/login"
     private UserName = new BehaviorSubject<string>(localStorage.getItem('username'))
     private UserRole = new BehaviorSubject<string>(localStorage.getItem('userRole'))
     private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus())
@@ -17,7 +17,7 @@ export class AccountService {
 
     login(username: string, password: string) {
 
-        const grantType ="password"
+        const grantType = "password"
 
         return this.http.post<any>(this.baseUrlToken, { username, password, grantType }).pipe(
             map(result => {
@@ -56,7 +56,7 @@ export class AccountService {
         let username = localStorage.getItem('username')
         let refreshToken = localStorage.getItem('refreshToken')
 
-        const grantType ="refresh_token"
+        const grantType = "refresh_token"
 
         return this.http.post<any>(this.baseUrlToken, { username, refreshToken, grantType }).pipe(
             map(result => {
@@ -79,8 +79,8 @@ export class AccountService {
 
         var loginCookie = localStorage.getItem("loginStatus")
 
-        if (loginCookie =="1") {
-            if (localStorage.getItem('jwt') != null || localStorage.getItem('jwt') != undefined) {
+        if (loginCookie == "1") {
+            if (localStorage.getItem('jwt') !== null || localStorage.getItem('jwt') !== undefined) {
                 return true
             }
         }

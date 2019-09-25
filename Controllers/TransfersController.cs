@@ -11,7 +11,7 @@ using Transfers.Resources;
 namespace Transfers.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Policy = "RequireLoggedIn")]
+    // [Authorize(Policy = "RequireLoggedIn")]
     public class TransfersController : ControllerBase
     {
         // !Variables

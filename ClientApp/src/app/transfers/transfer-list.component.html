@@ -1,16 +1,15 @@
-<div id='header'>
-    <div id='title'>
+<div id="header">
+    <div id="title">
         <i *ngIf="isFormVisible" class="big arrow alternate circle left outline icon" (click)="scrollToList()"></i>
         <h2>Transfers</h2>
         <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
     </div>
-    <div class='ui divider'></div>
-    <div id='search-box'>
-        <form [formGroup]='form' class="ui form" autocomplete='off'>
+    <div class="ui divider"></div>
+    <div id="search-box">
+        <form [formGroup]="form" class="ui form" autocomplete="off">
             <div class="field">
-                <input type="text" class="date" formControlName="dateIn" [appInputFormat]="'date'" tabindex='1' placeholder="Date">
-                <input class="dummy" tabindex='2'>
-                <button class='ui button solid' id='go' (click)='getTransfers()' tabindex='2'>Go</button>
+                <input type="text" class="date" formControlName="dateIn" [appInputFormat]="'date'" tabindex="1">
+                <button class="ui button solid" id="go" (click)="getTransfers()" tabindex="2">Search</button>
             </div>
         </form>
     </div>
@@ -57,25 +56,24 @@
                     </div>
                 </div>
             </div>
-            <div id='main-content'>
-                <table class='ui table'>
+            <div id="main-content">
+                <table class="ui table">
                     <thead>
                         <tr>
-                            <th class='center aligned one wide'>Dest</th>
-                            <th class='hidden'>Destination</th>
-                            <th class='center aligned two wide'>Route</th>
-                            <th class='center aligned'>Customer</th>
-                            <th class='center aligned two wide'>Pickup point</th>
-                            <th class='center aligned one wide'>Time</th>
-                            <th class='center aligned one wide'>Adults</th>
-                            <th class='center aligned one wide'>Kids</th>
-                            <th class='center aligned one wide'>Free</th>
-                            <th class='center aligned one wide'>Total</th>
-                            <th class="center aligned two wide">User</th>
+                            <th class="center aligned one wide">Dest</th>
+                            <th class="hidden">Destination</th>
+                            <th class="center aligned two wide">Route</th>
+                            <th class="center aligned">Customer</th>
+                            <th class="center aligned two wide">Pickup point</th>
+                            <th class="center aligned one wide">Time</th>
+                            <th class="center aligned one wide">Adults</th>
+                            <th class="center aligned one wide">Kids</th>
+                            <th class="center aligned one wide">Free</th>
+                            <th class="center aligned one wide">Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor='let transfer of queryResultFiltered.transfers' (click)='populateForm(transfer)'>
+                        <tr *ngFor="let transfer of queryResultFiltered.transfers" (click)="populateForm(transfer)">
                             <td class="center aligned">{{ transfer.destination.shortDescription }}</td>
                             <td class="hidden">{{ transfer.destination.description }}</td>
                             <td>{{ transfer.pickupPoint.route.shortDescription }}</td>
@@ -86,21 +84,22 @@
                             <td class="right aligned">{{ transfer.kids }}</td>
                             <td class="right aligned">{{ transfer.free }}</td>
                             <td class="right aligned">{{ transfer.totalPersons }}</td>
-                            <td>{{ transfer.userName }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
         <div id="form" class="scrollableItem">
-            <app-transfer-form [parentData]="selectedDate" [transfer]='selectedTransfer'></app-transfer-form>
+            <app-transfer-form #formComponent [transfer]="selectedTransfer"></app-transfer-form>
         </div>
     </div>
 </div>
 
-<div id='footer'>
-    <div class='ui divider'></div>
-    <div id='buttons'>
-        <button class='ui button solid' (click)="showForm()">New</button>
+<div id="footer">
+    <div class="ui divider"></div>
+    <div id="buttons">
+        <button *ngIf="!isFormVisible" class="ui button solid" (click)="formComponent.new()">New</button>
+        <button *ngIf="isFormVisible && formComponent.canDelete" class="ui button solid" (click)="formComponent.delete()">Delete</button>
+        <button *ngIf="isFormVisible" class="ui button solid" (click)="formComponent.save()" [disabled]="!form.valid">Save</button>
     </div>
 </div>

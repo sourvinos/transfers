@@ -48,7 +48,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     populateForm(transfer: ITransfer) {
-        this.selectedTransfer = transfer
+        this.updateTransfer(transfer)
         this.scrollToForm()
     }
 
@@ -88,10 +88,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
             .filter((z: { pickupPoint: { route: { description: string; }; }; }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.description) !== -1 })
     }
 
-    private ISODate() {
-        return moment(this.form.value.dateIn, 'DD/MM/YYYY').toISOString()
-    }
-
     private selectGroupItems() {
         this.selectItems('item destination', this.selectedDestinations)
         this.selectItems('item customer', this.selectedCustomers)
@@ -110,15 +106,15 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     private updateLocalStorageWithDate() {
-        localStorage.setItem('date', moment(this.form.value.dateIn, 'DD/MM/YYYY').format('DD/MM/YYYY'))
+        localStorage.setItem('date', moment(this.form.value.dateIn, 'DD/MM/YYYY').toISOString(true))
     }
 
     private readDateFromLocalStorage() {
-        this.form.setValue({ 'dateIn': localStorage.getItem('date') })
+        this.form.setValue({ 'dateIn': moment(localStorage.getItem('date')).format('DD/MM/YYYY') })
     }
 
     private getFilteredTransfers() {
-        this.service.getTransfers(this.ISODate()).subscribe((data: any) => {
+        this.service.getTransfers(localStorage.getItem('date')).subscribe((data: any) => {
             this.queryResult = this.queryResultFiltered = data
             document.getElementById("scrollable").style.marginLeft = - this.boxWidth + 'px'
         })
@@ -134,7 +130,11 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     private isRefreshNeeded() {
-        this.service.refreshNeeded.subscribe(() => { this.getFilteredTransfers() })
+        this.service.refreshNeeded.subscribe(() => {
+            this.getFilteredTransfers()
+            this.clearFilterArrays()
+            this.selectGroupItems()
+        })
     }
 
     scrollToHome() {
@@ -157,6 +157,16 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         let marginLeft = document.getElementById('scrollable').style.marginLeft
         let result = Number(marginLeft.substring(0, marginLeft.length - 2))
         return result == -3336
+    }
+
+    private clearFilterArrays() {
+        this.selectedDestinations.length = 0
+        this.selectedCustomers.length = 0
+        this.selectedRoutes.length = 0
+    }
+
+    private updateTransfer(transfer: ITransfer) {
+        this.selectedTransfer = transfer
     }
 
 }

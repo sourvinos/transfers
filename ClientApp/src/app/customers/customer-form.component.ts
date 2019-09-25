@@ -180,7 +180,7 @@ export class CustomerFormComponent implements OnInit, CanComponentDeactivate {
     }
 
     delete() {
-        if (this.id != null) {
+        if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
             }

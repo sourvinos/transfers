@@ -75,7 +75,7 @@ export class VatStateFormComponent implements OnInit, CanComponentDeactivate {
     }
 
     delete() {
-        if (this.id != null) {
+        if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.vatStateService.deleteVatState(this.id).subscribe(data => this.router.navigate(['/vatStates']), error => Utils.ErrorLogger(error));
             }

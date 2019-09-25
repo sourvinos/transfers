@@ -3,7 +3,11 @@
 }
 
 #search-box {
-    margin: 0 1rem !important;
+    margin: 0;
+}
+
+#content {
+    padding: 0;
 }
 
 #scrollable {

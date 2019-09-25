@@ -3,14 +3,20 @@ import { Injectable } from '@angular/core'
 import { Observable, Subject } from 'rxjs'
 
 import { ICustomer } from '../models/customer'
+import { tap } from 'rxjs/operators'
 
 @Injectable({ providedIn: 'root' })
 
 export class CustomerService {
 
     private url: string = '/api/customers'
+    private _refreshNeeded = new Subject<void>()
 
     constructor(private http: HttpClient) { }
+
+    get refreshNeeded() {
+        return this._refreshNeeded
+    }
 
     getCustomers(): Observable<ICustomer[]> {
         return this.http.get<ICustomer[]>(this.url)
@@ -21,7 +27,7 @@ export class CustomerService {
     }
 
     addCustomer(formData: ICustomer): Observable<ICustomer> {
-        return this.http.post<ICustomer>(this.url, formData)
+        return this.http.post<ICustomer>(this.url, formData).pipe(tap(() => { this._refreshNeeded.next() }))
     }
 
     updateCustomer(id: number, formData: ICustomer): Observable<ICustomer> {

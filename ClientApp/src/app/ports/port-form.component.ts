@@ -75,7 +75,7 @@ export class PortFormComponent implements OnInit, CanComponentDeactivate {
     }
 
     delete() {
-        if (this.id != null) {
+        if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.portService.deletePort(this.id).subscribe(data => this.router.navigate(['/ports']), error => Utils.ErrorLogger(error));
             }

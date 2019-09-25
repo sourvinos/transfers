@@ -54,7 +54,7 @@ export class JwtInterceptor implements HttpInterceptor {
         let errorMsg: string;
 
         if (errorResponse.error instanceof Error) {
-            errorMsg ="An error occured :" + errorResponse.error.message;
+            errorMsg = "An error occured :" + errorResponse.error.message;
         } else {
             errorMsg = `Backend returned code ${errorResponse.status}, body was: ${errorResponse.error}`;
         }
@@ -95,7 +95,7 @@ export class JwtInterceptor implements HttpInterceptor {
         }
         else {
             this.isTokenRefreshing = false;
-            return this.tokenSubject.pipe(filter(token => token != null), take(1), switchMap(token => { return next.handle(this.attachTokenToRequest(request)); }));
+            return this.tokenSubject.pipe(filter(token => token !== null), take(1), switchMap(token => { return next.handle(this.attachTokenToRequest(request)); }));
         }
 
     }

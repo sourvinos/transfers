@@ -75,7 +75,7 @@ export class TaxOfficeFormComponent implements OnInit, CanComponentDeactivate {
     }
 
     delete() {
-        if (this.id != null) {
+        if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
                 this.taxOfficeService.deleteTaxOffice(this.id).subscribe(data => this.router.navigate(['/taxOffices']), error => Utils.ErrorLogger(error));
             }

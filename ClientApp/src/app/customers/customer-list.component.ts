@@ -29,4 +29,9 @@ export class CustomerListComponent implements OnInit {
         this.service.getCustomers().subscribe(data => this.filteredCustomers = this.customers = data, error => Utils.ErrorLogger(error));
     }
 
+    private isRefreshNeeded() {
+        this.service.refreshNeeded.subscribe(() => { this.getAllCustomers() })
+    }
+
+
 }
