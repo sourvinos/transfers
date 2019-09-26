@@ -13,6 +13,7 @@ import { JwtInterceptor } from '../services/jwt.interceptor';
 import { MainComponent } from './../shared/components/main/main.component';
 import { RootComponent } from './root.component';
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
+import { LoaderComponent } from '../shared/components/loader/loader.component';
 // Routes
 import { CustomerFormComponent } from '../customers/customer-form.component';
 import { CustomerListComponent } from '../customers/customer-list.component';
@@ -43,6 +44,7 @@ import { InputFormatDirective } from '../directives/input-format.directive';
         MainComponent,
         RootComponent,
         SidebarComponent,
+        LoaderComponent,
         // Routes
         HomeComponent,
         LoginComponent,
