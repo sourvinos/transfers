@@ -12,11 +12,11 @@
         <div id="left">
             <div class="field" [class.error]="shortDescription.invalid && shortDescription.touched">
                 <label>Abbreviation</label>
-                <input type="text" formControlName="shortDescription">
+                <input type="text" formControlName="shortDescription" tabindex="1" autofocus>
             </div>
             <div class="field" [class.error]="description.invalid && description.touched">
                 <label>Description</label>
-                <input type="text" formControlName="description">
+                <input type="text" formControlName="description" tabindex="2">
             </div>
         </div>
     </form>

@@ -12,7 +12,7 @@
         <div id="left">
             <div class="field" [class.error]='(routeId.invalid && routeDescription.invalid && routeDescription.touched) || (routeDescription.touched && !arrayLookup(routes, routeDescription))'>
                 <label>Route</label>
-                <input type="text" list="routeList" formControlName='routeDescription' (change)="updateRouteId(routes, $event)">
+                <input type="text" list="routeList" formControlName='routeDescription' (change)="updateRouteId(routes, $event)" tabindex="1">
                 <datalist id="routeList">
                     <select>
                         <option *ngFor='let route of routes' [value]="route.description"></option>
@@ -21,15 +21,15 @@
             </div>
             <div class="field" [class.error]="description.invalid && description.touched">
                 <label>Description</label>
-                <input type="text" formControlName="description">
+                <input type="text" formControlName="description" tabindex="2">
             </div>
             <div class="field" [class.error]="exactPoint.invalid && exactPoint.touched">
                 <label>Exact point</label>
-                <input type="text" formControlName="exactPoint">
+                <input type="text" formControlName="exactPoint" tabindex="3">
             </div>
             <div class="field" [class.error]="time.invalid && time.touched">
                 <label>Time</label>
-                <input type="text" formControlName="time">
+                <input type="text" formControlName="time" tabindex="4">
             </div>
         </div>
     </form>

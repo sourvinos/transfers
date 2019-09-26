@@ -2,7 +2,7 @@
     <div>
         <i class="big arrow alternate circle left outline icon" [routerLink]="['/customers']"></i>
         <h2>Customer</h2>
-        <p>{{ form.value | json }} {{ form.valid }}</p>
+        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
     </div>
     <div class="ui divider"></div>
 </div>
@@ -12,41 +12,41 @@
         <div id="left">
             <div class="field" [class.error]="description.invalid && description.touched">
                 <label>Description</label>
-                <input type="text" formControlName="description">
+                <input type="text" formControlName="description" tabindex="1">
             </div>
             <div class="field" [class.error]="profession.invalid && profession.touched">
                 <label>Profession</label>
-                <input type="text" formControlName="profession">
+                <input type="text" formControlName="profession" tabindex="2">
             </div>
             <div class="field" [class.error]="address.invalid && address.touched">
                 <label>Address</label>
-                <input type="text" formControlName="address">
+                <input type="text" formControlName="address" tabindex="3">
             </div>
             <div class="field" [class.error]="phones.invalid && phones.touched">
                 <label>Phones</label>
-                <input type="text" formControlName="phones">
+                <input type="text" formControlName="phones" tabindex="4">
             </div>
             <div class="field" [class.error]="personInCharge.invalid && personInCharge.touched">
                 <label>Person in charge</label>
-                <input type="text" formControlName="personInCharge">
+                <input type="text" formControlName="personInCharge" tabindex="5">
             </div>
         </div>
         <div id="right">
             <div class="field" [class.error]="email.invalid && email.touched">
                 <label>Email</label>
-                <input type="text" formControlName="email">
+                <input type="text" formControlName="email" tabindex="6">
             </div>
             <div class="field" [class.error]="taxNo.invalid && taxNo.touched">
                 <label>Tax number</label>
-                <input type="text" formControlName="taxNo">
+                <input type="text" formControlName="taxNo" tabindex="7">
             </div>
             <div class="field" [class.error]="accountCode.invalid && accountCode.touched">
                 <label>Account code</label>
-                <input type="text" formControlName="accountCode">
+                <input type="text" formControlName="accountCode" tabindex="8">
             </div>
             <div class="field" [class.error]='(taxOfficeId.invalid && taxOfficeDescription.invalid && taxOfficeDescription.touched) || (taxOfficeDescription.touched && !arrayLookup(taxOffices, taxOfficeDescription))'>
                 <label>Tax office</label>
-                <input type="text" list="taxOfficeList" formControlName='taxOfficeDescription' (change)="updateTaxOfficeId(taxOffices, $event)">
+                <input type="text" list="taxOfficeList" formControlName='taxOfficeDescription' (change)="updateTaxOfficeId(taxOffices, $event)" tabindex="9">
                 <datalist id="taxOfficeList">
                     <select>
                         <option *ngFor='let taxOffice of taxOffices' [value]="taxOffice.description"></option>
@@ -55,7 +55,7 @@
             </div>
             <div class="field" [class.error]='(vatStateId.invalid && vatStateDescription.invalid && vatStateDescription.touched) || (vatStateDescription.touched && !arrayLookup(vatStates, vatStateDescription))'>
                 <label>VAT Regime</label>
-                <input type="text" list="vatStateList" formControlName='vatStateDescription' (change)="updateVatStateId(vatStates, $event)">
+                <input type="text" list="vatStateList" formControlName='vatStateDescription' (change)="updateVatStateId(vatStates, $event)" tabindex="10">
                 <datalist id="vatStateList">
                     <select>
                         <option *ngFor='let vatState of vatStates' [value]="vatState.description"></option>

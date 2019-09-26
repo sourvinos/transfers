@@ -12,15 +12,15 @@
         <div id="left">
             <div class="field" [class.error]="shortDescription.invalid && shortDescription.touched">
                 <label>Abbreviation</label>
-                <input type="text" formControlName="shortDescription">
+                <input type="text" formControlName="shortDescription" tabindex="1">
             </div>
             <div class="field" [class.error]="description.invalid && description.touched">
                 <label>Description</label>
-                <input type="text" formControlName="description">
+                <input type="text" formControlName="description" tabindex="2">
             </div>
             <div class="field" [class.error]='(portId.invalid && portDescription.invalid && portDescription.touched) || (portDescription.touched && !arrayLookup(ports, portDescription))'>
                 <label>Departure port</label>
-                <input type="text" list="portList" formControlName='portDescription' (change)="updatePortId(ports, $event)">
+                <input type="text" list="portList" formControlName='portDescription' (change)="updatePortId(ports, $event)" tabindex="3">
                 <datalist id="portList">
                     <select>
                         <option *ngFor='let port of ports' [value]="port.description"></option>

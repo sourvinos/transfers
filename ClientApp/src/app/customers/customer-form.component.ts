@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterViewChecked, AfterContentInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 

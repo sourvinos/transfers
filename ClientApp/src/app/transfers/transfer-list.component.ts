@@ -142,7 +142,10 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     private scrollToList() {
-        document.getElementById('scrollable').style.marginLeft = - this.boxWidth + 'px'
+        if (this.queryResult.persons > 0)
+            document.getElementById('scrollable').style.marginLeft = - this.boxWidth + 'px'
+        else
+            document.getElementById('scrollable').style.marginLeft = 0 + 'px'
     }
 
     private scrollToForm() {

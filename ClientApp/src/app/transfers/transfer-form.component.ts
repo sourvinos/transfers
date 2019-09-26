@@ -54,7 +54,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
     }
 
     ngAfterViewInit(): void {
-        this.focusOnElement(0)
+        this.focusOnElement(4)
     }
 
     populateDropDowns() {
