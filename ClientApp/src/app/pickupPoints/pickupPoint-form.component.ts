@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 
@@ -15,7 +15,7 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class PickupPointFormComponent implements OnInit, CanComponentDeactivate {
+export class PickupPointFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
 
     routes: any
 
@@ -53,6 +53,10 @@ export class PickupPointFormComponent implements OnInit, CanComponentDeactivate 
                 }
             }
         )
+    }
+
+    ngAfterViewInit(): void {
+        document.getElementById("routeList").focus()
     }
 
     populateFields() {

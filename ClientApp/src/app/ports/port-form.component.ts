@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { CanComponentDeactivate } from './../services/auth-guard.service';
@@ -13,7 +13,7 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class PortFormComponent implements OnInit, CanComponentDeactivate {
+export class PortFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
 
     id: number = null;
 
@@ -36,6 +36,10 @@ export class PortFormComponent implements OnInit, CanComponentDeactivate {
                 }
             });
         }
+    }
+
+    ngAfterViewInit(): void {
+        document.getElementById("description").focus()
     }
 
     populateFields() {

@@ -1,8 +1,8 @@
-import { IPort } from"./port";
+import { IPort } from "./port";
 
 export interface IRoute {
     id: number
-    shortDescription: string
+    abbreviation: string
     description: string
     port: IPort
     isSelected: boolean

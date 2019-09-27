@@ -11,7 +11,7 @@ import { ITransfer } from './../models/transfer';
     styleUrls: ['../shared/styles/lists.css', './transfer-list.component.css']
 })
 
-export class TransferListComponent implements OnInit, AfterViewInit {
+export class TransferListComponent implements OnInit {
 
     queryResult: any = {}
     queryResultFiltered: any = {}
@@ -31,10 +31,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.readDateFromLocalStorage()
         this.setWidthsForScrollableElements()
-    }
-
-    ngAfterViewInit(): void {
-        this.focusOnElement(0)
     }
 
     getTransfers() {
@@ -148,6 +144,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     private scrollToForm() {
         document.getElementById('scrollable').style.marginLeft = - this.boxWidth * 2 + 'px'
+        document.getElementById("destination").focus()
     }
 
     get boxWidth() {

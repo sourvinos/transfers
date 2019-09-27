@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { CanComponentDeactivate } from '../services/auth-guard.service';
@@ -13,13 +13,13 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class DestinationFormComponent implements OnInit, CanComponentDeactivate {
+export class DestinationFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
 
     id: number = null;
 
     form = this.formBuilder.group({
         id: 0,
-        shortDescription: ['', [Validators.maxLength(5)]],
+        abbreviation: ['', [Validators.maxLength(5)]],
         description: ['', [Validators.required, Validators.maxLength(100)]]
     })
 
@@ -39,12 +39,16 @@ export class DestinationFormComponent implements OnInit, CanComponentDeactivate 
         }
     }
 
+    ngAfterViewInit(): void {
+        document.getElementById("abbreviation").focus()
+    }
+
     populateFields() {
         this.destinationService.getDestination(this.id).subscribe(
             result => {
                 this.form.setValue({
                     id: result.id,
-                    shortDescription: result.shortDescription,
+                    abbreviation: result.abbreviation,
                     description: result.description
                 })
             },
@@ -53,8 +57,8 @@ export class DestinationFormComponent implements OnInit, CanComponentDeactivate 
             });;
     }
 
-    get shortDescription() {
-        return this.form.get('shortDescription');
+    get abbreviation() {
+        return this.form.get('abbreviation');
     }
 
     get description() {

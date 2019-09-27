@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 
@@ -15,7 +15,7 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class RouteFormComponent implements OnInit, CanComponentDeactivate {
+export class RouteFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
 
     ports: any
 
@@ -23,7 +23,7 @@ export class RouteFormComponent implements OnInit, CanComponentDeactivate {
 
     form = this.formBuilder.group({
         id: 0,
-        shortDescription: ['', [Validators.maxLength(10)]],
+        abbreviation: ['', [Validators.maxLength(10)]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
         portId: [''],
         portDescription: ['']
@@ -54,12 +54,16 @@ export class RouteFormComponent implements OnInit, CanComponentDeactivate {
         )
     }
 
+    ngAfterViewInit(): void {
+        document.getElementById("abbreviation").focus()
+    }
+
     populateFields() {
         this.routeService.getRoute(this.id).subscribe(
             result => {
                 this.form.setValue({
                     id: result.id,
-                    shortDescription: result.shortDescription,
+                    abbreviation: result.abbreviation,
                     description: result.description,
                     portId: result.port.id,
                     portDescription: result.port.description
@@ -70,8 +74,8 @@ export class RouteFormComponent implements OnInit, CanComponentDeactivate {
             });;
     }
 
-    get shortDescription() {
-        return this.form.get('shortDescription');
+    get abbreviation() {
+        return this.form.get('abbreviation');
     }
 
     get description() {

@@ -10,9 +10,9 @@
 <div id="content">
     <form [formGroup]='form' class="ui form" autocomplete='off'>
         <div id="left">
-            <div class="field" [class.error]="shortDescription.invalid && shortDescription.touched">
+            <div class="field" [class.error]="abbreviation.invalid && abbreviation.touched">
                 <label for="abbreviation">Abbreviation</label>
-                <input type="text" formControlName="shortDescription" tabindex="1" id="abbreviation">
+                <input type="text" formControlName="abbreviation" tabindex="1" id="abbreviation">
             </div>
             <div class="field" [class.error]="description.invalid && description.touched">
                 <label for="description">Description</label>

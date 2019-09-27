@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, AfterViewInit, AfterViewChecked, AfterContentInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 
@@ -16,7 +16,7 @@ import { VatStateService } from '../services/vatState.service';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class CustomerFormComponent implements OnInit, CanComponentDeactivate {
+export class CustomerFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
 
     taxOffices: any
     vatStates: any
@@ -64,6 +64,10 @@ export class CustomerFormComponent implements OnInit, CanComponentDeactivate {
                 }
             }
         )
+    }
+
+    ngAfterViewInit(): void {
+        document.getElementById("description").focus()
     }
 
     private populateFields() {

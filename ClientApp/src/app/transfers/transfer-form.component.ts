@@ -21,7 +21,7 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css', './transfer-form.component.css']
 })
 
-export class TransferFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
+export class TransferFormComponent implements OnInit, CanComponentDeactivate {
 
     constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router) { }
 
@@ -51,10 +51,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, CanComponen
 
     ngOnInit() {
         this.populateDropDowns()
-    }
-
-    ngAfterViewInit(): void {
-        this.focusOnElement(4)
     }
 
     populateDropDowns() {

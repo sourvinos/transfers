@@ -22,7 +22,7 @@ export class PickupPointListComponent implements OnInit {
         id: 0,
         route: {
             id: 0,
-            shortDescription: '',
+            abbreviation: '',
             description: '',
             port: {
                 id: 0,
