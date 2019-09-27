@@ -6,8 +6,8 @@
         <!-- <label>{{ form.value.userName }}</label> -->
         <!-- <label>{{ form.value.dateIn }}</label> -->
         <div class="field" [class.error]="(destinationId.invalid && destinationDescription.invalid && destinationDescription.touched) || (destinationDescription.touched && !arrayLookup(destinations, destinationDescription))">
-            <label>Destination</label>
-            <input type="text" list="destinationList" formControlName="destinationDescription" (change)="updateDestinationId(destinations, $event)" tabindex="1">
+            <label for="destination">Destination</label>
+            <input type="text" list="destinationList" formControlName="destinationDescription" (change)="updateDestinationId(destinations, $event)" tabindex="1" id="destination">
             <datalist id="destinationList">
                 <select>
                     <option *ngFor="let destination of destinations" [value]="destination.description"></option>
@@ -15,8 +15,8 @@
             </datalist>
         </div>
         <div class="field" [class.error]="(customerId.invalid && customerDescription.invalid && customerDescription.touched) || (customerDescription.touched && !arrayLookup(customers, customerDescription))">
-            <label>Customer</label>
-            <input type="text" list="customerList" formControlName="customerDescription" (change)="updateCustomerId(customers, $event)" tabindex="2">
+            <label for="customer">Customer</label>
+            <input type="text" list="customerList" formControlName="customerDescription" (change)="updateCustomerId(customers, $event)" tabindex="2" id="customer">
             <datalist id="customerList">
                 <select>
                     <option *ngFor="let customer of customers" [value]="customer.description"></option>
@@ -24,8 +24,8 @@
             </datalist>
         </div>
         <div class="field" [class.error]="(pickupPointId.invalid && pickupPointDescription.invalid && pickupPointDescription.touched) || (pickupPointDescription.touched && !arrayLookup(pickupPoints, pickupPointDescription))">
-            <label>Pickup point</label>
-            <input type="text" list="pickupPointList" formControlName="pickupPointDescription" (change)="updatePickupPointId(pickupPoints, $event)" tabindex="3">
+            <label for="pickupPoint">Pickup point</label>
+            <input type="text" list="pickupPointList" formControlName="pickupPointDescription" (change)="updatePickupPointId(pickupPoints, $event)" tabindex="3" id="pickupPoint">
             <datalist id="pickupPointList">
                 <select>
                     <option *ngFor="let pickupPoint of pickupPoints" [value]="pickupPoint.description"></option>
@@ -34,16 +34,16 @@
         </div>
         <div class="fields">
             <div class="field numeric">
-                <label>Adults</label>
-                <input type="text" class="number" formControlName="adults" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()" tabindex="4">
+                <label for="adults">Adults</label>
+                <input type="text" class="number" formControlName="adults" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()" tabindex="4" id="adults">
             </div>
             <div class="field numeric">
-                <label>Kids</label>
-                <input type="text" class="number" formControlName="kids" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()" tabindex="5">
+                <label for="kids">Kids</label>
+                <input type="text" class="number" formControlName="kids" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()" tabindex="5" id="kids">
             </div>
             <div class="field numeric">
-                <label>Free</label>
-                <input type="text" class="number" formControlName="free" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()" tabindex="6">
+                <label for="free">Free</label>
+                <input type="text" class="number" formControlName="free" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()" tabindex="6" id="free">
             </div>
             <div class="field numeric total">
                 <label>Total</label>
@@ -51,8 +51,8 @@
             </div>
         </div>
         <div class="field" [class.error]="(driverId.invalid && driverDescription.invalid && driverDescription.touched) || (driverDescription.touched && !arrayLookup(drivers, driverDescription))">
-            <label>Driver</label>
-            <input type="text" list="driverList" formControlName="driverDescription" (change)="updateDriverId(drivers, $event)" tabindex="7">
+            <label for="driver">Driver</label>
+            <input type="text" list="driverList" formControlName="driverDescription" (change)="updateDriverId(drivers, $event)" tabindex="7" id="driver">
             <datalist id="driverList">
                 <select>
                     <option *ngFor="let driver of drivers" [value]="driver.description"></option>
@@ -60,8 +60,8 @@
             </datalist>
         </div>
         <div class="field" [class.error]="(portId.invalid && portDescription.invalid && portDescription.touched) || (portDescription.touched && !arrayLookup(ports, portDescription))">
-            <label>Port</label>
-            <input type="text" list="portList" formControlName="portDescription" (change)="updatePortId(ports, $event)" tabindex="8">
+            <label for="port">Port</label>
+            <input type="text" list="portList" formControlName="portDescription" (change)="updatePortId(ports, $event)" tabindex="8" id="port">
             <datalist id="portList">
                 <select>
                     <option *ngFor="let port of ports" [value]="port.description"></option>
@@ -69,8 +69,8 @@
             </datalist>
         </div>
         <div class="field">
-            <label>Remarks</label>
-            <input type="text" formControlName="remarks" tabindex="9">
+            <label for="remarks">Remarks</label>
+            <input type="text" formControlName="remarks" tabindex="9" id="remarks">
         </div>
     </form>
     <!-- <div id="buttons">

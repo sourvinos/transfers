@@ -11,8 +11,8 @@
     <form [formGroup]='form' class="ui form" autocomplete='off'>
         <div id="left">
             <div class="field" [class.error]="description.invalid && description.touched">
-                <label>Description</label>
-                <input type="text" formControlName="description" tabindex="1">
+                <label for="description">Description</label>
+                <input type="text" formControlName="description" tabindex="1" id="description">
             </div>
         </div>
     </form>

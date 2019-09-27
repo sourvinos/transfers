@@ -11,16 +11,16 @@
     <form [formGroup]='form' class="ui form" autocomplete='off'>
         <div id="left">
             <div class="field" [class.error]="shortDescription.invalid && shortDescription.touched">
-                <label>Abbreviation</label>
-                <input type="text" formControlName="shortDescription" tabindex="1">
+                <label for="abbreviation">Abbreviation</label>
+                <input type="text" formControlName="shortDescription" tabindex="1" id="abbreviation">
             </div>
             <div class="field" [class.error]="description.invalid && description.touched">
-                <label>Description</label>
-                <input type="text" formControlName="description" tabindex="2">
+                <label for="description">Description</label>
+                <input type="text" formControlName="description" tabindex="2" id="description">
             </div>
             <div class="field" [class.error]='(portId.invalid && portDescription.invalid && portDescription.touched) || (portDescription.touched && !arrayLookup(ports, portDescription))'>
-                <label>Departure port</label>
-                <input type="text" list="portList" formControlName='portDescription' (change)="updatePortId(ports, $event)" tabindex="3">
+                <label for="departurePort">Departure port</label>
+                <input type="text" list="portList" formControlName='portDescription' (change)="updatePortId(ports, $event)" tabindex="3" id="departurePort">
                 <datalist id="portList">
                     <select>
                         <option *ngFor='let port of ports' [value]="port.description"></option>

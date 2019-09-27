@@ -5,8 +5,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { TransferService } from '../services/transfer.service';
 import { ITransfer } from './../models/transfer';
 
-declare var $: any
-
 @Component({
     selector: 'app-transfer-list',
     templateUrl: './transfer-list.component.html',
