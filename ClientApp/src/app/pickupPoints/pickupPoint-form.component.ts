@@ -1,9 +1,8 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { forkJoin } from 'rxjs';
-
-import { CanComponentDeactivate } from '../services/auth-guard.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, Observable } from 'rxjs';
+import { DialogService } from '../services/dialog-service';
 import { HelperService } from '../services/helper.service';
 import { PickupPointService } from '../services/pickupPoint.service';
 import { RouteService } from '../services/route.service';
@@ -15,11 +14,12 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class PickupPointFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
+export class PickupPointFormComponent implements OnInit, AfterViewInit {
 
     routes: any
 
     id: number = null
+    isSaving: boolean = false
 
     form = this.formBuilder.group({
         id: 0,
@@ -30,7 +30,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, CanCompo
         time: ['', [Validators.required, Validators.pattern("[0-9][0-9]:[0-9][0-9]")]]
     })
 
-    constructor(private routeService: RouteService, private pickupPointservice: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private routeService: RouteService, private pickupPointservice: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialogService: DialogService) {
         route.params.subscribe(p => this.id = p['id'])
     }
 
@@ -121,25 +121,30 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, CanCompo
 
     save() {
         if (!this.form.valid) return
+        this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.pickupPointservice.addPickupPoint(this.form.value).subscribe(data => this.router.navigate(['/pickuppoints']), (error: Response) => Utils.ErrorLogger(error))
+            this.pickupPointservice.addPickupPoint(this.form.value).subscribe(data => this.router.navigate(['/pickupPoints']), (error: Response) => Utils.ErrorLogger(error))
         }
         else {
-            this.pickupPointservice.updatePickupPoint(this.id, this.form.value).subscribe(data => this.router.navigate(['/pickuppoints']), (error: Response) => Utils.ErrorLogger(error))
+            this.pickupPointservice.updatePickupPoint(this.id, this.form.value).subscribe(data => this.router.navigate(['/pickupPoints']), (error: Response) => Utils.ErrorLogger(error))
         }
     }
 
     delete() {
         if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.pickupPointservice.deletePickupPoint(this.id).subscribe(data => this.router.navigate(['/pickuppoints']), error => Utils.ErrorLogger(error))
+                this.pickupPointservice.deletePickupPoint(this.id).subscribe(data => this.router.navigate(['/pickupPoints']), error => Utils.ErrorLogger(error))
             }
         }
     }
 
-    confirm() {
-        return confirm('Are you sure?')
+    canDeactivate(): Observable<boolean> | boolean {
+        if (!this.isSaving && this.form.dirty) {
+            this.isSaving = false
+            return this.dialogService.confirm('Discard changes?');
+        }
+        return true;
     }
 
 }

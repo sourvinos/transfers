@@ -1,14 +1,15 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { forkJoin } from 'rxjs';
-
-import { CanComponentDeactivate } from '../services/auth-guard.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, Observable } from 'rxjs';
 import { CustomerService } from '../services/customer.service';
+import { DialogService } from '../services/dialog-service';
 import { HelperService } from '../services/helper.service';
 import { TaxOfficeService } from '../services/taxOffice.service';
-import { Utils } from '../shared/classes/utils';
 import { VatStateService } from '../services/vatState.service';
+import { Utils } from '../shared/classes/utils';
+
+declare var $: any
 
 @Component({
     selector: 'app-customer-form',
@@ -16,12 +17,13 @@ import { VatStateService } from '../services/vatState.service';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class CustomerFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
+export class CustomerFormComponent implements OnInit, AfterViewInit {
 
     taxOffices: any
     vatStates: any
 
     id: number = null
+    isSaving: boolean = false
 
     form = this.formBuilder.group({
         id: 0,
@@ -39,7 +41,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, CanComponen
         accountCode: ['', [Validators.maxLength(100)]]
     })
 
-    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialogService: DialogService) {
         route.params.subscribe(p => (this.id = p['id']))
     }
 
@@ -142,14 +144,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, CanComponen
         return this.form.get('vatStateDescription')
     }
 
-    getRequiredFieldMessage() {
-        return 'This field is required, silly!'
-    }
-
-    getMaxLengthFieldMessage() {
-        return 'This field must not be longer than '
-    }
-
     arrayLookup(lookupArray: any[], givenField: FormControl) {
         for (let x of lookupArray) {
             if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
@@ -161,19 +155,18 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, CanComponen
     updateTaxOfficeId(lookupArray: any[], e: { target: { value: any } }): void {
         let name = e.target.value
         let list = lookupArray.filter(x => x.description === name)[0]
-
         this.form.patchValue({ taxOfficeId: list ? list.id : '' })
     }
 
     updateVatStateId(lookupArray: any[], e: { target: { value: any } }): void {
         let name = e.target.value
         let list = lookupArray.filter(x => x.description === name)[0]
-
         this.form.patchValue({ vatStateId: list ? list.id : '' })
     }
 
     save() {
         if (!this.form.valid) return
+        this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
             this.customerService.addCustomer(this.form.value).subscribe(() => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
@@ -191,8 +184,12 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, CanComponen
         }
     }
 
-    confirm() {
-        return confirm('Are you sure?')
+    canDeactivate(): Observable<boolean> | boolean {
+        if (!this.isSaving && this.form.dirty) {
+            this.isSaving = false
+            return this.dialogService.confirm('Discard changes?');
+        }
+        return true;
     }
 
 }

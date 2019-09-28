@@ -14,6 +14,7 @@ import { MainComponent } from './../shared/components/main/main.component';
 import { RootComponent } from './root.component';
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
 import { LoaderComponent } from '../shared/components/loader/loader.component';
+import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component';
 // Routes
 import { CustomerFormComponent } from '../customers/customer-form.component';
 import { CustomerListComponent } from '../customers/customer-list.component';
@@ -45,6 +46,7 @@ import { InputFormatDirective } from '../directives/input-format.directive';
         RootComponent,
         SidebarComponent,
         LoaderComponent,
+        PageNotFoundComponent,
         // Routes
         HomeComponent,
         LoginComponent,

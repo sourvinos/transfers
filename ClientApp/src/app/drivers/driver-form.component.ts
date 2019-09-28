@@ -1,8 +1,8 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-
-import { CanComponentDeactivate } from '../services/auth-guard.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { DialogService } from '../services/dialog-service';
 import { DriverService } from '../services/driver.service';
 import { HelperService } from '../services/helper.service';
 import { Utils } from '../shared/classes/utils';
@@ -13,16 +13,17 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class DriverFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
+export class DriverFormComponent implements OnInit, AfterViewInit {
 
     id: number = null;
+    isSaving: boolean = false
 
     form = this.formBuilder.group({
         id: 0,
         description: ['', [Validators.required, Validators.maxLength(100)]]
     })
 
-    constructor(private driverService: DriverService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private driverService: DriverService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialogService: DialogService) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
@@ -69,25 +70,30 @@ export class DriverFormComponent implements OnInit, AfterViewInit, CanComponentD
 
     save() {
         if (!this.form.valid) return
+        this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.driverService.addDriver(this.form.value).subscribe(data => this.router.navigate(['/drivers']), error => Utils.ErrorLogger(error));
+            this.driverService.addDriver(this.form.value).subscribe(() => this.router.navigate(['/drivers']), error => Utils.ErrorLogger(error));
         }
         else {
-            this.driverService.updateDriver(this.id, this.form.value).subscribe(data => this.router.navigate(['/drivers']), error => Utils.ErrorLogger(error));
+            this.driverService.updateDriver(this.id, this.form.value).subscribe(() => this.router.navigate(['/drivers']), error => Utils.ErrorLogger(error));
         }
     }
 
     delete() {
         if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.driverService.deleteDriver(this.id).subscribe(data => this.router.navigate(['/drivers']), error => Utils.ErrorLogger(error));
+                this.driverService.deleteDriver(this.id).subscribe(() => this.router.navigate(['/drivers']), error => Utils.ErrorLogger(error));
             }
         }
     }
 
-    confirm() {
-        return confirm('Are you sure?')
+    canDeactivate(): Observable<boolean> | boolean {
+        if (!this.isSaving && this.form.dirty) {
+            this.isSaving = false
+            return this.dialogService.confirm('Discard changes?');
+        }
+        return true;
     }
 
 }

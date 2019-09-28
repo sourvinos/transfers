@@ -1,15 +1,13 @@
-import { Idle } from '@ng-idle/core';
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
-
-import { CanComponentDeactivate } from './../services/auth-guard.service';
+import { forkJoin, Observable } from 'rxjs';
+import { ITransfer } from '../models/transfer';
 import { CustomerService } from '../services/customer.service';
 import { DestinationService } from '../services/destination.service';
+import { DialogService } from '../services/dialog-service';
 import { DriverService } from '../services/driver.service';
 import { HelperService } from '../services/helper.service';
-import { ITransfer } from '../models/transfer';
 import { PickupPointService } from '../services/pickupPoint.service';
 import { PortService } from '../services/port.service';
 import { TransferService } from '../services/transfer.service';
@@ -21,9 +19,9 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css', './transfer-form.component.css']
 })
 
-export class TransferFormComponent implements OnInit, CanComponentDeactivate {
+export class TransferFormComponent implements OnInit {
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router) { }
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private dialogService: DialogService) { }
 
     @Input() set transfer(transfer: ITransfer) { if (transfer) this.populateFields(transfer) }
 
@@ -32,6 +30,8 @@ export class TransferFormComponent implements OnInit, CanComponentDeactivate {
     pickupPoints: any
     drivers: any
     ports: any
+
+    isSaving: boolean = false
 
     form = this.formBuilder.group({
         id: 0,
@@ -224,6 +224,7 @@ export class TransferFormComponent implements OnInit, CanComponentDeactivate {
 
     save() {
         if (!this.form.valid) return
+        this.isSaving = true
         if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
                 console.log("New record saved")
@@ -250,15 +251,19 @@ export class TransferFormComponent implements OnInit, CanComponentDeactivate {
         return this.form.value.id !== 0 ? true : false
     }
 
-    confirm() {
-        return confirm('Are you sure?')
-    }
-
     get boxWidth() {
         let windowWidth = document.body.clientWidth
         let sidebarWidth = Number(document.getElementById('sidebar').clientWidth)
 
         return windowWidth - sidebarWidth
+    }
+
+    canDeactivate(): Observable<boolean> | boolean {
+        if (!this.isSaving && this.form.dirty) {
+            this.isSaving = false
+            return this.dialogService.confirm('Discard changes?');
+        }
+        return true;
     }
 
 }

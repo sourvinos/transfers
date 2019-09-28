@@ -1,9 +1,8 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { forkJoin } from 'rxjs';
-
-import { CanComponentDeactivate } from './../services/auth-guard.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, Observable } from 'rxjs';
+import { DialogService } from '../services/dialog-service';
 import { HelperService } from '../services/helper.service';
 import { PortService } from '../services/port.service';
 import { RouteService } from '../services/route.service';
@@ -15,11 +14,12 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class RouteFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
+export class RouteFormComponent implements OnInit, AfterViewInit {
 
     ports: any
 
     id: number = null;
+    isSaving: boolean = false
 
     form = this.formBuilder.group({
         id: 0,
@@ -29,7 +29,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, CanComponentDe
         portDescription: ['']
     })
 
-    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialogService: DialogService) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
@@ -115,6 +115,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, CanComponentDe
 
     save() {
         if (!this.form.valid) return
+        this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
             this.routeService.addRoute(this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error));
@@ -127,13 +128,17 @@ export class RouteFormComponent implements OnInit, AfterViewInit, CanComponentDe
     delete() {
         if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.routeService.deleteRoute(this.id).subscribe(data => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error));
+                this.routeService.deleteRoute(this.id).subscribe(() => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error))
             }
         }
     }
 
-    confirm() {
-        return confirm('Are you sure?')
+    canDeactivate(): Observable<boolean> | boolean {
+        if (!this.isSaving && this.form.dirty) {
+            this.isSaving = false
+            return this.dialogService.confirm('Discard changes?');
+        }
+        return true;
     }
 
 }

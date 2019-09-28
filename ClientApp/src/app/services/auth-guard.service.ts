@@ -1,3 +1,4 @@
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -12,7 +13,7 @@ export interface CanComponentDeactivate {
 
 @Injectable({ providedIn: 'root' })
 
-export class AuthGuardService implements CanActivate, CanDeactivate<CanComponentDeactivate> {
+export class AuthGuardService implements CanActivate {
 
     component: Object;
     route: ActivatedRouteSnapshot;
@@ -30,7 +31,4 @@ export class AuthGuardService implements CanActivate, CanDeactivate<CanComponent
         }))
     }
 
-    canDeactivate(component: CanComponentDeactivate, route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-        return component.confirm()
-    }
 }

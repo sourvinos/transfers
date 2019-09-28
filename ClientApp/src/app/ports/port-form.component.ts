@@ -1,8 +1,8 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-
-import { CanComponentDeactivate } from './../services/auth-guard.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { DialogService } from '../services/dialog-service';
 import { HelperService } from '../services/helper.service';
 import { PortService } from '../services/port.service';
 import { Utils } from '../shared/classes/utils';
@@ -13,16 +13,17 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class PortFormComponent implements OnInit, AfterViewInit, CanComponentDeactivate {
+export class PortFormComponent implements OnInit, AfterViewInit {
 
     id: number = null;
+    isSaving: boolean = false
 
     form = this.formBuilder.group({
         id: 0,
         description: ['', [Validators.required, Validators.maxLength(100)]]
     })
 
-    constructor(private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute) {
+    constructor(private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialogService: DialogService) {
         route.params.subscribe(p => (this.id = p['id']))
     };
 
@@ -69,6 +70,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, CanComponentDea
 
     save() {
         if (!this.form.valid) return
+        this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
             this.portService.addPort(this.form.value).subscribe(data => this.router.navigate(['/ports']), error => Utils.ErrorLogger(error));
@@ -86,8 +88,12 @@ export class PortFormComponent implements OnInit, AfterViewInit, CanComponentDea
         }
     }
 
-    confirm() {
-        return confirm('Are you sure?')
+    canDeactivate(): Observable<boolean> | boolean {
+        if (!this.isSaving && this.form.dirty) {
+            this.isSaving = false
+            return this.dialogService.confirm('Discard changes?');
+        }
+        return true;
     }
 
 }
