@@ -1,15 +1,14 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Observable } from 'rxjs';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { forkJoin, Observable, Subject } from 'rxjs';
 import { CustomerService } from '../services/customer.service';
-import { DialogService } from '../services/dialog-service';
 import { HelperService } from '../services/helper.service';
 import { TaxOfficeService } from '../services/taxOffice.service';
 import { VatStateService } from '../services/vatState.service';
 import { Utils } from '../shared/classes/utils';
-
-declare var $: any
+import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
     selector: 'app-customer-form',
@@ -24,6 +23,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
 
     id: number = null
     isSaving: boolean = false
+    modalRef: BsModalRef
 
     form = this.formBuilder.group({
         id: 0,
@@ -41,7 +41,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
         accountCode: ['', [Validators.maxLength(100)]]
     })
 
-    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialogService: DialogService) {
+    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService) {
         route.params.subscribe(p => (this.id = p['id']))
     }
 
@@ -178,18 +178,51 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
 
     delete() {
         if (this.id !== null) {
-            if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
-            }
+            const subject = new Subject<boolean>()
+            const modal = this.modalService.show(ModalDialogComponent, {
+                initialState: {
+                    title: 'Confirmation',
+                    message: 'If you continue, this record will be deleted.',
+                    type: 'delete'
+                }, animated: false
+            })
+            modal.content.subject = subject
+            return subject.asObservable().subscribe(result => {
+                if (result)
+                    this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate(['/customers']), error => { Utils.ErrorLogger(error); this.openErrorModal() })
+            })
         }
     }
 
     canDeactivate(): Observable<boolean> | boolean {
         if (!this.isSaving && this.form.dirty) {
             this.isSaving = false
-            return this.dialogService.confirm('Discard changes?');
+            const subject = new Subject<boolean>();
+            const modal = this.modalService.show(ModalDialogComponent, {
+                initialState: {
+                    title: 'Confirmation',
+                    message: 'If you continue, all changes in this record will be lost.',
+                    type: 'question'
+                }, animated: false
+            });
+            modal.content.subject = subject;
+            return subject.asObservable();
         }
         return true;
     }
+
+    openErrorModal() {
+        const subject = new Subject<boolean>()
+        const modal = this.modalService.show(ModalDialogComponent, {
+            initialState: {
+                title: 'Error',
+                message: 'This record is in use and cannot be deleted.',
+                type: 'error'
+            }, animated: false
+        })
+        modal.content.subject = subject
+        return subject.asObservable()
+    }
+
 
 }

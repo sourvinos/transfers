@@ -1,20 +1,22 @@
 // Base
-import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ModalModule } from 'ngx-bootstrap/modal';
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor';
-// Common
+// Common components
 import { MainComponent } from './../shared/components/main/main.component';
 import { RootComponent } from './root.component';
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
 import { LoaderComponent } from '../shared/components/loader/loader.component';
 import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component';
+import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
 // Routes
 import { CustomerFormComponent } from '../customers/customer-form.component';
 import { CustomerListComponent } from '../customers/customer-list.component';
@@ -47,6 +49,7 @@ import { InputFormatDirective } from '../directives/input-format.directive';
         SidebarComponent,
         LoaderComponent,
         PageNotFoundComponent,
+        ModalDialogComponent,
         // Routes
         HomeComponent,
         LoginComponent,
@@ -70,8 +73,11 @@ import { InputFormatDirective } from '../directives/input-format.directive';
         HttpClientModule,
         ReactiveFormsModule,
         NgIdleKeepaliveModule.forRoot(),
+        ModalModule.forRoot()
     ],
-    entryComponents: [],
+    entryComponents: [
+        ModalDialogComponent
+    ],
     providers: [],
     bootstrap: [RootComponent]
 })

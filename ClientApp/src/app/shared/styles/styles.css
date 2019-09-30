@@ -21,7 +21,7 @@
 
 * {
     --font-family-copyright: "Lato";
-    --font-family-buttons: "Ubuntu Condensed";
+    --font-family-buttons: "Lato";
     --font-family-dropdowns: "Play";
     --font-family-headers: "Ubuntu Condensed";
     --font-family-logo: "Anton";
@@ -140,4 +140,15 @@ h1, h2 {
 
 #loader p {
     margin-top: 0.5rem;
+}
+
+.modal-open .modal {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.modal-content {
+    background-color: #f0f0f8;
+    padding: 1rem;
+    width: 40rem
 }
