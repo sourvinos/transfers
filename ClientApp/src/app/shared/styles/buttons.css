@@ -1,0 +1,18 @@
+button {
+    color: var(--color-button-text) !important;
+    font-family: var(--font-family-buttons) !important;
+    font-weight: var(--font-weight-buttons) !important;
+    margin-left: 0.5rem !important;
+}
+
+button.primary {
+    background-color: var(--color-button-primary) !important;
+}
+
+button.secondary {
+    background-color: var(--color-button-secondary) !important;
+}
+
+button.delete {
+    background-color: var(--color-button-delete) !important;
+}

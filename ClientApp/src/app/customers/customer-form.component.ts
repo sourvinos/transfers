@@ -92,7 +92,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
                 })
             },
             error => {
-                Utils.ErrorLogger(error)
+                Utils.errorLogger(error)
             })
     }
 
@@ -169,10 +169,10 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
         this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.customerService.addCustomer(this.form.value).subscribe(() => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
+            this.customerService.addCustomer(this.form.value).subscribe(() => this.router.navigate(['/customers']), error => Utils.errorLogger(error))
         }
         else {
-            this.customerService.updateCustomer(this.form.value.id, this.form.value).subscribe(() => this.router.navigate(['/customers']), error => Utils.ErrorLogger(error))
+            this.customerService.updateCustomer(this.form.value.id, this.form.value).subscribe(() => this.router.navigate(['/customers']), error => Utils.errorLogger(error))
         }
     }
 
@@ -189,7 +189,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
             modal.content.subject = subject
             return subject.asObservable().subscribe(result => {
                 if (result)
-                    this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate(['/customers']), error => { Utils.ErrorLogger(error); this.openErrorModal() })
+                    this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate(['/customers']), error => { Utils.errorLogger(error); this.openErrorModal() })
             })
         }
     }
@@ -223,6 +223,5 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
         modal.content.subject = subject
         return subject.asObservable()
     }
-
 
 }

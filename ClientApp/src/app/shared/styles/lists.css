@@ -60,6 +60,10 @@ table th {
     top: 0;
 }
 
+table tbody {
+    background-color: var(--color-table-rows-background)!important;
+}
+
 table tr:hover {
     cursor: pointer !important;
     background-color: var(--color-table-row-hover) !important;

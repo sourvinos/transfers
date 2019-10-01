@@ -52,7 +52,7 @@ export class PortFormComponent implements OnInit, AfterViewInit {
                 })
             },
             error => {
-                Utils.ErrorLogger(error);
+                Utils.errorLogger(error);
             });;
     }
 
@@ -73,17 +73,17 @@ export class PortFormComponent implements OnInit, AfterViewInit {
         this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.portService.addPort(this.form.value).subscribe(data => this.router.navigate(['/ports']), error => Utils.ErrorLogger(error));
+            this.portService.addPort(this.form.value).subscribe(data => this.router.navigate(['/ports']), error => Utils.errorLogger(error));
         }
         else {
-            this.portService.updatePort(this.id, this.form.value).subscribe(data => this.router.navigate(['/ports']), error => Utils.ErrorLogger(error));
+            this.portService.updatePort(this.id, this.form.value).subscribe(data => this.router.navigate(['/ports']), error => Utils.errorLogger(error));
         }
     }
 
     delete() {
         if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.portService.deletePort(this.id).subscribe(data => this.router.navigate(['/ports']), error => Utils.ErrorLogger(error));
+                this.portService.deletePort(this.id).subscribe(data => this.router.navigate(['/ports']), error => Utils.errorLogger(error));
             }
         }
     }

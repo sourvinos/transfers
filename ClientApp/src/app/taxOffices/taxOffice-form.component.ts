@@ -52,7 +52,7 @@ export class TaxOfficeFormComponent implements OnInit, AfterViewInit {
                 })
             },
             error => {
-                Utils.ErrorLogger(error);
+                Utils.errorLogger(error);
             });;
     }
 
@@ -73,17 +73,17 @@ export class TaxOfficeFormComponent implements OnInit, AfterViewInit {
         this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.taxOfficeService.addTaxOffice(this.form.value).subscribe(data => this.router.navigate(['/taxOffices']), error => Utils.ErrorLogger(error));
+            this.taxOfficeService.addTaxOffice(this.form.value).subscribe(data => this.router.navigate(['/taxOffices']), error => Utils.errorLogger(error));
         }
         else {
-            this.taxOfficeService.updateTaxOffice(this.id, this.form.value).subscribe(data => this.router.navigate(['/taxOffices']), error => Utils.ErrorLogger(error));
+            this.taxOfficeService.updateTaxOffice(this.id, this.form.value).subscribe(data => this.router.navigate(['/taxOffices']), error => Utils.errorLogger(error));
         }
     }
 
     delete() {
         if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.taxOfficeService.deleteTaxOffice(this.id).subscribe(data => this.router.navigate(['/taxOffices']), error => Utils.ErrorLogger(error));
+                this.taxOfficeService.deleteTaxOffice(this.id).subscribe(data => this.router.navigate(['/taxOffices']), error => Utils.errorLogger(error));
             }
         }
     }

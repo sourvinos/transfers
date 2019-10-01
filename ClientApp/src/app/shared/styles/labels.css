@@ -1,0 +1,4 @@
+label {
+    color: var(--color-label) !important;
+    font-weight: var(--font-weight-labels) !important;
+}

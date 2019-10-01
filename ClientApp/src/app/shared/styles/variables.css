@@ -1,0 +1,64 @@
+* {
+    /* Weights */
+    --font-weight-buttons: 100 !important;
+    --font-weight-headers:100 !important;
+    --font-weight-labels: 100 !important;
+}
+
+* {
+    /* Sizes */
+    --font-size-copyright: 0.7rem;
+    --font-size-headers: 2.2rem;
+    --font-size-logo-first-child: 4.375rem;
+    --font-size-logo-second-child: 2.5rem;
+    --font-size-menu-list-item-active: 1.6rem;
+    --font-size-menu-list-items: 1.4rem;
+    --font-size-summary-block-header: 1.6rem;
+    --font-size-summary-block-item: 1rem;
+    --font-size-user-info: 1.1rem;
+}
+
+* {
+    /* Families */
+    --font-family-buttons: "Lato";
+    --font-family-copyright: "Lato";
+    --font-family-dropdowns: "Play";
+    --font-family-headers: "Tahoma";
+    --font-family-logo: "Anton";
+    --font-family-logo: "Anton";
+    --font-family-menu-list-items: "Tahoma";
+    --font-family-summary-block-header: "Play";
+    --font-family-summary-block-item: "Play";
+    --font-family-table: "Play";
+    --font-family-user-info: "Lato";
+}
+
+* {
+    /* Colors */
+    --color-background: #373F46;
+    --color-button-primary: #57617B;
+    --color-button-secondary: #5A75BC;
+    --color-button-delete: #D67474;
+    --color-button-text: #FFFDDD;
+    --color-company-logo-first-child: #FE9F36;
+    --color-company-logo-second-child: #FFE85C;
+    --color-copyright: #FE9F36;
+    --color-hamburger: #939393;
+    --color-headers: #939393;
+    --color-icon: #939393;
+    --color-label: #939393;
+    --color-menu-active-item: #FE9F36;
+    --color-menu-list-items: #939393;
+    --color-scrollbar: #5A758C;
+    --color-sidebar-background: #1D2733;
+    --color-summary-block-background: #f5f5f5;
+    --color-summary-block-border-active: #FE9F36;
+    --color-summary-block-border-inactive: #939393;
+    --color-summary-block-item-hover: #FFFFFF;
+    --color-summary-block-item: #939393;
+    --color-table-header-background: gray;
+    --color-table-header-text: #939393;
+    --color-table-row-hover: #f5f5f5;
+    --color-table-rows-background: lightgray;
+    --color-user-info: #939393;
+}

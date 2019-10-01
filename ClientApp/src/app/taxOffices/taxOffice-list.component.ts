@@ -19,7 +19,7 @@ export class TaxOfficeListComponent implements OnInit {
     constructor(private service: TaxOfficeService) { }
 
     ngOnInit() {
-        this.service.getTaxOffices().subscribe(data => this.filteredTaxOffices = this.taxOffices = data, error => Utils.ErrorLogger(error));
+        this.service.getTaxOffices().subscribe(data => this.filteredTaxOffices = this.taxOffices = data, error => Utils.errorLogger(error));
     }
 
     filter(query: string) {

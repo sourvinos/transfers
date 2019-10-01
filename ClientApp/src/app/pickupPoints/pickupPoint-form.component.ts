@@ -72,7 +72,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit {
                 })
             },
             error => {
-                Utils.ErrorLogger(error)
+                Utils.errorLogger(error)
             })
     }
 
@@ -124,17 +124,17 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit {
         this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.pickupPointservice.addPickupPoint(this.form.value).subscribe(data => this.router.navigate(['/pickupPoints']), (error: Response) => Utils.ErrorLogger(error))
+            this.pickupPointservice.addPickupPoint(this.form.value).subscribe(data => this.router.navigate(['/pickupPoints']), (error: Response) => Utils.errorLogger(error))
         }
         else {
-            this.pickupPointservice.updatePickupPoint(this.id, this.form.value).subscribe(data => this.router.navigate(['/pickupPoints']), (error: Response) => Utils.ErrorLogger(error))
+            this.pickupPointservice.updatePickupPoint(this.id, this.form.value).subscribe(data => this.router.navigate(['/pickupPoints']), (error: Response) => Utils.errorLogger(error))
         }
     }
 
     delete() {
         if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.pickupPointservice.deletePickupPoint(this.id).subscribe(data => this.router.navigate(['/pickupPoints']), error => Utils.ErrorLogger(error))
+                this.pickupPointservice.deletePickupPoint(this.id).subscribe(data => this.router.navigate(['/pickupPoints']), error => Utils.errorLogger(error))
             }
         }
     }

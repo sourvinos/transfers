@@ -54,7 +54,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit {
                 })
             },
             error => {
-                Utils.ErrorLogger(error);
+                Utils.errorLogger(error);
             });;
     }
 
@@ -71,17 +71,17 @@ export class DestinationFormComponent implements OnInit, AfterViewInit {
         this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.destinationService.addDestination(this.form.value).subscribe(() => this.router.navigate(['/destinations']), error => Utils.ErrorLogger(error));
+            this.destinationService.addDestination(this.form.value).subscribe(() => this.router.navigate(['/destinations']), error => Utils.errorLogger(error));
         }
         else {
-            this.destinationService.updateDestination(this.id, this.form.value).subscribe(() => this.router.navigate(['/destinations']), error => Utils.ErrorLogger(error));
+            this.destinationService.updateDestination(this.id, this.form.value).subscribe(() => this.router.navigate(['/destinations']), error => Utils.errorLogger(error));
         }
     }
 
     delete() {
         if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.destinationService.deleteDestination(this.id).subscribe(() => this.router.navigate(['/destinations']), error => Utils.ErrorLogger(error));
+                this.destinationService.deleteDestination(this.id).subscribe(() => this.router.navigate(['/destinations']), error => Utils.errorLogger(error));
             }
         }
     }

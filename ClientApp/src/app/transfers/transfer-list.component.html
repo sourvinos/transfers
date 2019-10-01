@@ -9,7 +9,7 @@
         <form [formGroup]="form" class="ui form" autocomplete="off">
             <div class="field">
                 <input type="text" class="date" formControlName="dateIn" [appInputFormat]="'date'">
-                <button class="ui button solid" id="go" (click)="getTransfers()">Search</button>
+                <button class="ui button primary" id="go" (click)="getTransfers()">Search</button>
             </div>
         </form>
     </div>
@@ -98,8 +98,8 @@
 <div id="footer">
     <div class="ui divider"></div>
     <div id="buttons">
-        <button *ngIf="!isFormVisible" class="ui button solid" (click)="formComponent.new()">New</button>
-        <button *ngIf="isFormVisible && formComponent.canDelete" class="ui button solid" (click)="formComponent.delete()">Delete</button>
-        <button *ngIf="isFormVisible" class="ui button solid" (click)="formComponent.save()">Save</button>
+        <button *ngIf="!isFormVisible" class="ui button primary" (click)="formComponent.new()">New</button>
+        <button *ngIf="isFormVisible && formComponent.canDelete" class="ui button primary" (click)="formComponent.delete()">Delete</button>
+        <button *ngIf="isFormVisible" class="ui button primary" (click)="formComponent.save()">Save</button>
     </div>
 </div>

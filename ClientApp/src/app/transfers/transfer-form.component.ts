@@ -229,20 +229,20 @@ export class TransferFormComponent implements OnInit {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
                 console.log("New record saved")
                 this.clearFields()
-            }, error => Utils.ErrorLogger(error))
+            }, error => Utils.errorLogger(error))
         }
         else {
             this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
                 console.log("Record updated")
                 this.clearFields()
-            }, error => Utils.ErrorLogger(error))
+            }, error => Utils.errorLogger(error))
         }
     }
 
     delete() {
         if (this.form.value.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => this.router.navigate(['/transfers']), error => Utils.ErrorLogger(error))
+                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => this.router.navigate(['/transfers']), error => Utils.errorLogger(error))
             }
         }
     }

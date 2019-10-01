@@ -52,7 +52,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit {
                 })
             },
             error => {
-                Utils.ErrorLogger(error);
+                Utils.errorLogger(error);
             });;
     }
 
@@ -73,17 +73,17 @@ export class DriverFormComponent implements OnInit, AfterViewInit {
         this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.driverService.addDriver(this.form.value).subscribe(() => this.router.navigate(['/drivers']), error => Utils.ErrorLogger(error));
+            this.driverService.addDriver(this.form.value).subscribe(() => this.router.navigate(['/drivers']), error => Utils.errorLogger(error));
         }
         else {
-            this.driverService.updateDriver(this.id, this.form.value).subscribe(() => this.router.navigate(['/drivers']), error => Utils.ErrorLogger(error));
+            this.driverService.updateDriver(this.id, this.form.value).subscribe(() => this.router.navigate(['/drivers']), error => Utils.errorLogger(error));
         }
     }
 
     delete() {
         if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.driverService.deleteDriver(this.id).subscribe(() => this.router.navigate(['/drivers']), error => Utils.ErrorLogger(error));
+                this.driverService.deleteDriver(this.id).subscribe(() => this.router.navigate(['/drivers']), error => Utils.errorLogger(error));
             }
         }
     }

@@ -11,9 +11,9 @@
 }
 
 #userInfo {
-    color: var(--color-master-dark);
-    font-family: var(--font-family-userInfo);
-    font-size: var(--font-size-userInfo);
+    color: var(--color-user-info);
+    font-family: var(--font-family-user-info);
+    font-size: var(--font-size-user-info);
     margin: 1.5rem auto 0;
     text-align: center;
 }
@@ -25,17 +25,19 @@
     text-align: center;
 }
 
-#companyLogo>:first-child {
-    color: var(--color-master-dark);
+#companyLogo {
     font-family: var(--font-family-logo);
-    font-size: var(--font-size-logo-firstChild);
+}
+
+#companyLogo>:first-child {
+    color: var(--color-company-logo-first-child);
+    font-size: var(--font-size-logo-first-child);
     margin: 0;
 }
 
 #companyLogo>:last-child {
-    color: var(--color-master-light);
-    font-family: var(--font-family-logo);
-    font-size: var(--font-size-logo-secondChild);
+    color: var(--color-company-logo-second-child);
+    font-size: var(--font-size-logo-second-child);
     font-weight: normal;
     margin-top: -1rem;
 }
@@ -89,7 +91,7 @@
 }
 
 #copyright {
-    color: var(--color-master-dark);
+    color: var(--color-copyright);
     font-family: var(--font-family-copyright);
     font-size: var(--font-size-copyright);
     margin: 0 auto 1.5rem;
@@ -115,10 +117,10 @@
 
 @media only screen and (min-width: 80.0625rem) {
     #sidebar {
-        width: 18rem !important;
+        width: 20rem !important;
     }
     #section {
-        margin-left: 18rem !important;
+        margin-left: 20rem !important;
     }
 }
 

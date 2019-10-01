@@ -70,7 +70,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit {
                 })
             },
             error => {
-                Utils.ErrorLogger(error);
+                Utils.errorLogger(error);
             });;
     }
 
@@ -118,17 +118,17 @@ export class RouteFormComponent implements OnInit, AfterViewInit {
         this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.routeService.addRoute(this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error));
+            this.routeService.addRoute(this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.errorLogger(error));
         }
         else {
-            this.routeService.updateRoute(this.id, this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error));
+            this.routeService.updateRoute(this.id, this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.errorLogger(error));
         }
     }
 
     delete() {
         if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.routeService.deleteRoute(this.id).subscribe(() => this.router.navigate(['/routes']), error => Utils.ErrorLogger(error))
+                this.routeService.deleteRoute(this.id).subscribe(() => this.router.navigate(['/routes']), error => Utils.errorLogger(error))
             }
         }
     }

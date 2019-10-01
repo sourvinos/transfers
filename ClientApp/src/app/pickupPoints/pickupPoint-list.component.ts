@@ -41,7 +41,7 @@ export class PickupPointListComponent implements OnInit {
     constructor(private routeService: RouteService, private pickupPointService: PickupPointService) { }
 
     ngOnInit() {
-        this.routeService.getRoutes().subscribe(data => this.routes = data, error => Utils.ErrorLogger(error))
+        this.routeService.getRoutes().subscribe(data => this.routes = data, error => Utils.errorLogger(error))
     }
 
     onRouteChange() {
@@ -49,6 +49,6 @@ export class PickupPointListComponent implements OnInit {
     }
 
     private populatePickupPoints() {
-        this.pickupPointService.getPickupPoints(this.pickupPoint.route.id).subscribe(data => this.pickupPoints = data, error => Utils.ErrorLogger(error));
+        this.pickupPointService.getPickupPoints(this.pickupPoint.route.id).subscribe(data => this.pickupPoints = data, error => Utils.errorLogger(error));
     }
 }

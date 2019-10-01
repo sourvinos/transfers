@@ -52,7 +52,7 @@ export class VatStateFormComponent implements OnInit, AfterViewInit {
                 })
             },
             error => {
-                Utils.ErrorLogger(error);
+                Utils.errorLogger(error);
             });;
     }
 
@@ -73,17 +73,17 @@ export class VatStateFormComponent implements OnInit, AfterViewInit {
         this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.vatStateService.addVatState(this.form.value).subscribe(data => this.router.navigate(['/vatStates']), error => Utils.ErrorLogger(error));
+            this.vatStateService.addVatState(this.form.value).subscribe(data => this.router.navigate(['/vatStates']), error => Utils.errorLogger(error));
         }
         else {
-            this.vatStateService.updateVatState(this.id, this.form.value).subscribe(data => this.router.navigate(['/vatStates']), error => Utils.ErrorLogger(error));
+            this.vatStateService.updateVatState(this.id, this.form.value).subscribe(data => this.router.navigate(['/vatStates']), error => Utils.errorLogger(error));
         }
     }
 
     delete() {
         if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.vatStateService.deleteVatState(this.id).subscribe(data => this.router.navigate(['/vatStates']), error => Utils.ErrorLogger(error));
+                this.vatStateService.deleteVatState(this.id).subscribe(data => this.router.navigate(['/vatStates']), error => Utils.errorLogger(error));
             }
         }
     }
