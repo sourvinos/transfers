@@ -27,12 +27,8 @@ body, h1, h2, h3 {
     font-family: var(--font-family-dropdowns);
 }
 
-.icon {
-    color: var(--color-icon);
-    cursor: pointer;
-    margin-left: -2px !important;
-    margin-top: 2px !important;
-    outline: 0;
+.search.icon {
+    margin-top: 0.8rem !important;
 }
 
 #section-one {
@@ -66,8 +62,40 @@ body, h1, h2, h3 {
     width: 40rem
 }
 
-@media only screen and (max-width: 1280px) {
-    h2 {
-        margin-left: 3rem !important;
+input {
+    padding-right: 2.5rem !important;
+}
+
+input:focus {
+    background-color: var(--color-input-focus) !important;
+}
+
+div.input {
+    align-items: center;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+div.input i {
+    height: 1.3rem !important;
+    margin:0 !important;
+    padding-right: 1.9rem;
+    position: absolute;
+}
+
+/* ! Wide screen */
+@media only screen and (min-width: 80.0625rem) {
+	.icon {
+		margin-left: 0 !important;
     }
+}
+
+/* ! Narrow screen */
+@media only screen and (max-width: 80rem) {
+	.icon {
+		margin-left: 2rem !important;
+    }
+    h2 {
+        margin-left: 1rem !important;
+    }    
 }

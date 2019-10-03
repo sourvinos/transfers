@@ -12,6 +12,10 @@ export class PickupPointService {
 
     constructor(private http: HttpClient) { }
 
+    getAllPickupPoints(): Observable<IPickupPoint[]> {
+        return this.http.get<IPickupPoint[]>(this.url);
+    }
+
     getPickupPoints(routeId: number): Observable<IPickupPoint[]> {
         return this.http.get<IPickupPoint[]>(this.url + '/pickupPointsForRoute/' + routeId);
     }

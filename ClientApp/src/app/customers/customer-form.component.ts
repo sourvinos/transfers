@@ -184,7 +184,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
                     title: 'Confirmation',
                     message: 'If you continue, this record will be deleted.',
                     type: 'delete'
-                }, animated: false
+                }, animated: true
             })
             modal.content.subject = subject
             return subject.asObservable().subscribe(result => {
@@ -203,7 +203,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
                     title: 'Confirmation',
                     message: 'If you continue, all changes in this record will be lost.',
                     type: 'question'
-                }, animated: false
+                }, animated: true
             });
             modal.content.subject = subject;
             return subject.asObservable();
@@ -218,7 +218,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
                 title: 'Error',
                 message: 'This record is in use and cannot be deleted.',
                 type: 'error'
-            }, animated: false
+            }, animated: true
         })
         modal.content.subject = subject
         return subject.asObservable()

@@ -99,13 +99,12 @@
 }
 
 /* ! Small heights = hide bus circle */
-
 @media only screen and (max-height: 60rem) {
     #sidebar {
         grid-template-areas: "userInfo""companyLogo""menu""copyright";
         grid-template-rows: min-content min-content auto min-content;
     }
-    #image, #copyright {
+    #image {
         display: none;
     }
     #menu {

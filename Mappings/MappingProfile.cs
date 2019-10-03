@@ -7,7 +7,7 @@ namespace Transfers.Mappings
     {
         public MappingProfile()
         {
-            // !From domain to api
+            // From domain to api
             CreateMap<Transfer, TransferResource>()
                 .ForMember(tr => tr.Customer, opt => opt.MapFrom(v => new CustomerResource { Id = v.Customer.Id, Description = v.Customer.Description }))
                 .ForMember(tr => tr.Destination, opt => opt.MapFrom(v => new DestinationResource { Id = v.Destination.Id, Description = v.Destination.Description }))
@@ -24,9 +24,9 @@ namespace Transfers.Mappings
                         Description = v.PickupPoint.Route.Description
                     }
                 }));
-            // !From api to domain 
-            // !v refers to the domain class (.cs) 
-            // !vr refers to the api class (.ts)
+            // From api to domain 
+            // v refers to the domain class (.cs) 
+            // vr refers to the api class (.ts)
             CreateMap<SaveTransferResource, Transfer>()
                 .ForMember(v => v.Id, opt => opt.Ignore())
                 .ForMember(v => v.DateIn, opt => opt.MapFrom(vr => vr.dateIn))

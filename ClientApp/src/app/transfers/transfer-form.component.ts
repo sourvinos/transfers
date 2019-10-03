@@ -1,17 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { forkJoin, Observable } from 'rxjs';
-import { ITransfer } from '../models/transfer';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { forkJoin, Observable, Subject } from 'rxjs';
 import { CustomerService } from '../services/customer.service';
 import { DestinationService } from '../services/destination.service';
-import { DialogService } from '../services/dialog-service';
 import { DriverService } from '../services/driver.service';
 import { HelperService } from '../services/helper.service';
 import { PickupPointService } from '../services/pickupPoint.service';
 import { PortService } from '../services/port.service';
 import { TransferService } from '../services/transfer.service';
 import { Utils } from '../shared/classes/utils';
+import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component';
+import { ITransfer } from '../models/transfer';
 
 @Component({
     selector: 'app-transfer-form',
@@ -19,9 +20,7 @@ import { Utils } from '../shared/classes/utils';
     styleUrls: ['../shared/styles/forms.css', './transfer-form.component.css']
 })
 
-export class TransferFormComponent implements OnInit {
-
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private dialogService: DialogService) { }
+export class TransferFormComponent implements OnInit, AfterViewInit {
 
     @Input() set transfer(transfer: ITransfer) { if (transfer) this.populateFields(transfer) }
 
@@ -32,6 +31,7 @@ export class TransferFormComponent implements OnInit {
     ports: any
 
     isSaving: boolean = false
+    modalRef: BsModalRef
 
     form = this.formBuilder.group({
         id: 0,
@@ -49,15 +49,13 @@ export class TransferFormComponent implements OnInit {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    ngOnInit() {
-        this.populateDropDowns()
-    }
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService) { }
 
-    populateDropDowns() {
+    ngOnInit() {
         let sources = []
         sources.push(this.destinationService.getDestinations())
         sources.push(this.customerService.getCustomers())
-        sources.push(this.pickupPointService.getPickupPoints(2))
+        sources.push(this.pickupPointService.getAllPickupPoints())
         sources.push(this.driverService.getDrivers())
         sources.push(this.portService.getPorts())
         return forkJoin(sources).subscribe(
@@ -75,6 +73,11 @@ export class TransferFormComponent implements OnInit {
             }
         )
     }
+
+    ngAfterViewInit(): void {
+        // document.getElementById("destination").focus()
+    }
+
 
     get destinationId() {
         return this.form.get('destinationId')
@@ -207,12 +210,6 @@ export class TransferFormComponent implements OnInit {
         this.form.patchValue({ portId: list ? list.id : '' })
     }
 
-    focusOnElement(index: number) {
-        var elements = document.getElementsByTagName('input')
-        elements[index].select()
-        elements[index].focus()
-    }
-
     calculateTotalPersons() {
         this.form.patchValue({ totalPersons: parseInt(this.form.value.adults) + parseInt(this.form.value.kids) + parseInt(this.form.value.free) })
     }
@@ -240,10 +237,20 @@ export class TransferFormComponent implements OnInit {
     }
 
     delete() {
-        if (this.form.value.id !== null) {
-            if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => this.router.navigate(['/transfers']), error => Utils.errorLogger(error))
-            }
+        if (this.transfer.id !== null) {
+            const subject = new Subject<boolean>()
+            const modal = this.modalService.show(ModalDialogComponent, {
+                initialState: {
+                    title: 'Confirmation',
+                    message: 'If you continue, this record will be deleted.',
+                    type: 'delete'
+                }, animated: true
+            })
+            modal.content.subject = subject
+            return subject.asObservable().subscribe(result => {
+                if (result)
+                    this.transferService.deleteTransfer(this.transfer.id).subscribe(() => this.router.navigate(['/transfers']), error => { Utils.errorLogger(error); this.openErrorModal() })
+            })
         }
     }
 
@@ -261,9 +268,35 @@ export class TransferFormComponent implements OnInit {
     canDeactivate(): Observable<boolean> | boolean {
         if (!this.isSaving && this.form.dirty) {
             this.isSaving = false
-            return this.dialogService.confirm('Discard changes?');
+            const subject = new Subject<boolean>();
+            const modal = this.modalService.show(ModalDialogComponent, {
+                initialState: {
+                    title: 'Confirmation',
+                    message: 'If you continue, all changes in this record will be lost.',
+                    type: 'question'
+                }, animated: true
+            });
+            modal.content.subject = subject;
+            return subject.asObservable();
         }
         return true;
     }
+
+    openErrorModal() {
+        const subject = new Subject<boolean>()
+        const modal = this.modalService.show(ModalDialogComponent, {
+            initialState: {
+                title: 'Error',
+                message: 'This record is in use and cannot be deleted.',
+                type: 'error'
+            }, animated: true
+        })
+        modal.content.subject = subject
+        return subject.asObservable()
+    }
+
+    // @Input() set transfer(transfer: ITransfer) { if (transfer) this.populateFields(transfer) }
+
+    // isSaving: boolean = false
 
 }

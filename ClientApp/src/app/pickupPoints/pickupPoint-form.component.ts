@@ -43,6 +43,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit {
         return forkJoin(sources).subscribe(
             result => {
                 this.routes = result[0]
+                console.log(this.routes)
                 if (this.id) {
                     this.populateFields()
                 }

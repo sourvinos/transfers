@@ -6,7 +6,7 @@
     <div id="search-box">
         <div class="ui icon input">
             <i class="search icon"></i>
-            <input type="text" placeholder="Search..." #query (keyup)="filter(query.value)" autocomplete="off">
+            <input type="text" #query (keyup)="filter(query.value)" autocomplete="off">
         </div>
     </div>
 </div>
@@ -29,6 +29,7 @@
 </div>
 
 <div id="footer">
+    <div class="ui divider"></div>
     <div id="buttons">
         <button class="ui button primary" id="new" [routerLink]="['/destinations/new']">New</button>
     </div>

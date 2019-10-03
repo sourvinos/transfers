@@ -11,7 +11,7 @@ export class MainComponent {
 	toggleMenu() {
 		document.getElementById("hamburger").classList.toggle("open");
 		var sidebar = document.getElementById("sidebar");
-		sidebar.style.width = sidebar.style.width =="16rem" ?"0" :"16rem";
+		sidebar.style.width = sidebar.style.width == "20rem" ? "0" : "20rem";
 	}
 
 }

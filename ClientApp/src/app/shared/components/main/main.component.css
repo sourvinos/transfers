@@ -5,7 +5,7 @@
 #hamburger {
 	position: absolute;
 	margin-left: 2rem;
-	top: 1.9rem;
+	top: 2.2rem;
 }
 
 #hamburger span {
@@ -30,8 +30,12 @@
 	transform: translateY(-10px) rotate(-45deg);
 }
 
-/* ! Wide screen */
+#content {
+	display: flex;
+	height: 100%;
+}
 
+/* ! Wide screen */
 @media only screen and (min-width: 80.0625rem) {
 	#hamburger {
 		display: none;
@@ -39,15 +43,8 @@
 }
 
 /* ! Narrow screen */
-
 @media only screen and (max-width: 80rem) {
 	#hamburger {
 		display: block;
 	}
-}
-
-#content {
-	display: flex;
-	height: 100%;
-	transition: 0.2s ease-out;
 }

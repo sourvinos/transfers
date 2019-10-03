@@ -10,14 +10,17 @@
 <div id="content">
     <form [formGroup]='form' class="ui form" autocomplete='off'>
         <div id="left">
-            <div class="field" [class.error]='(routeId.invalid && routeDescription.invalid && routeDescription.touched) || (routeDescription.touched && !arrayLookup(routes, routeDescription))'>
+            <div class="field">
                 <label for="routeList">Route</label>
-                <input type="text" list="routeList" formControlName='routeDescription' (change)="updateRouteId(routes, $event)" tabindex="1" id="routeList">
-                <datalist id="routeList">
-                    <select>
-                        <option *ngFor='let route of routes' [value]="route.description"></option>
-                    </select>
-                </datalist>
+                <div class="input">
+                    <input type="text" list="routeList" formControlName='routeDescription' (change)="updateRouteId(routes, $event)" tabindex="1" id="route">
+                    <i *ngIf="(routeId.invalid && routeDescription.invalid) || (!arrayLookup(routes, routeDescription))" class="red exclamation triangle icon"></i>
+                    <datalist id="routeList">
+                        <select>
+                            <option *ngFor='let route of routes' [value]="route.description"></option>
+                        </select>
+                    </datalist>
+                </div>
             </div>
             <div class="field" [class.error]="description.invalid && description.touched">
                 <label for="description">Description</label>
@@ -39,6 +42,6 @@
     <div class="ui divider"></div>
     <div id="buttons">
         <button class="ui button delete" (click)="delete()" [hidden]="!form.value.id">Delete</button>
-        <button class="ui button primary" (click)="save()" [disabled]="!form.valid">Save</button>
+        <button class="ui button primary" (click)="save()">Save</button>
     </div>
 </div>

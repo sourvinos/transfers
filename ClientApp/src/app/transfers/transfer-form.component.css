@@ -1,6 +1,13 @@
-#content form {
+#form  {
+    background-color: #FFFFFF;
     display: flex;
     flex-direction: column;
+    overflow: scroll;
+    padding: 0 2rem;
+}
+
+#header {
+    margin: 0;
 }
 
 .numeric {
@@ -13,4 +20,7 @@
 
 .numeric .number {
     text-align: right;
+}
+p{
+    color: #FFFFFF;
 }

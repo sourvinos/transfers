@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { get } from 'scriptjs';
+declare var $: any
 
 import { IPickupPoint } from '../models/pickupPoint';
 import { IRoute } from '../models/route';
@@ -42,6 +43,10 @@ export class PickupPointListComponent implements OnInit {
 
     ngOnInit() {
         this.routeService.getRoutes().subscribe(data => this.routes = data, error => Utils.errorLogger(error))
+    }
+
+    ngAfterViewInit() {
+        $('.ui.dropdown').dropdown();
     }
 
     onRouteChange() {

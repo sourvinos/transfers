@@ -4,7 +4,7 @@
     </div>
     <div class="ui divider"></div>
     <div id="search-box">
-        <select class="ui dropdown fluid" (change)="onRouteChange()" [(ngModel)]="pickupPoint.route.id" name="routeId" #route="ngModel" required>
+        <select class="ui dropdown" (change)="onRouteChange()" [(ngModel)]="pickupPoint.route.id" name="routeId" #route="ngModel" required>
             <option value="">Select route</option>
             <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
         </select>
@@ -31,6 +31,7 @@
 </div>
 
 <div id="footer">
+    <div class="ui divider"></div>
     <div id="buttons">
         <button class="ui button primary" id="new" [routerLink]="['/pickupPoints/new']">New</button>
     </div>

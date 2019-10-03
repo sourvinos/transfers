@@ -20,7 +20,7 @@ namespace Transfers.Resources
         public CustomerResource Customer { get; set; }
         public DestinationResource Destination { get; set; }
         public PickupPointResource PickupPoint { get; set; }
-        public Driver Driver { get; set; }
-        public Port Port { get; set; }
+        public DriverResource Driver { get; set; }
+        public PortResource Port { get; set; }
     }
 }

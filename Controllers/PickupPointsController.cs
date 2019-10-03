@@ -24,6 +24,13 @@ namespace Transfers.Controllers
             this.context = context;
         }
 
+        // GET: api/pickupPoints
+        [HttpGet]
+        public async Task<IEnumerable<PickupPoint>> GetAll(int routeId)
+        {
+            return await context.PickupPoints.Include(x => x.Route).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+        }
+
         // GET: api/pickupPoints/pickupPointsForRoute/5
         [HttpGet("pickupPointsForRoute/{routeId}")]
         public async Task<IEnumerable<PickupPoint>> Get(int routeId)

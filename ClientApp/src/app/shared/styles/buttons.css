@@ -2,7 +2,7 @@ button {
     color: var(--color-button-text) !important;
     font-family: var(--font-family-buttons) !important;
     font-weight: var(--font-weight-buttons) !important;
-    margin-left: 0.5rem !important;
+    margin: 0 0 0 0.5rem !important;
 }
 
 button.primary {
@@ -15,4 +15,8 @@ button.secondary {
 
 button.delete {
     background-color: var(--color-button-delete) !important;
+}
+
+button:active {
+    transform: translateY(3px);
 }

@@ -10,28 +10,34 @@
     margin: 2rem 2rem 2rem 2rem;
 }
 
-#header div {
+#header div:first-child {
     align-items: center;
     display: flex;
     justify-content: flex-start;
+    margin-left: 1rem;
 }
 
 #header #search-box {
     display: flex;
     justify-content: flex-end;
-    margin: 0 0 0 1rem;
+    margin-right: 1rem;
 }
 
 #content {
     display: flex;
-    padding: 0 2rem;
+    grid-area: "content";
     max-height: -webkit-fill-available;
+    padding: 0 2rem;
 }
 
 #footer {
     grid-area: "footer";
     margin: 0 2rem 2rem 2rem;
     text-align: right;
+}
+
+#footer #buttons {
+    margin-right: 1rem;
 }
 
 #content::-webkit-scrollbar {
@@ -69,10 +75,7 @@ table tr:hover {
     background-color: var(--color-table-row-hover) !important;
 }
 
-.ui.icon.input {
-    width: 25rem;
-}
-
+/* ! Narrow screen */
 @media only screen and (max-width: 80rem) {
     h2 {
         margin-left: 3rem !important;

@@ -11,7 +11,7 @@ import { ITransfer } from './../models/transfer';
     styleUrls: ['../shared/styles/lists.css', './transfer-list.component.css']
 })
 
-export class TransferListComponent implements OnInit {
+export class TransferListComponent implements OnInit, AfterViewInit {
 
     queryResult: any = {}
     queryResultFiltered: any = {}
@@ -30,19 +30,23 @@ export class TransferListComponent implements OnInit {
 
     ngOnInit() {
         this.readDateFromLocalStorage()
-        this.setWidthsForScrollableElements()
+    }
+
+    ngAfterViewInit(): void {
+        this.seteElementsWidths()
+        this.scrollToEmpty()
     }
 
     getTransfers() {
         this.getFilteredTransfers()
         this.selectGroupItems()
         this.isRefreshNeeded()
-        this.scrollToList()
         this.updateLocalStorageWithDate()
+        this.scrollToList()
     }
 
     populateForm(transfer: ITransfer) {
-        this.updateTransfer(transfer)
+        this.selectedTransfer = transfer
         this.scrollToForm()
     }
 
@@ -66,12 +70,6 @@ export class TransferListComponent implements OnInit {
 
     queryIsEmpty() {
         return this.queryResult.transfers == undefined || this.queryResult.transfers.length == 0 ? true : false
-    }
-
-    private focusOnElement(index: number) {
-        var elements = document.getElementsByTagName('input')
-        elements[index].select()
-        elements[index].focus()
     }
 
     private filterByCriteria() {
@@ -110,17 +108,30 @@ export class TransferListComponent implements OnInit {
     private getFilteredTransfers() {
         this.service.getTransfers(localStorage.getItem('date')).subscribe((data: any) => {
             this.queryResult = this.queryResultFiltered = data
-            document.getElementById("scrollable").style.marginLeft = - this.boxWidth + 'px'
         })
     }
 
-    private setWidthsForScrollableElements() {
-        let boxWidth = document.body.clientWidth - Number(document.getElementById('sidebar').clientWidth)
-        document.getElementById('header').style.width = boxWidth + 'px'
-        document.getElementById('empty').style.minWidth = boxWidth + 'px'
-        document.getElementById('summariesGrid').style.minWidth = boxWidth + 'px'
-        document.getElementById('form').style.minWidth = boxWidth + 'px'
-        document.getElementById('footer').style.width = boxWidth + 'px'
+    private seteElementsWidths() {
+        document.getElementById('header').style.width = this.getBoxWidth() + 'px'
+        document.getElementById('list-footer').style.width = this.getBoxWidth() + 'px'
+        document.getElementById('empty').style.minWidth = this.getBoxWidth() + 'px'
+        document.getElementById('table').style.minWidth = this.getScrollabelVisibleWidth(this.getBoxWidth(), this.getSummariesPadding(window.getComputedStyle(document.getElementById('summaries')))) + this.getSummariesPadding(window.getComputedStyle(document.getElementById('summaries'))) * 2 + 'px'
+        document.getElementById('form').style.minWidth = document.getElementById('table').style.minWidth
+    }
+
+    private scrollToEmpty() {
+        document.getElementById('scrollable').style.left = 0 + 'px'
+        document.getElementById('summaries').style.display = 'none'
+    }
+
+    private scrollToList() {
+        document.getElementById('summaries').style.display = 'grid'
+        document.getElementById('scrollable').style.left = -parseInt(document.getElementById('empty').style.minWidth) + 'px'
+    }
+
+    private scrollToForm() {
+        document.getElementById('summaries').style.display = 'grid'
+        document.getElementById('scrollable').style.left = -(parseInt(document.getElementById('table').style.minWidth) * 2) - (document.getElementById('summaries').clientWidth - 3) - this.getSummariesPadding(window.getComputedStyle(document.getElementById('summaries'))) + 'px'
     }
 
     private isRefreshNeeded() {
@@ -131,40 +142,22 @@ export class TransferListComponent implements OnInit {
         })
     }
 
-    scrollToHome() {
-        document.getElementById('scrollable').style.marginLeft = '0px'
-    }
-
-    private scrollToList() {
-        if (this.queryResult.persons > 0)
-            document.getElementById('scrollable').style.marginLeft = - this.boxWidth + 'px'
-        else
-            document.getElementById('scrollable').style.marginLeft = 0 + 'px'
-    }
-
-    private scrollToForm() {
-        document.getElementById('scrollable').style.marginLeft = - this.boxWidth * 2 + 'px'
-        document.getElementById("destination").focus()
-    }
-
-    get boxWidth() {
-        return document.body.clientWidth - Number(document.getElementById('sidebar').clientWidth)
-    }
-
-    get isFormVisible() {
-        let marginLeft = document.getElementById('scrollable').style.marginLeft
-        let result = Number(marginLeft.substring(0, marginLeft.length - 2))
-        return result == -3336
-    }
-
     private clearFilterArrays() {
         this.selectedDestinations.length = 0
         this.selectedCustomers.length = 0
         this.selectedRoutes.length = 0
     }
 
-    private updateTransfer(transfer: ITransfer) {
-        this.selectedTransfer = transfer
+    private getSummariesPadding(element: CSSStyleDeclaration) {
+        return parseInt(element.getPropertyValue('padding-left').substr(0, element.getPropertyValue('padding-left').length - 2))
+    }
+
+    private getScrollabelVisibleWidth(boxWidth: number, summariesPaddingLeft: number) {
+        return boxWidth - Number(document.getElementById('summaries').clientWidth) - summariesPaddingLeft * 3
+    }
+
+    private getBoxWidth() {
+        return document.body.clientWidth - Number(document.getElementById('sidebar').clientWidth)
     }
 
 }
