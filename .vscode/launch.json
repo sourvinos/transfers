@@ -1,29 +1,50 @@
 {
     "version": "0.2.0",
-    "configurations": [{
-            "name": ".NET Core Launch (web)",
+    "compounds": [
+        {
+            "name": "Core & Chrome",
+            "configurations": [
+                "Chrome",
+                ".NET Core"
+            ]
+        }
+    ],
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome",
+            "url": "https://localhost:5001",
+            "webRoot": "${workspaceFolder}/ClientApp"
+        },
+        {
+            "name": ".NET Core",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/Transfers.dll",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/transfers.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
+            "internalConsoleOptions": "neverOpen",
+            "externalConsole": true,
             "launchBrowser": {
-                "enabled": true
+                "enabled": false,
+                "args": "${auto-detect-url}",
+                "windows": {
+                    "command": "cmd.exe",
+                    "args": "/C start ${auto-detect-url}"
+                },
+                "osx": {
+                    "command": "open"
+                },
+                "linux": {
+                    "command": "xdg-open"
+                }
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
             }
-        },
-        {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:pickProcess}"
         }
     ]
 }

@@ -5,11 +5,14 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { TransferService } from '../services/transfer.service';
 import { ITransfer } from './../models/transfer';
 
+declare var $: any
+
 @Component({
     selector: 'app-transfer-list',
     templateUrl: './transfer-list.component.html',
     styleUrls: ['../shared/styles/lists.css', './transfer-list.component.css']
 })
+
 
 export class TransferListComponent implements OnInit, AfterViewInit {
 
@@ -33,8 +36,9 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.seteElementsWidths()
+        this.setElementsWidths()
         this.scrollToEmpty()
+        // $('.ui.sticky').sticky({ context: '.ui.table' })
     }
 
     getTransfers() {
@@ -111,27 +115,37 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         })
     }
 
-    private seteElementsWidths() {
+    private setElementsWidths() {
         document.getElementById('header').style.width = this.getBoxWidth() + 'px'
+        document.getElementById('empty').style.width = this.getBoxWidth() + 'px'
+        // document.getElementById('table').style.minWidth = this.getScrollabelVisibleWidth(this.getBoxWidth(), this.getSummariesPadding(window.getComputedStyle(document.getElementById('summaries')))) + this.getSummariesPadding(window.getComputedStyle(document.getElementById('summaries'))) * 2 + 'px'
+        // document.getElementById('list').style.width = this.getBoxWidth() - this.getSummariesPadding(window.getComputedStyle(document.getElementById('summaries'))) + 12 + 'px'
+        document.getElementById('list').style.width = this.getBoxWidth() - 25 + 'px'
+        document.getElementById('form').style.width = this.getBoxWidth() + 'px'
         document.getElementById('list-footer').style.width = this.getBoxWidth() + 'px'
-        document.getElementById('empty').style.minWidth = this.getBoxWidth() + 'px'
-        document.getElementById('table').style.minWidth = this.getScrollabelVisibleWidth(this.getBoxWidth(), this.getSummariesPadding(window.getComputedStyle(document.getElementById('summaries')))) + this.getSummariesPadding(window.getComputedStyle(document.getElementById('summaries'))) * 2 + 'px'
-        document.getElementById('form').style.minWidth = document.getElementById('table').style.minWidth
     }
 
     private scrollToEmpty() {
-        document.getElementById('scrollable').style.left = 0 + 'px'
-        document.getElementById('summaries').style.display = 'none'
+        document.getElementById('content').style.left = 0 + 'px'
+        console.log('Scrolling to empty')
+        console.log('Content left =', document.getElementById('content').style.left)
+        // document.getElementById('scrollable').style.left = document.getElementById('sidebar').clientWidth + 'px'
+        // document.getElementById('summaries').style.display = 'none'
     }
 
     private scrollToList() {
-        document.getElementById('summaries').style.display = 'grid'
-        document.getElementById('scrollable').style.left = -parseInt(document.getElementById('empty').style.minWidth) + 'px'
+        // document.getElementById('summaries').style.display = 'grid'
+        // console.log('Empty width', parseInt(document.getElementById('empty').style.minWidth))
+        document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) + 'px'
+        console.log('Scrolling to list')
+        console.log('Content left =', document.getElementById('content').style.left)
+        // document.getElementsByTagName('table')[0].style.width = '500px'
     }
 
     private scrollToForm() {
-        document.getElementById('summaries').style.display = 'grid'
-        document.getElementById('scrollable').style.left = -(parseInt(document.getElementById('table').style.minWidth) * 2) - (document.getElementById('summaries').clientWidth - 3) - this.getSummariesPadding(window.getComputedStyle(document.getElementById('summaries'))) + 'px'
+        document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) - parseInt(document.getElementById('list').style.width) - 20 + 'px'
+        console.log('Scrolling to form')
+        console.log('Content left =', document.getElementById('content').style.left)
     }
 
     private isRefreshNeeded() {
@@ -153,7 +167,8 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     private getScrollabelVisibleWidth(boxWidth: number, summariesPaddingLeft: number) {
-        return boxWidth - Number(document.getElementById('summaries').clientWidth) - summariesPaddingLeft * 3
+        return boxWidth
+        // return boxWidth - Number(document.getElementById('summaries').clientWidth) - summariesPaddingLeft * 3
     }
 
     private getBoxWidth() {

@@ -14,43 +14,44 @@
 </div>
 
 <div id="content">
-    <div id="summaries">
-        <div class="summaryBlock">
-            <div class="summaryHeader">
-                <header>Destinations</header>
-                <header class="total">{{ queryResult.persons }}</header>
-            </div>
-            <div *ngFor="let item of queryResult.personsPerDestination" (click)="toggleItem(item, this.selectedDestinations)" class="item destination" [class.active]="item.isSelected" [id]="item.description">
-                <div class="description"> {{ item.description }} </div>
-                <div class="total"> {{ item.persons }} </div>
-            </div>
-        </div>
-        <div class="summaryBlock">
-            <div class="summaryHeader">
-                <header>Customers</header>
-                <header class="total">{{ queryResult.persons }}</header>
-            </div>
-            <div *ngFor="let item of queryResult.personsPerCustomer" (click)="toggleItem(item, this.selectedCustomers)" class="item customer" [class.active]="item.isSelected" [id]="item.description">
-                <div class="description"> {{ item.description }} </div>
-                <div class="total"> {{ item.persons }} </div>
-            </div>
-        </div>
-        <div class="summaryBlock">
-            <div class="summaryHeader">
-                <header>Routes</header>
-                <header class="total">{{ queryResult.persons }}</header>
-            </div>
-            <div *ngFor="let item of queryResult.personsPerRoute" (click)="toggleItem(item, this.selectedRoutes)" class="item route" [class.activeItem]="item.isSelected" [id]="item.description">
-                <div class="description"> {{ item.description }} </div>
-                <div class="total"> {{ item.persons }} </div>
-            </div>
-        </div>
+    <!-- <div id="scrollable"> -->
+    <div id="empty">
+        <div class="empty ui divider"></div>
     </div>
-    <div id="scrollable">
-        <div id="empty">
-            <div class="empty ui divider"></div>
+    <div id="list">
+        <div id="summaries">
+            <div class="summaryBlock">
+                <div class="summaryHeader">
+                    <header>Destinations</header>
+                    <header class="total">{{ queryResult.persons }}</header>
+                </div>
+                <div *ngFor="let item of queryResult.personsPerDestination" (click)="toggleItem(item, this.selectedDestinations)" class="item destination" [class.active]="item.isSelected" [id]="item.description">
+                    <div class="description"> {{ item.description }} </div>
+                    <div class="total"> {{ item.persons }} </div>
+                </div>
+            </div>
+            <div class="summaryBlock">
+                <div class="summaryHeader">
+                    <header>Customers</header>
+                    <header class="total">{{ queryResult.persons }}</header>
+                </div>
+                <div *ngFor="let item of queryResult.personsPerCustomer" (click)="toggleItem(item, this.selectedCustomers)" class="item customer" [class.active]="item.isSelected" [id]="item.description">
+                    <div class="description"> {{ item.description }} </div>
+                    <div class="total"> {{ item.persons }} </div>
+                </div>
+            </div>
+            <div class="summaryBlock">
+                <div class="summaryHeader">
+                    <header>Routes</header>
+                    <header class="total">{{ queryResult.persons }}</header>
+                </div>
+                <div *ngFor="let item of queryResult.personsPerRoute" (click)="toggleItem(item, this.selectedRoutes)" class="item route" [class.activeItem]="item.isSelected" [id]="item.description">
+                    <div class="description"> {{ item.description }} </div>
+                    <div class="total"> {{ item.persons }} </div>
+                </div>
+            </div>
         </div>
-        <div id="table">
+        <div id="scrollable">
             <table class="ui table">
                 <thead>
                     <tr>
@@ -80,15 +81,17 @@
                 </tbody>
             </table>
         </div>
-        <div id="form">
-            <app-transfer-form #formComponent [transfer]="selectedTransfer"></app-transfer-form>
-        </div>
     </div>
+    <div id="form">
+        <app-transfer-form #formComponent [transfer]="selectedTransfer"></app-transfer-form>
+    </div>
+    <!-- </div> -->
 </div>
 
 <div id="list-footer">
     <div class="ui divider"></div>
     <div id="buttons">
+        <button class="ui button primary" id="new" (click)="scrollToEmpty()">Empty</button>
         <button class="ui button primary" id="new" (click)="scrollToList()">List</button>
         <button class="ui button primary" id="new" (click)="scrollToForm()">New</button>
     </div>
