@@ -1,26 +1,7 @@
-#form  {
-    background-color: #FFFFFF;
-    display: flex;
-    flex-direction: column;
-    overflow: scroll;
-    padding: 0 2rem;
-}
-
-#header {
-    margin: 0;
-}
-
 .numeric {
     width: 80px;
 }
 
 .numeric.total {
     width: 100px;
-}
-
-.numeric .number {
-    text-align: right;
-}
-p{
-    color: #FFFFFF;
 }

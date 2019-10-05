@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
@@ -20,9 +20,10 @@ import { ITransfer } from '../models/transfer';
     styleUrls: ['../shared/styles/forms.css', './transfer-form.component.css']
 })
 
-export class TransferFormComponent implements OnInit, AfterViewInit {
+export class TransferFormComponent implements OnInit {
 
     @Input() set transfer(transfer: ITransfer) { if (transfer) this.populateFields(transfer) }
+    @Output() eventEmitter = new EventEmitter()
 
     destinations: any
     customers: any
@@ -74,55 +75,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         )
     }
 
-    ngAfterViewInit(): void {
-        // document.getElementById("destination").focus()
-    }
-
-
-    get destinationId() {
-        return this.form.get('destinationId')
-    }
-
-    get destinationDescription() {
-        return this.form.get('destinationDescription')
-    }
-
-    get customerId() {
-        return this.form.get('customerId')
-    }
-
-    get customerDescription() {
-        return this.form.get('customerDescription')
-    }
-
-    get pickupPointId() {
-        return this.form.get('pickupPointId')
-    }
-
-    get pickupPointDescription() {
-        return this.form.get('pickupPointDescription')
-    }
-
-    get driverId() {
-        return this.form.get('driverId')
-    }
-
-    get driverDescription() {
-        return this.form.get('driverDescription')
-    }
-
-    get portId() {
-        return this.form.get('portId')
-    }
-
-    get portDescription() {
-        return this.form.get('portDescription')
-    }
-
-    disableFields() {
-        this.form.controls
-    }
-
     populateFields(transfer: ITransfer) {
         this.form.setValue({
             id: transfer.id,
@@ -159,14 +111,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         })
     }
 
-    getRequiredFieldMessage() {
-        return 'This field is required, silly!'
-    }
-
-    getMaxLengthFieldMessage() {
-        return 'This field must not be longer than '
-    }
-
     arrayLookup(lookupArray: any[], givenField: FormControl) {
         for (let x of lookupArray) {
             if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
@@ -175,51 +119,15 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         }
     }
 
-    updateDestinationId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ destinationId: list ? list.id : '' })
-    }
-
-    updateCustomerId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ customerId: list ? list.id : '' })
-    }
-
-    updatePickupPointId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ pickupPointId: list ? list.id : '' })
-    }
-
-    updateDriverId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ driverId: list ? list.id : '' })
-    }
-
-    updatePortId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ portId: list ? list.id : '' })
-    }
-
     calculateTotalPersons() {
         this.form.patchValue({ totalPersons: parseInt(this.form.value.adults) + parseInt(this.form.value.kids) + parseInt(this.form.value.free) })
     }
 
-    new() {
+    newRecord() {
         this.clearFields()
-        document.getElementById('scrollable').style.marginLeft = - this.boxWidth * 2 + 'px'
     }
 
-    save() {
+    saveRecord() {
         if (!this.form.valid) return
         this.isSaving = true
         if (this.form.value.id == 0) {
@@ -236,22 +144,20 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         }
     }
 
-    delete() {
-        if (this.transfer.id !== null) {
-            const subject = new Subject<boolean>()
-            const modal = this.modalService.show(ModalDialogComponent, {
-                initialState: {
-                    title: 'Confirmation',
-                    message: 'If you continue, this record will be deleted.',
-                    type: 'delete'
-                }, animated: true
-            })
-            modal.content.subject = subject
-            return subject.asObservable().subscribe(result => {
-                if (result)
-                    this.transferService.deleteTransfer(this.transfer.id).subscribe(() => this.router.navigate(['/transfers']), error => { Utils.errorLogger(error); this.openErrorModal() })
-            })
-        }
+    deleteRecord() {
+        const subject = new Subject<boolean>()
+        const modal = this.modalService.show(ModalDialogComponent, {
+            initialState: {
+                title: 'Confirmation',
+                message: 'If you continue, this record will be deleted.',
+                type: 'delete'
+            }, animated: true
+        })
+        modal.content.subject = subject
+        return subject.asObservable().subscribe(result => {
+            if (result)
+                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => this.scrollBackToList()), (error: Response) => console.log('Record NOT deleted')
+        })
     }
 
     get canDelete() {
@@ -295,8 +201,91 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         return subject.asObservable()
     }
 
-    // @Input() set transfer(transfer: ITransfer) { if (transfer) this.populateFields(transfer) }
+    // #region Get field values
 
-    // isSaving: boolean = false
+    get destinationId() {
+        return this.form.get('destinationId')
+    }
+
+    get destinationDescription() {
+        return this.form.get('destinationDescription')
+    }
+
+    get customerId() {
+        return this.form.get('customerId')
+    }
+
+    get customerDescription() {
+        return this.form.get('customerDescription')
+    }
+
+    get pickupPointId() {
+        return this.form.get('pickupPointId')
+    }
+
+    get pickupPointDescription() {
+        return this.form.get('pickupPointDescription')
+    }
+
+    get driverId() {
+        return this.form.get('driverId')
+    }
+
+    get driverDescription() {
+        return this.form.get('driverDescription')
+    }
+
+    get portId() {
+        return this.form.get('portId')
+    }
+
+    get portDescription() {
+        return this.form.get('portDescription')
+    }
+
+    //#endregion
+
+    // #region Update dropdowns with values
+
+    updateDestinationId(lookupArray: any[], e: { target: { value: any } }): void {
+        let name = e.target.value
+        let list = lookupArray.filter(x => x.description === name)[0]
+
+        this.form.patchValue({ destinationId: list ? list.id : '' })
+    }
+
+    updateCustomerId(lookupArray: any[], e: { target: { value: any } }): void {
+        let name = e.target.value
+        let list = lookupArray.filter(x => x.description === name)[0]
+
+        this.form.patchValue({ customerId: list ? list.id : '' })
+    }
+
+    updatePickupPointId(lookupArray: any[], e: { target: { value: any } }): void {
+        let name = e.target.value
+        let list = lookupArray.filter(x => x.description === name)[0]
+
+        this.form.patchValue({ pickupPointId: list ? list.id : '' })
+    }
+
+    updateDriverId(lookupArray: any[], e: { target: { value: any } }): void {
+        let name = e.target.value
+        let list = lookupArray.filter(x => x.description === name)[0]
+
+        this.form.patchValue({ driverId: list ? list.id : '' })
+    }
+
+    updatePortId(lookupArray: any[], e: { target: { value: any } }): void {
+        let name = e.target.value
+        let list = lookupArray.filter(x => x.description === name)[0]
+
+        this.form.patchValue({ portId: list ? list.id : '' })
+    }
+
+    // #endregion Update dropdowns with values
+
+    scrollBackToList() {
+        this.eventEmitter.emit()
+    }
 
 }

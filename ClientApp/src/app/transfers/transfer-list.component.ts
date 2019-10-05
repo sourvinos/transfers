@@ -1,18 +1,16 @@
-import * as moment from 'moment';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import * as moment from 'moment'
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core'
+import { FormBuilder, Validators } from '@angular/forms'
 
-import { TransferService } from '../services/transfer.service';
-import { ITransfer } from './../models/transfer';
-
-declare var $: any
+import { TransferService } from '../services/transfer.service'
+import { ITransfer } from './../models/transfer'
+import { TransferFormComponent } from './transfer-form.component'
 
 @Component({
     selector: 'app-transfer-list',
     templateUrl: './transfer-list.component.html',
     styleUrls: ['../shared/styles/lists.css', './transfer-list.component.css']
 })
-
 
 export class TransferListComponent implements OnInit, AfterViewInit {
 
@@ -29,6 +27,11 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         dateIn: ['', [Validators.required]]
     })
 
+    isNewRecord: boolean = false
+    isFormVisible: boolean = false
+
+    @ViewChild(TransferFormComponent) private transferForm: TransferFormComponent
+
     constructor(private service: TransferService, private formBuilder: FormBuilder) { }
 
     ngOnInit() {
@@ -38,7 +41,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         this.setElementsWidths()
         this.scrollToEmpty()
-        // $('.ui.sticky').sticky({ context: '.ui.table' })
     }
 
     getTransfers() {
@@ -50,8 +52,10 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     populateForm(transfer: ITransfer) {
-        this.selectedTransfer = transfer
         this.scrollToForm()
+        this.selectedTransfer = transfer
+        this.isNewRecord = false
+        this.isFormVisible = true
     }
 
     toggleItem(item: any, lookupArray: string) {
@@ -81,7 +85,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         this.queryResultFiltered.transfers = this.queryResult.transfers
             .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) !== -1 })
             .filter((y: { customer: { description: string } }) => { return this.selectedCustomers.indexOf(y.customer.description) !== -1 })
-            .filter((z: { pickupPoint: { route: { description: string; }; }; }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.description) !== -1 })
+            .filter((z: { pickupPoint: { route: { description: string } } }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.description) !== -1 })
     }
 
     private selectGroupItems() {
@@ -118,34 +122,44 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     private setElementsWidths() {
         document.getElementById('header').style.width = this.getBoxWidth() + 'px'
         document.getElementById('empty').style.width = this.getBoxWidth() + 'px'
-        // document.getElementById('table').style.minWidth = this.getScrollabelVisibleWidth(this.getBoxWidth(), this.getSummariesPadding(window.getComputedStyle(document.getElementById('summaries')))) + this.getSummariesPadding(window.getComputedStyle(document.getElementById('summaries'))) * 2 + 'px'
-        // document.getElementById('list').style.width = this.getBoxWidth() - this.getSummariesPadding(window.getComputedStyle(document.getElementById('summaries'))) + 12 + 'px'
-        document.getElementById('list').style.width = this.getBoxWidth() - 25 + 'px'
-        document.getElementById('form').style.width = this.getBoxWidth() + 'px'
-        document.getElementById('list-footer').style.width = this.getBoxWidth() + 'px'
+        document.getElementById('list').style.width = this.getBoxWidth() - this.getSummariesWidth() - 25 + 'px'
+        document.getElementById('form').style.width = this.getBoxWidth() - this.getSummariesWidth() - 25 + 'px'
+        document.getElementById('footer').style.width = this.getBoxWidth() + 'px'
     }
 
     private scrollToEmpty() {
         document.getElementById('content').style.left = 0 + 'px'
-        console.log('Scrolling to empty')
-        console.log('Content left =', document.getElementById('content').style.left)
-        // document.getElementById('scrollable').style.left = document.getElementById('sidebar').clientWidth + 'px'
-        // document.getElementById('summaries').style.display = 'none'
     }
 
     private scrollToList() {
-        // document.getElementById('summaries').style.display = 'grid'
-        // console.log('Empty width', parseInt(document.getElementById('empty').style.minWidth))
         document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) + 'px'
-        console.log('Scrolling to list')
-        console.log('Content left =', document.getElementById('content').style.left)
-        // document.getElementsByTagName('table')[0].style.width = '500px'
+    }
+
+    private scrollBackToList() {
+        this.isNewRecord = false
+        this.isFormVisible = false
+        document.getElementById('list').style.marginLeft = 0 + 'px'
+    }
+
+    newRecord() {
+        this.isNewRecord = true
+        this.isFormVisible = true
+        this.scrollToForm()
+        this.transferForm.clearFields()
+        this.transferForm.newRecord()
+    }
+
+    saveRecord() {
+        this.transferForm.saveRecord()
+        this.scrollBackToList()
+    }
+
+    deleteRecord() {
+        this.transferForm.deleteRecord()
     }
 
     private scrollToForm() {
-        document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) - parseInt(document.getElementById('list').style.width) - 20 + 'px'
-        console.log('Scrolling to form')
-        console.log('Content left =', document.getElementById('content').style.left)
+        document.getElementById('list').style.marginLeft = -parseInt(document.getElementById('form').style.width) - 25 + 'px'
     }
 
     private isRefreshNeeded() {
@@ -162,17 +176,16 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         this.selectedRoutes.length = 0
     }
 
-    private getSummariesPadding(element: CSSStyleDeclaration) {
-        return parseInt(element.getPropertyValue('padding-left').substr(0, element.getPropertyValue('padding-left').length - 2))
-    }
-
-    private getScrollabelVisibleWidth(boxWidth: number, summariesPaddingLeft: number) {
-        return boxWidth
-        // return boxWidth - Number(document.getElementById('summaries').clientWidth) - summariesPaddingLeft * 3
+    private getSummariesWidth() {
+        return document.getElementById('summaries').clientWidth
     }
 
     private getBoxWidth() {
         return document.body.clientWidth - Number(document.getElementById('sidebar').clientWidth)
+    }
+
+    scrollBackToListFromForm() {
+        this.scrollBackToList()
     }
 
 }

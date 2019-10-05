@@ -20,18 +20,6 @@
     margin-left: 1rem;
 }
 
-.navigation-icon {
-    color: var(--color-icon);
-    cursor: pointer;
-    margin-left: -2px !important;
-    margin-top: 2px !important;
-    outline: 0;
-}
-
-.navigation-icon:active {
-    transform: translateY(3px);
-}
-
 #content {
     align-content: flex-start;
     display: grid;

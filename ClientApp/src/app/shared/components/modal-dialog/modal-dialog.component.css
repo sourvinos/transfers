@@ -3,7 +3,7 @@
 }
 
 .modal-title {
-    font-size: 1.5rem
+    font-size: var(--font-size-modal-headers)
 }
 
 .modal-body {
@@ -13,6 +13,7 @@
 
 .modal-body p {
     margin-left: 1.5rem;
+    font-size: var(--font-size-modal-messages);
 }
 
 .modal-footer {

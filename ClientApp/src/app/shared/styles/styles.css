@@ -83,6 +83,26 @@ div.input i {
     position: absolute;
 }
 
+small {
+    color: var(--color-label)
+}
+
+.numeric .number {
+    text-align: right;
+}
+
+.navigation-icon {
+    color: var(--color-icon);
+    cursor: pointer;
+    margin-left: -2px !important;
+    margin-top: 2px !important;
+    outline: 0;
+}
+
+.navigation-icon:active {
+    transform: translateY(3px);
+}
+
 /* ! Wide screen */
 @media only screen and (min-width: 80.0625rem) {
 	.icon {

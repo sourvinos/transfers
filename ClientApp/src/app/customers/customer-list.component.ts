@@ -33,5 +33,4 @@ export class CustomerListComponent implements OnInit {
         this.service.refreshNeeded.subscribe(() => { this.getAllCustomers() })
     }
 
-
 }
