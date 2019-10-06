@@ -14,7 +14,6 @@
     overflow-y: hidden;
     padding: 0;
     position: relative;
-    transition: 0.2s ease-out;
     width: max-content;
     z-index: 0;
 }
@@ -38,11 +37,11 @@ input.date {
     text-align: end
 }
 
-#footer #buttons{
+#footer #buttons {
     margin-right: 1rem;
 }
 
-.search.icon{
+.search.icon {
     color: var(--color-icon);
 }
 
@@ -54,6 +53,13 @@ input.date {
 #empty {
     background-color: var(--color-background);
     display: flex;
+    flex-direction: column;
+}
+
+#empty-content {
+    align-items: center;
+    display: flex;
+    height: 100%;
     justify-content: center;
 }
 
@@ -130,21 +136,21 @@ input.date {
     width: 100%;
 }
 
-#list{
+#list {
     background-color: var(--color-background);
     display: flex;
     margin-right: 25px;
     transition: 0.2s ease-out;
 }
 
-#form{
+#form {
     background-color: var(--color-background);
 }
 
-.ui.table{
+.ui.table {
     background-color: var(--color-background);
     margin: 0 !important;
 }
-.ui.table>thead>tr:first-child>th:first-child, .ui.table>thead>tr:first-child>th:last-child{
+.ui.table>thead>tr:first-child>th:first-child, .ui.table>thead>tr:first-child>th:last-child {
     border-radius: 0 !important;
 }

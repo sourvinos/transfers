@@ -23,7 +23,7 @@ export class RootComponent {
             var nextTab = +(event.target.getAttribute('tabindex')) + 1
             for (var i = elements.length; i--;) {
                 if (nextTab > elements.length) nextTab = 1
-                if (+(elements[i].getAttribute('tabindex')) == nextTab) {
+                if (+(elements[i].getAttribute('tabindex')) == nextTab && !elements[i].getAttribute('disabled')) {
                     elements[i].focus()
                     elements[i].select()
                     break

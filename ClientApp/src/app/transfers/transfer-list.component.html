@@ -7,7 +7,7 @@
     <div id="search-box">
         <form [formGroup]="form" class="ui form" autocomplete="off">
             <div class="field">
-                <input type="text" class="date" formControlName="dateIn" [appInputFormat]="'date'">
+                <input type="text" class="date" formControlName="dateIn" [appInputFormat]="'date'" id="dateIn">
                 <button class="ui button primary" id="go" (click)="getTransfers()">Search</button>
             </div>
         </form>
@@ -17,6 +17,14 @@
 <div id="content">
     <div id="empty">
         <div class="empty ui divider"></div>
+        <div id="empty-content">
+            <div *ngIf="queryResult.persons == null; then thenBlock else elseBlock"></div>
+            <ng-template #thenBlock></ng-template>
+            <ng-template #elseBlock>
+                <i class="huge search icon"></i>
+                <h2>Nothing found!</h2>
+            </ng-template>
+        </div>
     </div>
     <div id="summaries">
         <div class="summaryBlock">

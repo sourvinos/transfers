@@ -41,14 +41,21 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         this.setElementsWidths()
         this.scrollToEmpty()
+        document.getElementById("dateIn").focus()
     }
 
     getTransfers() {
-        this.getFilteredTransfers()
-        this.selectGroupItems()
-        this.isRefreshNeeded()
         this.updateLocalStorageWithDate()
-        this.scrollToList()
+        this.getFilteredTransfers().then(() => {
+            this.selectGroupItems()
+            this.scrollToList()
+            this.isRefreshNeeded()
+        })
+    }
+
+    private async getFilteredTransfers() {
+        await this.service.getTransfers(localStorage.getItem('date')).then(data => this.queryResult = this.queryResultFiltered = data)
+        console.log(this.queryResult)
     }
 
     populateForm(transfer: ITransfer) {
@@ -113,11 +120,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         this.form.setValue({ 'dateIn': moment(localStorage.getItem('date')).format('DD/MM/YYYY') })
     }
 
-    private getFilteredTransfers() {
-        this.service.getTransfers(localStorage.getItem('date')).subscribe((data: any) => {
-            this.queryResult = this.queryResultFiltered = data
-        })
-    }
 
     private setElementsWidths() {
         document.getElementById('header').style.width = this.getBoxWidth() + 'px'
@@ -132,7 +134,10 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     private scrollToList() {
-        document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) + 'px'
+        if (this.queryResult.persons > 0)
+            document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) + 'px'
+        else
+            this.scrollToEmpty()
     }
 
     private scrollBackToList() {
@@ -142,10 +147,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     newRecord() {
-        this.isNewRecord = true
         this.isFormVisible = true
-        this.scrollToForm()
-        this.transferForm.clearFields()
         this.transferForm.newRecord()
     }
 

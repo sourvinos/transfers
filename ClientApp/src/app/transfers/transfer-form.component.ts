@@ -31,6 +31,8 @@ export class TransferFormComponent implements OnInit {
     drivers: any
     ports: any
 
+    isFormVisible: boolean = false
+    isNewRecord: boolean = false
     isSaving: boolean = false
     modalRef: BsModalRef
 
@@ -53,27 +55,10 @@ export class TransferFormComponent implements OnInit {
     constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService) { }
 
     ngOnInit() {
-        let sources = []
-        sources.push(this.destinationService.getDestinations())
-        sources.push(this.customerService.getCustomers())
-        sources.push(this.pickupPointService.getAllPickupPoints())
-        sources.push(this.driverService.getDrivers())
-        sources.push(this.portService.getPorts())
-        return forkJoin(sources).subscribe(
-            result => {
-                this.destinations = result[0]
-                this.customers = result[1]
-                this.pickupPoints = result[2]
-                this.drivers = result[3]
-                this.ports = result[4]
-            },
-            error => {
-                if (error.status == 404) {
-                    this.router.navigate(['/error'])
-                }
-            }
-        )
+        this.populateDropDowns()
+        this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
     }
+
 
     populateFields(transfer: ITransfer) {
         this.form.setValue({
@@ -125,6 +110,9 @@ export class TransferFormComponent implements OnInit {
 
     newRecord() {
         this.clearFields()
+        this.scrollToForm()
+        this.setRecordStatus(true)
+        this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
     }
 
     saveRecord() {
@@ -284,8 +272,48 @@ export class TransferFormComponent implements OnInit {
 
     // #endregion Update dropdowns with values
 
-    scrollBackToList() {
+    private populateDropDowns() {
+        let sources = []
+        sources.push(this.destinationService.getDestinations())
+        sources.push(this.customerService.getCustomers())
+        sources.push(this.pickupPointService.getAllPickupPoints())
+        sources.push(this.driverService.getDrivers())
+        sources.push(this.portService.getPorts())
+        return forkJoin(sources).subscribe(
+            result => {
+                this.destinations = result[0]
+                this.customers = result[1]
+                this.pickupPoints = result[2]
+                this.drivers = result[3]
+                this.ports = result[4]
+            },
+            error => {
+                if (error.status == 404) {
+                    this.router.navigate(['/error'])
+                }
+            }
+        )
+    }
+
+    private scrollBackToList() {
         this.eventEmitter.emit()
+    }
+
+    private disableFields(fields: string[]) {
+        Utils.disableFields(fields)
+    }
+
+    private enableFields(fields: string[]) {
+        Utils.enableFields(fields)
+    }
+
+    private scrollToForm() {
+        document.getElementById('list').style.marginLeft = -parseInt(document.getElementById('form').style.width) - 25 + 'px'
+        this.isFormVisible = true
+    }
+
+    private setRecordStatus(status: boolean) {
+        this.isNewRecord = status
     }
 
 }

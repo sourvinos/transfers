@@ -23,4 +23,16 @@ export class Utils {
 		return subject.asObservable()
 	}
 
+	public static disableFields(fields: string[]) {
+		fields.forEach((element: string) => {
+			document.getElementById(element).setAttribute('disabled', 'true')
+		});
+	}
+
+	public static enableFields(fields: string[]) {
+		fields.forEach((element: string) => {
+			document.getElementById(element).removeAttribute('disabled')
+		});
+	}
+
 }

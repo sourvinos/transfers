@@ -17,6 +17,7 @@
                 <div class="input">
                     <input type="text" list="destinationList" formControlName="destinationDescription" (change)="updateDestinationId(destinations, $event)" tabindex="1" id="destination">
                     <!-- <i *ngIf="(destinationId.invalid && destinationDescription.invalid) || (!arrayLookup(destinations, destinationDescription))" class="red exclamation triangle icon"></i> -->
+                    <!-- disabled="!isFormVisible" -->
                     <datalist id="destinationList">
                         <select>
                             <option *ngFor="let destination of destinations" [value]="destination.description"></option>
