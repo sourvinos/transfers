@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { forkJoin, Observable, Subject } from 'rxjs';
+
+import { ITransfer } from '../models/transfer';
 import { CustomerService } from '../services/customer.service';
 import { DestinationService } from '../services/destination.service';
 import { DriverService } from '../services/driver.service';
@@ -12,7 +14,6 @@ import { PortService } from '../services/port.service';
 import { TransferService } from '../services/transfer.service';
 import { Utils } from '../shared/classes/utils';
 import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component';
-import { ITransfer } from '../models/transfer';
 
 @Component({
     selector: 'app-transfer-form',
@@ -22,7 +23,6 @@ import { ITransfer } from '../models/transfer';
 
 export class TransferFormComponent implements OnInit {
 
-    @Input() set transfer(transfer: ITransfer) { if (transfer) this.populateFields(transfer) }
     @Output() eventEmitter = new EventEmitter()
 
     destinations: any
@@ -31,7 +31,6 @@ export class TransferFormComponent implements OnInit {
     drivers: any
     ports: any
 
-    isFormVisible: boolean = false
     isNewRecord: boolean = false
     isSaving: boolean = false
     modalRef: BsModalRef
@@ -52,13 +51,14 @@ export class TransferFormComponent implements OnInit {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
+    isFormDirty: boolean = this.form.dirty
+
     constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService) { }
 
     ngOnInit() {
         this.populateDropDowns()
         this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
     }
-
 
     populateFields(transfer: ITransfer) {
         this.form.setValue({
@@ -110,9 +110,18 @@ export class TransferFormComponent implements OnInit {
 
     newRecord() {
         this.clearFields()
-        this.scrollToForm()
         this.setRecordStatus(true)
         this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
+        this.scrollToForm()
+        this.setFocus('destination')
+    }
+
+    editRecord(transfer: ITransfer) {
+        this.populateFields(transfer)
+        this.setRecordStatus(false)
+        this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
+        this.scrollToForm()
+        this.setFocus('destination')
     }
 
     saveRecord() {
@@ -295,10 +304,6 @@ export class TransferFormComponent implements OnInit {
         )
     }
 
-    private scrollBackToList() {
-        this.eventEmitter.emit()
-    }
-
     private disableFields(fields: string[]) {
         Utils.disableFields(fields)
     }
@@ -307,13 +312,20 @@ export class TransferFormComponent implements OnInit {
         Utils.enableFields(fields)
     }
 
+    private scrollBackToList() {
+        this.eventEmitter.emit()
+    }
+
     private scrollToForm() {
         document.getElementById('list').style.marginLeft = -parseInt(document.getElementById('form').style.width) - 25 + 'px'
-        this.isFormVisible = true
     }
 
     private setRecordStatus(status: boolean) {
         this.isNewRecord = status
+    }
+
+    private setFocus(element: string) {
+        Utils.setFocus(element)
     }
 
 }

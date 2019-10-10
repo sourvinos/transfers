@@ -1,10 +1,11 @@
-import * as moment from 'moment'
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
+import * as moment from 'moment';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 
-import { TransferService } from '../services/transfer.service'
-import { ITransfer } from './../models/transfer'
-import { TransferFormComponent } from './transfer-form.component'
+import { TransferService } from '../services/transfer.service';
+import { ITransfer } from './../models/transfer';
+import { Utils } from './../shared/classes/utils';
+import { TransferFormComponent } from './transfer-form.component';
 
 @Component({
     selector: 'app-transfer-list',
@@ -16,8 +17,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     queryResult: any = {}
     queryResultFiltered: any = {}
-
-    selectedTransfer: ITransfer
 
     selectedDestinations: string[] = []
     selectedCustomers: string[] = []
@@ -41,7 +40,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         this.setElementsWidths()
         this.scrollToEmpty()
-        document.getElementById("dateIn").focus()
+        this.setFocus('dateIn')
     }
 
     getTransfers() {
@@ -55,14 +54,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     private async getFilteredTransfers() {
         await this.service.getTransfers(localStorage.getItem('date')).then(data => this.queryResult = this.queryResultFiltered = data)
-        console.log(this.queryResult)
-    }
-
-    populateForm(transfer: ITransfer) {
-        this.scrollToForm()
-        this.selectedTransfer = transfer
-        this.isNewRecord = false
-        this.isFormVisible = true
     }
 
     toggleItem(item: any, lookupArray: string) {
@@ -141,14 +132,18 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     private scrollBackToList() {
-        this.isNewRecord = false
-        this.isFormVisible = false
         document.getElementById('list').style.marginLeft = 0 + 'px'
+        this.isFormVisible = false
     }
 
     newRecord() {
         this.isFormVisible = true
         this.transferForm.newRecord()
+    }
+
+    editRecord(transfer: ITransfer) {
+        this.isFormVisible = true
+        this.transferForm.editRecord(transfer)
     }
 
     saveRecord() {
@@ -158,10 +153,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     deleteRecord() {
         this.transferForm.deleteRecord()
-    }
-
-    private scrollToForm() {
-        document.getElementById('list').style.marginLeft = -parseInt(document.getElementById('form').style.width) - 25 + 'px'
     }
 
     private isRefreshNeeded() {
@@ -186,8 +177,12 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         return document.body.clientWidth - Number(document.getElementById('sidebar').clientWidth)
     }
 
-    scrollBackToListFromForm() {
+    public scrollBackToListFromForm() {
         this.scrollBackToList()
+    }
+
+    private setFocus(element: string) {
+        Utils.setFocus(element)
     }
 
 }

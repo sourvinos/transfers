@@ -35,4 +35,11 @@ export class Utils {
 		});
 	}
 
+	public static setFocus(element: string) {
+		setTimeout(() => {
+			document.getElementById(element).focus()
+			document.execCommand('selectAll')
+		}, 500);
+	}
+
 }

@@ -22,7 +22,7 @@
             <ng-template #thenBlock></ng-template>
             <ng-template #elseBlock>
                 <i class="huge search icon"></i>
-                <h2>Nothing found!</h2>
+                <h2>We found nothing for this day!</h2>
             </ng-template>
         </div>
     </div>
@@ -75,7 +75,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let transfer of queryResultFiltered.transfers" (click)="populateForm(transfer)">
+                    <tr *ngFor="let transfer of queryResultFiltered.transfers" (click)="editRecord(transfer)">
                         <td class="center aligned">{{ transfer.destination.abbreviation }}</td>
                         <td class="center aligned">{{ transfer.pickupPoint.route.abbreviation }}</td>
                         <td class="left aligned">{{ transfer.customer.description }}</td>
@@ -91,7 +91,7 @@
         </div>
     </div>
     <div id="form">
-        <app-transfer-form (eventEmitter)="scrollBackToListFromForm($event)" [transfer]="selectedTransfer"></app-transfer-form>
+        <app-transfer-form (eventEmitter)="scrollBackToListFromForm($event)"></app-transfer-form>
     </div>
 </div>
 
