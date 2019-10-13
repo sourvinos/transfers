@@ -10,7 +10,7 @@ import { PickupPointFormComponent } from '../pickupPoints/pickupPoint-form.compo
 import { PortFormComponent } from '../ports/port-form.component'; import { PortListComponent } from '../ports/port-list.component';
 import { RouteFormComponent } from '../routes/route-form.component'; import { RouteListComponent } from '../routes/route-list.component';
 import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'; import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component';
-import { TransferFormComponent } from '../transfers/transfer-form.component'; import { TransferListComponent } from '../transfers/transfer-list.component'
+import { TransfersComponent } from '../transfers/transfers-component'; import { TransferStartComponent } from '../transfers/transfer-start.component'; import { TransferListComponent } from '../transfers/transfer-list.component'; import { TransferFormComponent } from '../transfers/transfer-form.component'
 import { VatStateFormComponent } from '../vatStates/vatState-form.component'; import { VatStateListComponent } from '../vatStates/vatState-list.component';
 import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component';
 
@@ -26,7 +26,13 @@ const appRoutes: Routes = [
 	{ path: 'ports', component: PortListComponent }, { path: 'ports/new', component: PortFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'ports/:id', component: PortFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'routes', component: RouteListComponent }, { path: 'routes/new', component: RouteFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'routes/:id', component: RouteFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'taxOffices', component: TaxOfficeListComponent }, { path: 'taxOffices/new', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'taxOffices/:id', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] },
-	{ path: 'transfers', component: TransferListComponent }, { path: 'transfers/new', component: TransferFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'transfers/:id', component: TransferFormComponent, canDeactivate: [CanDeactivateGuard] },
+	{
+		path: 'transfers', component: TransfersComponent, children: [
+			{ path: '', component: TransferListComponent },
+			{ path: 'new', component: TransferFormComponent, canDeactivate: [CanDeactivateGuard] },
+			{ path: ':id', component: TransferFormComponent, canDeactivate: [CanDeactivateGuard] }
+		]
+	},
 	{ path: 'vatStates', component: VatStateListComponent }, { path: 'vatStates/new', component: VatStateFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'vatStates/:id', component: VatStateFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'pageNotFound', component: PageNotFoundComponent }
 ];

@@ -1,6 +1,9 @@
 :host {
     display: grid;
-    grid-template-areas: "header" "content" "footer";
+    grid-template-areas: 
+        "header"
+        "content"
+        "footer";
     grid-template-rows: max-content auto max-content;
     height: 100vh;
 }

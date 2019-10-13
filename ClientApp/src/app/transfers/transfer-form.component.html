@@ -2,7 +2,7 @@
     <!-- <h2>Transfer</h2> -->
     <!-- </div> -->
     <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
-    <small>{{ isFromDirty }}</small>
+    <small>{{ form.dirty}}</small>
     <!-- <label>{{ form.value.id }}</label> -->
     <!-- <label>{{ form.value.userName }}</label> -->
     <!-- <label>{{ form.value.dateIn }}</label> -->
@@ -97,4 +97,13 @@
             </div>
         </div>
     </form>
+    <div id="footer-form">
+        <div class="ui divider"></div>
+        <div id="buttons">
+            <button class="ui button primary" (click)="onCancel()">Cancel</button>
+            <button class="ui button primary" id="new" (click)="newRecord()">New</button>
+            <button class="ui button delete" (click)="deleteRecord()">Delete</button>
+            <button class="ui button primary" (click)="saveRecord()">Save</button>
+        </div>
+    </div>
 </div>

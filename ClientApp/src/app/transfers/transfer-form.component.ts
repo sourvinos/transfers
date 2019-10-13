@@ -1,29 +1,31 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
-import { forkJoin, Observable, Subject } from 'rxjs';
+import { Component, OnInit } from '@angular/core'
+import { FormBuilder, FormControl, Validators } from '@angular/forms'
+import { ActivatedRoute, Router, Params } from '@angular/router'
+import { BsModalRef, BsModalService } from 'ngx-bootstrap'
+import { forkJoin, Subject } from 'rxjs'
 
-import { ITransfer } from '../models/transfer';
-import { CustomerService } from '../services/customer.service';
-import { DestinationService } from '../services/destination.service';
-import { DriverService } from '../services/driver.service';
-import { HelperService } from '../services/helper.service';
-import { PickupPointService } from '../services/pickupPoint.service';
-import { PortService } from '../services/port.service';
-import { TransferService } from '../services/transfer.service';
-import { Utils } from '../shared/classes/utils';
-import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component';
+import { ITransfer } from '../models/transfer'
+import { CustomerService } from '../services/customer.service'
+import { DestinationService } from '../services/destination.service'
+import { DriverService } from '../services/driver.service'
+import { HelperService } from '../services/helper.service'
+import { PickupPointService } from '../services/pickupPoint.service'
+import { PortService } from '../services/port.service'
+import { TransferService } from '../services/transfer.service'
+import { Utils } from '../shared/classes/utils'
+import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
+import { ComponentInteractionService } from '../shared/services/component-interaction.service'
 
 @Component({
     selector: 'app-transfer-form',
     templateUrl: './transfer-form.component.html',
-    styleUrls: ['../shared/styles/forms.css', './transfer-form.component.css']
+    styleUrls: ['./transfer-form.component.css']
 })
 
 export class TransferFormComponent implements OnInit {
 
-    @Output() eventEmitter = new EventEmitter()
+    id: number
+    editMode: boolean = false
 
     destinations: any
     customers: any
@@ -33,6 +35,7 @@ export class TransferFormComponent implements OnInit {
 
     isNewRecord: boolean = false
     isSaving: boolean = false
+    isFormVisible: boolean = false
     modalRef: BsModalRef
 
     form = this.formBuilder.group({
@@ -53,11 +56,28 @@ export class TransferFormComponent implements OnInit {
 
     isFormDirty: boolean = this.form.dirty
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService) { }
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private componentInteractionService: ComponentInteractionService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService) { }
 
     ngOnInit() {
         this.populateDropDowns()
         this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
+        this.route.params.subscribe((params: Params) => {
+            if (params['id'] != null) {
+                this.id = +params['id']
+                this.editMode = params['id'] != null
+                this.transferService.getTransfer(this.id).subscribe(result => {
+                    this.editRecord(result)
+                })
+            } else {
+                this.newRecord()
+            }
+        })
+    }
+
+    getTransfer(id: number) {
+        this.transferService.getTransfer(id).subscribe(result => {
+            this.editRecord(result)
+        })
     }
 
     populateFields(transfer: ITransfer) {
@@ -120,23 +140,23 @@ export class TransferFormComponent implements OnInit {
         this.populateFields(transfer)
         this.setRecordStatus(false)
         this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
-        this.scrollToForm()
+        // this.scrollToForm()
         this.setFocus('destination')
     }
 
     saveRecord() {
         if (!this.form.valid) return
         this.isSaving = true
+        this.componentInteractionService.isDataChanged(true)
         if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
-                console.log("New record saved")
-                this.clearFields()
+                this.form.reset()
             }, error => Utils.errorLogger(error))
         }
         else {
             this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
-                console.log("Record updated")
-                this.clearFields()
+                this.form.reset()
+                this.scrollToList()
             }, error => Utils.errorLogger(error))
         }
     }
@@ -150,10 +170,13 @@ export class TransferFormComponent implements OnInit {
                 type: 'delete'
             }, animated: true
         })
-        modal.content.subject = subject
-        return subject.asObservable().subscribe(result => {
+        modal.content.subject = subject.subscribe(result => {
             if (result)
-                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => this.scrollBackToList()), (error: Response) => console.log('Record NOT deleted')
+                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
+                    this.form.reset()
+                    this.scrollToList()
+                }),
+                    (error: Response) => console.log('Record NOT deleted')
         })
     }
 
@@ -168,21 +191,24 @@ export class TransferFormComponent implements OnInit {
         return windowWidth - sidebarWidth
     }
 
-    canDeactivate(): Observable<boolean> | boolean {
-        if (!this.isSaving && this.form.dirty) {
-            this.isSaving = false
-            const subject = new Subject<boolean>();
+    canDeactivate() {
+        if (this.form.dirty) {
+            const subject = new Subject<boolean>()
             const modal = this.modalService.show(ModalDialogComponent, {
                 initialState: {
                     title: 'Confirmation',
                     message: 'If you continue, all changes in this record will be lost.',
                     type: 'question'
-                }, animated: true
-            });
-            modal.content.subject = subject;
-            return subject.asObservable();
+                }, animated: false
+            })
+            modal.content.subject = subject.subscribe(result => {
+                if (result) {
+                    this.form.reset()
+                }
+            })
+        } else {
+            this.form.reset()
         }
-        return true;
     }
 
     openErrorModal() {
@@ -312,10 +338,6 @@ export class TransferFormComponent implements OnInit {
         Utils.enableFields(fields)
     }
 
-    private scrollBackToList() {
-        this.eventEmitter.emit()
-    }
-
     private scrollToForm() {
         document.getElementById('list').style.marginLeft = -parseInt(document.getElementById('form').style.width) - 25 + 'px'
     }
@@ -326,6 +348,17 @@ export class TransferFormComponent implements OnInit {
 
     private setFocus(element: string) {
         Utils.setFocus(element)
+    }
+
+    onCancel() {
+        this.canDeactivate()
+
+        // document.getElementById('list').style.marginLeft = 0 + 'px'
+        // this.router.navigate(['../'], { relativeTo: this.route })
+    }
+
+    private scrollToList() {
+        document.getElementById('list').style.marginLeft = 0 + 'px'
     }
 
 }

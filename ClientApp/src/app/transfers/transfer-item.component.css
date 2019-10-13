@@ -1,0 +1,12 @@
+.ui.table {
+    background-color: var(--color-background);
+    margin: 0 !important;
+}
+
+.ui.table>thead>tr:first-child>th:first-child, .ui.table>thead>tr:first-child>th:last-child {
+    border-radius: 0 !important;
+}
+
+tr:hover {
+    cursor: pointer;
+}

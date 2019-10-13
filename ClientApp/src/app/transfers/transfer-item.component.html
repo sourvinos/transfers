@@ -1,0 +1,25 @@
+<!-- Step 4/5 -->
+<!-- <p>Transfer item works</p> -->
+<a [routerLink]="[id]">
+    <tr>
+        <td>{{ transfer.destination.abbreviation }}</td>
+        <td>{{ transfer.pickupPoint.route.abbreviation }}</td>
+        <td>{{ transfer.customer.description }}</td>
+        <td>{{ transfer.pickupPoint.exactPoint }}</td>
+        <td>{{ transfer.pickupPoint.time }}</td>
+        <td>{{ transfer.adults }}</td>
+        <td>{{ transfer.kids }}</td>
+        <td>{{ transfer.free }}</td>
+        <td>{{ transfer.totalPersons }}</td>
+
+        <!-- <td class="center aligned">{{ transfer.destination.abbreviation }}</td>
+        <td class="center aligned">{{ transfer.pickupPoint.route.abbreviation }}</td>
+        <td class="left aligned">{{ transfer.customer.description }}</td>
+        <td class="left aligned">{{ transfer.pickupPoint.exactPoint }}</td>
+        <td class="center aligned">{{ transfer.pickupPoint.time }}</td>
+        <td class="right aligned">{{ transfer.adults }}</td>
+        <td class="right aligned">{{ transfer.kids }}</td>
+        <td class="right aligned">{{ transfer.free }}</td>
+        <td class="right aligned">{{ transfer.totalPersons }}</td> -->
+    </tr>
+</a>

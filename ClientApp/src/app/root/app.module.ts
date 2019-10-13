@@ -34,8 +34,11 @@ import { RouteFormComponent } from '../routes/route-form.component';
 import { RouteListComponent } from '../routes/route-list.component';
 import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component';
 import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component';
-import { TransferFormComponent } from '../transfers/transfer-form.component';
+import { TransfersComponent } from '../transfers/transfers-component';
+import { TransferStartComponent } from '../transfers/transfer-start.component';
 import { TransferListComponent } from '../transfers/transfer-list.component';
+import { TransferItemComponent } from './../transfers/transfer-item.component';
+import { TransferFormComponent } from '../transfers/transfer-form.component';
 import { VatStateFormComponent } from '../vatStates/vatState-form.component';
 import { VatStateListComponent } from '../vatStates/vatState-list.component';
 // Directives
@@ -60,7 +63,7 @@ import { InputFormatDirective } from '../directives/input-format.directive';
         PortFormComponent, PortListComponent,
         RouteFormComponent, RouteListComponent,
         TaxOfficeFormComponent, TaxOfficeListComponent,
-        TransferFormComponent, TransferListComponent,
+        TransfersComponent, TransferStartComponent, TransferListComponent, TransferItemComponent, TransferFormComponent,
         VatStateFormComponent, VatStateListComponent,
         // Directives
         InputFormatDirective
