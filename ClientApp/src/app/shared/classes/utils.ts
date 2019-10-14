@@ -36,6 +36,7 @@ export class Utils {
 	}
 
 	public static setFocus(element: string) {
+		console.log(element)
 		setTimeout(() => {
 			document.getElementById(element).focus()
 			document.execCommand('selectAll')

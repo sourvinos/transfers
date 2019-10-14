@@ -9,7 +9,11 @@ export class ComponentInteractionService {
 
     changeEmitted = this.emitChangeSource.asObservable();
 
-    isDataChanged(change: any) {
+    emitChange(change: any) {
+        this.emitChangeSource.next(change);
+    }
+
+    emitFormStatus(change: any) {
         this.emitChangeSource.next(change);
     }
 

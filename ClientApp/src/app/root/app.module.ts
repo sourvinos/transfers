@@ -1,3 +1,4 @@
+import { TransferTestComponent } from './../transfers/transfer-test.component';
 // Base
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -63,7 +64,7 @@ import { InputFormatDirective } from '../directives/input-format.directive';
         PortFormComponent, PortListComponent,
         RouteFormComponent, RouteListComponent,
         TaxOfficeFormComponent, TaxOfficeListComponent,
-        TransfersComponent, TransferStartComponent, TransferListComponent, TransferItemComponent, TransferFormComponent,
+        TransfersComponent, TransferStartComponent, TransferListComponent, TransferItemComponent, TransferFormComponent, TransferTestComponent,
         VatStateFormComponent, VatStateListComponent,
         // Directives
         InputFormatDirective

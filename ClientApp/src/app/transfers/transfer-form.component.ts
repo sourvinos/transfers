@@ -54,30 +54,11 @@ export class TransferFormComponent implements OnInit {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    isFormDirty: boolean = this.form.dirty
-
     constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private componentInteractionService: ComponentInteractionService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService) { }
 
     ngOnInit() {
         this.populateDropDowns()
-        this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
-        this.route.params.subscribe((params: Params) => {
-            if (params['id'] != null) {
-                this.id = +params['id']
-                this.editMode = params['id'] != null
-                this.transferService.getTransfer(this.id).subscribe(result => {
-                    this.editRecord(result)
-                })
-            } else {
-                this.newRecord()
-            }
-        })
-    }
-
-    getTransfer(id: number) {
-        this.transferService.getTransfer(id).subscribe(result => {
-            this.editRecord(result)
-        })
+        this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free'])
     }
 
     populateFields(transfer: ITransfer) {
@@ -128,26 +109,37 @@ export class TransferFormComponent implements OnInit {
         this.form.patchValue({ totalPersons: parseInt(this.form.value.adults) + parseInt(this.form.value.kids) + parseInt(this.form.value.free) })
     }
 
+    getTransfer(id: number) {
+        this.transferService.getTransfer(id).subscribe(result => {
+            this.scrollToForm()
+            this.editRecord(result)
+            // this.componentInteractionService.emitChange(true)
+            // this.isFormVisible = true
+        })
+    }
+
     newRecord() {
         this.clearFields()
         this.setRecordStatus(true)
-        this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
+        this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free'])
         this.scrollToForm()
-        this.setFocus('destination')
+        // this.componentInteractionService.emitChange(true)
+        // this.isFormVisible = true
+        // this.setFocus('destination')
     }
 
     editRecord(transfer: ITransfer) {
         this.populateFields(transfer)
         this.setRecordStatus(false)
-        this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
-        // this.scrollToForm()
-        this.setFocus('destination')
+        this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free'])
+        this.scrollToForm()
+        // this.setFocus('destination')
     }
 
     saveRecord() {
         if (!this.form.valid) return
         this.isSaving = true
-        this.componentInteractionService.isDataChanged(true)
+        this.componentInteractionService.emitChange(true)
         if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
                 this.form.reset()
@@ -155,7 +147,7 @@ export class TransferFormComponent implements OnInit {
         }
         else {
             this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
-                this.form.reset()
+                // this.form.reset()
                 this.scrollToList()
             }, error => Utils.errorLogger(error))
         }
@@ -203,12 +195,17 @@ export class TransferFormComponent implements OnInit {
             })
             modal.content.subject = subject.subscribe(result => {
                 if (result) {
-                    this.form.reset()
+                    this.componentInteractionService.emitChange(false)
+                    // this.isFormVisible = false
+                    document.getElementById('list').style.marginLeft = 0 + 'px'
                 }
             })
         } else {
-            this.form.reset()
+            //this.isFormVisible = false
+            this.componentInteractionService.emitChange(false)
+            document.getElementById('list').style.marginLeft = 0 + 'px'
         }
+
     }
 
     openErrorModal() {
@@ -339,6 +336,7 @@ export class TransferFormComponent implements OnInit {
     }
 
     private scrollToForm() {
+        this.componentInteractionService.emitFormStatus(true)
         document.getElementById('list').style.marginLeft = -parseInt(document.getElementById('form').style.width) - 25 + 'px'
     }
 
@@ -350,14 +348,8 @@ export class TransferFormComponent implements OnInit {
         Utils.setFocus(element)
     }
 
-    onCancel() {
-        this.canDeactivate()
-
-        // document.getElementById('list').style.marginLeft = 0 + 'px'
-        // this.router.navigate(['../'], { relativeTo: this.route })
-    }
-
     private scrollToList() {
+        this.componentInteractionService.emitChange(false)
         document.getElementById('list').style.marginLeft = 0 + 'px'
     }
 

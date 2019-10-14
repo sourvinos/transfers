@@ -1,11 +1,12 @@
-import * as moment from 'moment';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
+
+import { ComponentInteractionService } from '../shared/services/component-interaction.service';
+import { TransferFormComponent } from './transfer-form.component';
 import { TransferService } from '../services/transfer.service';
 import { Utils } from './../shared/classes/utils';
-import { ComponentInteractionService } from '../shared/services/component-interaction.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { TransferFormComponent } from './transfer-form.component';
 
 @Component({
     selector: 'app-transfer-list',
@@ -32,19 +33,21 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     @ViewChild(TransferFormComponent) private transferForm: TransferFormComponent
 
     constructor(private service: TransferService, private componentInteractionService: ComponentInteractionService, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder) {
-        this.componentInteractionService.changeEmitted.subscribe(() => {
+        this.componentInteractionService.changeEmitted.subscribe((result) => {
             this.getTransfers()
-        });
+            this.isFormVisible = result
+        })
     }
 
     ngOnInit() {
+        this.isFormVisible = false
         this.readDateFromLocalStorage()
     }
 
     ngAfterViewInit(): void {
         this.setElementsWidths()
         this.scrollToEmpty()
-        this.setFocus('dateIn')
+        // this.setFocus('dateIn')
     }
 
     getTransfers() {
@@ -61,7 +64,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     private async getFilteredTransfers() {
-        await this.service.getTransfers(localStorage.getItem('date')).then(data => { console.log(data); this.queryResult = this.queryResultFiltered = data })
+        await this.service.getTransfers(localStorage.getItem('date')).then(data => { this.queryResult = this.queryResultFiltered = data })
     }
 
     toggleItem(item: any, lookupArray: string) {
@@ -122,7 +125,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     private setElementsWidths() {
         document.getElementById('header').style.width = this.getBoxWidth() + 'px'
         document.getElementById('empty').style.width = this.getBoxWidth() + 'px'
-        // document.getElementById('list').style.width = this.getBoxWidth() - this.getSummariesWidth() - 25 + 'px'
+        document.getElementById('list').style.width = this.getBoxWidth() - this.getSummariesWidth() - 25 + 'px'
         document.getElementById('form').style.width = this.getBoxWidth() - this.getSummariesWidth() - 25 + 'px'
     }
 
@@ -138,8 +141,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     newRecord() {
-        this.isFormVisible = true
-        this.router.navigate(['new'], { relativeTo: this.route })
+        this.transferForm.newRecord()
     }
 
     private isRefreshNeeded() {
@@ -161,11 +163,15 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     private getBoxWidth() {
-        return document.body.clientWidth - Number(document.getElementById('sidebar').clientWidth) - 1000
+        return document.body.clientWidth - Number(document.getElementById('sidebar').clientWidth)
     }
 
     private setFocus(element: string) {
         Utils.setFocus(element)
+    }
+
+    goBack() {
+        this.transferForm.canDeactivate()
     }
 
 }

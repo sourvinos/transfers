@@ -4,7 +4,7 @@
     grid-template-areas: "userInfo" "companyLogo" "image" "menu" "copyright";
     grid-template-rows: min-content min-content min-content auto min-content;
     height: 100vh;
-    overflow-x: hidden;
+    overflow: hidden;
     position: sticky;
     transition: 0.7s;
     z-index: 1;

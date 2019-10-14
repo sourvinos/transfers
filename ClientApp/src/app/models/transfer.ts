@@ -1,6 +1,6 @@
 export interface ITransfer {
-    id: number;
-    dateIn: string;
+    id: number
+    dateIn: string
     customer: {
         id: number
         description: string
@@ -26,10 +26,10 @@ export interface ITransfer {
         id: number,
         description: string
     },
-    adults: number;
-    kids: number;
-    free: number;
-    totalPersons: number;
-    remarks: string;
+    adults: number
+    kids: number
+    free: number
+    totalPersons: number
+    remarks: string
     userName: string
 }

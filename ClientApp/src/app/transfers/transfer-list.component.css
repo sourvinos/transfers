@@ -2,8 +2,28 @@
     display: grid;
 }
 
-#search-box {
+#header {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    grid-template-areas: 
+        "title searchbox"
+        "divider divider";
     margin: 0;
+    padding: 2rem 2rem 0 2rem;
+}
+
+#title {
+    grid-area: title;
+}
+
+#search-box {
+    grid-area: searchbox;
+    margin: 0;
+}
+
+.ui.divider{
+    grid-area: divider;
 }
 
 #content {
@@ -13,7 +33,7 @@
     grid-auto-rows: 100%;
     overflow-x: hidden;
     overflow-y: hidden;
-    padding: 0 0 2rem 0;
+    padding: 0;
     position: relative;
     width: max-content;
     z-index: 0;
@@ -27,20 +47,9 @@ input.date {
     border-left-color: var(--color-summary-block-border-active) !important;
 }
 
-#header {
-    margin: 0;
-    padding: 2rem;
-}
-
-#footer-empty {
-    margin: 0;
-    padding: 0 2rem 2.6rem 2rem;
-    text-align: end
-}
-
 #footer-list {
     margin: 0;
-    padding: 0 ;
+    padding: 0 0.24rem 2rem 0;
     text-align: end
 }
 
@@ -107,6 +116,10 @@ input.date {
     margin-bottom: 1rem;
 }
 
+.summaryBlock header.total{
+    font-family: var(--font-family-summary-block-header-total);
+}
+
 .summaryBlock .item {
     border-left: 0.3rem solid var(--color-summary-block-border-inactive);
     color: var(--color-summary-block-item);
@@ -116,7 +129,7 @@ input.date {
     justify-content: space-between;
     line-height: 1.5rem;
     margin-bottom: 0.2rem;
-    padding: 0 0.5rem;
+    padding-left: 0.5rem;
 }
 
 .summaryBlock .item:hover {
@@ -134,6 +147,8 @@ input.date {
 .summaryBlock .item .total {
     align-items: flex-end;
     display: flex;
+    font-family: var(--font-family-summary-block-header-total);
+    font-size: var(--font-size-summary-block-item-total);
 }
 
 #scrollable {
@@ -154,14 +169,8 @@ input.date {
 }
 
 #form {
-    background-color: var(--color-background);
-    display: grid;
-    grid-template-areas:
-        "router-outlet"
-        "list"
-        "footer";
-    grid-template-rows: min-content auto min-content;
-}
+    background-color:var(--color-background);
+ }
 
 .ui.table {
     background-color: var(--color-background);

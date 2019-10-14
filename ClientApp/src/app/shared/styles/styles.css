@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Anton&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Play&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Economica&display=swap');
 
 @import "variables.css";
 @import "headers.css";
@@ -41,6 +42,7 @@ body, h1, h2, h3 {
 
 #loader {
     align-items: center;
+    background-color: #373F46;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -49,6 +51,7 @@ body, h1, h2, h3 {
 
 #loader p {
     margin-top: 0.5rem;
+    color: #ffffff;
 }
 
 .modal-open .modal {

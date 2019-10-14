@@ -1,0 +1,17 @@
+#content{
+    /* background-color: aquamarine; */
+}
+
+#footer-form {
+    margin: 0;
+    padding: 0 ;
+    text-align: end
+}
+
+#footer-form #buttons {
+    margin-right: 1rem;
+}
+
+.ui.divider {
+    margin-bottom: 2rem;
+}

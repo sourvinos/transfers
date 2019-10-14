@@ -17,6 +17,7 @@
     --font-size-modal-messages: 1.1rem;
     --font-size-summary-block-header: 1.6rem;
     --font-size-summary-block-item: 1rem;
+    --font-size-summary-block-item-total: 1.2rem;
     --font-size-user-info: 1.1rem;
 }
 
@@ -29,8 +30,9 @@
     --font-family-logo: "Anton";
     --font-family-logo: "Anton";
     --font-family-menu-list-items: "Tahoma";
-    --font-family-summary-block-header: "Play";
-    --font-family-summary-block-item: "Play";
+    --font-family-summary-block-header: "Lato";
+    --font-family-summary-block-header-total: "Economica";
+    --font-family-summary-block-item: "Lato";
     --font-family-table: "Play";
     --font-family-user-info: "Lato";
 }
@@ -52,7 +54,7 @@
     --color-label: #939393;
     --color-menu-active-item: #FE9F36;
     --color-menu-list-items: #939393;
-    --color-scrollbar: #57617B;
+    --color-scrollbar: #FE9F36;
     --color-sidebar-background: #1D2733;
     --color-summary-block-background: #f5f5f5;
     --color-summary-block-border-active: #FE9F36;

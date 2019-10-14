@@ -1,0 +1,30 @@
+<div id="header">
+</div>
+
+<div id="content">
+    <form [formGroup]="form" class="ui form" autocomplete="off">
+        <div class="field">
+            <label for="destination">Destination</label>
+            <div class="input">
+                <input type="text" list="destinationList" formControlName="destinationDescription" (change)="updateDestinationId(destinations, $event)" tabindex="1">
+                <!-- <input type="text" list="destinationList" formControlName="destinationDescription" (change)="updateDestinationId(destinations, $event)" tabindex="1" id="destination"> -->
+                <!-- <i *ngIf="(destinationId.invalid && destinationDescription.invalid) || (!arrayLookup(destinations, destinationDescription))" class="red exclamation triangle icon"></i> -->
+                <!-- disabled="!isFormVisible" -->
+                <datalist id="destinationList">
+                    <select>
+                        <option *ngFor="let destination of destinations" [value]="destination.description"></option>
+                    </select>
+                </datalist>
+            </div>
+        </div>
+    </form>
+    <div id="footer-form">
+        <div class="ui divider"></div>
+        <div id="buttons">
+            <button class="ui button primary" (click)="onCancel()">Cancel</button>
+            <button class="ui button primary" id="new" (click)="newRecord()">New</button>
+            <button class="ui button delete" (click)="deleteRecord()">Delete</button>
+            <button class="ui button primary" (click)="saveRecord()">Save</button>
+        </div>
+    </div>
+</div>
