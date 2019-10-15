@@ -29,12 +29,12 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     isNewRecord: boolean = false
     isFormVisible: boolean = false
+    selectedDate: string = ''
 
     @ViewChild(TransferFormComponent) private transferForm: TransferFormComponent
 
     constructor(private service: TransferService, private componentInteractionService: ComponentInteractionService, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder) {
         this.componentInteractionService.changeEmitted.subscribe((result) => {
-            this.getTransfers()
             this.isFormVisible = result
         })
     }
@@ -47,46 +47,14 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         this.setElementsWidths()
         this.scrollToEmpty()
-        // this.setFocus('dateIn')
-    }
-
-    getTransfers() {
-        this.updateLocalStorageWithDate()
-        this.getFilteredTransfers().then(() => {
-            this.selectGroupItems()
-            this.scrollToList()
-            this.isRefreshNeeded()
-        })
-    }
-
-    getTransfer(id: number) {
-        this.transferForm.getTransfer(id)
+        this.setFocus('dateIn')
     }
 
     private async getFilteredTransfers() {
-        await this.service.getTransfers(localStorage.getItem('date')).then(data => { this.queryResult = this.queryResultFiltered = data })
-    }
-
-    toggleItem(item: any, lookupArray: string) {
-        var element = document.getElementById(item.description)
-        if (element.classList.contains('activeItem')) {
-            for (var i = 0; i < eval(lookupArray).length; i++) {
-                if (eval(lookupArray)[i] === item.description) {
-                    eval(lookupArray).splice(i, 1)
-                    i--
-                    element.classList.remove('activeItem')
-                    break
-                }
-            }
-        } else {
-            element.classList.add('activeItem')
-            eval(lookupArray).push(item.description)
-        }
-        this.filterByCriteria()
-    }
-
-    queryIsEmpty() {
-        return this.queryResult.transfers == undefined || this.queryResult.transfers.length == 0 ? true : false
+        await this.service.getTransfers(localStorage.getItem('date')).then(data => {
+            this.queryResult = this.queryResultFiltered = data
+            this.selectedDate = this.form.value.dateIn
+        })
     }
 
     private filterByCriteria() {
@@ -140,10 +108,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
             this.scrollToEmpty()
     }
 
-    newRecord() {
-        this.transferForm.newRecord()
-    }
-
     private isRefreshNeeded() {
         this.service.refreshNeeded.subscribe(() => {
             this.getFilteredTransfers()
@@ -170,8 +134,43 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         Utils.setFocus(element)
     }
 
+    newRecord() {
+        this.transferForm.newRecord()
+    }
+
     goBack() {
         this.transferForm.canDeactivate()
+    }
+
+    getTransfers() {
+        this.updateLocalStorageWithDate()
+        this.getFilteredTransfers().then(() => {
+            this.selectGroupItems()
+            this.scrollToList()
+            this.isRefreshNeeded()
+        })
+    }
+
+    getTransfer(id: number) {
+        this.transferForm.getTransfer(id)
+    }
+
+    toggleItem(item: any, lookupArray: string) {
+        var element = document.getElementById(item.description)
+        if (element.classList.contains('activeItem')) {
+            for (var i = 0; i < eval(lookupArray).length; i++) {
+                if (eval(lookupArray)[i] === item.description) {
+                    eval(lookupArray).splice(i, 1)
+                    i--
+                    element.classList.remove('activeItem')
+                    break
+                }
+            }
+        } else {
+            element.classList.add('activeItem')
+            eval(lookupArray).push(item.description)
+        }
+        this.filterByCriteria()
     }
 
 }
