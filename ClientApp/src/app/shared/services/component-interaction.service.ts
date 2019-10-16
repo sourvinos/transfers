@@ -5,16 +5,12 @@ import { Subject } from 'rxjs'
 
 export class ComponentInteractionService {
 
-    private emitChangeSource = new Subject<any>();
+    private emitChangeSource = new Subject<any>()
 
-    changeEmitted = this.emitChangeSource.asObservable();
+    changeEmitted = this.emitChangeSource.asObservable()
 
-    emitChange(change: any) {
-        this.emitChangeSource.next(change);
-    }
-
-    emitFormStatus(change: any) {
-        this.emitChangeSource.next(change);
+    emitChange(change: any[]) {
+        this.emitChangeSource.next(change)
     }
 
 }

@@ -1,5 +1,5 @@
-import { IKeyValuePair } from"./keyValuePair";
+import { IKeyValuePair } from "./keyValuePair"
 
 export interface IDriver extends IKeyValuePair {
-    userName: string;
+    userName: string
 }

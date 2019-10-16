@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { get } from 'scriptjs';
+import { Component, OnInit } from '@angular/core'
 
-import { IRoute } from '../models/route';
-import { RouteService } from '../services/route.service';
-import { Utils } from '../shared/classes/utils';
+import { IRoute } from '../models/route'
+import { RouteService } from '../services/route.service'
+import { Utils } from '../shared/classes/utils'
 
 @Component({
     selector: 'route-list',
@@ -13,17 +12,17 @@ import { Utils } from '../shared/classes/utils';
 
 export class RouteListComponent implements OnInit {
 
-    coachRoutes: IRoute[];
-    filteredRoutes: IRoute[];
+    coachRoutes: IRoute[]
+    filteredRoutes: IRoute[]
 
     constructor(private service: RouteService) { }
 
     ngOnInit() {
-        this.service.getRoutes().subscribe(data => this.filteredRoutes = this.coachRoutes = data, error => Utils.errorLogger(error));
+        this.service.getRoutes().subscribe(data => this.filteredRoutes = this.coachRoutes = data, error => Utils.errorLogger(error))
     }
 
     filter(query: string) {
-        this.filteredRoutes = query ? this.coachRoutes.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.coachRoutes;
+        this.filteredRoutes = query ? this.coachRoutes.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.coachRoutes
     }
 
 }

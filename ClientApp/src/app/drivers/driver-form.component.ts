@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { DialogService } from '../services/dialog-service';
-import { DriverService } from '../services/driver.service';
-import { HelperService } from '../services/helper.service';
-import { Utils } from '../shared/classes/utils';
+import { AfterViewInit, Component, OnInit } from '@angular/core'
+import { FormBuilder, Validators } from '@angular/forms'
+import { ActivatedRoute, Router } from '@angular/router'
+import { Observable } from 'rxjs'
+import { DialogService } from '../services/dialog.service'
+import { DriverService } from '../services/driver.service'
+import { HelperService } from '../services/helper.service'
+import { Utils } from '../shared/classes/utils'
 
 @Component({
     selector: 'app-driver-form',
@@ -15,7 +15,7 @@ import { Utils } from '../shared/classes/utils';
 
 export class DriverFormComponent implements OnInit, AfterViewInit {
 
-    id: number = null;
+    id: number = null
     isSaving: boolean = false
 
     form = this.formBuilder.group({
@@ -25,7 +25,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit {
 
     constructor(private driverService: DriverService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialogService: DialogService) {
         route.params.subscribe(p => (this.id = p['id']))
-    };
+    }
 
     ngOnInit() {
         if (this.id) {
@@ -35,7 +35,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit {
                 if (error.status == 404) {
                     this.router.navigate(['/error'])
                 }
-            });
+            })
         }
     }
 
@@ -52,16 +52,16 @@ export class DriverFormComponent implements OnInit, AfterViewInit {
                 })
             },
             error => {
-                Utils.errorLogger(error);
-            });;
+                Utils.errorLogger(error)
+            })
     }
 
     get description() {
-        return this.form.get('description');
+        return this.form.get('description')
     }
 
     getRequiredFieldMessage() {
-        return 'This field is required, silly!';
+        return 'This field is required, silly!'
     }
 
     getMaxLengthFieldMessage() {
@@ -73,17 +73,17 @@ export class DriverFormComponent implements OnInit, AfterViewInit {
         this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.driverService.addDriver(this.form.value).subscribe(() => this.router.navigate(['/drivers']), error => Utils.errorLogger(error));
+            this.driverService.addDriver(this.form.value).subscribe(() => this.router.navigate(['/drivers']), error => Utils.errorLogger(error))
         }
         else {
-            this.driverService.updateDriver(this.id, this.form.value).subscribe(() => this.router.navigate(['/drivers']), error => Utils.errorLogger(error));
+            this.driverService.updateDriver(this.id, this.form.value).subscribe(() => this.router.navigate(['/drivers']), error => Utils.errorLogger(error))
         }
     }
 
     delete() {
         if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.driverService.deleteDriver(this.id).subscribe(() => this.router.navigate(['/drivers']), error => Utils.errorLogger(error));
+                this.driverService.deleteDriver(this.id).subscribe(() => this.router.navigate(['/drivers']), error => Utils.errorLogger(error))
             }
         }
     }
@@ -91,9 +91,9 @@ export class DriverFormComponent implements OnInit, AfterViewInit {
     canDeactivate(): Observable<boolean> | boolean {
         if (!this.isSaving && this.form.dirty) {
             this.isSaving = false
-            return this.dialogService.confirm('Discard changes?');
+            return this.dialogService.confirm('Discard changes?')
         }
-        return true;
+        return true
     }
 
 }

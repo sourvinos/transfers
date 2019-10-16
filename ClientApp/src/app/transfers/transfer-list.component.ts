@@ -1,12 +1,13 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import * as moment from 'moment';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core'
+import { FormBuilder, Validators } from '@angular/forms'
+import { ActivatedRoute, Router } from '@angular/router'
+import * as moment from 'moment'
 
-import { ComponentInteractionService } from '../shared/services/component-interaction.service';
-import { TransferFormComponent } from './transfer-form.component';
-import { TransferService } from '../services/transfer.service';
-import { Utils } from './../shared/classes/utils';
+import { ComponentInteractionService } from '../shared/services/component-interaction.service'
+import { TransferFormComponent } from './transfer-form.component'
+import { TransferService } from '../services/transfer.service'
+import { Utils } from './../shared/classes/utils'
+import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 
 @Component({
     selector: 'app-transfer-list',
@@ -31,20 +32,26 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     isFormVisible: boolean = false
     selectedDate: string = ''
 
+    keyboardShortcuts: KeyboardShortcuts
+    unlisten: Unlisten
+
     @ViewChild(TransferFormComponent) private transferForm: TransferFormComponent
 
-    constructor(private service: TransferService, private componentInteractionService: ComponentInteractionService, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder) {
+    constructor(private service: TransferService, private componentInteractionService: ComponentInteractionService, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, keyboardShortcuts: KeyboardShortcuts) {
+        this.keyboardShortcuts = keyboardShortcuts
+        this.unlisten = null
         this.componentInteractionService.changeEmitted.subscribe((result) => {
-            this.isFormVisible = result
+            this.isFormVisible = result[0]
         })
     }
 
     ngOnInit() {
-        this.isFormVisible = false
+        this.scrollToEmpty()
         this.readDateFromLocalStorage()
+        this.addShortcuts()
     }
 
-    ngAfterViewInit(): void {
+    ngAfterViewInit() {
         this.setElementsWidths()
         this.scrollToEmpty()
         this.setFocus('dateIn')
@@ -99,6 +106,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     private scrollToEmpty() {
         document.getElementById('content').style.left = 0 + 'px'
+        this.isFormVisible = false
     }
 
     private scrollToList() {
@@ -171,6 +179,26 @@ export class TransferListComponent implements OnInit, AfterViewInit {
             eval(lookupArray).push(item.description)
         }
         this.filterByCriteria()
+    }
+
+    addShortcuts() {
+        this.unlisten = this.keyboardShortcuts.listen({
+            "Ctrl.S": (event: KeyboardEvent): void => {
+                if (this.isFormVisible && !document.getElementsByClassName('modal-dialog')[0]) {
+                    console.log("Parent: Ctrl.S")
+                    this.transferForm.saveRecord()
+                    event.preventDefault()
+                }
+            },
+            "Escape": (event: KeyboardEvent): void => {
+                if (this.isFormVisible && !document.getElementsByClassName('modal-dialog')[0]) {
+                    this.goBack()
+                }
+            }
+        }, {
+            priority: 0,
+            inputs: true
+        })
     }
 
 }

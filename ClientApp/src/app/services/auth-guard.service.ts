@@ -1,11 +1,9 @@
-import { FormBuilder } from '@angular/forms';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router'
+import { Injectable } from '@angular/core'
+import { Observable } from 'rxjs'
+import { map, take } from 'rxjs/operators'
 
-import { AccountService } from './account.service';
-import { CanDeactivate } from '@angular/router';
+import { AccountService } from './account.service'
 
 export interface CanComponentDeactivate {
     confirm(): boolean
@@ -15,8 +13,8 @@ export interface CanComponentDeactivate {
 
 export class AuthGuardService implements CanActivate {
 
-    component: Object;
-    route: ActivatedRouteSnapshot;
+    component: Object
+    route: ActivatedRouteSnapshot
 
     constructor(private accountService: AccountService, private router: Router) { }
 

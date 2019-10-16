@@ -1,5 +1,5 @@
 import * as moment from 'moment'
-import { Directive, HostListener, ElementRef, Input } from '@angular/core';
+import { Directive, HostListener, ElementRef, Input } from '@angular/core'
 
 @Directive({
     selector: '[appInputFormat]'
@@ -7,7 +7,7 @@ import { Directive, HostListener, ElementRef, Input } from '@angular/core';
 
 export class InputFormatDirective {
 
-    @Input('appInputFormat') format: string;
+    @Input('appInputFormat') format: string
 
     constructor(private el: ElementRef) { }
 
@@ -31,12 +31,12 @@ export class InputFormatDirective {
 
             let value: string = this.el.nativeElement.value
 
-            let seperatorCount = 0;
-            let position = value.indexOf('/');
+            let seperatorCount = 0
+            let position = value.indexOf('/')
 
             while (position !== -1) {
-                seperatorCount++;
-                position = value.indexOf('/', position + 1);
+                seperatorCount++
+                position = value.indexOf('/', position + 1)
             }
 
             if (value) {

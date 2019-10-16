@@ -82,7 +82,7 @@
                 </div>
             </div>
             <div class="field">
-                <label for="vatState">VAT Regime</label>
+                <label for="vatState">VAT regime</label>
                 <div class="input">
                     <input type="text" list="vatStateList" formControlName="vatStateDescription" (change)="updateVatStateId(vatStates, $event)" tabindex="10" id="vatState">
                     <i *ngIf="(vatStateId.invalid && vatStateDescription.invalid) || (!arrayLookup(vatStates, vatStateDescription))" class="red exclamation triangle icon"></i>

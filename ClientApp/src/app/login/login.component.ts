@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core'
+import { FormBuilder, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
 
-import { AccountService } from '../services/account.service';
-import { CountdownService } from '../services/countdown.service';
+import { AccountService } from '../services/account.service'
+import { CountdownService } from '../services/countdown.service'
 
 @Component({
 	selector: 'app-login',

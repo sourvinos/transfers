@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core'
 import { HttpResponse } from '@angular/common/http'
-import { get } from 'scriptjs'
 
 import { IPort } from './../models/port'
 import { PortService } from '../services/port.service'

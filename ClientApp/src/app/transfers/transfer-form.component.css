@@ -1,9 +1,5 @@
-.numeric {
-    width: 80px;
-}
-
-.numeric.total {
-    width: 100px;
+.fields {
+    margin: 0 !important;
 }
 
 #content{
@@ -27,4 +23,18 @@
 
 .ui.divider {
     margin-bottom: 2rem;
+}
+
+/* ! Small heights = numeric fields on the same line */
+@media only screen and (max-height: 60rem) {
+    .fields {
+        flex-direction: row !important;
+    }    
+}
+
+/* ! Big heights = numeric fields on different lines */
+@media only screen and (min-height: 60.0625rem) {
+    .fields {
+        flex-direction: column !important;
+    }    
 }

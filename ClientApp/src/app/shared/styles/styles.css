@@ -16,8 +16,8 @@ body, h1, h2, h3 {
     margin: 0 !important;
 }
 
-.hidden {
-    display: none !important;
+input.ng-invalid.ng-touched {
+    background-color: rgb(255, 197, 197) !important;
 }
 
 .date {
@@ -65,33 +65,18 @@ body, h1, h2, h3 {
     width: 40rem
 }
 
-input {
-    padding-right: 2.5rem !important;
-}
-
 input:focus {
     background-color: var(--color-input-focus) !important;
 }
 
-div.input {
-    align-items: center;
-    display: flex;
-    flex-direction: row-reverse;
+div.field.numeric {
+    padding: 0 !important;
 }
 
-div.input i {
-    height: 1.3rem !important;
-    margin:0 !important;
-    padding-right: 1.9rem;
-    position: absolute;
-}
-
-small {
-    color: var(--color-label)
-}
-
-.numeric .number {
+.number {
+    margin: 0 0.5rem 1rem 0 !important;
     text-align: right;
+    width: 80px !important;
 }
 
 .navigation-icon {

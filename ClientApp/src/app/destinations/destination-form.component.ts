@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { DestinationService } from '../services/destination.service';
-import { DialogService } from '../services/dialog-service';
-import { HelperService } from '../services/helper.service';
-import { Utils } from '../shared/classes/utils';
+import { AfterViewInit, Component, OnInit } from '@angular/core'
+import { FormBuilder, Validators } from '@angular/forms'
+import { ActivatedRoute, Router } from '@angular/router'
+import { Observable } from 'rxjs'
+import { DestinationService } from '../services/destination.service'
+import { DialogService } from '../services/dialog.service'
+import { HelperService } from '../services/helper.service'
+import { Utils } from '../shared/classes/utils'
 
 @Component({
     selector: 'app-destination-form',
@@ -26,7 +26,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit {
 
     constructor(private destinationService: DestinationService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialogService: DialogService) {
         route.params.subscribe(p => (this.id = p['id']))
-    };
+    }
 
     ngOnInit() {
         if (this.id) {
@@ -36,7 +36,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit {
                 if (error.status == 404) {
                     this.router.navigate(['/pageNotFound'])
                 }
-            });
+            })
         }
     }
 
@@ -54,16 +54,16 @@ export class DestinationFormComponent implements OnInit, AfterViewInit {
                 })
             },
             error => {
-                Utils.errorLogger(error);
-            });;
+                Utils.errorLogger(error)
+            })
     }
 
     get abbreviation() {
-        return this.form.get('abbreviation');
+        return this.form.get('abbreviation')
     }
 
     get description() {
-        return this.form.get('description');
+        return this.form.get('description')
     }
 
     save() {
@@ -71,17 +71,17 @@ export class DestinationFormComponent implements OnInit, AfterViewInit {
         this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.destinationService.addDestination(this.form.value).subscribe(() => this.router.navigate(['/destinations']), error => Utils.errorLogger(error));
+            this.destinationService.addDestination(this.form.value).subscribe(() => this.router.navigate(['/destinations']), error => Utils.errorLogger(error))
         }
         else {
-            this.destinationService.updateDestination(this.id, this.form.value).subscribe(() => this.router.navigate(['/destinations']), error => Utils.errorLogger(error));
+            this.destinationService.updateDestination(this.id, this.form.value).subscribe(() => this.router.navigate(['/destinations']), error => Utils.errorLogger(error))
         }
     }
 
     delete() {
         if (this.id !== null) {
             if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.destinationService.deleteDestination(this.id).subscribe(() => this.router.navigate(['/destinations']), error => Utils.errorLogger(error));
+                this.destinationService.deleteDestination(this.id).subscribe(() => this.router.navigate(['/destinations']), error => Utils.errorLogger(error))
             }
         }
     }
@@ -89,9 +89,9 @@ export class DestinationFormComponent implements OnInit, AfterViewInit {
     canDeactivate(): Observable<boolean> | boolean {
         if (!this.isSaving && this.form.dirty) {
             this.isSaving = false
-            return this.dialogService.confirm('Discard changes?');
+            return this.dialogService.confirm('Discard changes?')
         }
-        return true;
+        return true
     }
 
 }

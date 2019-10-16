@@ -1,12 +1,12 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Observable } from 'rxjs';
-import { DialogService } from '../services/dialog-service';
-import { HelperService } from '../services/helper.service';
-import { PickupPointService } from '../services/pickupPoint.service';
-import { RouteService } from '../services/route.service';
-import { Utils } from '../shared/classes/utils';
+import { AfterViewInit, Component, OnInit } from '@angular/core'
+import { FormBuilder, FormControl, Validators } from '@angular/forms'
+import { ActivatedRoute, Router } from '@angular/router'
+import { forkJoin, Observable } from 'rxjs'
+import { DialogService } from '../services/dialog.service'
+import { HelperService } from '../services/helper.service'
+import { PickupPointService } from '../services/pickupPoint.service'
+import { RouteService } from '../services/route.service'
+import { Utils } from '../shared/classes/utils'
 
 @Component({
     selector: 'pickupPoint-customer-form',
@@ -43,7 +43,6 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit {
         return forkJoin(sources).subscribe(
             result => {
                 this.routes = result[0]
-                console.log(this.routes)
                 if (this.id) {
                     this.populateFields()
                 }
@@ -108,14 +107,14 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit {
     arrayLookup(lookupArray: any[], givenField: FormControl) {
         for (let x of lookupArray) {
             if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
-                return true;
+                return true
             }
         }
     }
 
-    updateRouteId(lookupArray: any[], e: { target: { value: any; }; }): void {
-        let name = e.target.value;
-        let list = lookupArray.filter(x => x.description === name)[0];
+    updateRouteId(lookupArray: any[], e: { target: { value: any } }): void {
+        let name = e.target.value
+        let list = lookupArray.filter(x => x.description === name)[0]
 
         this.form.patchValue({ routeId: list ? list.id : '' })
     }
@@ -143,9 +142,9 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit {
     canDeactivate(): Observable<boolean> | boolean {
         if (!this.isSaving && this.form.dirty) {
             this.isSaving = false
-            return this.dialogService.confirm('Discard changes?');
+            return this.dialogService.confirm('Discard changes?')
         }
-        return true;
+        return true
     }
 
 }

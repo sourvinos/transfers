@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { DialogService } from '../services/dialog-service';
+import { DialogService } from '../services/dialog.service';
 import { HelperService } from '../services/helper.service';
 import { VatStateService } from '../services/vatState.service';
 import { Utils } from '../shared/classes/utils';

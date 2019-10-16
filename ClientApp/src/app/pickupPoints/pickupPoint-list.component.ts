@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { get } from 'scriptjs';
+import { Component, OnInit } from '@angular/core'
 declare var $: any
 
-import { IPickupPoint } from '../models/pickupPoint';
-import { IRoute } from '../models/route';
-import { PickupPointService } from '../services/pickupPoint.service';
-import { RouteService } from '../services/route.service';
-import { Utils } from '../shared/classes/utils';
+import { IPickupPoint } from '../models/pickupPoint'
+import { IRoute } from '../models/route'
+import { PickupPointService } from '../services/pickupPoint.service'
+import { RouteService } from '../services/route.service'
+import { Utils } from '../shared/classes/utils'
 
 @Component({
     selector: 'pickupPoint-list',
@@ -16,8 +15,8 @@ import { Utils } from '../shared/classes/utils';
 
 export class PickupPointListComponent implements OnInit {
 
-    routes: IRoute[];
-    pickupPoints: IPickupPoint[];
+    routes: IRoute[]
+    pickupPoints: IPickupPoint[]
 
     pickupPoint: IPickupPoint = {
         id: 0,
@@ -46,7 +45,7 @@ export class PickupPointListComponent implements OnInit {
     }
 
     ngAfterViewInit() {
-        $('.ui.dropdown').dropdown();
+        $('.ui.dropdown').dropdown()
     }
 
     onRouteChange() {
@@ -54,6 +53,6 @@ export class PickupPointListComponent implements OnInit {
     }
 
     private populatePickupPoints() {
-        this.pickupPointService.getPickupPoints(this.pickupPoint.route.id).subscribe(data => this.pickupPoints = data, error => Utils.errorLogger(error));
+        this.pickupPointService.getPickupPoints(this.pickupPoint.route.id).subscribe(data => this.pickupPoints = data, error => Utils.errorLogger(error))
     }
 }

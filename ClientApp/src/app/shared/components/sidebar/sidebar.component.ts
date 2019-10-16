@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core'
+import { Observable } from 'rxjs'
 
-import { AccountService } from '../../../services/account.service';
-import { CountdownService } from '../../../services/countdown.service';
+import { AccountService } from '../../../services/account.service'
+import { CountdownService } from '../../../services/countdown.service'
 
 @Component({
     selector: 'sidebar',
@@ -22,13 +22,13 @@ export class SidebarComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.loginStatus = this.accountService.isLoggedIn;
-        this.userName = this.accountService.currentUserName;
+        this.loginStatus = this.accountService.isLoggedIn
+        this.userName = this.accountService.currentUserName
     }
 
     triggerEvent(elem: HTMLElement, event: string) {
-        let clickEvent = new Event(event);
-        elem.dispatchEvent(clickEvent);
+        let clickEvent = new Event(event)
+        elem.dispatchEvent(clickEvent)
     }
 
     logout() {
@@ -36,9 +36,9 @@ export class SidebarComponent implements OnInit {
     }
 
     closeSidebar() {
-        var hamburger = document.getElementById("hamburger");
+        var hamburger = document.getElementById("hamburger")
         if (hamburger.className == "open") {
-            this.triggerEvent(hamburger, "click");
-        };
+            this.triggerEvent(hamburger, "click")
+        }
     }
 }

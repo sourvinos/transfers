@@ -113,7 +113,6 @@
 }
 
 /* ! Wide = menu always visible */
-
 @media only screen and (min-width: 80.0625rem) {
     #sidebar {
         width: 20rem !important;
@@ -124,7 +123,6 @@
 }
 
 /* ! Narrow = menu always hidden */
-
 @media only screen and (max-width: 80rem) {
     #sidebar {
         width: 0;

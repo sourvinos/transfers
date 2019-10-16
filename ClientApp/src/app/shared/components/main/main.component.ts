@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'
 
 @Component({
 	selector: 'main',
@@ -9,9 +9,9 @@ import { Component } from '@angular/core';
 export class MainComponent {
 
 	toggleMenu() {
-		document.getElementById("hamburger").classList.toggle("open");
-		var sidebar = document.getElementById("sidebar");
-		sidebar.style.width = sidebar.style.width == "20rem" ? "0" : "20rem";
+		document.getElementById("hamburger").classList.toggle("open")
+		var sidebar = document.getElementById("sidebar")
+		sidebar.style.width = sidebar.style.width == "20rem" ? "0" : "20rem"
 	}
 
 }

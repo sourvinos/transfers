@@ -1,14 +1,14 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { forkJoin, Observable, Subject } from 'rxjs';
-import { CustomerService } from '../services/customer.service';
-import { HelperService } from '../services/helper.service';
-import { TaxOfficeService } from '../services/taxOffice.service';
-import { VatStateService } from '../services/vatState.service';
-import { Utils } from '../shared/classes/utils';
-import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component';
+import { AfterViewInit, Component, OnInit } from '@angular/core'
+import { FormBuilder, FormControl, Validators } from '@angular/forms'
+import { ActivatedRoute, Router } from '@angular/router'
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal'
+import { forkJoin, Observable, Subject } from 'rxjs'
+import { CustomerService } from '../services/customer.service'
+import { HelperService } from '../services/helper.service'
+import { TaxOfficeService } from '../services/taxOffice.service'
+import { VatStateService } from '../services/vatState.service'
+import { Utils } from '../shared/classes/utils'
+import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
 
 @Component({
     selector: 'app-customer-form',
@@ -189,7 +189,10 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
             modal.content.subject = subject
             return subject.asObservable().subscribe(result => {
                 if (result)
-                    this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate(['/customers']), error => { Utils.errorLogger(error); this.openErrorModal() })
+                    this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate(['/customers']), error => {
+                        Utils.errorLogger(error)
+                        this.openErrorModal()
+                    })
             })
         }
     }
@@ -197,18 +200,18 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
     canDeactivate(): Observable<boolean> | boolean {
         if (!this.isSaving && this.form.dirty) {
             this.isSaving = false
-            const subject = new Subject<boolean>();
+            const subject = new Subject<boolean>()
             const modal = this.modalService.show(ModalDialogComponent, {
                 initialState: {
                     title: 'Confirmation',
                     message: 'If you continue, all changes in this record will be lost.',
                     type: 'question'
                 }, animated: true
-            });
-            modal.content.subject = subject;
-            return subject.asObservable();
+            })
+            modal.content.subject = subject
+            return subject.asObservable()
         }
-        return true;
+        return true
     }
 
     openErrorModal() {

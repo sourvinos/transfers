@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { FormBuilder, FormControl, Validators } from '@angular/forms'
-import { ActivatedRoute, Router, Params } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { BsModalRef, BsModalService } from 'ngx-bootstrap'
 import { forkJoin, Subject } from 'rxjs'
 
@@ -15,6 +15,7 @@ import { TransferService } from '../services/transfer.service'
 import { Utils } from '../shared/classes/utils'
 import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
 import { ComponentInteractionService } from '../shared/services/component-interaction.service'
+import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 
 @Component({
     selector: 'app-transfer-form',
@@ -54,11 +55,17 @@ export class TransferFormComponent implements OnInit {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private componentInteractionService: ComponentInteractionService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService) { }
+    unlisten: Unlisten
+    keyboardShortcuts: KeyboardShortcuts
+
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private componentInteractionService: ComponentInteractionService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService, keyboardShortcuts: KeyboardShortcuts) {
+        this.keyboardShortcuts = keyboardShortcuts
+    }
 
     ngOnInit() {
         this.populateDropDowns()
         this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free'])
+        // this.addShortcuts()
     }
 
     populateFields(transfer: ITransfer) {
@@ -111,8 +118,12 @@ export class TransferFormComponent implements OnInit {
 
     getTransfer(id: number) {
         this.transferService.getTransfer(id).subscribe(result => {
+            this.clearFields()
+            this.populateFields(result)
+            this.setRecordStatus(false)
+            this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free'])
             this.scrollToForm()
-            this.editRecord(result)
+            this.setFocus('destination')
             // this.componentInteractionService.emitChange(true)
             // this.isFormVisible = true
         })
@@ -123,23 +134,13 @@ export class TransferFormComponent implements OnInit {
         this.setRecordStatus(true)
         this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free'])
         this.scrollToForm()
-        // this.componentInteractionService.emitChange(true)
-        // this.isFormVisible = true
-        // this.setFocus('destination')
-    }
-
-    editRecord(transfer: ITransfer) {
-        this.populateFields(transfer)
-        this.setRecordStatus(false)
-        this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free'])
-        this.scrollToForm()
         // this.setFocus('destination')
     }
 
     saveRecord() {
         if (!this.form.valid) return
         this.isSaving = true
-        this.componentInteractionService.emitChange(true)
+        this.componentInteractionService.emitChange([true])
         if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
                 this.form.reset()
@@ -147,7 +148,7 @@ export class TransferFormComponent implements OnInit {
         }
         else {
             this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
-                // this.form.reset()
+                this.form.reset()
                 this.scrollToList()
             }, error => Utils.errorLogger(error))
         }
@@ -191,19 +192,17 @@ export class TransferFormComponent implements OnInit {
                     title: 'Confirmation',
                     message: 'If you continue, all changes in this record will be lost.',
                     type: 'question'
-                }, animated: false
+                }, animated: true
             })
             modal.content.subject = subject.subscribe(result => {
                 if (result) {
-                    this.componentInteractionService.emitChange(false)
-                    // this.isFormVisible = false
-                    document.getElementById('list').style.marginLeft = 0 + 'px'
+                    this.form.reset()
+                    this.scrollToList()
                 }
             })
         } else {
-            //this.isFormVisible = false
-            this.componentInteractionService.emitChange(false)
-            document.getElementById('list').style.marginLeft = 0 + 'px'
+            this.form.reset()
+            this.scrollToList()
         }
 
     }
@@ -245,6 +244,18 @@ export class TransferFormComponent implements OnInit {
 
     get pickupPointDescription() {
         return this.form.get('pickupPointDescription')
+    }
+
+    get adults() {
+        return this.form.get('adults')
+    }
+
+    get kids() {
+        return this.form.get('kids')
+    }
+
+    get free() {
+        return this.form.get('free')
     }
 
     get driverId() {
@@ -336,7 +347,7 @@ export class TransferFormComponent implements OnInit {
     }
 
     private scrollToForm() {
-        this.componentInteractionService.emitFormStatus(true)
+        this.componentInteractionService.emitChange([true])
         document.getElementById('list').style.marginLeft = -parseInt(document.getElementById('form').style.width) - 25 + 'px'
     }
 
@@ -349,8 +360,16 @@ export class TransferFormComponent implements OnInit {
     }
 
     private scrollToList() {
-        this.componentInteractionService.emitChange(false)
+        this.componentInteractionService.emitChange([false])
         document.getElementById('list').style.marginLeft = 0 + 'px'
+    }
+
+    isInvalid(id: { invalid: any }, description: FormControl, destinationsArray: any[]) {
+        return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(destinationsArray, description))
+    }
+
+    isNumericInvalid(field: any) {
+        return (field.invalid && field.touched)
     }
 
 }

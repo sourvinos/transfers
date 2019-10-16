@@ -1,12 +1,12 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Observable } from 'rxjs';
-import { DialogService } from '../services/dialog-service';
-import { HelperService } from '../services/helper.service';
-import { PortService } from '../services/port.service';
-import { RouteService } from '../services/route.service';
-import { Utils } from '../shared/classes/utils';
+import { AfterViewInit, Component, OnInit } from '@angular/core'
+import { FormBuilder, FormControl, Validators } from '@angular/forms'
+import { ActivatedRoute, Router } from '@angular/router'
+import { forkJoin, Observable } from 'rxjs'
+import { DialogService } from '../services/dialog.service'
+import { HelperService } from '../services/helper.service'
+import { PortService } from '../services/port.service'
+import { RouteService } from '../services/route.service'
+import { Utils } from '../shared/classes/utils'
 
 @Component({
     selector: 'app-route-form',
@@ -18,7 +18,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit {
 
     ports: any
 
-    id: number = null;
+    id: number = null
     isSaving: boolean = false
 
     form = this.formBuilder.group({
@@ -31,7 +31,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit {
 
     constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialogService: DialogService) {
         route.params.subscribe(p => (this.id = p['id']))
-    };
+    }
 
     ngOnInit() {
         let sources = []
@@ -70,16 +70,16 @@ export class RouteFormComponent implements OnInit, AfterViewInit {
                 })
             },
             error => {
-                Utils.errorLogger(error);
-            });;
+                Utils.errorLogger(error)
+            })
     }
 
     get abbreviation() {
-        return this.form.get('abbreviation');
+        return this.form.get('abbreviation')
     }
 
     get description() {
-        return this.form.get('description');
+        return this.form.get('description')
     }
 
     get portId() {
@@ -91,7 +91,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit {
     }
 
     getRequiredFieldMessage() {
-        return 'This field is required, silly!';
+        return 'This field is required, silly!'
     }
 
     getMaxLengthFieldMessage() {
@@ -118,10 +118,10 @@ export class RouteFormComponent implements OnInit, AfterViewInit {
         this.isSaving = true
         this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
         if (this.id == null) {
-            this.routeService.addRoute(this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.errorLogger(error));
+            this.routeService.addRoute(this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.errorLogger(error))
         }
         else {
-            this.routeService.updateRoute(this.id, this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.errorLogger(error));
+            this.routeService.updateRoute(this.id, this.form.value).subscribe(data => this.router.navigate(['/routes']), error => Utils.errorLogger(error))
         }
     }
 
@@ -136,9 +136,9 @@ export class RouteFormComponent implements OnInit, AfterViewInit {
     canDeactivate(): Observable<boolean> | boolean {
         if (!this.isSaving && this.form.dirty) {
             this.isSaving = false
-            return this.dialogService.confirm('Discard changes?');
+            return this.dialogService.confirm('Discard changes?')
         }
-        return true;
+        return true
     }
 
 }

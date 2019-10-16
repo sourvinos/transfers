@@ -1,13 +1,13 @@
-import { Subject } from "rxjs";
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { ModalDialogComponent } from "../components/modal-dialog/modal-dialog.component";
+import { Subject } from "rxjs"
+import { BsModalService } from 'ngx-bootstrap/modal'
+import { ModalDialogComponent } from "../components/modal-dialog/modal-dialog.component"
 
 export class Utils {
 
-	static modalService: BsModalService;
+	static modalService: BsModalService
 
 	public static errorLogger(message: Response) {
-		console.log('Error: ' + message);
+		console.log('Error: ' + message)
 	}
 
 	public static openErrorModal() {
@@ -26,21 +26,20 @@ export class Utils {
 	public static disableFields(fields: string[]) {
 		fields.forEach((element: string) => {
 			document.getElementById(element).setAttribute('disabled', 'true')
-		});
+		})
 	}
 
 	public static enableFields(fields: string[]) {
 		fields.forEach((element: string) => {
 			document.getElementById(element).removeAttribute('disabled')
-		});
+		})
 	}
 
 	public static setFocus(element: string) {
-		console.log(element)
 		setTimeout(() => {
 			document.getElementById(element).focus()
 			document.execCommand('selectAll')
-		}, 500);
+		}, 500)
 	}
 
 }
