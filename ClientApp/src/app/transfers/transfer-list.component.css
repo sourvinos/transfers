@@ -2,67 +2,38 @@
     display: grid;
 }
 
-#header {
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
-    grid-template-areas: 
-        "title searchbox"
-        "divider divider";
-    margin: 0;
-    padding: 2rem 2rem 0 2rem;
-}
-
-#title {
-    grid-area: title;
-}
-
-#search-box {
-    grid-area: searchbox;
-    margin: 0;
-}
-
-.ui.divider{
-    grid-area: divider;
-}
-
 #content {
-    display: flex;
-    flex-direction: row;
-    grid-area: "content";
-    grid-auto-rows: 100%;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    padding: 0;
-    position: relative;
+    padding: 0 !important;
     width: max-content;
-    z-index: 0;
 }
 
-input.date {
-    margin-right: 0.25rem !important;
+#list {
+    background-color: var(--color-background);
+    display: grid;
+    grid-template-areas: 
+        "list"
+        "footer";
+    grid-template-rows: auto min-content;
+    margin-right: 25px;
+    transition: 0.2s ease-out;
 }
+
+#form {
+    background-color:var(--color-background);
+ }
 
 .activeItem {
     border-left-color: var(--color-summary-block-border-active) !important;
 }
 
-#footer-list {
-    margin: 0;
-    padding: 0 0.24rem 2rem 0;
-    text-align: end
-}
-
-#footer-list #buttons {
-    margin-right: 1rem;
-}
-
-.search.icon {
-    color: var(--color-icon);
-}
-
-.empty.ui.divider {
+#empty > #footer {
     margin: 0 2rem 2rem 2rem;
+    text-align: end;
+}
+
+#list > #footer {
+    margin: 0 0.24rem 2rem 0;
+    padding: 0;
 }
 
 #empty {
@@ -76,16 +47,6 @@ input.date {
     display: flex;
     height: 100%;
     justify-content: center;
-}
-
-#scrollable::-webkit-scrollbar {
-    width: 0.5rem;
-}
-
-#scrollable::-webkit-scrollbar-thumb {
-    background-color: var(--color-scrollbar);
-    min-height: 6.25rem;
-    border-radius: 0;
 }
 
 #summaries {
@@ -149,39 +110,4 @@ input.date {
     display: flex;
     font-family: var(--font-family-summary-block-header-total);
     font-size: var(--font-size-summary-block-item-total);
-}
-
-#scrollable {
-    overflow-y: scroll;
-    overflow-x: hidden;
-    width: 100%;
-}
-
-#list {
-    background-color: var(--color-background);
-    display: grid;
-    grid-template-areas: 
-        "list"
-        "footer";
-    grid-template-rows: auto min-content;
-    margin-right: 25px;
-    transition: 0.2s ease-out;
-}
-
-#form {
-    background-color:var(--color-background);
- }
-
-.ui.table {
-    background-color: var(--color-background);
-    margin: 0 !important;
-    width: inherit;
-}
-
-.ui.table>thead>tr:first-child>th:first-child, .ui.table>thead>tr:first-child>th:last-child {
-    border-radius: 0 !important;
-}
-
-.hidden {
-    display: none;
 }

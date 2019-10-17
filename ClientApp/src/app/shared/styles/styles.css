@@ -91,6 +91,14 @@ div.field.numeric {
     transform: translateY(3px);
 }
 
+.fields{
+    margin: 0 !important;
+}
+
+.hidden {
+    display: none;
+}
+
 /* ! Wide screen */
 @media only screen and (min-width: 80.0625rem) {
 	.icon {

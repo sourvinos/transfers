@@ -2,34 +2,37 @@
     <div id="title">
         <h2>Customers</h2>
     </div>
-    <div class="ui divider"></div>
     <div id="search-box">
-        <div class="ui icon input">
-            <i class="search icon"></i>
-            <input type="text" #query (keyup)="filter(query.value)" autocomplete="off">
-        </div>
+        <form class="ui form" autocomplete="off">
+            <div class="field">
+                <input type="text" id="searchField" #query (keyup)="filter(query.value)" autocomplete="off">
+            </div>
+        </form>
     </div>
+    <div class="ui divider"></div>
 </div>
 
 <div id="content">
-    <table class="ui sortable fixed table">
-        <thead>
-            <tr>
-                <th class="center aligned eight wide">Name</th>
-                <th class="center aligned four wide">Phones</th>
-                <th class="center aligned four wide">Email</th>
-                <th class="center aligned two wide">User</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let customer of filteredCustomers" routerLink="/customers/{{ customer.id }}">
-                <td>{{ customer.description }}</td>
-                <td>{{ customer.phones }}</td>
-                <td>{{ customer.email }}</td>
-                <td>{{ customer.userName }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div id="scrollable">
+        <table class="ui table">
+            <thead>
+                <tr>
+                    <th class="center aligned eight wide">Name</th>
+                    <th class="center aligned four wide">Phones</th>
+                    <th class="center aligned four wide">Email</th>
+                    <th class="center aligned two wide">User</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let customer of filteredCustomers" routerLink="/customers/{{ customer.id }}">
+                    <td>{{ customer.description }}</td>
+                    <td>{{ customer.phones }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.userName }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div id="footer">

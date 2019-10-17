@@ -1,6 +1,6 @@
 :host {
     display: grid;
-    grid-template-areas: 
+    grid-template-areas:         
         "header"
         "content"
         "footer";
@@ -9,32 +9,50 @@
 }
 
 #header {
-    grid-area: "header";
-    margin: 2rem 2rem 2rem 2rem;
+    display: grid;
+    grid-area: header;
+    grid-template-areas:
+        "title searchbox"
+        "divider divider";
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    margin: 0;
+    padding: 2rem 2rem 0 2rem;
 }
 
-#header div:first-child {
+#header #title {
     align-items: center;
     display: flex;
+    grid-area: title;
     justify-content: flex-start;
     margin-left: 1rem;
 }
 
 #header #search-box {
     display: flex;
+    grid-area: searchbox;
     justify-content: flex-end;
-    margin-right: 1rem;
+    margin: 0 1rem 0 0;
+}
+
+#searchField {
+    width: 30rem;
 }
 
 #content {
     display: flex;
-    grid-area: "content";
-    overflow-x: auto;
+    flex-direction: row;
+    grid-area: content;
+    grid-auto-rows: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
     padding: 0 2rem;
+    position: relative;
+    z-index: 0;
 }
 
 #footer {
-    grid-area: "footer";
+    grid-area: footer;
     margin: 0 2rem 2rem 2rem;
     text-align: right;
 }
@@ -43,26 +61,36 @@
     margin-right: 1rem;
 }
 
-#content::-webkit-scrollbar {
+#scrollable {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    width: 100%;
+}
+
+#scrollable::-webkit-scrollbar {
     width: 0.5rem;
 }
 
-#content::-webkit-scrollbar-thumb {
+#scrollable::-webkit-scrollbar-thumb {
     background-color: var(--color-scrollbar);
+    border-radius: 0;
     min-height: 6.25rem;
 }
 
 .ui.divider {
+    grid-area: divider;
     margin: 1.8rem 0 2rem 0;
 }
 
 table {
-    font-family: var(--font-family-table);
+    background-color: var(--color-background) !important;
     border: 0 !important;
+    font-family: var(--font-family-table);
 }
 
 table th {
     background-color: var(--color-table-header-background) !important;
+    border-radius: 0 !important;
     border: 0 !important;
     color: var(--color-table-header-text);
     position: sticky;
@@ -74,8 +102,8 @@ table tbody {
 }
 
 table tr:hover {
-    cursor: pointer !important;
     background-color: var(--color-table-row-hover) !important;
+    cursor: pointer !important;
 }
 
 /* ! Narrow screen */

@@ -5,7 +5,7 @@
     </div>
     <div id="search-box">
         <form [formGroup]="form" class="ui form" autocomplete="off">
-            <div class="field">
+            <div class="fields">
                 <input type="text" class="date" formControlName="dateIn" [appInputFormat]="'date'" id="dateIn">
                 <button class="ui button primary" id="go" (click)="getTransfers()">Search</button>
             </div>
@@ -95,7 +95,7 @@
                 </tbody>
             </table>
         </div>
-        <div id="footer-list">
+        <div id="footer">
             <div class="ui divider"></div>
             <div id="buttons">
                 <button class="ui button primary" id="new" (click)="newRecord()">New</button>
