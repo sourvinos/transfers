@@ -30,7 +30,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     isNewRecord: boolean = false
     isFormVisible: boolean = false
-    selectedDate: string = ''
 
     keyboardShortcuts: KeyboardShortcuts
     unlisten: Unlisten
@@ -46,7 +45,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.scrollToEmpty()
         this.readDateFromLocalStorage()
         this.addShortcuts()
     }
@@ -60,7 +58,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     private async getFilteredTransfers() {
         await this.service.getTransfers(localStorage.getItem('date')).then(data => {
             this.queryResult = this.queryResultFiltered = data
-            this.selectedDate = this.form.value.dateIn
         })
     }
 
@@ -112,8 +109,10 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     private scrollToList() {
         if (this.queryResult.persons > 0)
             document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) + 'px'
-        else
+        else {
             this.scrollToEmpty()
+            setTimeout(() => { this.toggleClassFromMessage() }, 1000)
+        }
     }
 
     private isRefreshNeeded() {
@@ -142,6 +141,10 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         Utils.setFocus(element)
     }
 
+    private toggleClassFromMessage() {
+        document.getElementById('nothing') ? document.getElementById('nothing').classList.toggle('hidden') : ''
+    }
+
     newRecord() {
         this.transferForm.newRecord()
     }
@@ -153,9 +156,11 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     getTransfers() {
         this.updateLocalStorageWithDate()
         this.getFilteredTransfers().then(() => {
+            this.setFocus('dateIn')
             this.selectGroupItems()
             this.scrollToList()
             this.isRefreshNeeded()
+            this.toggleClassFromMessage()
         })
     }
 

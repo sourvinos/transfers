@@ -127,7 +127,7 @@ input.date {
     font-family: var(--font-family-summary-block-item);
     font-size: var(--font-size-summary-block-item);
     justify-content: space-between;
-    line-height: 1.5rem;
+    line-height: 2.0rem;
     margin-bottom: 0.2rem;
     padding-left: 0.5rem;
 }
@@ -177,6 +177,11 @@ input.date {
     margin: 0 !important;
     width: inherit;
 }
+
 .ui.table>thead>tr:first-child>th:first-child, .ui.table>thead>tr:first-child>th:last-child {
     border-radius: 0 !important;
+}
+
+.hidden {
+    display: none;
 }
