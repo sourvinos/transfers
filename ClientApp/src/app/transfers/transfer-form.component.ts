@@ -64,11 +64,10 @@ export class TransferFormComponent implements OnInit {
 
     ngOnInit() {
         this.populateDropDowns()
-        this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free'])
-        // this.addShortcuts()
+        this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
     }
 
-    populateFields(transfer: ITransfer) {
+    private populateFields(transfer: ITransfer) {
         this.form.setValue({
             id: transfer.id,
             dateIn: transfer.dateIn,
@@ -86,7 +85,7 @@ export class TransferFormComponent implements OnInit {
         })
     }
 
-    clearFields() {
+    private clearFields() {
         this.form.setValue({
             id: 0,
             dateIn: this.helperService.getDateFromLocalStorage(),
@@ -118,23 +117,23 @@ export class TransferFormComponent implements OnInit {
 
     getTransfer(id: number) {
         this.transferService.getTransfer(id).subscribe(result => {
-            this.clearFields()
             this.populateFields(result)
             this.setRecordStatus(false)
-            this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free'])
+            this.disableFields(['dateIn', 'go'])
+            this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
             this.scrollToForm()
             this.setFocus('destination')
-            // this.componentInteractionService.emitChange(true)
-            // this.isFormVisible = true
         })
     }
 
     newRecord() {
-        this.clearFields()
         this.setRecordStatus(true)
-        this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free'])
+        this.disableFields(['dateIn', 'go'])
+        this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
+        this.clearFields()
+        this.scrollToList()
         this.scrollToForm()
-        // this.setFocus('destination')
+        this.setFocus('destination')
     }
 
     saveRecord() {
@@ -143,13 +142,14 @@ export class TransferFormComponent implements OnInit {
         this.componentInteractionService.emitChange([true])
         if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
-                this.form.reset()
+                this.clearFields()
+                this.setFocus('destination')
             }, error => Utils.errorLogger(error))
         }
         else {
             this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
-                this.form.reset()
-                this.scrollToList()
+                this.scrollBackToList()
+                this.clearFields()
             }, error => Utils.errorLogger(error))
         }
     }
@@ -166,8 +166,8 @@ export class TransferFormComponent implements OnInit {
         modal.content.subject = subject.subscribe(result => {
             if (result)
                 this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
-                    this.form.reset()
-                    this.scrollToList()
+                    this.scrollBackToList()
+                    this.clearFields()
                 }),
                     (error: Response) => console.log('Record NOT deleted')
         })
@@ -196,15 +196,12 @@ export class TransferFormComponent implements OnInit {
             })
             modal.content.subject = subject.subscribe(result => {
                 if (result) {
-                    this.form.reset()
-                    this.scrollToList()
+                    this.abortDataEntry()
                 }
             })
         } else {
-            this.form.reset()
-            this.scrollToList()
+            this.abortDataEntry()
         }
-
     }
 
     openErrorModal() {
@@ -359,9 +356,22 @@ export class TransferFormComponent implements OnInit {
         Utils.setFocus(element)
     }
 
-    private scrollToList() {
+    private scrollBackToList() {
         this.componentInteractionService.emitChange([false])
         document.getElementById('list').style.marginLeft = 0 + 'px'
+    }
+
+    private scrollToList() {
+        this.componentInteractionService.emitChange([false])
+        document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) + 'px'
+    }
+
+    private abortDataEntry() {
+        this.scrollBackToList()
+        this.enableFields(['dateIn', 'go'])
+        this.setFocus('dateIn')
+        this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
+        this.clearFields()
     }
 
     isInvalid(id: { invalid: any }, description: FormControl, destinationsArray: any[]) {

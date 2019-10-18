@@ -26,12 +26,14 @@ export class Utils {
 	public static disableFields(fields: string[]) {
 		fields.forEach((element: string) => {
 			document.getElementById(element).setAttribute('disabled', 'true')
+			document.getElementById(element).style.cursor = 'no-drop'
 		})
 	}
 
 	public static enableFields(fields: string[]) {
 		fields.forEach((element: string) => {
 			document.getElementById(element).removeAttribute('disabled')
+			document.getElementById(element).style.cursor = 'default'
 		})
 	}
 

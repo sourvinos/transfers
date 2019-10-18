@@ -8,6 +8,7 @@ import { NgIdleKeepaliveModule } from '@ng-idle/keepalive'
 import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { ModalModule } from 'ngx-bootstrap/modal'
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
 // Common components
@@ -36,7 +37,6 @@ import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'
 import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component'
 import { TransfersComponent } from '../transfers/transfers-component'
 import { TransferListComponent } from '../transfers/transfer-list.component'
-import { TransferItemComponent } from './../transfers/transfer-item.component'
 import { TransferFormComponent } from '../transfers/transfer-form.component'
 import { VatStateFormComponent } from '../vatStates/vatState-form.component'
 import { VatStateListComponent } from '../vatStates/vatState-list.component'
@@ -62,7 +62,7 @@ import { InputFormatDirective } from '../directives/input-format.directive'
         PortFormComponent, PortListComponent,
         RouteFormComponent, RouteListComponent,
         TaxOfficeFormComponent, TaxOfficeListComponent,
-        TransfersComponent, TransferListComponent, TransferItemComponent, TransferFormComponent,
+        TransfersComponent, TransferListComponent, TransferFormComponent,
         VatStateFormComponent, VatStateListComponent,
         // Directives
         InputFormatDirective
@@ -75,7 +75,8 @@ import { InputFormatDirective } from '../directives/input-format.directive'
         HttpClientModule,
         ReactiveFormsModule,
         NgIdleKeepaliveModule.forRoot(),
-        ModalModule.forRoot()
+        ModalModule.forRoot(),
+        ButtonsModule.forRoot()
     ],
     entryComponents: [
         ModalDialogComponent

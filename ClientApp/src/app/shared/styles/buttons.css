@@ -17,6 +17,10 @@ button.delete {
     background-color: var(--color-button-delete) !important;
 }
 
+button {
+    cursor: default !important;
+}
+
 button:active {
     transform: translateY(3px);
 }

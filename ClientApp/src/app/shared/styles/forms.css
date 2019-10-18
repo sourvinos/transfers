@@ -56,7 +56,7 @@
 
 /* ! Narrow screen */
 @media only screen and (max-width: 80rem) {
-    h2 {
+    h1 {
         margin-left: 0 !important;
     }
     .navigation-icon {

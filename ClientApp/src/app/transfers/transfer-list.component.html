@@ -1,7 +1,7 @@
 <div id="header">
     <div id="title">
         <i *ngIf="isFormVisible" class="big arrow alternate circle left outline icon navigation-icon" (click)="goBack()"></i>
-        <h2>Transfers</h2>
+        <h1>Transfers</h1>
     </div>
     <div id="search-box">
         <form [formGroup]="form" class="ui form" autocomplete="off">
@@ -19,7 +19,7 @@
         <div id="empty-content">
             <div *ngIf="queryResult.persons == null; then thenBlock else elseBlock"></div>
             <ng-template #thenBlock>
-                <h2></h2>
+                <h3></h3>
             </ng-template>
             <ng-template #elseBlock>
                 <h2 id="nothing">We found nothing for this date</h2>

@@ -108,7 +108,7 @@ table tr:hover {
 
 /* ! Narrow screen */
 @media only screen and (max-width: 80rem) {
-    h2 {
+    h1 {
         margin-left: 3rem !important;
     }
 }

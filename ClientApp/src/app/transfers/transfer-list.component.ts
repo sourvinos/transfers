@@ -4,10 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router'
 import * as moment from 'moment'
 
 import { ComponentInteractionService } from '../shared/services/component-interaction.service'
+import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 import { TransferFormComponent } from './transfer-form.component'
 import { TransferService } from '../services/transfer.service'
 import { Utils } from './../shared/classes/utils'
-import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 
 @Component({
     selector: 'app-transfer-list',
@@ -111,7 +111,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
             document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) + 'px'
         else {
             this.scrollToEmpty()
-            setTimeout(() => { this.toggleClassFromMessage() }, 1000)
         }
     }
 
@@ -141,10 +140,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         Utils.setFocus(element)
     }
 
-    private toggleClassFromMessage() {
-        document.getElementById('nothing') ? document.getElementById('nothing').classList.toggle('hidden') : ''
-    }
-
     newRecord() {
         this.transferForm.newRecord()
     }
@@ -160,7 +155,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
             this.selectGroupItems()
             this.scrollToList()
             this.isRefreshNeeded()
-            this.toggleClassFromMessage()
         })
     }
 
@@ -188,12 +182,18 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     addShortcuts() {
         this.unlisten = this.keyboardShortcuts.listen({
-            "Ctrl.S": (event: KeyboardEvent): void => {
+            "Alt.N": (event: KeyboardEvent): void => {
+                if (!document.getElementById('new').hasAttribute('disabled')) {
+                    this.transferForm.newRecord()
+                }
+                event.preventDefault()
+            },
+            "Alt.S": (event: KeyboardEvent): void => {
                 if (this.isFormVisible && !document.getElementsByClassName('modal-dialog')[0]) {
-                    console.log("Parent: Ctrl.S")
                     this.transferForm.saveRecord()
                     event.preventDefault()
                 }
+                event.preventDefault()
             },
             "Escape": (event: KeyboardEvent): void => {
                 if (this.isFormVisible && !document.getElementsByClassName('modal-dialog')[0]) {
