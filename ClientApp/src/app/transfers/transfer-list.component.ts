@@ -23,6 +23,8 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     selectedDestinations: string[] = []
     selectedCustomers: string[] = []
     selectedRoutes: string[] = []
+    selectedDrivers: string[] = []
+    selectedPorts: string[] = []
 
     form = this.formBuilder.group({
         dateIn: ['', [Validators.required]]
@@ -67,12 +69,16 @@ export class TransferListComponent implements OnInit, AfterViewInit {
             .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) !== -1 })
             .filter((y: { customer: { description: string } }) => { return this.selectedCustomers.indexOf(y.customer.description) !== -1 })
             .filter((z: { pickupPoint: { route: { description: string } } }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.description) !== -1 })
+            .filter((o: { driver: { description: string } }) => { return this.selectedDrivers.indexOf(o.driver.description) !== -1 })
+            .filter((p: { port: { description: string } }) => { return this.selectedPorts.indexOf(p.port.description) !== -1 })
     }
 
     private selectGroupItems() {
         this.selectItems('item destination', this.selectedDestinations)
         this.selectItems('item customer', this.selectedCustomers)
         this.selectItems('item route', this.selectedRoutes)
+        this.selectItems('item driver', this.selectedDrivers)
+        this.selectItems('item port', this.selectedPorts)
     }
 
     private selectItems(className: string, lookupArray: any) {
@@ -126,6 +132,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         this.selectedDestinations.length = 0
         this.selectedCustomers.length = 0
         this.selectedRoutes.length = 0
+        this.selectedDrivers.length = 0
     }
 
     private getSummariesWidth() {
