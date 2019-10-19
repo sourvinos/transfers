@@ -52,7 +52,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.setElementsWidths()
+        this.setElementsDimensions()
         this.scrollToEmpty()
         this.setFocus('dateIn')
     }
@@ -89,7 +89,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
                 element.classList.add('activeItem')
                 eval(lookupArray).push(element.id)
             }
-        }, (1000))
+        }, (500))
     }
 
     private updateLocalStorageWithDate() {
@@ -100,21 +100,25 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         this.form.setValue({ 'dateIn': moment(localStorage.getItem('date')).format('DD/MM/YYYY') })
     }
 
-    private setElementsWidths() {
+    private setElementsDimensions() {
         document.getElementById('header').style.width = this.getBoxWidth() + 'px'
         document.getElementById('empty').style.width = this.getBoxWidth() + 'px'
-        document.getElementById('list').style.width = this.getBoxWidth() - this.getSummariesWidth() - 25 + 'px'
-        document.getElementById('form').style.width = this.getBoxWidth() - this.getSummariesWidth() - 25 + 'px'
+        document.getElementById('list').style.width = this.getBoxWidth() - this.getSummariesWidth() - 53 + 'px'
+        document.getElementById('form').style.width = this.getBoxWidth() - this.getSummariesWidth() - 53 + 'px'
+        document.getElementById('summaries').style.height = document.getElementById('scrollable').clientHeight + 'px'
     }
 
     private scrollToEmpty() {
         document.getElementById('content').style.left = 0 + 'px'
+        document.getElementById('empty').style.zIndex = '0'
         this.isFormVisible = false
     }
 
     private scrollToList() {
-        if (this.queryResult.persons > 0)
+        if (this.queryResult.persons > 0) {
             document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) + 'px'
+            document.getElementById('empty').style.zIndex = '-1'
+        }
         else {
             this.scrollToEmpty()
         }
@@ -189,28 +193,45 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     addShortcuts() {
         this.unlisten = this.keyboardShortcuts.listen({
-            "Alt.N": (event: KeyboardEvent): void => {
-                if (!document.getElementById('new').hasAttribute('disabled')) {
-                    this.transferForm.newRecord()
-                }
-                event.preventDefault()
-            },
-            "Alt.S": (event: KeyboardEvent): void => {
-                if (this.isFormVisible && !document.getElementsByClassName('modal-dialog')[0]) {
-                    this.transferForm.saveRecord()
-                    event.preventDefault()
-                }
-                event.preventDefault()
-            },
             "Escape": (event: KeyboardEvent): void => {
                 if (this.isFormVisible && !document.getElementsByClassName('modal-dialog')[0]) {
                     this.goBack()
                 }
-            }
+            },
+            "Alt.N": (event: KeyboardEvent): void => {
+                if (!this.isFormVisible && !document.getElementById('new').hasAttribute('disabled')) {
+                    this.transferForm.newRecord()
+                }
+                event.preventDefault()
+            },
+            "Alt.D": (event: KeyboardEvent): void => {
+                if (this.isFormVisible && !document.getElementById('delete').classList.contains('hidden') && !document.getElementsByClassName('modal-dialog')[0]) {
+                    this.transferForm.deleteRecord()
+                    event.preventDefault()
+                }
+                event.preventDefault()
+            },
+            "Alt.S": (event: KeyboardEvent): void => {
+                if (!this.isFormVisible && !document.getElementById('go').hasAttribute('disabled')) {
+                    this.getTransfers()
+                }
+                if (this.isFormVisible && !document.getElementById('save').hasAttribute('disabled')) {
+                    this.transferForm.saveRecord()
+                }
+                event.preventDefault()
+            },
         }, {
             priority: 0,
             inputs: true
         })
     }
+
+    get boxWidth() {
+        let windowWidth = document.body.clientWidth
+        let sidebarWidth = Number(document.getElementById('sidebar').clientWidth)
+
+        return windowWidth - sidebarWidth
+    }
+
 
 }

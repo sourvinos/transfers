@@ -16,8 +16,35 @@ body, h1, h2, h3 {
     margin: 0 !important;
 }
 
+input:focus {
+    background-color: var(--color-input-focus) !important;
+}
+
 input.ng-invalid.ng-touched {
     background-color: rgb(255, 197, 197) !important;
+}
+
+input[type=text]:disabled {
+    cursor: not-allowed !important;
+    opacity: 1 !important;
+    pointer-events: all !important;
+}
+
+input[type=text] {
+    cursor: text !important;
+}
+
+button.ui.button:not(:disabled) {
+    cursor: pointer !important;
+}
+
+button.ui.button::first-letter {
+    text-decoration: underline;
+  }
+
+button.ui.button:disabled {
+    cursor: not-allowed !important;
+    pointer-events: all !important;
 }
 
 .date {
@@ -50,23 +77,19 @@ input.ng-invalid.ng-touched {
 }
 
 #loader p {
-    margin-top: 0.5rem;
     color: #ffffff;
+    margin-top: 0.5rem;
 }
 
 .modal-open .modal {
-    display: flex !important;
     align-items: center !important;
+    display: flex !important;
 }
 
 .modal-content {
     background-color: #f0f0f8;
     padding: 1rem;
     width: 40rem
-}
-
-input:focus {
-    background-color: var(--color-input-focus) !important;
 }
 
 div.field.numeric {
@@ -96,7 +119,7 @@ div.field.numeric {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 /* ! Wide screen */

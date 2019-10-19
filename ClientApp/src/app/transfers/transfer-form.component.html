@@ -43,7 +43,7 @@
                 </div>
                 <div class="field numeric total">
                     <label>Total</label>
-                    <input type="text" class="number" formControlName="totalPersons">
+                    <input type="text" class="number" formControlName="totalPersons" id="totalPersons">
                 </div>
             </div>
             <div class="field" [class.error]="isInvalid(driverId, driverDescription, drivers)">
@@ -74,8 +74,8 @@
     <div id="footer-form">
         <div class="ui divider"></div>
         <div id="buttons">
-            <button *ngIf="!isNewRecord" class="ui button delete" (click)="deleteRecord()">Delete</button>
-            <button class="ui button primary" (click)="saveRecord()">Save</button>
+            <button class="ui button delete" [class.hidden]="isNewRecord" id="delete" (click)="deleteRecord()">Delete</button>
+            <button class="ui button primary" id="save" (click)="saveRecord()">Save</button>
         </div>
     </div>
 </div>

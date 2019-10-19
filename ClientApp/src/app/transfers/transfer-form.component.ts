@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, AfterViewInit } from '@angular/core'
 import { FormBuilder, FormControl, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router'
 import { BsModalRef, BsModalService } from 'ngx-bootstrap'
@@ -23,7 +23,7 @@ import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.serv
     styleUrls: ['./transfer-form.component.css']
 })
 
-export class TransferFormComponent implements OnInit {
+export class TransferFormComponent implements OnInit, AfterViewInit {
 
     id: number
     editMode: boolean = false
@@ -64,7 +64,107 @@ export class TransferFormComponent implements OnInit {
 
     ngOnInit() {
         this.populateDropDowns()
-        this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
+    }
+
+    ngAfterViewInit() {
+        this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'totalPersons', 'remarks', 'delete', 'save'])
+    }
+
+    // PT
+    getTransfer(id: number) {
+        this.transferService.getTransfer(id).subscribe(result => {
+            this.populateFields(result)
+            this.setRecordStatus(false)
+            this.disableFields(['dateIn', 'go'])
+            this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks', 'delete', 'save'])
+            this.scrollToForm()
+            this.setFocus('destination')
+        })
+    }
+
+    // PT
+    newRecord() {
+        this.setRecordStatus(true)
+        this.disableFields(['dateIn', 'go'])
+        this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks', 'delete', 'save'])
+        this.clearFields()
+        this.scrollToList()
+        this.scrollToForm()
+        this.setFocus('destination')
+    }
+
+    // T 
+    calculateTotalPersons() {
+        this.form.patchValue({ totalPersons: parseInt(this.form.value.adults) + parseInt(this.form.value.kids) + parseInt(this.form.value.free) })
+    }
+
+    // T 
+    saveRecord() {
+        if (!this.form.valid) return
+        this.isSaving = true
+        this.componentInteractionService.emitChange([true])
+        if (this.form.value.id == 0) {
+            this.transferService.addTransfer(this.form.value).subscribe(() => {
+                this.clearFields()
+                this.setFocus('destination')
+            }, error => Utils.errorLogger(error))
+        }
+        else {
+            this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
+                this.abortDataEntry()
+            }, error => Utils.errorLogger(error))
+        }
+    }
+
+    // T 
+    deleteRecord() {
+        const subject = new Subject<boolean>()
+        const modal = this.modalService.show(ModalDialogComponent, {
+            initialState: {
+                title: 'Confirmation',
+                message: 'If you continue, this record will be deleted.',
+                type: 'delete'
+            }, animated: true
+        })
+        modal.content.subject = subject.subscribe(result => {
+            if (result)
+                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
+                    this.scrollBackToList()
+                    this.clearFields()
+                }),
+                    (error: Response) => console.log('Record NOT deleted')
+        })
+    }
+
+    // T 
+    canDeactivate() {
+        if (this.form.dirty) {
+            const subject = new Subject<boolean>()
+            const modal = this.modalService.show(ModalDialogComponent, {
+                initialState: {
+                    title: 'Confirmation',
+                    message: 'If you continue, all changes in this record will be lost.',
+                    type: 'question'
+                }, animated: true
+            })
+            modal.content.subject = subject.subscribe(result => {
+                if (result) {
+                    this.abortDataEntry()
+                }
+            })
+        } else {
+            this.abortDataEntry()
+        }
+    }
+
+    // T 
+    isInvalid(id: { invalid: any }, description: FormControl, lookupArray: any[]) {
+        return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(lookupArray, description))
+    }
+
+    // T 
+    isNumericInvalid(field: any) {
+        return (field.invalid && field.touched)
     }
 
     private populateFields(transfer: ITransfer) {
@@ -86,7 +186,7 @@ export class TransferFormComponent implements OnInit {
     }
 
     private clearFields() {
-        this.form.setValue({
+        this.form.reset({
             id: 0,
             dateIn: this.helperService.getDateFromLocalStorage(),
             destinationId: 0, destinationDescription: '',
@@ -103,7 +203,7 @@ export class TransferFormComponent implements OnInit {
         })
     }
 
-    arrayLookup(lookupArray: any[], givenField: FormControl) {
+    private arrayLookup(lookupArray: any[], givenField: FormControl) {
         for (let x of lookupArray) {
             if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
                 return true
@@ -111,113 +211,71 @@ export class TransferFormComponent implements OnInit {
         }
     }
 
-    calculateTotalPersons() {
-        this.form.patchValue({ totalPersons: parseInt(this.form.value.adults) + parseInt(this.form.value.kids) + parseInt(this.form.value.free) })
-    }
-
-    getTransfer(id: number) {
-        this.transferService.getTransfer(id).subscribe(result => {
-            this.populateFields(result)
-            this.setRecordStatus(false)
-            this.disableFields(['dateIn', 'go'])
-            this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
-            this.scrollToForm()
-            this.setFocus('destination')
-        })
-    }
-
-    newRecord() {
-        this.setRecordStatus(true)
-        this.disableFields(['dateIn', 'go'])
-        this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
-        this.clearFields()
-        this.scrollToList()
-        this.scrollToForm()
-        this.setFocus('destination')
-    }
-
-    saveRecord() {
-        if (!this.form.valid) return
-        this.isSaving = true
-        this.componentInteractionService.emitChange([true])
-        if (this.form.value.id == 0) {
-            this.transferService.addTransfer(this.form.value).subscribe(() => {
-                this.clearFields()
-                this.setFocus('destination')
-            }, error => Utils.errorLogger(error))
-        }
-        else {
-            this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
-                this.scrollBackToList()
-                this.clearFields()
-            }, error => Utils.errorLogger(error))
-        }
-    }
-
-    deleteRecord() {
-        const subject = new Subject<boolean>()
-        const modal = this.modalService.show(ModalDialogComponent, {
-            initialState: {
-                title: 'Confirmation',
-                message: 'If you continue, this record will be deleted.',
-                type: 'delete'
-            }, animated: true
-        })
-        modal.content.subject = subject.subscribe(result => {
-            if (result)
-                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
-                    this.scrollBackToList()
-                    this.clearFields()
-                }),
-                    (error: Response) => console.log('Record NOT deleted')
-        })
-    }
-
-    get canDelete() {
-        return this.form.value.id !== 0 ? true : false
-    }
-
-    get boxWidth() {
-        let windowWidth = document.body.clientWidth
-        let sidebarWidth = Number(document.getElementById('sidebar').clientWidth)
-
-        return windowWidth - sidebarWidth
-    }
-
-    canDeactivate() {
-        if (this.form.dirty) {
-            const subject = new Subject<boolean>()
-            const modal = this.modalService.show(ModalDialogComponent, {
-                initialState: {
-                    title: 'Confirmation',
-                    message: 'If you continue, all changes in this record will be lost.',
-                    type: 'question'
-                }, animated: true
-            })
-            modal.content.subject = subject.subscribe(result => {
-                if (result) {
-                    this.abortDataEntry()
+    private populateDropDowns() {
+        let sources = []
+        sources.push(this.destinationService.getDestinations())
+        sources.push(this.customerService.getCustomers())
+        sources.push(this.pickupPointService.getAllPickupPoints())
+        sources.push(this.driverService.getDrivers())
+        sources.push(this.portService.getPorts())
+        return forkJoin(sources).subscribe(
+            result => {
+                this.destinations = result[0]
+                this.customers = result[1]
+                this.pickupPoints = result[2]
+                this.drivers = result[3]
+                this.ports = result[4]
+            },
+            error => {
+                if (error.status == 404) {
+                    this.router.navigate(['/error'])
                 }
-            })
-        } else {
-            this.abortDataEntry()
-        }
+            }
+        )
     }
 
-    openErrorModal() {
-        const subject = new Subject<boolean>()
-        const modal = this.modalService.show(ModalDialogComponent, {
-            initialState: {
-                title: 'Error',
-                message: 'This record is in use and cannot be deleted.',
-                type: 'error'
-            }, animated: true
-        })
-        modal.content.subject = subject
-        return subject.asObservable()
+    private disableFields(fields: string[]) {
+        Utils.disableFields(fields)
     }
 
-    // #region Get field values
+    private enableFields(fields: string[]) {
+        Utils.enableFields(fields)
+    }
+
+    private scrollToForm() {
+        this.componentInteractionService.emitChange([true])
+        document.getElementById('list').style.zIndex = '-1'
+        document.getElementById('list').style.marginLeft = -parseInt(document.getElementById('form').style.width) - 25 + 'px'
+    }
+
+    private setRecordStatus(status: boolean) {
+        this.isNewRecord = status
+    }
+
+    private setFocus(element: string) {
+        Utils.setFocus(element)
+    }
+
+    private scrollToList() {
+        this.componentInteractionService.emitChange([false])
+        document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) + 'px'
+    }
+
+    private abortDataEntry() {
+        this.clearFields()
+        this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'totalPersons', 'remarks', 'delete', 'save'])
+        this.scrollBackToList()
+        this.enableFields(['dateIn', 'go'])
+        this.setFocus('dateIn')
+    }
+
+    private scrollBackToList() {
+        this.componentInteractionService.emitChange([false])
+        document.getElementById('list').style.zIndex = '0'
+        document.getElementById('list').style.marginLeft = 0 + 'px'
+    }
+
+    // #region Get field values - called from the template
 
     get destinationId() {
         return this.form.get('destinationId')
@@ -273,7 +331,7 @@ export class TransferFormComponent implements OnInit {
 
     //#endregion
 
-    // #region Update dropdowns with values
+    // #region Update dropdowns with values - called from the template
 
     updateDestinationId(lookupArray: any[], e: { target: { value: any } }): void {
         let name = e.target.value
@@ -311,75 +369,5 @@ export class TransferFormComponent implements OnInit {
     }
 
     // #endregion Update dropdowns with values
-
-    private populateDropDowns() {
-        let sources = []
-        sources.push(this.destinationService.getDestinations())
-        sources.push(this.customerService.getCustomers())
-        sources.push(this.pickupPointService.getAllPickupPoints())
-        sources.push(this.driverService.getDrivers())
-        sources.push(this.portService.getPorts())
-        return forkJoin(sources).subscribe(
-            result => {
-                this.destinations = result[0]
-                this.customers = result[1]
-                this.pickupPoints = result[2]
-                this.drivers = result[3]
-                this.ports = result[4]
-            },
-            error => {
-                if (error.status == 404) {
-                    this.router.navigate(['/error'])
-                }
-            }
-        )
-    }
-
-    private disableFields(fields: string[]) {
-        Utils.disableFields(fields)
-    }
-
-    private enableFields(fields: string[]) {
-        Utils.enableFields(fields)
-    }
-
-    private scrollToForm() {
-        this.componentInteractionService.emitChange([true])
-        document.getElementById('list').style.marginLeft = -parseInt(document.getElementById('form').style.width) - 25 + 'px'
-    }
-
-    private setRecordStatus(status: boolean) {
-        this.isNewRecord = status
-    }
-
-    private setFocus(element: string) {
-        Utils.setFocus(element)
-    }
-
-    private scrollBackToList() {
-        this.componentInteractionService.emitChange([false])
-        document.getElementById('list').style.marginLeft = 0 + 'px'
-    }
-
-    private scrollToList() {
-        this.componentInteractionService.emitChange([false])
-        document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) + 'px'
-    }
-
-    private abortDataEntry() {
-        this.scrollBackToList()
-        this.enableFields(['dateIn', 'go'])
-        this.setFocus('dateIn')
-        this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks'])
-        this.clearFields()
-    }
-
-    isInvalid(id: { invalid: any }, description: FormControl, destinationsArray: any[]) {
-        return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(destinationsArray, description))
-    }
-
-    isNumericInvalid(field: any) {
-        return (field.invalid && field.touched)
-    }
 
 }

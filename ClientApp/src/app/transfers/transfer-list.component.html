@@ -98,6 +98,8 @@
                         <th class="center aligned one wide">Kids</th>
                         <th class="center aligned one wide">Free</th>
                         <th class="center aligned one wide">Total</th>
+                        <th class="center aligned">Driver</th>
+                        <th class="center aligned">Port</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,6 +113,8 @@
                         <td class="right aligned">{{ transfer.kids }}</td>
                         <td class="right aligned">{{ transfer.free }}</td>
                         <td class="right aligned">{{ transfer.totalPersons }}</td>
+                        <td>{{ transfer.driver.description }}</td>
+                        <td>{{ transfer.port.description }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -118,7 +122,7 @@
         <div id="footer">
             <div class="ui divider"></div>
             <div id="buttons">
-                <button class="ui button primary" id="new" (click)="newRecord()">New</button>
+                <button class="ui button primary" id="new" [disabled]="queryResult.persons == undefined" (click)="newRecord()">New</button>
             </div>
         </div>
     </div>
