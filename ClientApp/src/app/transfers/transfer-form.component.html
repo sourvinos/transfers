@@ -1,7 +1,7 @@
 <div id="content">
     <form [formGroup]="form" class="ui form" autocomplete="off">
         <div id="left">
-            <div class="field" [class.error]="isInvalid(destinationId, destinationDescription, destinations)">
+            <div class="field" [class.error]="isValidInput(destinationDescription, destinationId, destinations)">
                 <label for="destination">Destination</label>
                 <input type="text" list="destinationList" formControlName="destinationDescription" (change)="updateDestinationId(destinations, $event)" tabindex="1" id="destination">
                 <datalist id="destinationList">
@@ -10,7 +10,7 @@
                     </select>
                 </datalist>
             </div>
-            <div class="field" [class.error]="isInvalid(customerId, customerDescription, customers)">
+            <div class="field" [class.error]="isValidInput(customerDescription, customerId, customers)">
                 <label for="destination">Customer</label>
                 <input type="text" list="customerList" formControlName="customerDescription" (change)="updateCustomerId(customers, $event)" tabindex="2" id="customer">
                 <datalist id="customerList">
@@ -19,7 +19,7 @@
                     </select>
                 </datalist>
             </div>
-            <div class="field" [class.error]="isInvalid(pickupPointId, pickupPointDescription, pickupPoints)">
+            <div class="field" [class.error]="isValidInput(pickupPointDescription, pickupPointId, pickupPoints)">
                 <label for="pickupPoint">Pickup point</label>
                 <input type="text" list="pickupPointList" formControlName="pickupPointDescription" (change)="updatePickupPointId(pickupPoints, $event)" tabindex="3" id="pickupPoint">
                 <datalist id="pickupPointList">
@@ -29,15 +29,15 @@
                 </datalist>
             </div>
             <div class="fields">
-                <div class="field numeric" [class.error]="isNumericInvalid(adults)">
+                <div class="field numeric" [class.error]="isValidInput(adults)">
                     <label for="adults">Adults</label>
                     <input type="text" class="number" formControlName="adults" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()" tabindex="4" id="adults">
                 </div>
-                <div class="field numeric" [class.error]="isNumericInvalid(kids)">
+                <div class="field numeric" [class.error]="isValidInput(kids)">
                     <label for="kids">Kids</label>
                     <input type="text" class="number" formControlName="kids" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()" tabindex="5" id="kids">
                 </div>
-                <div class="field numeric" [class.error]="isNumericInvalid(kids)">
+                <div class="field numeric" [class.error]="isValidInput(kids)">
                     <label for="free">Free</label>
                     <input type="text" class="number" formControlName="free" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()" tabindex="6" id="free">
                 </div>
@@ -46,7 +46,7 @@
                     <input type="text" class="number" formControlName="totalPersons" id="totalPersons">
                 </div>
             </div>
-            <div class="field" [class.error]="isInvalid(driverId, driverDescription, drivers)">
+            <div class="field" [class.error]="isValidInput(driverDescription, driverId, drivers)">
                 <label for="driver">Driver</label>
                 <input type="text" list="driverList" formControlName="driverDescription" (change)="updateDriverId(drivers, $event)" tabindex="7" id="driver">
                 <datalist id="driverList">
@@ -55,7 +55,7 @@
                     </select>
                 </datalist>
             </div>
-            <div class="field" [class.error]="isInvalid(portId, portDescription, ports)">
+            <div class="field" [class.error]="isValidInput(portDescription, portId, ports)">
                 <label for="port">Port</label>
                 <input type="text" list="portList" formControlName="portDescription" (change)="updatePortId(ports, $event)" tabindex="8" id="port">
                 <datalist id="portList">
@@ -64,7 +64,7 @@
                     </select>
                 </datalist>
             </div>
-            <div class="field">
+            <div class="field" [class.error]="isValidInput(remarks)">
                 <label for="remarks">Remarks</label>
                 <input type="text" formControlName="remarks" tabindex="9" id="remarks">
             </div>

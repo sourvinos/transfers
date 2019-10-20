@@ -51,7 +51,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         kids: [0, Validators.required],
         free: [0, Validators.required],
         totalPersons: 0,
-        remarks: [''],
+        remarks: ['', Validators.maxLength(100)],
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
@@ -95,45 +95,8 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
 
     // T 
     calculateTotalPersons() {
-        this.form.patchValue({ totalPersons: parseInt(this.form.value.adults) + parseInt(this.form.value.kids) + parseInt(this.form.value.free) })
-    }
-
-    // T 
-    saveRecord() {
-        if (!this.form.valid) return
-        this.isSaving = true
-        this.componentInteractionService.emitChange([true])
-        if (this.form.value.id == 0) {
-            this.transferService.addTransfer(this.form.value).subscribe(() => {
-                this.clearFields()
-                this.setFocus('destination')
-            }, error => Utils.errorLogger(error))
-        }
-        else {
-            this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
-                this.abortDataEntry()
-            }, error => Utils.errorLogger(error))
-        }
-    }
-
-    // T 
-    deleteRecord() {
-        const subject = new Subject<boolean>()
-        const modal = this.modalService.show(ModalDialogComponent, {
-            initialState: {
-                title: 'Confirmation',
-                message: 'If you continue, this record will be deleted.',
-                type: 'delete'
-            }, animated: true
-        })
-        modal.content.subject = subject.subscribe(result => {
-            if (result)
-                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
-                    this.scrollBackToList()
-                    this.clearFields()
-                }),
-                    (error: Response) => console.log('Record NOT deleted')
-        })
+        let totalPersons = parseInt(this.form.value.adults) + parseInt(this.form.value.kids) + parseInt(this.form.value.free)
+        this.form.patchValue({ totalPersons: !!Number(totalPersons) ? totalPersons : 0 })
     }
 
     // T 
@@ -158,13 +121,47 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     }
 
     // T 
-    isInvalid(id: { invalid: any }, description: FormControl, lookupArray: any[]) {
-        return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(lookupArray, description))
+    deleteRecord() {
+        const subject = new Subject<boolean>()
+        const modal = this.modalService.show(ModalDialogComponent, {
+            initialState: {
+                title: 'Confirmation',
+                message: 'If you continue, this record will be deleted.',
+                type: 'delete'
+            }, animated: true
+        })
+        modal.content.subject = subject.subscribe(result => {
+            if (result)
+                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
+                    this.scrollBackToList()
+                    this.clearFields()
+                }),
+                    (error: Response) => console.log('Record NOT deleted')
+        })
     }
 
     // T 
-    isNumericInvalid(field: any) {
-        return (field.invalid && field.touched)
+    isValidInput(description: FormControl, id?: { invalid: any }, lookupArray?: any[]) {
+        if (id == null) return (description.invalid && description.touched)
+        if (id != null) return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(lookupArray, description))
+    }
+
+    // T 
+    saveRecord() {
+        if (!this.form.valid) return
+        this.isSaving = true
+        this.componentInteractionService.emitChange([true])
+        if (this.form.value.id == 0) {
+            this.transferService.addTransfer(this.form.value).subscribe(() => {
+                this.clearFields()
+                this.setFocus('destination')
+            }, error => Utils.errorLogger(error))
+        }
+        else {
+            this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
+                this.abortDataEntry()
+            }, error => Utils.errorLogger(error))
+        }
     }
 
     private populateFields(transfer: ITransfer) {
@@ -327,6 +324,10 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
 
     get portDescription() {
         return this.form.get('portDescription')
+    }
+
+    get remarks() {
+        return this.form.get('remarks')
     }
 
     //#endregion

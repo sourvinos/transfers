@@ -233,5 +233,4 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         return windowWidth - sidebarWidth
     }
 
-
 }
