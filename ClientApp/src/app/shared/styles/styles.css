@@ -16,6 +16,23 @@ body, h1, h2, h3 {
     margin: 0 !important;
 }
 
+p {
+    color: var(--color-label);
+    font-size: 13px;
+    margin: 0 !important;
+    padding: 0;
+}
+
+input.date {
+    text-align: center;
+}
+
+input.number {
+    margin: 0 0.5rem 1rem 0 !important;
+    text-align: right;
+    width: 80px !important;
+}
+
 input:focus {
     background-color: var(--color-input-focus) !important;
 }
@@ -40,15 +57,11 @@ button.ui.button:not(:disabled) {
 
 button.ui.button::first-letter {
     text-decoration: underline;
-  }
+}
 
 button.ui.button:disabled {
     cursor: not-allowed !important;
     pointer-events: all !important;
-}
-
-.date {
-    text-align: center;
 }
 
 .dropdown {
@@ -56,7 +69,7 @@ button.ui.button:disabled {
 }
 
 .search.icon {
-    margin-top: 0.8rem !important;
+    margin-top: 0.2rem !important;
 }
 
 #section-one {
@@ -92,16 +105,6 @@ button.ui.button:disabled {
     width: 40rem
 }
 
-div.field.numeric {
-    padding: 0 !important;
-}
-
-.number {
-    margin: 0 0.5rem 1rem 0 !important;
-    text-align: right;
-    width: 80px !important;
-}
-
 .navigation-icon {
     color: var(--color-icon);
     cursor: pointer;
@@ -114,7 +117,7 @@ div.field.numeric {
     transform: translateY(3px);
 }
 
-.fields{
+.fields {
     margin: 0 !important;
 }
 
@@ -122,19 +125,32 @@ div.field.numeric {
     display: none !important;
 }
 
+#footer {
+    grid-area: footer;
+    margin: 0 2rem 2rem 2rem;
+}
+
+#footer #buttons {
+    align-items: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 1rem;
+}
+
 /* ! Wide screen */
 @media only screen and (min-width: 80.0625rem) {
-	.icon {
-		margin-left: 0 !important;
+    .icon {
+        margin-left: 0 !important;
     }
 }
 
 /* ! Narrow screen */
 @media only screen and (max-width: 80rem) {
-	.icon {
-		margin-left: 2rem !important;
+    .icon {
+        margin-left: 2rem !important;
     }
+
     h1 {
         margin-left: 1rem !important;
-    }    
+    }
 }

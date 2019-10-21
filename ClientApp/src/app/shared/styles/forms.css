@@ -1,6 +1,6 @@
 :host {
     display: grid;
-    grid-template-areas: 
+    grid-template-areas:
         "header"
         "content"
         "footer";
@@ -36,15 +36,6 @@
     height: 100%;
 }
 
-#footer {
-    grid-area: "footer";
-    margin: 0 2rem 2rem 2rem;
-    text-align: right;
-}
-
-#footer #buttons {
-    margin-right: 1rem;
-}
 
 .ui.divider {
     margin: 1.8rem 0 2rem 0;
@@ -59,6 +50,7 @@
     h1 {
         margin-left: 0 !important;
     }
+
     .navigation-icon {
         margin-left: 2rem !important;
     }

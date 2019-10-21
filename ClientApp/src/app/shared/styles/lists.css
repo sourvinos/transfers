@@ -1,6 +1,6 @@
 :host {
     display: grid;
-    grid-template-areas:         
+    grid-template-areas:
         "header"
         "content"
         "footer";
@@ -50,16 +50,6 @@
     position: relative;
 }
 
-#footer {
-    grid-area: footer;
-    margin: 0 2rem 2rem 2rem;
-    text-align: right;
-}
-
-#footer #buttons {
-    margin-right: 1rem;
-}
-
 #scrollable {
     overflow-x: hidden;
     overflow-y: scroll;
@@ -94,14 +84,15 @@ table {
 table th {
     background-color: var(--color-table-header-background) !important;
     border-radius: 0 !important;
-    border: 0 !important;
+    border-bottom: 0 !important;
+    border-top: 0 !important;
     color: var(--color-table-header-text);
     position: sticky;
     top: 0;
 }
 
 table tbody {
-    background-color: var(--color-table-rows-background)!important;
+    background-color: var(--color-table-rows-background) !important;
 }
 
 table tr:hover {

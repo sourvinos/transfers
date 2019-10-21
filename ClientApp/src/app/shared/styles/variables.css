@@ -1,7 +1,7 @@
 * {
     /* Weights */
     --font-weight-buttons: 100 !important;
-    --font-weight-headers:100 !important;
+    --font-weight-headers: 100 !important;
     --font-weight-labels: 100 !important;
 }
 
@@ -62,7 +62,7 @@
     --color-summary-block-border-inactive: #939393;
     --color-summary-block-item-hover: #FFFFFF;
     --color-summary-block-item: #939393;
-    --color-table-header-background: #808080;
+    --color-table-header-background: #b3b2b2;
     --color-table-header-text: #939393;
     --color-table-row-hover: #F5F5F5;
     --color-table-rows-background: #D3D3D3;

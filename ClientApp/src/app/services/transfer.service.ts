@@ -28,7 +28,7 @@ export class TransferService {
     }
 
     addTransfer(formData: ITransfer): Observable<ITransfer> {
-        return this.http.post<ITransfer>(this.url, formData).pipe(tap(() => { console.log('Post save'); this._refreshNeeded.next() }))
+        return this.http.post<ITransfer>(this.url, formData).pipe(tap(() => this._refreshNeeded.next()))
     }
 
     updateTransfer(id: number, formData: ITransfer): Observable<ITransfer> {

@@ -9,7 +9,7 @@
         <p>{{ message }}</p>
     </div>
     <div class="modal-footer">
-        <button *ngIf="type!='error'" class="ui facebook button" (click)="action(false)">Cancel</button>
-        <button class="ui twitter button right" (click)="action(true)">OK</button>
+        <button *ngIf="type!='error'" class="ui facebook button" id="cancel" (click)="action(false)">Cancel</button>
+        <button class="ui twitter button right" id="ok" (click)="action(true)">OK</button>
     </div>
 </div>

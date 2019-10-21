@@ -1,97 +1,65 @@
 <div id="header">
     <div>
-        <i class="big arrow alternate circle left outline icon navigation-icon" [routerLink]="['/customers']"></i>
+        <i class="big arrow alternate circle left outline icon navigation-icon" id="goBack" (click)="goBack()"></i>
         <h1>Customer</h1>
     </div>
-    <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
-    <!-- <p>{{ form.dirty }}</p> -->
     <div class="ui divider"></div>
 </div>
 
 <div id="content">
     <form [formGroup]="form" class="ui form" autocomplete="off">
         <div id="left">
-            <div class="field">
+            <div class="field" [class.error]="isValidInput(description)">
                 <label for="description">Description</label>
-                <div class="input">
-                    <i *ngIf="description.invalid" class="red exclamation triangle icon"></i>
-                    <input type="text" formControlName="description" tabindex="1" id="description">
-                </div>
+                <input type="text" formControlName="description" tabindex="1" id="description">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="isValidInput(profession)">
                 <label for="profession">Profession</label>
-                <div class="input">
-                    <i *ngIf="profession.invalid" class="red exclamation triangle icon"></i>
-                    <input type="text" formControlName="profession" tabindex="2" id="profession">
-                </div>
+                <input type="text" formControlName="profession" tabindex="2" id="profession">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="isValidInput(address)">
                 <label for="address">Address</label>
-                <div class="input">
-                    <i *ngIf="address.invalid" class="red exclamation triangle icon"></i>
-                    <input type="text" formControlName="address" tabindex="3" id="address">
-                </div>
+                <input type="text" formControlName="address" tabindex="3" id="address">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="isValidInput(phones)">
                 <label for="phones">Phones</label>
-                <div class="input">
-                    <i *ngIf="phones.invalid" class="red exclamation triangle icon"></i>
-                    <input type="text" formControlName="phones" tabindex="4" id="phones">
-                </div>
+                <input type="text" formControlName="phones" tabindex="4" id="phones">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="isValidInput(personInCharge)">
                 <label for="personInCharge">Person in charge</label>
-                <div class="input">
-                    <i *ngIf="personInCharge.invalid" class="red exclamation triangle icon"></i>
-                    <input type="text" formControlName="personInCharge" tabindex="5" id="personInCharge">
-                </div>
+                <input type="text" formControlName="personInCharge" tabindex="5" id="personInCharge">
             </div>
         </div>
         <div id="right">
-            <div class="field">
+            <div class="field" [class.error]="isValidInput(email)">
                 <label for="email">Email</label>
-                <div class="input">
-                    <i *ngIf="email.invalid" class="red exclamation triangle icon"></i>
-                    <input type="text" formControlName="email" tabindex="6" id="email">
-                </div>
+                <input type="text" formControlName="email" tabindex="6" id="email">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="isValidInput(taxNo)">
                 <label for="taxNo">Tax number</label>
-                <div class="input">
-                    <i *ngIf="taxNo.invalid" class="red exclamation triangle icon"></i>
-                    <input type="text" formControlName="taxNo" tabindex="7" id="taxNo">
-                </div>
+                <input type="text" formControlName="taxNo" tabindex="7" id="taxNo">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="isValidInput(accountCode)">
                 <label for="accountCode">Account code</label>
-                <div class="input">
-                    <i *ngIf="accountCode.invalid" class="red exclamation triangle icon"></i>
-                    <input type="text" formControlName="accountCode" tabindex="8" id="accountCode">
-                </div>
+                <input type="text" formControlName="accountCode" tabindex="8" id="accountCode">
             </div>
-            <div class="field">
+            <div class="field" [class.error]="isValidInput(taxOfficeDescription, taxOfficeId, taxOffices)">
                 <label for="taxOffice">Tax office</label>
-                <div class="input">
-                    <input type="text" list="taxOfficeList" formControlName="taxOfficeDescription" (change)="updateTaxOfficeId(taxOffices, $event)" tabindex="9" id="taxOffice">
-                    <i *ngIf="(taxOfficeId.invalid && taxOfficeDescription.invalid) || (!arrayLookup(taxOffices, taxOfficeDescription))" class="red exclamation triangle icon"></i>
-                    <datalist id="taxOfficeList">
-                        <select>
-                            <option *ngFor="let taxOffice of taxOffices" [value]="taxOffice.description"></option>
-                        </select>
-                    </datalist>
-                </div>
+                <input type="text" list="taxOfficesList" formControlName="taxOfficeDescription" (change)="updateTaxOfficeId(taxOffices, $event)" tabindex="9" id="taxOffice">
+                <datalist id="taxOfficesList">
+                    <select>
+                        <option *ngFor="let taxOffice of taxOffices" [value]="taxOffice.description"></option>
+                    </select>
+                </datalist>
             </div>
-            <div class="field">
+            <div class="field" [class.error]="isValidInput(vatStateDescription, vatStateId, vatStates)">
                 <label for="vatState">VAT regime</label>
-                <div class="input">
-                    <input type="text" list="vatStateList" formControlName="vatStateDescription" (change)="updateVatStateId(vatStates, $event)" tabindex="10" id="vatState">
-                    <i *ngIf="(vatStateId.invalid && vatStateDescription.invalid) || (!arrayLookup(vatStates, vatStateDescription))" class="red exclamation triangle icon"></i>
-                    <datalist id="vatStateList">
-                        <select>
-                            <option *ngFor="let vatState of vatStates" [value]="vatState.description"></option>
-                        </select>
-                    </datalist>
-                </div>
+                <input type="text" list="vatStateList" formControlName="vatStateDescription" (change)="updateVatStateId(vatStates, $event)" tabindex="10" id="vatState">
+                <datalist id="vatStateList">
+                    <select>
+                        <option *ngFor="let vatState of vatStates" [value]="vatState.description"></option>
+                    </select>
+                </datalist>
             </div>
         </div>
     </form>
@@ -100,7 +68,8 @@
 <div id="footer">
     <div class="ui divider"></div>
     <div id="buttons">
-        <button class="ui button delete" (click)="delete()" [hidden]="!form.value.id">Delete</button>
-        <button class="ui button primary" (click)="save()">Save</button>
+        <p>{{ form.value | json }} {{ form.valid }}</p>
+        <button class="ui button delete" [class.hidden]="isNewRecord" id="delete" (click)="deleteRecord()">Delete</button>
+        <button class="ui button primary" id="save" (click)="saveRecord()">Save</button>
     </div>
 </div>

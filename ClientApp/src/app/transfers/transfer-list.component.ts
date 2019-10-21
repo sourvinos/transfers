@@ -33,13 +33,13 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     isNewRecord: boolean = false
     isFormVisible: boolean = false
 
-    keyboardShortcuts: KeyboardShortcuts
+    // keyboardShortcuts: KeyboardShortcuts
     unlisten: Unlisten
 
     @ViewChild(TransferFormComponent) private transferForm: TransferFormComponent
 
-    constructor(private service: TransferService, private componentInteractionService: ComponentInteractionService, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, keyboardShortcuts: KeyboardShortcuts) {
-        this.keyboardShortcuts = keyboardShortcuts
+    constructor(private service: TransferService, private componentInteractionService: ComponentInteractionService, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts) {
+        // this.keyboardShortcuts = keyboardShortcuts
         this.unlisten = null
         this.componentInteractionService.changeEmitted.subscribe((result) => {
             this.isFormVisible = result[0]
@@ -192,7 +192,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     addShortcuts() {
-        this.unlisten = this.keyboardShortcuts.listen({
+        this.unlisten = this.keyboardShortcutsService.listen({
             "Escape": (event: KeyboardEvent): void => {
                 if (this.isFormVisible && !document.getElementsByClassName('modal-dialog')[0]) {
                     this.goBack()

@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core'
+import { CountdownService } from './../services/countdown.service';
+import { AfterViewInit, Component, OnInit, OnDestroy } from '@angular/core'
 import { FormBuilder, FormControl, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router'
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal'
@@ -9,6 +10,7 @@ import { TaxOfficeService } from '../services/taxOffice.service'
 import { VatStateService } from '../services/vatState.service'
 import { Utils } from '../shared/classes/utils'
 import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
+import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 
 @Component({
     selector: 'app-customer-form',
@@ -16,14 +18,16 @@ import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-di
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class CustomerFormComponent implements OnInit, AfterViewInit {
+export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     taxOffices: any
     vatStates: any
 
-    id: number = null
-    isSaving: boolean = false
+    id: number
+    isNewRecord: boolean
+
     modalRef: BsModalRef
+    unlisten: Unlisten
 
     form = this.formBuilder.group({
         id: 0,
@@ -38,38 +42,114 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
         personInCharge: ['', [Validators.maxLength(100)]],
         email: ['', [Validators.maxLength(100)]],
         taxNo: ['', [Validators.maxLength(100)]],
-        accountCode: ['', [Validators.maxLength(100)]]
+        accountCode: ['', [Validators.maxLength(100)]],
+        userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService) {
+    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService, private keyboardShortcutsService: KeyboardShortcuts) {
         route.params.subscribe(p => (this.id = p['id']))
+        this.unlisten = null
     }
 
     ngOnInit() {
-        let sources = []
-        sources.push(this.taxOfficeService.getTaxOffices())
-        sources.push(this.vatStateService.getVatStates())
-        if (this.id) {
-            sources.push(this.customerService.getCustomer(this.id))
-        }
-        return forkJoin(sources).subscribe(
-            result => {
-                this.taxOffices = result[0]
-                this.vatStates = result[1]
-                if (this.id) {
-                    this.populateFields()
-                }
-            },
-            error => {
-                if (error.status == 404) {
-                    this.router.navigate(['/error'])
-                }
-            }
-        )
+        this.addShortcuts()
+        this.populateDropDowns()
     }
 
     ngAfterViewInit(): void {
         document.getElementById("description").focus()
+    }
+
+    public ngOnDestroy(): void {
+        (this.unlisten) && this.unlisten();
+    }
+
+    // Master
+    canDeactivate(): Observable<boolean> | boolean {
+        if (this.form.dirty) {
+            const subject = new Subject<boolean>()
+            const modal = this.modalService.show(ModalDialogComponent, {
+                initialState: {
+                    title: 'Confirmation',
+                    message: 'If you continue, all changes in this record will be lost.',
+                    type: 'question'
+                }, animated: true
+            })
+            modal.content.subject = subject
+            return subject.asObservable()
+        }
+        return true
+    }
+
+    // T
+    deleteRecord() {
+        if (this.id !== null) {
+            const subject = new Subject<boolean>()
+            const modal = this.modalService.show(ModalDialogComponent, {
+                initialState: {
+                    title: 'Confirmation',
+                    message: 'If you continue, this record will be deleted.',
+                    type: 'delete'
+                }, animated: true
+            })
+            modal.content.subject = subject
+            return subject.asObservable().subscribe(result => {
+                if (result)
+                    this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate(['/customers']), error => {
+                        Utils.errorLogger(error)
+                        this.openErrorModal()
+                    })
+            })
+        }
+    }
+
+    // T
+    goBack() {
+        this.router.navigate(['/customers'])
+    }
+
+    // T 
+    isValidInput(description: FormControl, id?: { invalid: any }, lookupArray?: any[]) {
+        if (id == null) return (description.invalid && description.touched)
+        if (id != null) return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(lookupArray, description))
+    }
+
+    // T
+    saveRecord() {
+        if (!this.form.valid) return
+        if (this.isNewRecord) {
+            this.customerService.addCustomer(this.form.value).subscribe(() => {
+                this.form.reset();
+                this.router.navigate(['/customers'])
+            }, error => Utils.errorLogger(error))
+        }
+        if (!this.isNewRecord) {
+            this.customerService.updateCustomer(this.id, this.form.value).subscribe(() => {
+                this.form.reset();
+                this.router.navigate(['/customers'])
+            }, error => Utils.errorLogger(error))
+        }
+    }
+
+    private arrayLookup(lookupArray: any[], givenField: FormControl) {
+        for (let x of lookupArray) {
+            if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
+                return true
+            }
+        }
+    }
+
+    private openErrorModal() {
+        const subject = new Subject<boolean>()
+        const modal = this.modalService.show(ModalDialogComponent, {
+            initialState: {
+                title: 'Error',
+                message: 'This record is in use and cannot be deleted.',
+                type: 'error'
+            }, animated: true
+        })
+        modal.content.subject = subject
+        return subject.asObservable()
     }
 
     private populateFields() {
@@ -88,13 +168,76 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
                     personInCharge: result.personInCharge,
                     email: result.email,
                     taxNo: result.taxNo,
-                    accountCode: result.accountCode
+                    accountCode: result.accountCode,
+                    userName: result.userName
                 })
             },
             error => {
                 Utils.errorLogger(error)
             })
     }
+
+    private populateDropDowns() {
+        let sources = []
+        sources.push(this.taxOfficeService.getTaxOffices())
+        sources.push(this.vatStateService.getVatStates())
+        if (this.id) {
+            sources.push(this.customerService.getCustomer(this.id))
+        }
+        return forkJoin(sources).subscribe(
+            result => {
+                this.taxOffices = result[0]
+                this.vatStates = result[1]
+                if (this.id) {
+                    this.isNewRecord = false
+                    this.populateFields()
+                } else {
+                    this.isNewRecord = true
+                }
+            },
+            error => {
+                if (error.status == 404) {
+                    this.router.navigate(['/error'])
+                }
+            }
+        )
+    }
+
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            "Escape": (event: KeyboardEvent): void => {
+                if (!document.getElementsByClassName('modal-dialog')[0]) {
+                    event.preventDefault()
+                    document.getElementById('goBack').click()
+                }
+            },
+            "Alt.D": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                document.getElementById('delete').click()
+            },
+            "Alt.C": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('modal-dialog')[0]) {
+                    event.preventDefault()
+                    document.getElementById('cancel').click()
+                }
+            },
+            "Alt.O": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('modal-dialog')[0]) {
+                    event.preventDefault()
+                    document.getElementById('ok').click()
+                }
+            },
+            "Alt.S": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                document.getElementById('save').click()
+            },
+        }, {
+            priority: 2,
+            inputs: true
+        })
+    }
+
+    // #region Update dropdowns with values - called from the template
 
     get description() {
         return this.form.get('description')
@@ -144,13 +287,9 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
         return this.form.get('vatStateDescription')
     }
 
-    arrayLookup(lookupArray: any[], givenField: FormControl) {
-        for (let x of lookupArray) {
-            if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
-                return true
-            }
-        }
-    }
+    //#endregion
+
+    // #region Update dropdowns with values - called from the template
 
     updateTaxOfficeId(lookupArray: any[], e: { target: { value: any } }): void {
         let name = e.target.value
@@ -164,67 +303,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
         this.form.patchValue({ vatStateId: list ? list.id : '' })
     }
 
-    save() {
-        if (!this.form.valid) return
-        this.isSaving = true
-        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
-        if (this.id == null) {
-            this.customerService.addCustomer(this.form.value).subscribe(() => this.router.navigate(['/customers']), error => Utils.errorLogger(error))
-        }
-        else {
-            this.customerService.updateCustomer(this.form.value.id, this.form.value).subscribe(() => this.router.navigate(['/customers']), error => Utils.errorLogger(error))
-        }
-    }
-
-    delete() {
-        if (this.id !== null) {
-            const subject = new Subject<boolean>()
-            const modal = this.modalService.show(ModalDialogComponent, {
-                initialState: {
-                    title: 'Confirmation',
-                    message: 'If you continue, this record will be deleted.',
-                    type: 'delete'
-                }, animated: true
-            })
-            modal.content.subject = subject
-            return subject.asObservable().subscribe(result => {
-                if (result)
-                    this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate(['/customers']), error => {
-                        Utils.errorLogger(error)
-                        this.openErrorModal()
-                    })
-            })
-        }
-    }
-
-    canDeactivate(): Observable<boolean> | boolean {
-        if (!this.isSaving && this.form.dirty) {
-            this.isSaving = false
-            const subject = new Subject<boolean>()
-            const modal = this.modalService.show(ModalDialogComponent, {
-                initialState: {
-                    title: 'Confirmation',
-                    message: 'If you continue, all changes in this record will be lost.',
-                    type: 'question'
-                }, animated: true
-            })
-            modal.content.subject = subject
-            return subject.asObservable()
-        }
-        return true
-    }
-
-    openErrorModal() {
-        const subject = new Subject<boolean>()
-        const modal = this.modalService.show(ModalDialogComponent, {
-            initialState: {
-                title: 'Error',
-                message: 'This record is in use and cannot be deleted.',
-                type: 'error'
-            }, animated: true
-        })
-        modal.content.subject = subject
-        return subject.asObservable()
-    }
+    // #endregion Update dropdowns with values
 
 }
