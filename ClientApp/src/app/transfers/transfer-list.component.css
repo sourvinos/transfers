@@ -10,7 +10,7 @@
 #list {
     background-color: var(--color-background);
     display: grid;
-    grid-template-areas: 
+    grid-template-areas:
         "list"
         "footer";
     grid-template-rows: auto min-content;
@@ -19,19 +19,19 @@
 }
 
 #form {
-    background-color:var(--color-background);
- }
+    background-color: var(--color-background);
+}
 
 .activeItem {
     border-left-color: var(--color-summary-block-border-active) !important;
 }
 
-#empty > #footer {
+#empty>#footer {
     margin: 0 2rem 2rem 2rem;
     text-align: end;
 }
 
-#list > #footer {
+#list>#footer {
     margin: 0 0.24rem 2rem 0;
     padding: 0;
 }
@@ -54,6 +54,7 @@
     background-color: var(--color-background);
     display: grid;
     margin-right: 1.5rem;
+    overflow-x: hidden;
     overflow-y: scroll;
     padding-left: 2rem;
     row-gap: 0.5rem;
@@ -93,7 +94,7 @@
     margin-bottom: 1rem;
 }
 
-.summaryBlock header.total{
+.summaryBlock header.total {
     font-family: var(--font-family-summary-block-header-total);
 }
 

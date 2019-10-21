@@ -33,13 +33,11 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     isNewRecord: boolean = false
     isFormVisible: boolean = false
 
-    // keyboardShortcuts: KeyboardShortcuts
     unlisten: Unlisten
 
     @ViewChild(TransferFormComponent) private transferForm: TransferFormComponent
 
     constructor(private service: TransferService, private componentInteractionService: ComponentInteractionService, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts) {
-        // this.keyboardShortcuts = keyboardShortcuts
         this.unlisten = null
         this.componentInteractionService.changeEmitted.subscribe((result) => {
             this.isFormVisible = result[0]
@@ -194,32 +192,27 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             "Escape": (event: KeyboardEvent): void => {
-                if (this.isFormVisible && !document.getElementsByClassName('modal-dialog')[0]) {
-                    this.goBack()
-                }
+                if (this.isFormVisible && !document.getElementsByClassName('modal-dialog')[0]) { this.goBack() }
             },
             "Alt.N": (event: KeyboardEvent): void => {
-                if (!this.isFormVisible && !document.getElementById('new').hasAttribute('disabled')) {
-                    this.transferForm.newRecord()
-                }
-                event.preventDefault()
+                if (!this.isFormVisible && !document.getElementById('new').hasAttribute('disabled')) { this.transferForm.newRecord() }
             },
             "Alt.D": (event: KeyboardEvent): void => {
-                if (this.isFormVisible && !document.getElementById('delete').classList.contains('hidden') && !document.getElementsByClassName('modal-dialog')[0]) {
-                    this.transferForm.deleteRecord()
-                    event.preventDefault()
-                }
                 event.preventDefault()
+                if (this.isFormVisible && !document.getElementById('delete').classList.contains('hidden') && !document.getElementsByClassName('modal-dialog')[0]) { this.transferForm.deleteRecord() }
             },
             "Alt.S": (event: KeyboardEvent): void => {
-                if (!this.isFormVisible && !document.getElementById('go').hasAttribute('disabled')) {
-                    this.getTransfers()
-                }
-                if (this.isFormVisible && !document.getElementById('save').hasAttribute('disabled')) {
-                    this.transferForm.saveRecord()
-                }
+                if (!this.isFormVisible && !document.getElementById('go').hasAttribute('disabled')) { this.getTransfers() }
+                if (this.isFormVisible && !document.getElementById('save').hasAttribute('disabled')) { this.transferForm.saveRecord() }
                 event.preventDefault()
             },
+            "Alt.C": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('modal-dialog')[0]) { document.getElementById('cancel').click() }
+            },
+            "Alt.O": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('modal-dialog')[0]) { document.getElementById('ok').click() }
+            },
+
         }, {
             priority: 0,
             inputs: true

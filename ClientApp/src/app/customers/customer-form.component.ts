@@ -83,7 +83,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // T
     deleteRecord() {
-        if (this.id !== null) {
+        if (this.id != undefined) {
             const subject = new Subject<boolean>()
             const modal = this.modalService.show(ModalDialogComponent, {
                 initialState: {
@@ -207,30 +207,26 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             "Escape": (event: KeyboardEvent): void => {
                 if (!document.getElementsByClassName('modal-dialog')[0]) {
-                    event.preventDefault()
-                    document.getElementById('goBack').click()
+                    this.goBack()
                 }
             },
             "Alt.D": (event: KeyboardEvent): void => {
                 event.preventDefault()
-                document.getElementById('delete').click()
+                this.deleteRecord()
+            },
+            "Alt.S": (event: KeyboardEvent): void => {
+                this.saveRecord()
             },
             "Alt.C": (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('modal-dialog')[0]) {
-                    event.preventDefault()
                     document.getElementById('cancel').click()
                 }
             },
             "Alt.O": (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('modal-dialog')[0]) {
-                    event.preventDefault()
                     document.getElementById('ok').click()
                 }
-            },
-            "Alt.S": (event: KeyboardEvent): void => {
-                event.preventDefault()
-                document.getElementById('save').click()
-            },
+            }
         }, {
             priority: 2,
             inputs: true

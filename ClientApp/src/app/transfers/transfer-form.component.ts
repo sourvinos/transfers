@@ -39,9 +39,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     isFormVisible: boolean = false
     modalRef: BsModalRef
 
-    unlisten: Unlisten
-    keyboardShortcuts: KeyboardShortcuts
-
     form = this.formBuilder.group({
         id: 0,
         dateIn: [this.helperService.getDateFromLocalStorage()],
@@ -58,9 +55,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private componentInteractionService: ComponentInteractionService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService, keyboardShortcuts: KeyboardShortcuts) {
-        this.keyboardShortcuts = keyboardShortcuts
-    }
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private componentInteractionService: ComponentInteractionService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService) { }
 
     ngOnInit() {
         this.populateDropDowns()

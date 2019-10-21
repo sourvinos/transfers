@@ -68,7 +68,7 @@
 <div id="footer">
     <div class="ui divider"></div>
     <div id="buttons">
-        <p>{{ form.value | json }} {{ form.valid }}</p>
+        <p [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
         <button class="ui button delete" [class.hidden]="isNewRecord" id="delete" (click)="deleteRecord()">Delete</button>
         <button class="ui button primary" id="save" (click)="saveRecord()">Save</button>
     </div>
