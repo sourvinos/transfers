@@ -30,6 +30,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
     form = this.formBuilder.group({
         id: 0,
         description: ['', [Validators.required, Validators.maxLength(100)]],
+        phone: ['', [Validators.required, Validators.maxLength(100)]],
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
@@ -146,6 +147,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.form.setValue({
                         id: result.id,
                         description: result.description,
+                        phone: result.phone,
                         userName: result.userName
                     })
                 },
@@ -189,6 +191,10 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     get description() {
         return this.form.get('description')
+    }
+
+    get phone() {
+        return this.form.get('phone')
     }
 
     // #endregion 

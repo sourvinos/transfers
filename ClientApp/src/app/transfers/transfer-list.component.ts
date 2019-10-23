@@ -100,8 +100,8 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     private setElementsDimensions() {
         document.getElementById('header').style.width = this.getBoxWidth() + 'px'
         document.getElementById('empty').style.width = this.getBoxWidth() + 'px'
-        document.getElementById('list').style.width = this.getBoxWidth() - this.getSummariesWidth() - 53 + 'px'
-        document.getElementById('form').style.width = this.getBoxWidth() - this.getSummariesWidth() - 53 + 'px'
+        document.getElementById('list').style.width = this.getBoxWidth() - this.getSummariesWidth() - 151 + 'px'
+        document.getElementById('form').style.width = this.getBoxWidth() - this.getSummariesWidth() - 151 + 'px'
         document.getElementById('summaries').style.height = document.getElementById('scrollable').clientHeight + 'px'
     }
 

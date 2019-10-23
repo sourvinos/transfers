@@ -79,6 +79,7 @@ table {
     background-color: var(--color-background) !important;
     border: 0 !important;
     font-family: var(--font-family-table);
+    padding-right: 0.1rem;
 }
 
 table th {

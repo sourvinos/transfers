@@ -21,11 +21,13 @@
             <thead>
                 <tr>
                     <th class="center aligned">Description</th>
+                    <th class="center aligned">Phone</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let driver of filteredDrivers" routerLink="/drivers/{{ driver.id }}">
                     <td>{{ driver.description }}</td>
+                    <td>{{ driver.phone }}</td>
                 </tr>
             </tbody>
         </table>

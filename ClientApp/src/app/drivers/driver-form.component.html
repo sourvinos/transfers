@@ -13,6 +13,10 @@
                 <label for="description">Description</label>
                 <input type="text" formControlName="description" tabindex="1" id="description">
             </div>
+            <div class="field" [class.error]="isValidInput(phone)">
+                <label for="phone">Phone</label>
+                <input type="text" formControlName="phone" tabindex="2" id="phone">
+            </div>
         </div>
     </form>
 </div>
