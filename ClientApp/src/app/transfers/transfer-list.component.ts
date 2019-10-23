@@ -30,7 +30,6 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         dateIn: ['', [Validators.required]]
     })
 
-    isNewRecord: boolean = false
     isFormVisible: boolean = false
 
     unlisten: Unlisten

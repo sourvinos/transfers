@@ -1,8 +1,7 @@
 <div id="header">
     <div>
-        <i class="big arrow alternate circle left outline icon navigation-icon" [routerLink]="['/pickupPoints']"></i>
+        <i class="big arrow alternate circle left outline icon navigation-icon" id="goBack" (click)="goBack()"></i>
         <h1>Pickup point</h1>
-        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
     </div>
     <div class="ui divider"></div>
 </div>
@@ -10,27 +9,24 @@
 <div id="content">
     <form [formGroup]='form' class="ui form" autocomplete='off'>
         <div id="left">
-            <div class="field">
-                <label for="routeList">Route</label>
-                <div class="input">
-                    <input type="text" list="routeList" formControlName='routeDescription' (change)="updateRouteId(routes, $event)" tabindex="1" id="route">
-                    <i *ngIf="(routeId.invalid && routeDescription.invalid) || (!arrayLookup(routes, routeDescription))" class="red exclamation triangle icon"></i>
-                    <datalist id="routeList">
-                        <select>
-                            <option *ngFor='let route of routes' [value]="route.description"></option>
-                        </select>
-                    </datalist>
-                </div>
+            <div class="field" [class.error]="isValidInput(routeDescription, routeId, routes)">
+                <label for="route">Route</label>
+                <input type="text" list="routesList" formControlName="routeDescription" (change)="updateRouteId(routes, $event)" tabindex="1" id="route">
+                <datalist id="routesList">
+                    <select>
+                        <option *ngFor="let route of routes" [value]="route.description"></option>
+                    </select>
+                </datalist>
             </div>
-            <div class="field" [class.error]="description.invalid && description.touched">
+            <div class="field" [class.error]="isValidInput(description)">
                 <label for="description">Description</label>
                 <input type="text" formControlName="description" tabindex="2" id="description">
             </div>
-            <div class="field" [class.error]="exactPoint.invalid && exactPoint.touched">
+            <div class="field" [class.error]="isValidInput(exactPoint)">
                 <label for="exactPoint">Exact point</label>
                 <input type="text" formControlName="exactPoint" tabindex="3" id="exactPoint">
             </div>
-            <div class="field" [class.error]="time.invalid && time.touched">
+            <div class="field" [class.error]="isValidInput(time)">
                 <label for="time">Time</label>
                 <input type="text" formControlName="time" tabindex="4" id="time">
             </div>
@@ -41,7 +37,8 @@
 <div id="footer">
     <div class="ui divider"></div>
     <div id="buttons">
-        <button class="ui button delete" (click)="delete()" [hidden]="!form.value.id">Delete</button>
-        <button class="ui button primary" (click)="save()">Save</button>
+        <p [class.hidden]=true>{{ form.value | json }} {{ form.valid }} {{ isNewRecord }}</p>
+        <button class="ui button delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
+        <button class="ui button primary" id="save" (click)="saveRecord()">Save</button>
     </div>
 </div>

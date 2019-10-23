@@ -1,16 +1,15 @@
-import { CountdownService } from './../services/countdown.service';
-import { AfterViewInit, Component, OnInit, OnDestroy } from '@angular/core'
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, FormControl, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router'
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal'
 import { forkJoin, Observable, Subject } from 'rxjs'
 import { CustomerService } from '../services/customer.service'
 import { HelperService } from '../services/helper.service'
+import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 import { TaxOfficeService } from '../services/taxOffice.service'
 import { VatStateService } from '../services/vatState.service'
 import { Utils } from '../shared/classes/utils'
 import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
-import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 
 @Component({
     selector: 'app-customer-form',
@@ -20,14 +19,18 @@ import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.serv
 
 export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    // #region Init
+
+    id: number
+    url: string = '/customers'
+
     taxOffices: any
     vatStates: any
 
-    id: number
-    isNewRecord: boolean
-
     modalRef: BsModalRef
     unlisten: Unlisten
+
+    // #endregion     
 
     form = this.formBuilder.group({
         id: 0,
@@ -60,7 +63,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         document.getElementById("description").focus()
     }
 
-    public ngOnDestroy(): void {
+    ngOnDestroy(): void {
         (this.unlisten) && this.unlisten();
     }
 
@@ -95,7 +98,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             modal.content.subject = subject
             return subject.asObservable().subscribe(result => {
                 if (result)
-                    this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate(['/customers']), error => {
+                    this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate([this.url]), error => {
                         Utils.errorLogger(error)
                         this.openErrorModal()
                     })
@@ -105,7 +108,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // T
     goBack() {
-        this.router.navigate(['/customers'])
+        this.router.navigate([this.url])
     }
 
     // T 
@@ -117,16 +120,16 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // T
     saveRecord() {
         if (!this.form.valid) return
-        if (this.isNewRecord) {
+        if (!this.id) {
             this.customerService.addCustomer(this.form.value).subscribe(() => {
                 this.form.reset();
-                this.router.navigate(['/customers'])
+                this.router.navigate([this.url])
             }, error => Utils.errorLogger(error))
         }
-        if (!this.isNewRecord) {
+        if (this.id) {
             this.customerService.updateCustomer(this.id, this.form.value).subscribe(() => {
                 this.form.reset();
-                this.router.navigate(['/customers'])
+                this.router.navigate([this.url])
             }, error => Utils.errorLogger(error))
         }
     }
@@ -153,28 +156,30 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private populateFields() {
-        this.customerService.getCustomer(this.id).subscribe(
-            result => {
-                this.form.setValue({
-                    id: result.id,
-                    description: result.description,
-                    profession: result.profession,
-                    taxOfficeId: result.taxOffice.id,
-                    taxOfficeDescription: result.taxOffice.description,
-                    vatStateId: result.vatState.id,
-                    vatStateDescription: result.vatState.description,
-                    address: result.address,
-                    phones: result.phones,
-                    personInCharge: result.personInCharge,
-                    email: result.email,
-                    taxNo: result.taxNo,
-                    accountCode: result.accountCode,
-                    userName: result.userName
+        if (this.id) {
+            this.customerService.getCustomer(this.id).subscribe(
+                result => {
+                    this.form.setValue({
+                        id: result.id,
+                        description: result.description,
+                        profession: result.profession,
+                        taxOfficeId: result.taxOffice.id,
+                        taxOfficeDescription: result.taxOffice.description,
+                        vatStateId: result.vatState.id,
+                        vatStateDescription: result.vatState.description,
+                        address: result.address,
+                        phones: result.phones,
+                        personInCharge: result.personInCharge,
+                        email: result.email,
+                        taxNo: result.taxNo,
+                        accountCode: result.accountCode,
+                        userName: result.userName
+                    })
+                },
+                error => {
+                    Utils.errorLogger(error)
                 })
-            },
-            error => {
-                Utils.errorLogger(error)
-            })
+        }
     }
 
     private populateDropDowns() {
@@ -189,10 +194,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.taxOffices = result[0]
                 this.vatStates = result[1]
                 if (this.id) {
-                    this.isNewRecord = false
                     this.populateFields()
-                } else {
-                    this.isNewRecord = true
                 }
             },
             error => {
@@ -233,7 +235,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    // #region Update dropdowns with values - called from the template
+    // #region Helper properties
 
     get description() {
         return this.form.get('description')
@@ -283,7 +285,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.form.get('vatStateDescription')
     }
 
-    //#endregion
+    // #endregion
 
     // #region Update dropdowns with values - called from the template
 
@@ -299,6 +301,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.form.patchValue({ vatStateId: list ? list.id : '' })
     }
 
-    // #endregion Update dropdowns with values
+    // #endregion 
 
 }

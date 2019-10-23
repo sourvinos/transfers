@@ -20,34 +20,22 @@
         <table class="ui celled table">
             <thead>
                 <tr>
-                    <th class="center aligned">Id</th>
                     <th class="center aligned">Description</th>
-                    <th class="center aligned">Profession</th>
-                    <th class="center aligned">Tax office</th>
-                    <th class="center aligned">VAT regime</th>
                     <th class="center aligned">Address</th>
                     <th class="center aligned">Phones</th>
                     <th class="center aligned">Person in charge</th>
                     <th class="center aligned">Email</th>
                     <th class="center aligned">Tax No</th>
-                    <th class="center aligned">Account code</th>
-                    <th class="center aligned">User</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let customer of filteredCustomers" routerLink="/customers/{{ customer.id }}">
-                    <td class="center aligned">{{ customer.id }}</td>
                     <td>{{ customer.description }}</td>
-                    <td>{{ customer.profession }}</td>
-                    <td>{{ customer.taxOffice.description }}</td>
-                    <td>{{ customer.vatState.description }}</td>
                     <td>{{ customer.address }}</td>
                     <td>{{ customer.phones }}</td>
                     <td>{{ customer.personInCharge }}</td>
                     <td>{{ customer.email }}</td>
-                    <td>{{ customer.taxNo }}</td>
-                    <td>{{ customer.accountCode }}</td>
-                    <td>{{ customer.userName }}</td>
+                    <td class="center aligned">{{ customer.taxNo }}</td>
                 </tr>
             </tbody>
         </table>

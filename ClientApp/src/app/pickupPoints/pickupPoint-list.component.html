@@ -2,37 +2,37 @@
     <div id="title">
         <h1>Pickup points</h1>
     </div>
-    <div class="ui divider"></div>
     <div id="search-box">
-        <select class="ui dropdown" (change)="onRouteChange()" [(ngModel)]="pickupPoint.route.id" name="routeId" #route="ngModel" required>
+        <select class="ui dropdown" (change)="onRouteChange()" [(ngModel)]="routeId" name="routeId" #route="ngModel" id="routesDropdown" required>
             <option value="">Select route</option>
             <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
         </select>
     </div>
+    <div class="ui divider"></div>
 </div>
 
 <div id="content">
-    <table class="ui sortable fixed table">
-        <thead>
-            <tr>
-                <th class="center aligned">Description</th>
-                <th class="center aligned two wide">Time</th>
-                <th class="center aligned two wide">User</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let pickupPoint of pickupPoints" routerLink="/pickupPoints/{{ pickupPoint.id }}">
-                <td>{{ pickupPoint.description }}</td>
-                <td class="center aligned">{{ pickupPoint.time }}</td>
-                <td>{{ pickupPoint.userName }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div id="scrollable">
+        <table class="ui celled table">
+            <thead>
+                <tr>
+                    <th class="center aligned">Description</th>
+                    <th class="center aligned two wide">Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let pickupPoint of pickupPoints" routerLink="/pickupPoints/{{ pickupPoint.id }}">
+                    <td>{{ pickupPoint.description }}</td>
+                    <td class="center aligned">{{ pickupPoint.time }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div id="footer">
     <div class="ui divider"></div>
     <div id="buttons">
-        <button class="ui button primary" id="new" [routerLink]="['/pickupPoints/new']">New</button>
+        <button class="ui button primary" id="new" (click)="newRecord()">New</button>
     </div>
 </div>

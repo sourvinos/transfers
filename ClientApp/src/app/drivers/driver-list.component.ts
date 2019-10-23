@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core'
-import { get } from 'scriptjs'
-
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Router } from '@angular/router'
 import { DriverService } from '../services/driver.service'
-import { IDriver } from './../models/driver'
+import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 import { Utils } from '../shared/classes/utils'
+import { IDriver } from './../models/driver'
 
 @Component({
     selector: 'driver-list',
@@ -11,19 +11,59 @@ import { Utils } from '../shared/classes/utils'
     styleUrls: ['../shared/styles/lists.css']
 })
 
-export class DriverListComponent implements OnInit {
+export class DriverListComponent implements OnInit, OnDestroy {
+
+    //#region Init
 
     drivers: IDriver[]
     filteredDrivers: IDriver[]
 
-    constructor(private service: DriverService) { }
+    unlisten: Unlisten
+
+    // #endregion
+
+    constructor(private service: DriverService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router) {
+        this.unlisten = null
+    }
 
     ngOnInit() {
+        this.getAllDrivers()
+        this.addShortcuts()
+        this.setFocus('searchField')
+    }
+
+    ngOnDestroy(): void {
+        (this.unlisten) && this.unlisten();
+    }
+
+    // T
+    filter(query: string) {
+        this.filteredDrivers = query ? this.drivers.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.drivers
+    }
+
+    // T
+    newRecord() {
+        this.router.navigate(['/drivers/new'])
+    }
+
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            "Alt.N": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                document.getElementById('new').click()
+            }
+        }, {
+            priority: 1,
+            inputs: true
+        })
+    }
+
+    private getAllDrivers() {
         this.service.getDrivers().subscribe(data => this.filteredDrivers = this.drivers = data, error => Utils.errorLogger(error))
     }
 
-    filter(query: string) {
-        this.filteredDrivers = query ? this.drivers.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.drivers
+    private setFocus(element: string) {
+        Utils.setFocus(element)
     }
 
 }

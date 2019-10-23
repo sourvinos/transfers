@@ -1,11 +1,13 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
+import { FormBuilder, FormControl, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router'
-import { Observable } from 'rxjs'
+import { BsModalRef, BsModalService } from 'ngx-bootstrap'
+import { Observable, Subject } from 'rxjs'
 import { DestinationService } from '../services/destination.service'
-import { DialogService } from '../services/dialog.service'
 import { HelperService } from '../services/helper.service'
+import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 import { Utils } from '../shared/classes/utils'
+import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
 
 @Component({
     selector: 'app-destination-form',
@@ -13,50 +15,179 @@ import { Utils } from '../shared/classes/utils'
     styleUrls: ['../shared/styles/forms.css']
 })
 
-export class DestinationFormComponent implements OnInit, AfterViewInit {
+export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    id: number = null
-    isSaving: boolean = false
+    // #region Init
+
+    id: number
+    url: string = '/destinations'
+
+    modalRef: BsModalRef
+    unlisten: Unlisten
+
+    // #endregion     
 
     form = this.formBuilder.group({
         id: 0,
         abbreviation: ['', [Validators.maxLength(5)]],
-        description: ['', [Validators.required, Validators.maxLength(100)]]
+        description: ['', [Validators.required, Validators.maxLength(100)]],
+        userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private destinationService: DestinationService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private dialogService: DialogService) {
+    constructor(private destinationService: DestinationService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService, private keyboardShortcutsService: KeyboardShortcuts) {
         route.params.subscribe(p => (this.id = p['id']))
+        this.unlisten = null
     }
 
     ngOnInit() {
-        if (this.id) {
-            this.destinationService.getDestination(this.id).subscribe(result => {
-                this.populateFields()
-            }, error => {
-                if (error.status == 404) {
-                    this.router.navigate(['/pageNotFound'])
-                }
-            })
-        }
+        this.addShortcuts()
+        this.populateFields()
     }
 
     ngAfterViewInit(): void {
         document.getElementById("abbreviation").focus()
     }
 
-    populateFields() {
-        this.destinationService.getDestination(this.id).subscribe(
-            result => {
-                this.form.setValue({
-                    id: result.id,
-                    abbreviation: result.abbreviation,
-                    description: result.description
-                })
-            },
-            error => {
-                Utils.errorLogger(error)
-            })
+    ngOnDestroy(): void {
+        (this.unlisten) && this.unlisten();
     }
+
+    // Master
+    canDeactivate(): Observable<boolean> | boolean {
+        if (this.form.dirty) {
+            const subject = new Subject<boolean>()
+            const modal = this.modalService.show(ModalDialogComponent, {
+                initialState: {
+                    title: 'Confirmation',
+                    message: 'If you continue, all changes in this record will be lost.',
+                    type: 'question'
+                }, animated: true
+            })
+            modal.content.subject = subject
+            return subject.asObservable()
+        }
+        return true
+    }
+
+    // T
+    deleteRecord() {
+        if (this.id != undefined) {
+            const subject = new Subject<boolean>()
+            const modal = this.modalService.show(ModalDialogComponent, {
+                initialState: {
+                    title: 'Confirmation',
+                    message: 'If you continue, this record will be deleted.',
+                    type: 'delete'
+                }, animated: true
+            })
+            modal.content.subject = subject
+            return subject.asObservable().subscribe(result => {
+                if (result)
+                    this.destinationService.deleteDestination(this.id).subscribe(() => this.router.navigate([this.url]), error => {
+                        Utils.errorLogger(error)
+                        this.openErrorModal()
+                    })
+            })
+        }
+    }
+
+    // T
+    goBack() {
+        this.router.navigate([this.url])
+    }
+
+    // T 
+    isValidInput(description: FormControl, id?: { invalid: any }, lookupArray?: any[]) {
+        if (id == null) return (description.invalid && description.touched)
+        if (id != null) return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(lookupArray, description))
+    }
+
+    // T
+    saveRecord() {
+        if (!this.form.valid) return
+        if (!this.id) {
+            this.destinationService.addDestination(this.form.value).subscribe(() => {
+                this.form.reset();
+                this.router.navigate([this.url])
+            }, error => Utils.errorLogger(error))
+        }
+        if (this.id) {
+            this.destinationService.updateDestination(this.id, this.form.value).subscribe(() => {
+                this.form.reset();
+                this.router.navigate([this.url])
+            }, error => Utils.errorLogger(error))
+        }
+    }
+
+    private arrayLookup(lookupArray: any[], givenField: FormControl) {
+        for (let x of lookupArray) {
+            if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
+                return true
+            }
+        }
+    }
+
+    private openErrorModal() {
+        const subject = new Subject<boolean>()
+        const modal = this.modalService.show(ModalDialogComponent, {
+            initialState: {
+                title: 'Error',
+                message: 'This record is in use and cannot be deleted.',
+                type: 'error'
+            }, animated: true
+        })
+        modal.content.subject = subject
+        return subject.asObservable()
+    }
+
+    private populateFields() {
+        if (this.id) {
+            this.destinationService.getDestination(this.id).subscribe(
+                result => {
+                    this.form.setValue({
+                        id: result.id,
+                        abbreviation: result.abbreviation,
+                        description: result.description,
+                        userName: result.userName
+                    })
+                },
+                error => {
+                    Utils.errorLogger(error)
+                })
+        }
+    }
+
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            "Escape": (event: KeyboardEvent): void => {
+                if (!document.getElementsByClassName('modal-dialog')[0]) {
+                    this.goBack()
+                }
+            },
+            "Alt.D": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                this.deleteRecord()
+            },
+            "Alt.S": (event: KeyboardEvent): void => {
+                this.saveRecord()
+            },
+            "Alt.C": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('modal-dialog')[0]) {
+                    document.getElementById('cancel').click()
+                }
+            },
+            "Alt.O": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('modal-dialog')[0]) {
+                    document.getElementById('ok').click()
+                }
+            }
+        }, {
+            priority: 2,
+            inputs: true
+        })
+    }
+
+    // #region Helper properties
 
     get abbreviation() {
         return this.form.get('abbreviation')
@@ -66,32 +197,6 @@ export class DestinationFormComponent implements OnInit, AfterViewInit {
         return this.form.get('description')
     }
 
-    save() {
-        if (!this.form.valid) return
-        this.isSaving = true
-        this.form.value.userName = this.helperService.getUsernameFromLocalStorage()
-        if (this.id == null) {
-            this.destinationService.addDestination(this.form.value).subscribe(() => this.router.navigate(['/destinations']), error => Utils.errorLogger(error))
-        }
-        else {
-            this.destinationService.updateDestination(this.id, this.form.value).subscribe(() => this.router.navigate(['/destinations']), error => Utils.errorLogger(error))
-        }
-    }
-
-    delete() {
-        if (this.id !== null) {
-            if (confirm('This record will permanently be deleted. Are you sure?')) {
-                this.destinationService.deleteDestination(this.id).subscribe(() => this.router.navigate(['/destinations']), error => Utils.errorLogger(error))
-            }
-        }
-    }
-
-    canDeactivate(): Observable<boolean> | boolean {
-        if (!this.isSaving && this.form.dirty) {
-            this.isSaving = false
-            return this.dialogService.confirm('Discard changes?')
-        }
-        return true
-    }
+    // #endregion 
 
 }

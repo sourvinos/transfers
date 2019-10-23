@@ -1,8 +1,7 @@
 <div id="header">
     <div>
-        <i class="big arrow alternate circle left outline icon navigation-icon" [routerLink]="['/taxOffices']"></i>
+        <i class="big arrow alternate circle left outline icon navigation-icon" id="goBack" (click)="goBack()"></i>
         <h1>Tax office</h1>
-        <!-- <p>{{ form.value | json }} {{ form.valid }}</p> -->
     </div>
     <div class="ui divider"></div>
 </div>
@@ -10,7 +9,7 @@
 <div id="content">
     <form [formGroup]='form' class="ui form" autocomplete='off'>
         <div id="left">
-            <div class="field" [class.error]="description.invalid && description.touched">
+            <div class="field" [class.error]="isValidInput(description)">
                 <label for="description">Description</label>
                 <input type="text" formControlName="description" tabindex="1" id="description">
             </div>
@@ -21,7 +20,8 @@
 <div id="footer">
     <div class="ui divider"></div>
     <div id="buttons">
-        <button class="ui button delete" (click)="delete()" [hidden]="!form.value.id">Delete</button>
-        <button class="ui button primary" (click)="save()">Save</button>
+        <p [class.hidden]=true>{{ form.value | json }} {{ form.valid }} {{ isNewRecord }}</p>
+        <button class="ui button delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
+        <button class="ui button primary" id="save" (click)="saveRecord()">Save</button>
     </div>
 </div>

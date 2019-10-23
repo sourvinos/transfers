@@ -2,35 +2,39 @@
     <div id="title">
         <h1>Routes</h1>
     </div>
-    <div class="ui divider"></div>
     <div id="search-box">
-        <div class="ui icon input">
-            <i class="search icon"></i>
-            <input type="text" placeholder="Search..." #query (keyup)="filter(query.value)" autocomplete="off">
-        </div>
+        <form class="ui form" autocomplete="off">
+            <div class="field">
+                <div class="ui icon input">
+                    <input type="text" id="searchField" #query (keyup)="filter(query.value)" autocomplete="off">
+                    <i class="search icon"></i>
+                </div>
+            </div>
+        </form>
     </div>
+    <div class="ui divider"></div>
 </div>
 
 <div id="content">
-    <table class="ui sortable fixed table">
-        <thead>
-            <tr>
-                <th class="center aligned">Description</th>
-                <th class="center aligned two wide">User</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let route of filteredRoutes" routerLink="/routes/{{ route.id }}">
-                <td>{{ route.description }}</td>
-                <td>{{ route.userName }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div id="scrollable">
+        <table class="ui celled table">
+            <thead>
+                <tr>
+                    <th class="center aligned">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let route of filteredRoutes" routerLink="/routes/{{ route.id }}">
+                    <td>{{ route.description }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div id="footer">
     <div class="ui divider"></div>
     <div id="buttons">
-        <button class="ui button primary" id="new" [routerLink]="['/routes/new']">New</button>
+        <button class="ui button primary" id="new" (click)="newRecord()">New</button>
     </div>
 </div>

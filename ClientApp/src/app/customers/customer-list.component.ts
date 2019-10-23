@@ -1,10 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'
-
-import { CustomerService } from '../services/customer.service'
-import { ICustomer } from '../models/customer'
-import { Utils } from '../shared/classes/utils'
-import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
+import { Component, OnDestroy, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
+import { ICustomer } from '../models/customer'
+import { CustomerService } from '../services/customer.service'
+import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
+import { Utils } from '../shared/classes/utils'
 
 @Component({
     selector: 'app-customer-list',
@@ -14,10 +13,14 @@ import { Router } from '@angular/router'
 
 export class CustomerListComponent implements OnInit, OnDestroy {
 
+    //#region Init
+
     customers: ICustomer[]
     filteredCustomers: ICustomer[]
 
     unlisten: Unlisten
+
+    //#endregion
 
     constructor(private service: CustomerService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router) {
         this.unlisten = null
@@ -29,10 +32,11 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         this.setFocus('searchField')
     }
 
-    public ngOnDestroy(): void {
-        (this.unlisten) && this.unlisten();
+    ngOnDestroy(): void {
+        (this.unlisten) && this.unlisten()
     }
 
+    // T
     filter(query: string) {
         this.filteredCustomers = query ? this.customers.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.customers
     }

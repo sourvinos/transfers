@@ -8,33 +8,34 @@
 * {
     /* Sizes */
     --font-size-copyright: 0.7rem;
-    --font-size-headers: 2.2rem;
+    --font-size-headers: 2.3rem;
+    --font-size-table-headers: 1.1rem;
     --font-size-logo-first-child: 4.375rem;
     --font-size-logo-second-child: 2.5rem;
-    --font-size-menu-list-item-active: 1.6rem;
-    --font-size-menu-list-items: 1.4rem;
+    --font-size-menu-list-item-active: 2.1rem;
+    --font-size-menu-list-items: 1.8rem;
     --font-size-modal-headers: 1.7rem;
     --font-size-modal-messages: 1.1rem;
-    --font-size-summary-block-header: 1.4rem;
-    --font-size-summary-block-item: 1rem;
+    --font-size-summary-block-header: 1.7rem;
     --font-size-summary-block-item-total: 1.2rem;
+    --font-size-summary-block-item: 1.2rem;
     --font-size-user-info: 1.1rem;
 }
 
 * {
     /* Fonts */
-    --font-family-buttons: "Lato";
-    --font-family-copyright: "Lato";
+    --font-family-buttons: "Roboto";
+    --font-family-copyright: "Roboto";
     --font-family-dropdowns: "Play";
-    --font-family-headers: "Lato";
+    --font-family-headers: "Roboto";
     --font-family-logo: "Anton";
     --font-family-logo: "Anton";
-    --font-family-menu-list-items: "Tahoma";
-    --font-family-summary-block-header: "Lato";
-    --font-family-summary-block-header-total: "Lato";
-    --font-family-summary-block-item: "Lato";
+    --font-family-menu-list-items: "Ubuntu Condensed";
+    --font-family-summary-block-header: "Roboto Condensed";
+    --font-family-summary-block-header-total: "Roboto Condensed";
+    --font-family-summary-block-item: "Roboto Condensed";
     --font-family-table: "Play";
-    --font-family-user-info: "Lato";
+    --font-family-user-info: "Roboto";
 }
 
 * {
@@ -50,6 +51,7 @@
     --color-hamburger: #939393;
     --color-headers: #939393;
     --color-icon: #939393;
+    --color-icon-hover: #EAF5BA;
     --color-input-focus: #EAF5BA;
     --color-label: #939393;
     --color-menu-active-item: #FE9F36;

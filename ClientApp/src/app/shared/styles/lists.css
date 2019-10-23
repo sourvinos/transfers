@@ -82,6 +82,10 @@ table {
 }
 
 table th {
+    font-size: var(--font-size-table-headers);
+}
+
+table th {
     background-color: var(--color-table-header-background) !important;
     border-radius: 0 !important;
     border-bottom: 0 !important;
