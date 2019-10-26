@@ -1,0 +1,14 @@
+<div class="dialog">
+    <div class="modal-header modal-block-primary">
+        <div class="modal-title">{{ title }}</div>
+    </div>
+    <div class="modal-body">
+        <ul *ngIf="list.length">
+            <li class=" index-item" *ngFor="let item of list" (click)="action(item)">{{ item.description }}</li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <button *ngIf="type!='error'" class="ui facebook button" id="cancel" (click)="action(false)">Cancel</button>
+        <button class="ui twitter button right" id="ok" (click)="action(true)">OK</button>
+    </div>
+</div>

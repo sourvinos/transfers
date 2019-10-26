@@ -3,30 +3,15 @@
         <div id="left">
             <div class="field" [class.error]="isValidInput(destinationDescription, destinationId, destinations)">
                 <label for="destination">Destination</label>
-                <input type="text" list="destinationList" formControlName="destinationDescription" (change)="updateDestinationId(destinations, $event)" tabindex="1" id="destination">
-                <datalist id="destinationList">
-                    <select>
-                        <option *ngFor="let destination of destinations" [value]="destination.description"></option>
-                    </select>
-                </datalist>
+                <input type="text" formControlName="destinationDescription" (change)="lookupTable(0, 'destinationId', 'destinationDescription', destinationDescription, 'destination', 'customer')" tabindex="1" id="destination">
             </div>
             <div class="field" [class.error]="isValidInput(customerDescription, customerId, customers)">
-                <label for="destination">Customer</label>
-                <input type="text" list="customerList" formControlName="customerDescription" (change)="updateCustomerId(customers, $event)" tabindex="2" id="customer">
-                <datalist id="customerList">
-                    <select>
-                        <option *ngFor="let customer of customers" [value]="customer.description"></option>
-                    </select>
-                </datalist>
+                <label for="customer">Customer</label>
+                <input type="text" formControlName="customerDescription" (change)="lookupTable(1, 'customerId', 'customerDescription', customerDescription, 'customer', 'pickupPoint')" tabindex="2" id="customer">
             </div>
             <div class="field" [class.error]="isValidInput(pickupPointDescription, pickupPointId, pickupPoints)">
                 <label for="pickupPoint">Pickup point</label>
-                <input type="text" list="pickupPointList" formControlName="pickupPointDescription" (change)="updatePickupPointId(pickupPoints, $event)" tabindex="3" id="pickupPoint">
-                <datalist id="pickupPointList">
-                    <select>
-                        <option *ngFor="let pickupPoint of pickupPoints" [value]="pickupPoint.description"></option>
-                    </select>
-                </datalist>
+                <input type="text" formControlName="pickupPointDescription" (change)="lookupTable(2, 'pickupPointId', 'pickupPointDescription', pickupPointDescription, 'pickupPoint', 'adults')" tabindex="3" id="pickupPoint">
             </div>
             <div class="fields">
                 <div class="field numeric" [class.error]="isValidInput(adults)">
@@ -48,21 +33,11 @@
             </div>
             <div class="field" [class.error]="isValidInput(driverDescription, driverId, drivers)">
                 <label for="driver">Driver</label>
-                <input type="text" list="driverList" formControlName="driverDescription" (change)="updateDriverId(drivers, $event)" tabindex="7" id="driver">
-                <datalist id="driverList">
-                    <select>
-                        <option *ngFor="let driver of drivers" [value]="driver.description"></option>
-                    </select>
-                </datalist>
+                <input type="text" formControlName="driverDescription" (change)="lookupTable(3, 'driverId', 'driverDescription', driverDescription, 'driver', 'port')" tabindex="7" id="driver">
             </div>
             <div class="field" [class.error]="isValidInput(portDescription, portId, ports)">
-                <label for="port">Port</label>
-                <input type="text" list="portList" formControlName="portDescription" (change)="updatePortId(ports, $event)" tabindex="8" id="port">
-                <datalist id="portList">
-                    <select>
-                        <option *ngFor="let port of ports" [value]="port.description"></option>
-                    </select>
-                </datalist>
+                <label for="driver">Port</label>
+                <input type="text" formControlName="portDescription" (change)="lookupTable(4, 'portId', 'portDescription', portDescription, 'port' ,'remarks')" tabindex="8" id="port">
             </div>
             <div class="field" [class.error]="isValidInput(remarks)">
                 <label for="remarks">Remarks</label>
@@ -74,6 +49,7 @@
     <div id="footer-form">
         <div class="ui divider"></div>
         <div id="buttons">
+            <p [class.hidden]=false>{{ form.value | json }} {{ form.valid }} {{ isNewRecord }}</p>
             <button class="ui button delete" [class.hidden]="isNewRecord" id="delete" (click)="deleteRecord()">Delete</button>
             <button class="ui button primary" id="save" (click)="saveRecord()">Save</button>
         </div>

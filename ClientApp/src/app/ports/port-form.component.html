@@ -20,7 +20,7 @@
 <div id="footer">
     <div class="ui divider"></div>
     <div id="buttons">
-        <p [class.hidden]=true>{{ form.value | json }} {{ form.valid }} {{ isNewRecord }}</p>
+        <p [class.hidden]=false>{{ form.value | json }} {{ form.valid }} {{ id }}</p>
         <button class="ui button delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
         <button class="ui button primary" id="save" (click)="saveRecord()">Save</button>
     </div>

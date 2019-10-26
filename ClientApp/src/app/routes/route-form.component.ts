@@ -154,7 +154,8 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
                         abbreviation: result.abbreviation,
                         description: result.description,
                         portId: result.port.id,
-                        portDescription: result.port.description
+                        portDescription: result.port.description,
+                        userName: result.userName
                     })
                 },
                 error => {

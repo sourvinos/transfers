@@ -89,21 +89,23 @@
             <table class="ui celled table">
                 <thead>
                     <tr>
-                        <th class="center aligned one wide">Destination</th>
-                        <th class="center aligned one wide">Route</th>
-                        <th class="center aligned three wide">Customer</th>
-                        <th class="center aligned three wide">Pickup point</th>
-                        <th class="center aligned one wide">Time</th>
-                        <th class="center aligned one wide">Adults</th>
-                        <th class="center aligned one wide">Kids</th>
-                        <th class="center aligned one wide">Free</th>
-                        <th class="center aligned one wide">Total</th>
+                        <th class="center aligned">Id</th>
+                        <th class="center aligned">Destination</th>
+                        <th class="center aligned">Route</th>
+                        <th class="center aligned">Customer</th>
+                        <th class="center aligned">Pickup point</th>
+                        <th class="center aligned">Time</th>
+                        <th class="center aligned">Adults</th>
+                        <th class="center aligned">Kids</th>
+                        <th class="center aligned">Free</th>
+                        <th class="center aligned">Total</th>
                         <th class="center aligned">Driver</th>
                         <th class="center aligned">Port</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let transfer of queryResultFiltered.transfers" (click)="getTransfer(transfer.id)">
+                        <td class="center aligned">{{ transfer.id }}</td>
                         <td class="center aligned">{{ transfer.destination.abbreviation }}</td>
                         <td class="center aligned">{{ transfer.pickupPoint.route.abbreviation }}</td>
                         <td>{{ transfer.customer.description }}</td>

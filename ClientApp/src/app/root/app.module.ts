@@ -18,6 +18,7 @@ import { SidebarComponent } from '../shared/components/sidebar/sidebar.component
 import { LoaderComponent } from '../shared/components/loader/loader.component'
 import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
 import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
+import { ModalIndexComponent } from './../shared/components/modal-index/modal-index.component';
 // Routes
 import { HomeComponent } from './../home/home.component'
 import { LoginComponent } from '../login/login.component'
@@ -42,6 +43,7 @@ import { InputFormatDirective } from '../directives/input-format.directive'
         LoaderComponent,
         PageNotFoundComponent,
         ModalDialogComponent,
+        ModalIndexComponent,
         // Routes
         HomeComponent,
         LoginComponent,
@@ -69,7 +71,8 @@ import { InputFormatDirective } from '../directives/input-format.directive'
         ButtonsModule.forRoot()
     ],
     entryComponents: [
-        ModalDialogComponent
+        ModalDialogComponent,
+        ModalIndexComponent
     ],
     providers: [],
     bootstrap: [RootComponent]

@@ -15,7 +15,8 @@ import { TransferService } from '../services/transfer.service'
 import { Utils } from '../shared/classes/utils'
 import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
 import { ComponentInteractionService } from '../shared/services/component-interaction.service'
-import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
+import { ModalIndexComponent } from '../shared/components/modal-index/modal-index.component'
+import { error } from 'util'
 
 @Component({
     selector: 'app-transfer-form',
@@ -28,11 +29,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     id: number
     editMode: boolean = false
 
-    destinations: any
-    customers: any
-    pickupPoints: any
-    drivers: any
-    ports: any
+    tables: any[] = []
 
     isNewRecord: boolean = false
     isSaving: boolean = false
@@ -58,7 +55,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private componentInteractionService: ComponentInteractionService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService) { }
 
     ngOnInit() {
-        this.populateDropDowns()
+        this.populateTables()
     }
 
     ngAfterViewInit() {
@@ -138,7 +135,16 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     // T 
     isValidInput(description: FormControl, id?: { invalid: any }, lookupArray?: any[]) {
         if (id == null) return (description.invalid && description.touched)
-        if (id != null) return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(lookupArray, description))
+        // if (id != null) return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(lookupArray, description))
+    }
+
+    // T
+    lookupTable(tableIndex: number, id: string, description: string, controlName: FormControl, currentFocus: string, nextFocus: string) {
+        let lookupInput = controlName.value.toUpperCase()
+        let lookupResults = this.tables[tableIndex].filter((item: { description: string; }) => {
+            return item.description.includes(lookupInput)
+        })
+        if (lookupResults.length > 0) this.showModalIndex(id, description, lookupResults, currentFocus, nextFocus)
     }
 
     // T 
@@ -195,43 +201,12 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         })
     }
 
-    private arrayLookup(lookupArray: any[], givenField: FormControl) {
-        for (let x of lookupArray) {
-            if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
-                return true
-            }
-        }
-    }
-
-    private populateDropDowns() {
-        let sources = []
-        sources.push(this.destinationService.getDestinations())
-        sources.push(this.customerService.getCustomers())
-        sources.push(this.pickupPointService.getAllPickupPoints())
-        sources.push(this.driverService.getDrivers())
-        sources.push(this.portService.getPorts())
-        return forkJoin(sources).subscribe(
-            result => {
-                this.destinations = result[0]
-                this.customers = result[1]
-                this.pickupPoints = result[2]
-                this.drivers = result[3]
-                this.ports = result[4]
-            },
-            error => {
-                if (error.status == 404) {
-                    this.router.navigate(['/error'])
-                }
-            }
-        )
-    }
-
     private disableFields(fields: string[]) {
-        Utils.disableFields(fields)
+        // Utils.disableFields(fields)
     }
 
     private enableFields(fields: string[]) {
-        Utils.enableFields(fields)
+        // Utils.enableFields(fields)
     }
 
     private scrollToForm() {
@@ -265,6 +240,52 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         this.componentInteractionService.emitChange([false])
         document.getElementById('list').style.zIndex = '0'
         document.getElementById('list').style.marginLeft = 0 + 'px'
+    }
+
+    private showModalIndex(id: string, description: string, list: any, currentFocus: string, nextFocus: string) {
+        const subject = new Subject<any>()
+        const modal = this.modalService.show(ModalIndexComponent, {
+            initialState: {
+                title: 'Destinations',
+                list: list,
+                type: 'delete'
+            }, animated: true
+        })
+        modal.content.subject = subject.subscribe(result => {
+            if (result != '') {
+                this.updateFormFields(result, id, description)
+                this.setFocus(nextFocus)
+            } else {
+                this.setFocus(currentFocus)
+            }
+        })
+    }
+
+    private updateFormFields(result: any, id: string, description: string) {
+        this.form.patchValue({ [id]: result.id, [description]: result.description })
+    }
+
+    private populateTables() {
+        let sources = []
+        sources.push(this.destinationService.getDestinations())
+        sources.push(this.customerService.getCustomers())
+        sources.push(this.pickupPointService.getAllPickupPoints())
+        sources.push(this.driverService.getDrivers())
+        sources.push(this.portService.getPorts())
+        return forkJoin(sources).subscribe(
+            result => {
+                this.tables.push(result[0])
+                this.tables.push(result[1])
+                this.tables.push(result[2])
+                this.tables.push(result[3])
+                this.tables.push(result[4])
+            },
+            error => {
+                if (error.status == 404) {
+                    this.router.navigate(['/error'])
+                }
+            }
+        )
     }
 
     // #region Get field values - called from the template

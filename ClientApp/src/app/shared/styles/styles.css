@@ -15,7 +15,7 @@ body, h1, h2, h3 {
     margin: 0 !important;
 }
 
-p {
+p, ul {
     color: var(--color-label);
     font-size: 13px;
     margin: 0 !important;
@@ -90,7 +90,7 @@ button.ui.button:disabled {
 
 #loader p {
     color: #ffffff;
-    margin-top: 0.5rem;
+    margin-top: 0.5rem !important;
 }
 
 .modal-open .modal {
@@ -119,6 +119,10 @@ button.ui.button:disabled {
 
 .fields {
     margin: 0 !important;
+}
+
+.field.numeric {
+    padding-left: 0 !important;
 }
 
 .hidden {

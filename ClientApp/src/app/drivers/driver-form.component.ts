@@ -30,7 +30,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
     form = this.formBuilder.group({
         id: 0,
         description: ['', [Validators.required, Validators.maxLength(100)]],
-        phone: ['', [Validators.required, Validators.maxLength(100)]],
+        phone: ['', [Validators.maxLength(100)]],
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 

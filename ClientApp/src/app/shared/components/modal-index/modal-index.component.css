@@ -1,0 +1,27 @@
+.modal-header {
+    border: none;
+}
+
+.modal-title {
+    font-size: var(--font-size-modal-headers)
+}
+
+.modal-body {
+    display: flex;
+    overflow-y: auto;
+    height: 300px;
+}
+
+.modal-body p {
+    margin-left: 1.5rem !important;
+    font-size: var(--font-size-modal-messages);
+}
+
+.modal-footer {
+    border: none;
+    padding-top: 2rem;
+}
+
+.selected {
+    background-color: burlywood;
+}
