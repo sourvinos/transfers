@@ -1,7 +1,12 @@
 #sidebar {
     background-color: var(--color-sidebar-background);
     display: grid;
-    grid-template-areas: "userInfo" "companyLogo" "image" "menu" "copyright";
+    grid-template-areas:
+        "userInfo"
+        "companyLogo"
+        "image"
+        "menu"
+        "copyright";
     grid-template-rows: min-content min-content min-content auto min-content;
     height: 100vh;
     overflow: hidden;
@@ -20,7 +25,7 @@
 
 #companyLogo {
     cursor: pointer;
-    margin: 1rem auto 1.6rem;
+    margin: 0.5rem auto 1.6rem;
     outline: 0;
     text-align: center;
 }
@@ -39,7 +44,7 @@
     color: var(--color-company-logo-second-child);
     font-size: var(--font-size-logo-second-child);
     font-weight: normal;
-    margin-top: -1rem;
+    margin-top: -1rem !important;
 }
 
 #image {
@@ -104,9 +109,11 @@
         grid-template-areas: "userInfo""companyLogo""menu""copyright";
         grid-template-rows: min-content min-content auto min-content;
     }
+
     #image {
         display: none;
     }
+
     #menu {
         padding: 0 0 1rem 0;
     }
@@ -117,6 +124,7 @@
     #sidebar {
         width: 20rem !important;
     }
+
     #section {
         margin-left: 20rem !important;
     }
@@ -127,6 +135,7 @@
     #sidebar {
         width: 0;
     }
+
     #section {
         margin-left: 0;
     }

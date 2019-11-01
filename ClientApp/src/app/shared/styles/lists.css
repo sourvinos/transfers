@@ -70,11 +70,6 @@
     min-height: 6.25rem;
 }
 
-.ui.divider {
-    grid-area: divider;
-    margin: 1.8rem 0 2rem 0;
-}
-
 table {
     background-color: var(--color-background) !important;
     border: 0 !important;

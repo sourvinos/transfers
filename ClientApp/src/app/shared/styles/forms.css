@@ -22,26 +22,17 @@
 
 #content {
     align-content: flex-start;
-    display: grid;
-    grid-area: "content";
     justify-content: center;
-    margin: 0 2rem;
+    margin: 0 3rem;
 }
 
 #content form {
-    display: grid;
-    grid-gap: 0.625rem;
-    grid-template-areas: "section-one section-two";
-    grid-template-columns: 1fr, 1fr;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-.ui.divider {
-    margin: 1.8rem 0 2rem 0;
-}
-
-.field {
-    width: 30rem;
+#footer {
+    grid-area: "footer";
 }
 
 /* ! Narrow screen */

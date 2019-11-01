@@ -16,7 +16,6 @@ import { Utils } from '../shared/classes/utils'
 import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
 import { ComponentInteractionService } from '../shared/services/component-interaction.service'
 import { ModalIndexComponent } from '../shared/components/modal-index/modal-index.component'
-import { error } from 'util'
 
 @Component({
     selector: 'app-transfer-form',
@@ -135,7 +134,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     // T 
     isValidInput(description: FormControl, id?: { invalid: any }, lookupArray?: any[]) {
         if (id == null) return (description.invalid && description.touched)
-        // if (id != null) return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(lookupArray, description))
     }
 
     // T

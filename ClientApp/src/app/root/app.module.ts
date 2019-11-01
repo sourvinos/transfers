@@ -9,6 +9,16 @@ import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { ModalModule } from 'ngx-bootstrap/modal'
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
+// Material design
+import { CdkTableModule } from '@angular/cdk/table';
+import { MatButtonModule } from '@angular/material/button'
+import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS } from '@angular/material'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatIconModule } from '@angular/material/icon'
+import { MatInputModule } from '@angular/material/input'
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table'
+import { MaterialDialogComponent } from '../shared/components/material-dialog/material-dialog.component'
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
 // Common components
@@ -33,6 +43,7 @@ import { TransfersComponent } from '../transfers/transfers-component'; import { 
 import { VatStateFormComponent } from '../vatStates/vatState-form.component'; import { VatStateListComponent } from '../vatStates/vatState-list.component'
 // Directives
 import { InputFormatDirective } from '../directives/input-format.directive'
+import { MatRowKeyboardSelectionModule } from "mat-row-keyboard-selection";
 
 @NgModule({
     declarations: [
@@ -44,6 +55,7 @@ import { InputFormatDirective } from '../directives/input-format.directive'
         PageNotFoundComponent,
         ModalDialogComponent,
         ModalIndexComponent,
+        MaterialDialogComponent,
         // Routes
         HomeComponent,
         LoginComponent,
@@ -65,16 +77,27 @@ import { InputFormatDirective } from '../directives/input-format.directive'
         BrowserModule,
         FormsModule,
         HttpClientModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatRowKeyboardSelectionModule,
+        MatSnackBarModule,
+        MatTableModule,
+        MatTableModule,
         ReactiveFormsModule,
-        NgIdleKeepaliveModule.forRoot(),
         ModalModule.forRoot(),
-        ButtonsModule.forRoot()
+        ButtonsModule.forRoot(),
+        NgIdleKeepaliveModule.forRoot(),
     ],
     entryComponents: [
         ModalDialogComponent,
-        ModalIndexComponent
+        ModalIndexComponent,
+        MaterialDialogComponent
     ],
-    providers: [],
+    providers: [{ provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } }],
     bootstrap: [RootComponent]
 })
 

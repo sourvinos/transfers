@@ -1,7 +1,6 @@
 import { SpecReporter } from 'jasmine-spec-reporter'
 
 export const config = {
-
     allScriptsTimeout: 11000,
     specs: [
         './src/**/*.e2e-spec.ts'
@@ -10,7 +9,7 @@ export const config = {
         'browserName': 'chrome'
     },
     directConnect: true,
-    baseUrl: 'http://localhost:4200/',
+    baseUrl: 'http://localhost:4300/',
     framework: 'jasmine',
     jasmineNodeOpts: {
         showColors: true,

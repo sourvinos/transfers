@@ -1,5 +1,6 @@
 button {
     color: var(--color-button-text) !important;
+    cursor: default !important;
     font-family: var(--font-family-buttons) !important;
     font-weight: var(--font-weight-buttons) !important;
     margin: 0 0 0 0.5rem !important;
@@ -17,10 +18,24 @@ button.delete {
     background-color: var(--color-button-delete) !important;
 }
 
-button {
-    cursor: default !important;
+button.navigation {
+    margin: 0 0.5rem 0 0 !important;
+    background-color: var(--color-button-navigation) !important;
 }
 
 button:active {
     transform: translateY(3px);
+}
+
+button::first-letter {
+    text-decoration: underline;
+}
+
+button:disabled {
+    cursor: not-allowed !important;
+    pointer-events: all !important;
+}
+
+button:not(:disabled) {
+    cursor: pointer !important;
 }

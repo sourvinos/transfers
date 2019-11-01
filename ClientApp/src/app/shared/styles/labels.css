@@ -1,5 +1,4 @@
 label {
-    color: var(--color-label) !important;
+    color: var(--color-input-label) !important;
     font-weight: var(--font-weight-labels) !important;
-    margin-top: -4px !important;
 }

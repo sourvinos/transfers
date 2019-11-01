@@ -1,5 +1,6 @@
-h1, h2 {
+h1 {
     color: var(--color-headers) !important;
     font-family: var(--font-family-headers) !important;
+    font-size: var(--font-size-headers) !important;
     font-weight: var(--font-weight-headers) !important;
 }

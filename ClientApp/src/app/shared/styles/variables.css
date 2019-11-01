@@ -7,55 +7,62 @@
 
 * {
     /* Sizes */
-    --font-size-copyright: 0.7rem;
-    --font-size-headers: 2.3rem;
-    --font-size-table-headers: 1.1rem;
+    --font-size-copyright: 0.6rem;
+    --font-size-headers: 2rem;
     --font-size-logo-first-child: 4.375rem;
     --font-size-logo-second-child: 2.5rem;
-    --font-size-menu-list-item-active: 2.1rem;
-    --font-size-menu-list-items: 1.8rem;
-    --font-size-modal-headers: 1.7rem;
+    --font-size-menu-list-item-active: 1.8rem;
+    --font-size-menu-list-items: 1.5rem;
+    --font-size-modal-headers: 2.1rem;
     --font-size-modal-messages: 1.1rem;
     --font-size-summary-block-header: 1.7rem;
     --font-size-summary-block-item-total: 1.2rem;
     --font-size-summary-block-item: 1.2rem;
-    --font-size-user-info: 1.1rem;
+    --font-size-table-headers: 1.1rem;
+    --font-size-user-info: 0.9rem;
 }
 
 * {
     /* Fonts */
-    --font-family-buttons: "Roboto";
-    --font-family-copyright: "Roboto";
+    --font-family-buttons: "Lato";
+    --font-family-copyright: "lato";
     --font-family-dropdowns: "Play";
-    --font-family-headers: "Roboto";
+    --font-family-headers: "Lato";
     --font-family-logo: "Anton";
     --font-family-logo: "Anton";
     --font-family-menu-list-items: "Ubuntu Condensed";
-    --font-family-summary-block-header: "Roboto Condensed";
+    --font-family-modal-header: 'Roboto Condensed';
     --font-family-summary-block-header-total: "Roboto Condensed";
+    --font-family-summary-block-header: "Roboto Condensed";
     --font-family-summary-block-item: "Roboto Condensed";
     --font-family-table: "Play";
-    --font-family-user-info: "Roboto";
+    --font-family-user-info: "Lato";
 }
 
 * {
     /* Colors */
     --color-background: #373F46;
     --color-button-delete: #D67474;
+    --color-button-navigation: #57617B;
     --color-button-primary: #57617B;
     --color-button-secondary: #5A75BC;
     --color-button-text: #FFFDDD;
     --color-company-logo-first-child: #FE9F36;
     --color-company-logo-second-child: #FFE85C;
+    --color-curet: #FFFFFF;
     --color-copyright: #FE9F36;
+    --color-divider: #5c5c5c;
     --color-hamburger: #939393;
     --color-headers: #939393;
-    --color-icon: #939393;
     --color-icon-hover: #EAF5BA;
-    --color-input-focus: #EAF5BA;
-    --color-label: #939393;
+    --color-icon: #939393;
+    --color-input-label-focus: #FE9F36;
+    --color-input-label: #939393;
+    --color-input-underline-focus: #ba680b;
+    --color-input: #FFFFFF;
+    --color-input-error: #fc3b3b;
     --color-menu-active-item: #FE9F36;
-    --color-menu-list-items: #939393;
+    --color-menu-list-items: #9F9F9F;
     --color-scrollbar-background: #373F46;
     --color-scrollbar: #FE9F36;
     --color-sidebar-background: #1D2733;

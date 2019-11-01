@@ -1,75 +1,61 @@
 <div id="header">
     <div>
-        <i class="big arrow alternate circle left outline icon navigation-icon" id="goBack" (click)="goBack()"></i>
+        <button mat-mini-fab class="navigation">
+            <mat-icon id="goBack" (click)="goBack()">arrow_back</mat-icon>
+        </button>
         <h1>Customer</h1>
     </div>
-    <div class="ui divider"></div>
+    <mat-divider></mat-divider>
 </div>
 
 <div id="content">
     <form [formGroup]="form" class="ui form" autocomplete="off">
-        <div id="left">
-            <div class="field" [class.error]="isValidInput(description)">
-                <label for="description">Description</label>
-                <input type="text" formControlName="description" tabindex="1" id="description">
-            </div>
-            <div class="field" [class.error]="isValidInput(profession)">
-                <label for="profession">Profession</label>
-                <input type="text" formControlName="profession" tabindex="2" id="profession">
-            </div>
-            <div class="field" [class.error]="isValidInput(address)">
-                <label for="address">Address</label>
-                <input type="text" formControlName="address" tabindex="3" id="address">
-            </div>
-            <div class="field" [class.error]="isValidInput(phones)">
-                <label for="phones">Phones</label>
-                <input type="text" formControlName="phones" tabindex="4" id="phones">
-            </div>
-            <div class="field" [class.error]="isValidInput(personInCharge)">
-                <label for="personInCharge">Person in charge</label>
-                <input type="text" formControlName="personInCharge" tabindex="5" id="personInCharge">
-            </div>
-        </div>
-        <div id="right">
-            <div class="field" [class.error]="isValidInput(email)">
-                <label for="email">Email</label>
-                <input type="text" formControlName="email" tabindex="6" id="email">
-            </div>
-            <div class="field" [class.error]="isValidInput(taxNo)">
-                <label for="taxNo">Tax number</label>
-                <input type="text" formControlName="taxNo" tabindex="7" id="taxNo">
-            </div>
-            <div class="field" [class.error]="isValidInput(accountCode)">
-                <label for="accountCode">Account code</label>
-                <input type="text" formControlName="accountCode" tabindex="8" id="accountCode">
-            </div>
-            <div class="field" [class.error]="isValidInput(taxOfficeDescription, taxOfficeId, taxOffices)">
-                <label for="taxOffice">Tax office</label>
-                <input type="text" list="taxOfficesList" formControlName="taxOfficeDescription" (change)="updateTaxOfficeId(taxOffices, $event)" tabindex="9" id="taxOffice">
-                <datalist id="taxOfficesList">
-                    <select>
-                        <option *ngFor="let taxOffice of taxOffices" [value]="taxOffice.description"></option>
-                    </select>
-                </datalist>
-            </div>
-            <div class="field" [class.error]="isValidInput(vatStateDescription, vatStateId, vatStates)">
-                <label for="vatState">VAT regime</label>
-                <input type="text" list="vatStateList" formControlName="vatStateDescription" (change)="updateVatStateId(vatStates, $event)" tabindex="10" id="vatState">
-                <datalist id="vatStateList">
-                    <select>
-                        <option *ngFor="let vatState of vatStates" [value]="vatState.description"></option>
-                    </select>
-                </datalist>
-            </div>
-        </div>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Description" formControlName="description" tabindex="1" id="description">
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Profession" formControlName="profession" tabindex="2" id="profession">
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Address" formControlName="address" tabindex="3" id="address">
+            <mat-error *ngIf="address.invalid"></mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Phones" formControlName="phones" tabindex="4" id="phones">
+            <mat-error *ngIf="phones.invalid"></mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Person in charge" formControlName="personInCharge" tabindex="5" id="personInCharge">
+            <mat-error *ngIf="personInCharge.invalid"></mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Email" formControlName="email" tabindex="6" id="email">
+            <mat-error *ngIf="email.invalid"></mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Tax no" formControlName="taxNo" tabindex="7" id="taxNo">
+            <mat-error *ngIf="taxNo.invalid"></mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Account code" formControlName="accountCode" tabindex="8" id="accountCode">
+            <mat-error *ngIf="accountCode.invalid"></mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Tax office" formControlName="taxOfficeDescription" tabindex="9" id="taxOffice" (change)="lookupIndex(taxOffices, 'taxOfficeId', 'taxOfficeDescription', $event)">
+            <mat-error *ngIf="taxOfficeDescription.invalid"></mat-error>
+        </mat-form-field>
+        <!-- <mat-form-field>
+            <input type="text" matInput placeholder="VAT regime" formControlName="vatState" tabindex="10" id="vatState">
+            <mat-error *ngIf="vatState.invalid"></mat-error>
+        </mat-form-field>  -->
     </form>
 </div>
 
 <div id="footer">
-    <div class="ui divider"></div>
+    <mat-divider></mat-divider>
     <div id="buttons">
-        <p [class.hidden]=true>{{ form.value | json }} {{ form.valid }} {{ isNewRecord }}</p>
-        <button class="ui button delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
-        <button class="ui button primary" id="save" (click)="saveRecord()">Save</button>
+        <p class="form-value" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
+        <button class="mat-flat-button delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
+        <button class="mat-flat-button primary" id="save" (click)="saveRecord()">Save</button>
     </div>
 </div>

@@ -10,6 +10,13 @@ import { TaxOfficeService } from '../services/taxOffice.service'
 import { VatStateService } from '../services/vatState.service'
 import { Utils } from '../shared/classes/utils'
 import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
+import { MatDialog, MatTableDataSource } from '@angular/material'
+import { SelectionModel } from '@angular/cdk/collections'
+import { MaterialDialogComponent } from '../shared/components/material-dialog/material-dialog.component'
+
+interface TableItem {
+    name: string;
+}
 
 @Component({
     selector: 'app-customer-form',
@@ -30,6 +37,8 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     modalRef: BsModalRef
     unlisten: Unlisten
 
+    taxOfficeDataSource: MatTableDataSource<TableItem>; taxOfficeSelection: SelectionModel<TableItem>;
+
     // #endregion     
 
     form = this.formBuilder.group({
@@ -49,7 +58,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService, private keyboardShortcutsService: KeyboardShortcuts) {
+    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private modalService: BsModalService) {
         route.params.subscribe(p => (this.id = p['id']))
         this.unlisten = null
     }
@@ -60,7 +69,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        document.getElementById("description").focus()
+        Utils.setFocus('description')
     }
 
     ngOnDestroy(): void {
@@ -118,6 +127,18 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // T
+    lookupIndex(lookupArray: any[], lookupId: any, lookupDescription: any, e: { target: { value: any } }) {
+        const filteredArray = []
+        lookupArray.filter(x => { if (x.description.toUpperCase().includes(e.target.value.toUpperCase())) filteredArray.push(x) })
+        if (filteredArray.length > 0) {
+            this.showModalIndex(filteredArray, lookupId, lookupDescription)
+        }
+        if (filteredArray.length == 0) {
+            this.patchFields(null, lookupId, lookupDescription)
+        }
+    }
+
+    // T
     saveRecord() {
         if (!this.form.valid) return
         if (!this.id) {
@@ -132,6 +153,36 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.router.navigate([this.url])
             }, error => Utils.errorLogger(error))
         }
+    }
+
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            "Escape": (event: KeyboardEvent): void => {
+                if (!document.getElementsByClassName('cdk-overlay-pane')) {
+                    this.goBack()
+                }
+            },
+            "Alt.D": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                this.deleteRecord()
+            },
+            "Alt.S": (event: KeyboardEvent): void => {
+                this.saveRecord()
+            },
+            "Alt.C": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('modal-dialog')[0]) {
+                    document.getElementById('cancel').click()
+                }
+            },
+            "Alt.O": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('modal-dialog')[0]) {
+                    document.getElementById('ok').click()
+                }
+            }
+        }, {
+            priority: 2,
+            inputs: true
+        })
     }
 
     private arrayLookup(lookupArray: any[], givenField: FormControl) {
@@ -153,6 +204,11 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
         modal.content.subject = subject
         return subject.asObservable()
+    }
+
+    private patchFields(result: any[], id: any, description: any) {
+        this.form.patchValue({ [id]: result ? result[0] : '' })
+        this.form.patchValue({ [description]: result ? result[1] : '' })
     }
 
     private populateFields() {
@@ -191,7 +247,10 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         return forkJoin(sources).subscribe(
             result => {
+                this.taxOfficeDataSource = new MatTableDataSource<TableItem>(result)[0];
+                this.taxOfficeSelection = new SelectionModel<TableItem>(false);
                 this.taxOffices = result[0]
+
                 this.vatStates = result[1]
                 if (this.id) {
                     this.populateFields()
@@ -205,33 +264,15 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         )
     }
 
-    private addShortcuts() {
-        this.unlisten = this.keyboardShortcutsService.listen({
-            "Escape": (event: KeyboardEvent): void => {
-                if (!document.getElementsByClassName('modal-dialog')[0]) {
-                    this.goBack()
-                }
-            },
-            "Alt.D": (event: KeyboardEvent): void => {
-                event.preventDefault()
-                this.deleteRecord()
-            },
-            "Alt.S": (event: KeyboardEvent): void => {
-                this.saveRecord()
-            },
-            "Alt.C": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('modal-dialog')[0]) {
-                    document.getElementById('cancel').click()
-                }
-            },
-            "Alt.O": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('modal-dialog')[0]) {
-                    document.getElementById('ok').click()
-                }
+    private showModalIndex(filteredArray: any[], lookupId: any, lookupDescription: any) {
+        let selection = this.dialog.open(MaterialDialogComponent, {
+            data: {
+                headers: ['id', 'description'],
+                records: filteredArray
             }
-        }, {
-            priority: 2,
-            inputs: true
+        })
+        selection.afterClosed().subscribe((result) => {
+            this.patchFields(result, lookupId, lookupDescription)
         })
     }
 
@@ -286,21 +327,5 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // #endregion
-
-    // #region Update dropdowns with values - called from the template
-
-    updateTaxOfficeId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-        this.form.patchValue({ taxOfficeId: list ? list.id : '' })
-    }
-
-    updateVatStateId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-        this.form.patchValue({ vatStateId: list ? list.id : '' })
-    }
-
-    // #endregion 
 
 }

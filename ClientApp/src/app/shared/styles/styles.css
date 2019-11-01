@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Anton&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Economica&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 @import "variables.css";
 @import "headers.css";
@@ -11,15 +13,21 @@
     box-sizing: border-box !important;
 }
 
-body, h1, h2, h3 {
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+body, h1, h3 {
     margin: 0 !important;
 }
 
-p, ul {
-    color: var(--color-label);
-    font-size: 13px;
-    margin: 0 !important;
-    padding: 0;
+p.form-value {
+    color: bisque !important;
 }
 
 input.date {
@@ -32,12 +40,14 @@ input.number {
     width: 80px !important;
 }
 
-input:focus {
-    background-color: var(--color-input-focus) !important;
+input::selection {
+    background-color: darkgray;
 }
 
-input.ng-invalid.ng-touched {
-    background-color: rgb(255, 197, 197) !important;
+input[type=text] {
+    caret-color: var(--color-curet);
+    color: var(--color-input);
+    cursor: text !important;
 }
 
 input[type=text]:disabled {
@@ -46,37 +56,28 @@ input[type=text]:disabled {
     pointer-events: all !important;
 }
 
-input[type=text] {
-    cursor: text !important;
+p, ul {
+    color: var(--color-label);
+    font-size: 13px;
+    margin: 0 !important;
+    padding: 0;
 }
 
-button.ui.button:not(:disabled) {
-    cursor: pointer !important;
+#footer #buttons {
+    align-items: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 1rem;
 }
 
-button.ui.button::first-letter {
-    text-decoration: underline;
+#footer {
+    grid-area: footer;
+    margin: 0 2rem 2rem 2rem;
 }
 
-button.ui.button:disabled {
-    cursor: not-allowed !important;
-    pointer-events: all !important;
-}
-
-.dropdown {
-    font-family: var(--font-family-dropdowns);
-}
-
-.search.icon {
-    margin-top: 0.2rem !important;
-}
-
-#section-one {
-    grid-area: "section-one";
-}
-
-#section-two {
-    grid-area: "section-two";
+#loader p {
+    color: #ffffff;
+    margin-top: 0.5rem !important;
 }
 
 #loader {
@@ -88,20 +89,69 @@ button.ui.button:disabled {
     justify-content: center;
 }
 
-#loader p {
-    color: #ffffff;
-    margin-top: 0.5rem !important;
+#section-one {
+    grid-area: "section-one";
 }
 
-.modal-open .modal {
-    align-items: center !important;
-    display: flex !important;
+#section-two {
+    grid-area: "section-two";
 }
+
+.field.numeric {
+    padding-left: 0 !important;
+}
+
+.fields {
+    margin: 0 !important;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Focused */
+
+.mat-form-field.mat-focused .mat-form-field-label {
+    color: var(--color-input-label-focus) !important;
+}
+
+.mat-form-field.mat-focused .mat-input-element {
+    color: var(--color-input-label-focus) !important;
+}
+
+.mat-form-field.mat-focused .mat-form-field-ripple {
+    background-color: var(--color-input-underline-focus) !important
+}
+
+/* Focused */
+
+/* Error */
+
+.mat-form-field.mat-form-field-invalid .mat-form-field-label {
+    color: var(--color-input-error) !important;
+    font-weight: bold !important;
+}
+
+.mat-form-field.mat-form-field-invalid .mat-input-element {
+    color: var(--color-input-error) !important;
+}
+
+.mat-form-field.mat-form-field-invalid .mat-form-field-ripple {
+    background-color: var(--color-input-error) !important;
+}
+
+/* Error */
+
 
 .modal-content {
     background-color: #f0f0f8;
     padding: 1rem;
     width: 40rem
+}
+
+.modal-open .modal {
+    align-items: center !important;
+    display: flex !important;
 }
 
 .navigation-icon {
@@ -117,28 +167,13 @@ button.ui.button:disabled {
     color: var(--color-icon-hover);
 }
 
-.fields {
-    margin: 0 !important;
+.search.icon {
+    margin-top: 0.2rem !important;
 }
 
-.field.numeric {
-    padding-left: 0 !important;
-}
-
-.hidden {
-    display: none !important;
-}
-
-#footer {
-    grid-area: footer;
-    margin: 0 2rem 2rem 2rem;
-}
-
-#footer #buttons {
-    align-items: flex-end;
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 1rem;
+.mat-divider {
+    background-color: var(--color-divider) !important;
+    margin: 2rem 0 !important;
 }
 
 /* ! Wide screen */
