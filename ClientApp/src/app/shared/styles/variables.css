@@ -42,8 +42,11 @@
 * {
     /* Colors */
     --color-background: #373F46;
+    --color-modal-background: #424242;
+    --color-modal-title: #D67474;
+    --color-modal-content: #FFFDDD;
     --color-button-delete: #D67474;
-    --color-button-navigation: #57617B;
+    --color-button-navigation: #373F46;
     --color-button-primary: #57617B;
     --color-button-secondary: #5A75BC;
     --color-button-text: #FFFDDD;

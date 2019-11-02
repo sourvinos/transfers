@@ -41,20 +41,20 @@
             <mat-error *ngIf="accountCode.invalid"></mat-error>
         </mat-form-field>
         <mat-form-field>
-            <input type="text" matInput placeholder="Tax office" formControlName="taxOfficeDescription" tabindex="9" id="taxOffice" (change)="lookupIndex(taxOffices, 'taxOfficeId', 'taxOfficeDescription', $event)">
+            <input type="text" matInput placeholder="Tax office" formControlName="taxOfficeDescription" tabindex="9" id="taxOfficeDescription" (change)="lookupIndex(taxOffices, 'taxOfficeId', 'taxOfficeDescription', $event)">
             <mat-error *ngIf="taxOfficeDescription.invalid"></mat-error>
         </mat-form-field>
-        <!-- <mat-form-field>
-            <input type="text" matInput placeholder="VAT regime" formControlName="vatState" tabindex="10" id="vatState">
-            <mat-error *ngIf="vatState.invalid"></mat-error>
-        </mat-form-field>  -->
+        <mat-form-field>
+            <input type="text" matInput placeholder="VAT regime" formControlName="vatStateDescription" tabindex="10" id="vatStateDescription" (change)="lookupIndex(vatStates, 'vatStateId', 'vatStateDescription', $event)">
+            <mat-error *ngIf="vatStateDescription.invalid"></mat-error>
+        </mat-form-field>
     </form>
 </div>
 
 <div id="footer">
     <mat-divider></mat-divider>
     <div id="buttons">
-        <p class="form-value" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
+        <p class="form-value" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
         <button class="mat-flat-button delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
         <button class="mat-flat-button primary" id="save" (click)="saveRecord()">Save</button>
     </div>

@@ -10,7 +10,6 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { ModalModule } from 'ngx-bootstrap/modal'
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 // Material design
-import { CdkTableModule } from '@angular/cdk/table';
 import { MatButtonModule } from '@angular/material/button'
 import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS } from '@angular/material'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -18,7 +17,8 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table'
-import { MaterialDialogComponent } from '../shared/components/material-dialog/material-dialog.component'
+import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
+import { MaterialDialogComponent } from './../shared/components/material-dialog/material-dialog.component';
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
 // Common components
@@ -55,6 +55,7 @@ import { MatRowKeyboardSelectionModule } from "mat-row-keyboard-selection";
         PageNotFoundComponent,
         ModalDialogComponent,
         ModalIndexComponent,
+        MaterialIndexDialogComponent,
         MaterialDialogComponent,
         // Routes
         HomeComponent,
@@ -95,6 +96,7 @@ import { MatRowKeyboardSelectionModule } from "mat-row-keyboard-selection";
     entryComponents: [
         ModalDialogComponent,
         ModalIndexComponent,
+        MaterialIndexDialogComponent,
         MaterialDialogComponent
     ],
     providers: [{ provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } }],

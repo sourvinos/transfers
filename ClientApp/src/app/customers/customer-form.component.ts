@@ -1,22 +1,17 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, FormControl, Validators } from '@angular/forms'
+import { MatDialog } from '@angular/material'
 import { ActivatedRoute, Router } from '@angular/router'
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal'
-import { forkJoin, Observable, Subject } from 'rxjs'
+import { forkJoin } from 'rxjs'
+import { map } from 'rxjs/operators'
 import { CustomerService } from '../services/customer.service'
 import { HelperService } from '../services/helper.service'
 import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 import { TaxOfficeService } from '../services/taxOffice.service'
 import { VatStateService } from '../services/vatState.service'
-import { Utils } from '../shared/classes/utils'
-import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
-import { MatDialog, MatTableDataSource } from '@angular/material'
-import { SelectionModel } from '@angular/cdk/collections'
 import { MaterialDialogComponent } from '../shared/components/material-dialog/material-dialog.component'
-
-interface TableItem {
-    name: string;
-}
+import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
+import { Utils } from './../shared/classes/utils'
 
 @Component({
     selector: 'app-customer-form',
@@ -34,10 +29,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     taxOffices: any
     vatStates: any
 
-    modalRef: BsModalRef
     unlisten: Unlisten
-
-    taxOfficeDataSource: MatTableDataSource<TableItem>; taxOfficeSelection: SelectionModel<TableItem>;
 
     // #endregion     
 
@@ -58,7 +50,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private modalService: BsModalService) {
+    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts) {
         route.params.subscribe(p => (this.id = p['id']))
         this.unlisten = null
     }
@@ -73,44 +65,50 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        (this.unlisten) && this.unlisten();
+        (this.unlisten) && this.unlisten()
     }
 
     // Master
-    canDeactivate(): Observable<boolean> | boolean {
+    canDeactivate() {
         if (this.form.dirty) {
-            const subject = new Subject<boolean>()
-            const modal = this.modalService.show(ModalDialogComponent, {
-                initialState: {
-                    title: 'Confirmation',
-                    message: 'If you continue, all changes in this record will be lost.',
-                    type: 'question'
-                }, animated: true
+            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+                width: '550px',
+                data: {
+                    title: 'Abort editing',
+                    message: 'If you continue, changes in this record will be lost.',
+                    actions: ['cancel', 'ok']
+                },
+                panelClass: 'dialog'
             })
-            modal.content.subject = subject
-            return subject.asObservable()
+            return dialogRef.afterClosed().pipe(map(result => {
+                if (result == 'true') {
+                    return true
+                }
+            }))
+        } else {
+            return true
         }
-        return true
     }
 
     // T
     deleteRecord() {
         if (this.id != undefined) {
-            const subject = new Subject<boolean>()
-            const modal = this.modalService.show(ModalDialogComponent, {
-                initialState: {
-                    title: 'Confirmation',
-                    message: 'If you continue, this record will be deleted.',
-                    type: 'delete'
-                }, animated: true
+            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+                width: '550px',
+                data: {
+                    title: 'Delete record',
+                    message: 'This record will be permanently deleted.',
+                    actions: ['cancel', 'ok']
+                },
+                panelClass: 'dialog'
             })
-            modal.content.subject = subject
-            return subject.asObservable().subscribe(result => {
-                if (result)
+            dialogRef.afterClosed().subscribe(result => {
+                if (result == 'true') {
                     this.customerService.deleteCustomer(this.id).subscribe(() => this.router.navigate([this.url]), error => {
                         Utils.errorLogger(error)
                         this.openErrorModal()
                     })
+                }
             })
         }
     }
@@ -129,11 +127,16 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // T
     lookupIndex(lookupArray: any[], lookupId: any, lookupDescription: any, e: { target: { value: any } }) {
         const filteredArray = []
-        lookupArray.filter(x => { if (x.description.toUpperCase().includes(e.target.value.toUpperCase())) filteredArray.push(x) })
+        lookupArray.filter(x => {
+            if (x.description.toUpperCase().includes(e.target.value.toUpperCase())) {
+                filteredArray.push(x)
+            }
+        })
         if (filteredArray.length > 0) {
             this.showModalIndex(filteredArray, lookupId, lookupDescription)
         }
         if (filteredArray.length == 0) {
+            this.focus(lookupDescription)
             this.patchFields(null, lookupId, lookupDescription)
         }
     }
@@ -143,13 +146,13 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.form.valid) return
         if (!this.id) {
             this.customerService.addCustomer(this.form.value).subscribe(() => {
-                this.form.reset();
+                this.form.reset()
                 this.router.navigate([this.url])
             }, error => Utils.errorLogger(error))
         }
         if (this.id) {
             this.customerService.updateCustomer(this.id, this.form.value).subscribe(() => {
-                this.form.reset();
+                this.form.reset()
                 this.router.navigate([this.url])
             }, error => Utils.errorLogger(error))
         }
@@ -158,7 +161,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             "Escape": (event: KeyboardEvent): void => {
-                if (!document.getElementsByClassName('cdk-overlay-pane')) {
+                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
                     this.goBack()
                 }
             },
@@ -170,12 +173,12 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.saveRecord()
             },
             "Alt.C": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('modal-dialog')[0]) {
+                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
                     document.getElementById('cancel').click()
                 }
             },
             "Alt.O": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('modal-dialog')[0]) {
+                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
                     document.getElementById('ok').click()
                 }
             }
@@ -193,22 +196,48 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    private focus(field: string) {
+        Utils.setFocus(field)
+    }
+
     private openErrorModal() {
-        const subject = new Subject<boolean>()
-        const modal = this.modalService.show(ModalDialogComponent, {
-            initialState: {
-                title: 'Error',
-                message: 'This record is in use and cannot be deleted.',
-                type: 'error'
-            }, animated: true
+        this.dialog.open(MaterialDialogComponent, {
+            width: '550px',
+            data: {
+                title: 'Delete record',
+                message: 'This record is in use and can\'t be deleted.',
+                actions: ['ok']
+            },
+            panelClass: 'dialog'
         })
-        modal.content.subject = subject
-        return subject.asObservable()
     }
 
     private patchFields(result: any[], id: any, description: any) {
         this.form.patchValue({ [id]: result ? result[0] : '' })
         this.form.patchValue({ [description]: result ? result[1] : '' })
+    }
+
+    private populateDropDowns() {
+        let sources = []
+        sources.push(this.taxOfficeService.getTaxOffices())
+        sources.push(this.vatStateService.getVatStates())
+        if (this.id) {
+            sources.push(this.customerService.getCustomer(this.id))
+        }
+        return forkJoin(sources).subscribe(
+            result => {
+                this.taxOffices = result[0]
+                this.vatStates = result[1]
+                if (this.id) {
+                    this.populateFields()
+                }
+            },
+            error => {
+                if (error.status == 404) {
+                    this.router.navigate(['/error'])
+                }
+            }
+        )
     }
 
     private populateFields() {
@@ -238,34 +267,8 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    private populateDropDowns() {
-        let sources = []
-        sources.push(this.taxOfficeService.getTaxOffices())
-        sources.push(this.vatStateService.getVatStates())
-        if (this.id) {
-            sources.push(this.customerService.getCustomer(this.id))
-        }
-        return forkJoin(sources).subscribe(
-            result => {
-                this.taxOfficeDataSource = new MatTableDataSource<TableItem>(result)[0];
-                this.taxOfficeSelection = new SelectionModel<TableItem>(false);
-                this.taxOffices = result[0]
-
-                this.vatStates = result[1]
-                if (this.id) {
-                    this.populateFields()
-                }
-            },
-            error => {
-                if (error.status == 404) {
-                    this.router.navigate(['/error'])
-                }
-            }
-        )
-    }
-
     private showModalIndex(filteredArray: any[], lookupId: any, lookupDescription: any) {
-        let selection = this.dialog.open(MaterialDialogComponent, {
+        let selection = this.dialog.open(MaterialIndexDialogComponent, {
             data: {
                 headers: ['id', 'description'],
                 records: filteredArray
