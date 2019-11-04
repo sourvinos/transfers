@@ -1,0 +1,14 @@
+.mat-dialog-content {
+    height: 100%;
+}
+
+.mat-dialog-content h6 {
+    color: var(--color-modal-content);
+}
+
+.mat-dialog-actions {
+    justify-content: flex-end;
+    margin-bottom: 0;
+    min-height: auto;
+    padding: 0;
+}

@@ -44,6 +44,8 @@ import { VatStateFormComponent } from '../vatStates/vatState-form.component'; im
 // Directives
 import { InputFormatDirective } from '../directives/input-format.directive'
 import { MatRowKeyboardSelectionModule } from "mat-row-keyboard-selection";
+// Pipes
+import { CustomPipe } from '../pipes/custom.pipe'
 
 @NgModule({
     declarations: [
@@ -70,7 +72,9 @@ import { MatRowKeyboardSelectionModule } from "mat-row-keyboard-selection";
         TransfersComponent, TransferListComponent, TransferFormComponent,
         VatStateFormComponent, VatStateListComponent,
         // Directives
-        InputFormatDirective
+        InputFormatDirective,
+        // Pipes
+        CustomPipe
     ],
     imports: [
         AppRoutingModule,

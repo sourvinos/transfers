@@ -11,8 +11,8 @@
     --font-size-headers: 2rem;
     --font-size-logo-first-child: 4.375rem;
     --font-size-logo-second-child: 2.5rem;
-    --font-size-menu-list-item-active: 1.8rem;
-    --font-size-menu-list-items: 1.5rem;
+    --font-size-menu-list-item-active: 1.5rem;
+    --font-size-menu-list-items: 1.4rem;
     --font-size-modal-headers: 2.1rem;
     --font-size-modal-messages: 1.1rem;
     --font-size-summary-block-header: 1.7rem;
@@ -30,7 +30,7 @@
     --font-family-headers: "Lato";
     --font-family-logo: "Anton";
     --font-family-logo: "Anton";
-    --font-family-menu-list-items: "Ubuntu Condensed";
+    --font-family-menu-list-items: "Lato";
     --font-family-modal-header: 'Roboto Condensed';
     --font-family-summary-block-header-total: "Roboto Condensed";
     --font-family-summary-block-header: "Roboto Condensed";

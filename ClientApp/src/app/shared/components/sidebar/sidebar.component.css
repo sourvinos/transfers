@@ -72,7 +72,7 @@
     flex-direction: column;
     font-family: var(--font-family-menu-list-items);
     font-size: var(--font-size-menu-list-items);
-    line-height: 2.8rem;
+    line-height: 2.5rem;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -122,11 +122,11 @@
 /* ! Wide = menu always visible */
 @media only screen and (min-width: 80.0625rem) {
     #sidebar {
-        width: 20rem !important;
+        width: 17rem !important;
     }
 
     #section {
-        margin-left: 20rem !important;
+        margin-left: 17rem !important;
     }
 }
 

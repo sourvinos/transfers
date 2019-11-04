@@ -15,7 +15,11 @@ export class MaterialIndexDialogComponent implements OnInit {
     dataSource: MatTableDataSource<[]>;
     selection: SelectionModel<[]>;
 
+    header = ''
     columns = []
+    fields = []
+    align = []
+    format = []
     selectedElement = []
 
     @HostListener('document:keydown', ['$event']) anyEvent(event: { altKey: any; shiftKey: any; key: { toUpperCase: { (): string; (): string; (): string; (): string; (): string; }; }; }) {
@@ -26,11 +30,16 @@ export class MaterialIndexDialogComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.columns = this.data.headers
+        this.header = this.data.header
+        this.columns = this.data.columns
+        this.fields = this.data.fields
+        this.align = this.data.align
+        this.format = this.data.format
         this.dataSource = new MatTableDataSource<[]>(this.data.records);
         this.selection = new SelectionModel<[]>(false);
     }
 
+    // T
     close() {
         this.getCurrentRow()
         this.dialogRef.close(this.selectedElement)
@@ -38,8 +47,9 @@ export class MaterialIndexDialogComponent implements OnInit {
 
     private getCurrentRow() {
         for (let index = 0; index < this.columns.length; index++) {
-            this.selectedElement[index] = document.querySelector('tr.selected').children[index].textContent
+            this.selectedElement[index] = document.querySelector('.mat-row.selected').children[index].textContent.trimRight()
         }
+        return this.selectedElement
     }
 
 }

@@ -72,9 +72,10 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     canDeactivate() {
         if (this.form.dirty) {
             const dialogRef = this.dialog.open(MaterialDialogComponent, {
+                height: '250px',
                 width: '550px',
                 data: {
-                    title: 'Abort editing',
+                    title: 'Please confirm',
                     message: 'If you continue, changes in this record will be lost.',
                     actions: ['cancel', 'ok']
                 },
@@ -94,10 +95,11 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     deleteRecord() {
         if (this.id != undefined) {
             const dialogRef = this.dialog.open(MaterialDialogComponent, {
+                height: '250px',
                 width: '550px',
                 data: {
-                    title: 'Delete record',
-                    message: 'This record will be permanently deleted.',
+                    title: 'Please confirm',
+                    message: 'If you continue, this record will be permanently deleted.',
                     actions: ['cancel', 'ok']
                 },
                 panelClass: 'dialog'
@@ -125,7 +127,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // T
-    lookupIndex(lookupArray: any[], lookupId: any, lookupDescription: any, e: { target: { value: any } }) {
+    lookupIndex(lookupArray: any[], modalTitle: string, lookupId: any, lookupDescription: any, e: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
             if (x.description.toUpperCase().includes(e.target.value.toUpperCase())) {
@@ -133,7 +135,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         })
         if (filteredArray.length > 0) {
-            this.showModalIndex(filteredArray, lookupId, lookupDescription)
+            this.showModalIndex(filteredArray, modalTitle, lookupId, lookupDescription)
         }
         if (filteredArray.length == 0) {
             this.focus(lookupDescription)
@@ -202,10 +204,11 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private openErrorModal() {
         this.dialog.open(MaterialDialogComponent, {
+            height: '250px',
             width: '550px',
             data: {
-                title: 'Delete record',
-                message: 'This record is in use and can\'t be deleted.',
+                title: 'Error',
+                message: 'This record is in use and can not be deleted.',
                 actions: ['ok']
             },
             panelClass: 'dialog'
@@ -267,14 +270,18 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    private showModalIndex(filteredArray: any[], lookupId: any, lookupDescription: any) {
-        let selection = this.dialog.open(MaterialIndexDialogComponent, {
+    private showModalIndex(filteredArray: any[], modalTitle: string, lookupId: any, lookupDescription: any) {
+        let dialogRef = this.dialog.open(MaterialIndexDialogComponent, {
             data: {
-                headers: ['id', 'description'],
+                header: modalTitle,
+                columns: ['id', 'description'],
+                fields: ['Id', 'Description'],
+                align: ['center', 'left'],
+                format: ['', ''],
                 records: filteredArray
             }
         })
-        selection.afterClosed().subscribe((result) => {
+        dialogRef.afterClosed().subscribe((result) => {
             this.patchFields(result, lookupId, lookupDescription)
         })
     }
