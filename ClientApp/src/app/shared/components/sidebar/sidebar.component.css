@@ -103,10 +103,14 @@
     text-align: center;
 }
 
-/* ! Small heights = hide bus circle */
+/* Small heights = hide bus circle */
 @media only screen and (max-height: 60rem) {
     #sidebar {
-        grid-template-areas: "userInfo""companyLogo""menu""copyright";
+        grid-template-areas:
+            "userInfo"
+            "companyLogo"
+            "menu"
+            "copyright";
         grid-template-rows: min-content min-content auto min-content;
     }
 
@@ -116,6 +120,10 @@
 
     #menu {
         padding: 0 0 1rem 0;
+    }
+
+    #menuItems {
+        line-height: 2rem !important;
     }
 }
 

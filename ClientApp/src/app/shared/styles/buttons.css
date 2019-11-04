@@ -4,6 +4,7 @@ button {
     font-family: var(--font-family-buttons) !important;
     font-weight: var(--font-weight-buttons) !important;
     margin: 0 0 0 0.5rem !important;
+    outline: 0 !important;
 }
 
 button.primary {

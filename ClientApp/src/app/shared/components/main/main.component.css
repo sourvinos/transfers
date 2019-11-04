@@ -1,50 +1,49 @@
 :host {
-	display: grid;
+    display: grid;
 }
 
 #hamburger {
-	position: absolute;
-	margin-left: 2rem;
-	top: 2.2rem;
+    position: absolute;
+    margin-left: 2rem;
 }
 
 #hamburger span {
-	margin: 5px;
-	width: 30px;
-	height: 5px;
-	background-color: var(--color-hamburger);
-	display: block;
-	transition: transform 1000ms;
-	cursor: pointer;
+    margin: 5px;
+    width: 30px;
+    height: 5px;
+    background-color: var(--color-hamburger);
+    display: block;
+    transition: transform 1000ms;
+    cursor: pointer;
 }
 
 #hamburger.open span:first-child {
-	transform: translateY(10px) rotate(45deg);
+    transform: translateY(10px) rotate(45deg);
 }
 
 #hamburger.open span:nth-child(2) {
-	visibility: hidden;
+    visibility: hidden;
 }
 
 #hamburger.open span:last-child {
-	transform: translateY(-10px) rotate(-45deg);
+    transform: translateY(-10px) rotate(-45deg);
 }
 
 #content {
-	display: flex;
-	height: 100%;
+    display: flex;
+    height: 100%;
 }
 
 /* ! Wide screen */
 @media only screen and (min-width: 80.0625rem) {
-	#hamburger {
-		display: none;
-	}
+    #hamburger {
+        display: none;
+    }
 }
 
 /* ! Narrow screen */
 @media only screen and (max-width: 80rem) {
-	#hamburger {
-		display: block;
-	}
+    #hamburger {
+        display: block;
+    }
 }

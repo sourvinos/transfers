@@ -11,8 +11,7 @@ export class RootComponent {
 
     constructor(private accountService: AccountService) { }
 
-    @HostListener('window:resize', ['$event']) onResize(event: { target: { innerWidth: any; }; }) {
-    }
+    @HostListener('window:resize', ['$event']) onResize(event: { target: { innerWidth: any; }; }) { }
 
     @HostListener('window:beforeunload', ['$event']) beforeUnloadHander() {
         this.accountService.logout()
@@ -50,4 +49,3 @@ export class RootComponent {
     }
 
 }
-

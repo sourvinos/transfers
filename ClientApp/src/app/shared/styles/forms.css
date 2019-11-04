@@ -45,3 +45,20 @@
         margin-left: 2rem !important;
     }
 }
+
+/* Small heights */
+@media only screen and (max-height: 60rem) {
+    form {
+        flex-direction: row !important;
+    }
+
+    #section-one {
+        margin-right: 1rem;
+    }
+}
+
+#section-one, #section-two {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
