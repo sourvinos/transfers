@@ -15,7 +15,7 @@
         "title searchbox"
         "divider divider";
     grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
+    grid-template-rows: 45px auto;
     margin: 0;
     padding: 2rem 2rem 0 2rem;
 }
@@ -35,8 +35,21 @@
     margin: 0 1rem 0 0;
 }
 
+#header #search-box .form {
+    text-align: end;
+    width: 50% !important;
+}
+
+#header #search-box .form .mat-form-field {
+    width: 100% !important;
+}
+
 #searchField {
-    width: 30rem;
+    width: 30rem !important;
+}
+
+#header mat-divider {
+    grid-area: divider;
 }
 
 #content {
@@ -85,4 +98,8 @@ table tr:hover {
     h1 {
         margin-left: 3rem !important;
     }
+}
+
+.mat-column-phones {
+    min-width: 300px;
 }

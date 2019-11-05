@@ -79,10 +79,6 @@ export class KeyboardShortcuts {
         this.zone = zone
         this.listeners = []
         this.normalizedKeys = Object.create(null)
-        // Since we're going to create a root event-handler for the keydown event, we're
-        // gonna do this outside of the NgZone. This way, we're not constantly triggering
-        // change-detection for every key event - we'll only re-enter the Angular Zone
-        // when we have an event that is actually being consumed by one of our components.
         this.zone.runOutsideAngular(
             (): void => {
                 window.addEventListener("keydown", this.handleKeyboardEvent)
@@ -111,9 +107,6 @@ export class KeyboardShortcuts {
         this.listeners.push(listener)
         this.listeners.sort(
             (a: Listener, b: Listener): number => {
-                // We want to sort the listeners in DESCENDING priority order so that the
-                // higher-priority items are at the start of the collection - this will
-                // make it easier to loop over later (highest priority first).
                 if (a.priority < b.priority) {
                     return (1)
                 } else if (a.priority > b.priority) {
@@ -133,24 +126,16 @@ export class KeyboardShortcuts {
     // CAUTION: Most of this logic is taken from the core KeyEventsPlugin code but,
     // with some of the logic removed. This is simplified for the demo.
     private getKeyFromEvent(event: KeyboardEvent): string {
-
         var key = (event.key || event["keyIdentifier"] || "Unidentified")
-
         if (key.startsWith("U+")) {
-
             key = String.fromCharCode(parseInt(key.slice(2), 16))
-
         }
-
         var parts = [KEY_MAP[key] || key]
-
         if (event.altKey) parts.push("Alt")
         if (event.ctrlKey) parts.push("Control")
         if (event.metaKey) parts.push("Meta")
         if (event.shiftKey) parts.push("Shift")
-
         return (this.normalizeKey(parts.join(".")))
-
     }
 
     // I handle the keyboard events for the root handler (and delegate to the listeners).
@@ -158,41 +143,28 @@ export class KeyboardShortcuts {
         var key = this.getKeyFromEvent(event)
         var isInputEvent = this.isEventFromInput(event)
         var handler: Handler
-        // Iterate over the listeners in DESCENDING priority order.
         for (var listener of this.listeners) {
             if (handler = listener.bindings[key]) {
-                // Execute handler if this is NOT an input event that we need to ignore.
                 if (!isInputEvent || listener.inputs) {
-                    // Right now, we're executing outside of the NgZone. As such, we
-                    // have to re-enter the NgZone so that we can hook back into change-
-                    // detection. Plus, this will also catch errors and propagate them
-                    // through application properly.
                     var result = this.zone.runGuarded(
                         (): boolean | void => {
                             return (handler(event))
                         }
                     )
-                    // If the handler returned an explicit False, we're going to treat
-                    // this listener as Terminal, regardless of the original settings.
                     if (result === false) {
                         return
-                        // If the handler returned an explicit True, we're going to treat
-                        // this listener as NOT Terminal, regardless of the original settings.
                     } else if (result === true) {
                         continue
                     }
                 }
-                // If this listener is terminal for matches, stop propagation.
                 if (listener.terminal === "match") {
                     return
                 }
             }
-            // If this listener is terminal for all events, stop propagation (unless the
-            // event is white-listed for propagation).
             if ((listener.terminal === true) && !listener.terminalWhitelist[key]) {
                 return
             }
-        } // END: For-loop.
+        }
     }
 
     // I determine if the given event originated from a form input element.
@@ -203,12 +175,8 @@ export class KeyboardShortcuts {
                 case "SELECT":
                 case "TEXTAREA":
                     return (true)
-                    // @ts-ignore: TS7027: Unreachable code detected.
-                    break
                 default:
                     return (false)
-                    // @ts-ignore: TS7027: Unreachable code detected.
-                    break
             }
         }
         return (false)
@@ -240,14 +208,11 @@ export class KeyboardShortcuts {
                 .split(".")
                 .map(
                     (segment): string => {
-
                         return (KEY_ALIAS[segment] || segment)
-
                     }
                 )
                 .sort()
                 .join(".")
-
         }
         return (this.normalizedKeys[key])
     }

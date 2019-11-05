@@ -24,7 +24,6 @@ export class MainComponent implements AfterViewInit {
 
 	private positionHamburger() {
 		var hamburger = document.getElementById("hamburger")
-		console.log(window.innerHeight)
 		hamburger.style.top = window.innerHeight - 68 + 'px'
 	}
 

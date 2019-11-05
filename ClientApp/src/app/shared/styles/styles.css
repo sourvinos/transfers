@@ -78,10 +78,6 @@ p {
     color: var(--color-navigation-icon-hover);
 }
 
-.search.icon {
-    margin-top: 0.2rem !important;
-}
-
 .mat-divider {
     background-color: var(--color-divider) !important;
     margin: 2rem 0 !important;

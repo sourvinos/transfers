@@ -15,6 +15,7 @@ input::selection {
 input[type=text] {
     caret-color: var(--color-curet);
     color: var(--color-input);
+    font-size: var(--font-size-input);
     cursor: text !important;
 }
 

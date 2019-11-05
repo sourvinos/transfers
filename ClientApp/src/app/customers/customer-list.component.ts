@@ -1,4 +1,6 @@
+import { SelectionModel } from '@angular/cdk/collections'
 import { Component, OnDestroy, OnInit } from '@angular/core'
+import { MatTableDataSource } from '@angular/material'
 import { Router } from '@angular/router'
 import { ICustomer } from '../models/customer'
 import { CustomerService } from '../services/customer.service'
@@ -18,7 +20,17 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     customers: ICustomer[]
     filteredCustomers: ICustomer[]
 
+    columns = ['id', 'description', 'address', 'phones', 'email']
+    fields = ['Id', 'Description', 'Address', 'Phones', 'Email']
+    format = ['', '', '', '', '']
+    align = ['center', 'left', 'left', 'left', 'left']
+
     unlisten: Unlisten
+
+    dataSource: MatTableDataSource<ICustomer>;
+    selection: SelectionModel<[]>;
+
+    selectedElement = []
 
     //#endregion
 
@@ -37,8 +49,8 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     }
 
     // T
-    filter(query: string) {
-        this.filteredCustomers = query ? this.customers.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.customers
+    editRecord() {
+        this.router.navigate(['/customers/', document.querySelector('.mat-row.selected').children[0].textContent])
     }
 
     // T
@@ -46,8 +58,16 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/customers/new'])
     }
 
+    // T
+    filter(query: string) {
+        this.dataSource.data = query ? this.customers.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.customers
+    }
+
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
+            "Enter": (event: KeyboardEvent): void => {
+                this.editRecord()
+            },
             "Alt.N": (event: KeyboardEvent): void => {
                 event.preventDefault()
                 document.getElementById('new').click()
@@ -59,7 +79,8 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     }
 
     private getAllCustomers() {
-        this.service.getCustomers().subscribe(data => this.filteredCustomers = this.customers = data, error => Utils.errorLogger(error))
+        this.service.getCustomers().subscribe(data => { this.filteredCustomers = this.customers = data; this.dataSource = new MatTableDataSource<ICustomer>(this.filteredCustomers); }, error => Utils.errorLogger(error))
+        this.selection = new SelectionModel<[]>(false);
     }
 
     private setFocus(element: string) {
