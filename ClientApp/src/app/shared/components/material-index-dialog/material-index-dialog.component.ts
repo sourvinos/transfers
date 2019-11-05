@@ -47,7 +47,7 @@ export class MaterialIndexDialogComponent implements OnInit {
 
     private getCurrentRow() {
         for (let index = 0; index < this.columns.length; index++) {
-            this.selectedElement[index] = document.querySelector('.mat-row.selected').children[index].textContent.trimRight()
+            this.selectedElement[index] = document.querySelector('.mat-row.selected').children[index].textContent.trim()
         }
         return this.selectedElement
     }

@@ -1,0 +1,28 @@
+.mat-dialog-container {
+    background-color: var(--color-dialog-background) !important;
+    border-radius: 5px !important;
+    display: flex !important;
+    height: 574px !important;
+    padding: 25px !important;
+    width: 700px !important;
+}
+
+.mat-dialog-title {
+    color: var(--color-dialog-title) !important;
+    font-family: var(--font-family-dialog-header) !important;
+    font-size: var(--font-size-mat-dialog-title) !important;
+    margin-bottom: 25px !important;
+}
+
+.mat-dialog-container>.ng-star-inserted {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.mat-dialog-content {
+    color: var(--color-dialog-content) !important;
+    font-family: var(--font-family-dialog-content) !important;
+    font-size: var(--font-size-mat-dialog-content) !important;
+}

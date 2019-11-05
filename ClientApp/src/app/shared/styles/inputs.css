@@ -1,0 +1,52 @@
+input.date {
+    text-align: center;
+}
+
+input.number {
+    margin: 0 0.5rem 1rem 0 !important;
+    text-align: right;
+    width: 80px !important;
+}
+
+input::selection {
+    background-color: darkgray;
+}
+
+input[type=text] {
+    caret-color: var(--color-curet);
+    color: var(--color-input);
+    cursor: text !important;
+}
+
+input[type=text]:disabled {
+    cursor: not-allowed !important;
+    opacity: 1 !important;
+    pointer-events: all !important;
+}
+
+/* Focused */
+.mat-form-field.mat-focused .mat-form-field-label {
+    color: var(--color-input-label-focus) !important;
+}
+
+.mat-form-field.mat-focused .mat-input-element {
+    color: var(--color-input-label-focus) !important;
+}
+
+.mat-form-field.mat-focused .mat-form-field-ripple {
+    background-color: var(--color-input-underline-focus) !important
+}
+
+/* Error */
+.mat-form-field.mat-form-field-invalid .mat-form-field-label {
+    color: var(--color-input-error) !important;
+    font-weight: bold !important;
+}
+
+.mat-form-field.mat-form-field-invalid .mat-input-element {
+    color: var(--color-input-error) !important;
+}
+
+.mat-form-field.mat-form-field-invalid .mat-form-field-ripple {
+    background-color: var(--color-input-error) !important;
+}

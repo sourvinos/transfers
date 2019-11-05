@@ -1,0 +1,62 @@
+.mat-cell:not(:first-child) {
+    color: beige !important;
+    font-size: 1.0rem;
+    padding: 0 10px !important;
+}
+
+.mat-cell:last-child {
+    border-right: 0 !important;
+}
+
+.mat-row {
+    background-color: #57617B !important;
+    color: beige;
+    cursor: pointer;
+    font-family: 'Lato';
+}
+
+.mat-row.selected {
+    background-color: #7E7E7E !important;
+}
+
+.mat-row>.mat-cell:nth-child(2) {
+    border-left: 4px solid #57617B !important;
+}
+
+.mat-row.selected>.mat-cell:nth-child(2) {
+    border-left: 4px solid #FFE85C !important;
+}
+
+.mat-header-row {
+    background-color: #637092 !important;
+    font-family: 'Lato';
+}
+
+.mat-header-cell:first-child, .mat-cell:first-child {
+    flex: 0% !important;
+    padding: 0 !important;
+}
+
+.mat-header-cell:not(:first-child), .mat-cell:not(:first-child) {
+    flex: 100%;
+}
+
+.mat-header-cell:not(:first-child) {
+    color: beige !important;
+    font-size: 1.1rem !important;
+    justify-content: center !important;
+    padding: 0 10px !important;
+    border-right: 1px solid #57617b !important;
+}
+
+.left {
+    justify-content: flex-start !important;
+}
+
+.right {
+    justify-content: flex-end !important;
+}
+
+.center {
+    justify-content: center !important;
+}

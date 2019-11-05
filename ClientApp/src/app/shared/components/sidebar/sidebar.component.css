@@ -35,15 +35,15 @@
 }
 
 #companyLogo>:first-child {
-    color: var(--color-company-logo-first-child);
-    font-size: var(--font-size-logo-first-child);
+    color: var(--color-company-logo-first-child) !important;
+    font-size: var(--font-size-logo-first-child) !important;
     margin: 0;
 }
 
 #companyLogo>:last-child {
-    color: var(--color-company-logo-second-child);
-    font-size: var(--font-size-logo-second-child);
-    font-weight: normal;
+    color: var(--color-company-logo-second-child) !important;
+    font-size: var(--font-size-logo-second-child) !important;
+    font-weight: normal !important;
     margin-top: -1rem !important;
 }
 

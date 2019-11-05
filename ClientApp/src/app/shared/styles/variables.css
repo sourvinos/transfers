@@ -1,82 +1,105 @@
 * {
-    /* Weights */
+    /* ! Font weights */
+
     --font-weight-buttons: 100 !important;
     --font-weight-headers: 100 !important;
     --font-weight-labels: 100 !important;
 }
 
 * {
-    /* Sizes */
-    --font-size-copyright: 0.6rem;
+    /* ! Font sizes */
+
+    /* - All headers */
     --font-size-headers: 2rem;
+    /* - Dialogs */
+    --font-size-mat-dialog-title: 2.0rem;
+    --font-size-mat-dialog-content: 1.0rem;
+    /* - Transfer summary boxes */
+    --font-size-summary-block-header: 1.7rem;
+    --font-size-summary-block-item-total: 1.2rem;
+    --font-size-summary-block-item: 1.2rem;
+    /* - Sidebar - Menu */
+    --font-size-copyright: 0.6rem;
     --font-size-logo-first-child: 4.375rem;
     --font-size-logo-second-child: 2.5rem;
     --font-size-menu-list-item-active: 1.5rem;
     --font-size-menu-list-items: 1.4rem;
-    --font-size-modal-headers: 2.1rem;
-    --font-size-modal-messages: 1.1rem;
-    --font-size-summary-block-header: 1.7rem;
-    --font-size-summary-block-item-total: 1.2rem;
-    --font-size-summary-block-item: 1.2rem;
-    --font-size-table-headers: 1.1rem;
     --font-size-user-info: 0.9rem;
 }
 
 * {
-    /* Fonts */
+    /* ! Font families */
+
+    /* - Buttons */
     --font-family-buttons: "Lato";
-    --font-family-copyright: "lato";
-    --font-family-dropdowns: "Play";
+    /* - All headers */
     --font-family-headers: "Lato";
-    --font-family-logo: "Anton";
-    --font-family-logo: "Anton";
-    --font-family-menu-list-items: "Lato";
-    --font-family-modal-header: 'Roboto Condensed';
+    /* - Dialogs */
+    --font-family-dialog-header: 'Lato';
+    --font-family-dialog-content: 'Lato';
+    /* - Transfer summary boxes */
     --font-family-summary-block-header-total: "Roboto Condensed";
     --font-family-summary-block-header: "Roboto Condensed";
     --font-family-summary-block-item: "Roboto Condensed";
-    --font-family-table: "Play";
+    /* - Sidebar  */
+    --font-family-copyright: "lato";
+    --font-family-logo: "Anton";
+    --font-family-logo: "Anton";
+    --font-family-menu-list-items: "Lato";
     --font-family-user-info: "Lato";
 }
 
 * {
-    /* Colors */
-    --color-background: #373F46;
-    --color-modal-background: #424242;
-    --color-modal-title: #D67474;
-    --color-modal-content: #FFFDDD;
+    /* ! Colors */
+
+    /* - Buttons */
     --color-button-delete: #D67474;
     --color-button-navigation: #373F46;
     --color-button-primary: #57617B;
     --color-button-secondary: #5A75BC;
     --color-button-text: #FFFDDD;
-    --color-company-logo-first-child: #FE9F36;
-    --color-company-logo-second-child: #FFE85C;
-    --color-curet: #FFFFFF;
-    --color-copyright: #FE9F36;
+    /* - Dialogs */
+    --color-dialog-background: #424242;
+    --color-dialog-content: #FFFDDD;
+    --color-dialog-title: #D67474;
+    /* - Divider lines */
     --color-divider: #5c5c5c;
+    /* - Hamburger */
     --color-hamburger: #939393;
+    /* - Headers */
     --color-headers: #939393;
-    --color-icon-hover: #EAF5BA;
-    --color-icon: #939393;
+    /* - Input boxes */
+    --color-curet: #FFFFFF;
+    --color-input-error: #fc3b3b;
     --color-input-label-focus: #FE9F36;
     --color-input-label: #939393;
     --color-input-underline-focus: #ba680b;
     --color-input: #FFFFFF;
-    --color-input-error: #fc3b3b;
+    /* - Main background */
+    --color-background: #373F46;
+    /* - Navigation icon */
+    --color-navigation-icon-hover: #EAF5BA;
+    --color-navigation-icon: #939393;
+    /* - Scrollbars */
+    --color-scrollbar: #FE9F36;
+    /* - Sidebar */
+    --color-company-logo-first-child: #FE9F36;
+    --color-company-logo-second-child: #FFE85C;
+    --color-copyright: #FE9F36;
     --color-menu-active-item: #FE9F36;
     --color-menu-list-items: #9F9F9F;
-    --color-scrollbar-background: #373F46;
-    --color-scrollbar: #FE9F36;
     --color-sidebar-background: #1D2733;
+    --color-user-info: #939393;
+    /* - Tables */
+    --color-scrollbar-background: #373F46;
+    --color-table-header-background: #b3b2b2;
+    --color-table-header-text: #939393;
+    --color-table-row-hover: #F5F5F5;
+    --color-table-rows-background: #D3D3D3;
+    /* - Transfer summary boxes */
     --color-summary-block-background: #f5f5f5;
     --color-summary-block-border-active: #FE9F36;
     --color-summary-block-border-inactive: #939393;
     --color-summary-block-item-hover: #FFFFFF;
     --color-summary-block-item: #939393;
-    --color-table-header-background: #b3b2b2;
-    --color-table-header-text: #939393;
-    --color-table-row-hover: #F5F5F5;
-    --color-table-rows-background: #D3D3D3;
-    --color-user-info: #939393;
 }
