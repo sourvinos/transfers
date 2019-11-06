@@ -1,16 +1,14 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
-import { FormBuilder, FormControl, Validators } from '@angular/forms'
+import { FormBuilder, Validators } from '@angular/forms'
+import { MatDialog } from '@angular/material'
 import { ActivatedRoute, Router } from '@angular/router'
-import { BsModalRef, BsModalService } from 'ngx-bootstrap'
-import { Observable, Subject } from 'rxjs'
+import { BsModalService } from 'ngx-bootstrap'
+import { map } from 'rxjs/operators'
 import { HelperService } from '../services/helper.service'
 import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 import { PortService } from '../services/port.service'
 import { Utils } from '../shared/classes/utils'
-import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
 import { MaterialDialogComponent } from '../shared/components/material-dialog/material-dialog.component'
-import { MatDialog } from '@angular/material'
-import { map } from 'rxjs/operators'
 
 @Component({
     selector: 'app-port-form',

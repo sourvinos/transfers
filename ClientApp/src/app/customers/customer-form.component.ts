@@ -51,7 +51,8 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     })
 
     constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts) {
-        this.activatedRoute.params.subscribe(p => (this.id = p['id'])); this.unlisten = null
+        this.activatedRoute.params.subscribe(p => (this.id = p['id']))
+        this.unlisten = null
     }
 
     ngOnInit() {

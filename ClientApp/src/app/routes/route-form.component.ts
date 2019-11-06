@@ -9,6 +9,10 @@ import { PortService } from '../services/port.service'
 import { RouteService } from '../services/route.service'
 import { Utils } from '../shared/classes/utils'
 import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
+import { MatDialog } from '@angular/material'
+import { MaterialDialogComponent } from '../shared/components/material-dialog/material-dialog.component'
+import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
+import { map } from 'rxjs/operators'
 
 @Component({
     selector: 'app-route-form',
@@ -20,12 +24,11 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Init
 
-    id: number = null
+    id: number
     url: string = '/routes'
 
     ports: any
 
-    modalRef: BsModalRef
     unlisten: Unlisten
 
     // #endregion     
@@ -39,8 +42,8 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService, private keyboardShortcutsService: KeyboardShortcuts) {
-        route.params.subscribe(p => (this.id = p['id']))
+    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts) {
+        this.activatedRoute.params.subscribe(p => (this.id = p['id']))
         this.unlisten = null
     }
 
@@ -50,7 +53,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        document.getElementById("abbreviation").focus()
+        this.focus('abbreviation')
     }
 
     ngOnDestroy(): void {
@@ -58,40 +61,48 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // Master
-    canDeactivate(): Observable<boolean> | boolean {
+    canDeactivate() {
         if (this.form.dirty) {
-            const subject = new Subject<boolean>()
-            const modal = this.modalService.show(ModalDialogComponent, {
-                initialState: {
-                    title: 'Confirmation',
-                    message: 'If you continue, all changes in this record will be lost.',
-                    type: 'question'
-                }, animated: true
+            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+                height: '250px',
+                width: '550px',
+                data: {
+                    title: 'Please confirm',
+                    message: 'If you continue, changes in this record will be lost.',
+                    actions: ['cancel', 'ok']
+                },
+                panelClass: 'dialog'
             })
-            modal.content.subject = subject
-            return subject.asObservable()
+            return dialogRef.afterClosed().pipe(map(result => {
+                if (result == 'true') {
+                    return true
+                }
+            }))
+        } else {
+            return true
         }
-        return true
     }
 
     // T
     deleteRecord() {
         if (this.id != undefined) {
-            const subject = new Subject<boolean>()
-            const modal = this.modalService.show(ModalDialogComponent, {
-                initialState: {
-                    title: 'Confirmation',
-                    message: 'If you continue, this record will be deleted.',
-                    type: 'delete'
-                }, animated: true
+            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+                height: '250px',
+                width: '550px',
+                data: {
+                    title: 'Please confirm',
+                    message: 'If you continue, this record will be permanently deleted.',
+                    actions: ['cancel', 'ok']
+                },
+                panelClass: 'dialog'
             })
-            modal.content.subject = subject
-            return subject.asObservable().subscribe(result => {
-                if (result)
+            dialogRef.afterClosed().subscribe(result => {
+                if (result == 'true') {
                     this.routeService.deleteRoute(this.id).subscribe(() => this.router.navigate([this.url]), error => {
                         Utils.errorLogger(error)
                         this.openErrorModal()
                     })
+                }
             })
         }
     }
@@ -101,10 +112,21 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigate([this.url])
     }
 
-    // T 
-    isValidInput(description: FormControl, id?: { invalid: any }, lookupArray?: any[]) {
-        if (id == null) return (description.invalid && description.touched)
-        if (id != null) return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(lookupArray, description))
+    // T
+    lookupIndex(lookupArray: any[], modalTitle: string, lookupId: any, lookupDescription: any, e: { target: { value: any } }) {
+        const filteredArray = []
+        lookupArray.filter(x => {
+            if (x.description.toUpperCase().includes(e.target.value.toUpperCase())) {
+                filteredArray.push(x)
+            }
+        })
+        if (filteredArray.length > 0) {
+            this.showModalIndex(filteredArray, modalTitle, lookupId, lookupDescription)
+        }
+        if (filteredArray.length == 0) {
+            this.focus(lookupDescription)
+            this.patchFields(null, lookupId, lookupDescription)
+        }
     }
 
     // T
@@ -124,44 +146,56 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    private arrayLookup(lookupArray: any[], givenField: FormControl) {
-        for (let x of lookupArray) {
-            if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
-                return true
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            "Escape": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+                    this.goBack()
+                }
+            },
+            "Alt.D": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                this.deleteRecord()
+            },
+            "Alt.S": (event: KeyboardEvent): void => {
+                this.saveRecord()
+            },
+            "Alt.C": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
+                    document.getElementById('cancel').click()
+                }
+            },
+            "Alt.O": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
+                    document.getElementById('ok').click()
+                }
             }
-        }
+        }, {
+            priority: 2,
+            inputs: true
+        })
+    }
+
+    private focus(field: string) {
+        Utils.setFocus(field)
     }
 
     private openErrorModal() {
-        const subject = new Subject<boolean>()
-        const modal = this.modalService.show(ModalDialogComponent, {
-            initialState: {
+        this.dialog.open(MaterialDialogComponent, {
+            height: '250px',
+            width: '550px',
+            data: {
                 title: 'Error',
-                message: 'This record is in use and cannot be deleted.',
-                type: 'error'
-            }, animated: true
+                message: 'This record is in use and can not be deleted.',
+                actions: ['ok']
+            },
+            panelClass: 'dialog'
         })
-        modal.content.subject = subject
-        return subject.asObservable()
     }
 
-    private populateFields() {
-        if (this.id) {
-            this.routeService.getRoute(this.id).subscribe(
-                result => {
-                    this.form.setValue({
-                        id: result.id,
-                        abbreviation: result.abbreviation,
-                        description: result.description,
-                        portId: result.port.id,
-                        portDescription: result.port.description,
-                        userName: result.userName
-                    })
-                },
-                error => {
-                    Utils.errorLogger(error)
-                })
-        }
+    private patchFields(result: any[], id: any, description: any) {
+        this.form.patchValue({ [id]: result ? result[0] : '' })
+        this.form.patchValue({ [description]: result ? result[1] : '' })
     }
 
     private populateDropDowns() {
@@ -185,33 +219,38 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         )
     }
 
-    private addShortcuts() {
-        this.unlisten = this.keyboardShortcutsService.listen({
-            "Escape": (event: KeyboardEvent): void => {
-                if (!document.getElementsByClassName('modal-dialog')[0]) {
-                    this.goBack()
-                }
-            },
-            "Alt.D": (event: KeyboardEvent): void => {
-                event.preventDefault()
-                this.deleteRecord()
-            },
-            "Alt.S": (event: KeyboardEvent): void => {
-                this.saveRecord()
-            },
-            "Alt.C": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('modal-dialog')[0]) {
-                    document.getElementById('cancel').click()
-                }
-            },
-            "Alt.O": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('modal-dialog')[0]) {
-                    document.getElementById('ok').click()
-                }
+    private populateFields() {
+        if (this.id) {
+            this.routeService.getRoute(this.id).subscribe(
+                result => {
+                    this.form.setValue({
+                        id: result.id,
+                        abbreviation: result.abbreviation,
+                        description: result.description,
+                        portId: result.port.id,
+                        portDescription: result.port.description,
+                        userName: result.userName
+                    })
+                },
+                error => {
+                    Utils.errorLogger(error)
+                })
+        }
+    }
+
+    private showModalIndex(filteredArray: any[], modalTitle: string, lookupId: any, lookupDescription: any) {
+        let dialogRef = this.dialog.open(MaterialIndexDialogComponent, {
+            data: {
+                header: modalTitle,
+                columns: ['id', 'description'],
+                fields: ['Id', 'Description'],
+                align: ['center', 'left'],
+                format: ['', ''],
+                records: filteredArray
             }
-        }, {
-            priority: 2,
-            inputs: true
+        })
+        dialogRef.afterClosed().subscribe((result) => {
+            this.patchFields(result, lookupId, lookupDescription)
         })
     }
 
@@ -233,25 +272,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.form.get('portDescription')
     }
 
-    getRequiredFieldMessage() {
-        return 'This field is required, silly!'
-    }
-
-    getMaxLengthFieldMessage() {
-        return 'This field must not be longer than '
-    }
-
     // #endregion
-
-    // #region Update dropdowns with values - called from the template
-
-    updatePortId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ portId: list ? list.id : '' })
-    }
-
-    // #endregion 
 
 }
