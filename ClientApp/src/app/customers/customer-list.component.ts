@@ -1,7 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections'
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { MatTableDataSource } from '@angular/material'
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { ICustomer } from '../models/customer'
 import { CustomerService } from '../services/customer.service'
 import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
@@ -34,12 +34,15 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     //#endregion
 
-    constructor(private service: CustomerService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router) {
+    constructor(private service: CustomerService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute) {
+        this.customers = this.route.snapshot.data['customerList']
+        this.filteredCustomers = this.customers
+        this.dataSource = new MatTableDataSource<ICustomer>(this.filteredCustomers)
+        this.selection = new SelectionModel<[]>(false)
         this.unlisten = null
     }
 
     ngOnInit() {
-        this.getAllCustomers()
         this.addShortcuts()
         this.setFocus('searchField')
     }

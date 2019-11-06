@@ -1,9 +1,15 @@
 section {
     background-color: var(--color-background);
     display: grid;
-    grid-template-areas: "sidebar" "main";
+    grid-template-areas: "sidebar""main";
     grid-template-columns: auto 1fr;
     height: 100vh;
     overflow: hidden;
     transition: margin-left 0.7s;
+}
+
+.spinner {
+    left: 50%;
+    position: absolute;
+    top: 50%;
 }

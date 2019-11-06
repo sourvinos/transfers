@@ -1,5 +1,6 @@
-import { Component, HostListener } from '@angular/core'
-import { AccountService } from './../services/account.service'
+import { Component, HostListener } from '@angular/core';
+import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
+import { AccountService } from './../services/account.service';
 
 @Component({
     selector: 'root',
@@ -9,7 +10,18 @@ import { AccountService } from './../services/account.service'
 
 export class RootComponent {
 
-    constructor(private accountService: AccountService) { }
+    showLoadingIndication: boolean = true
+
+    constructor(private accountService: AccountService, private router: Router) {
+        this.router.events.subscribe((routerEvent) => {
+            if (routerEvent instanceof NavigationStart) {
+                this.showLoadingIndication = true
+            }
+            if (routerEvent instanceof NavigationEnd || routerEvent instanceof NavigationCancel || routerEvent instanceof NavigationError) {
+                this.showLoadingIndication = false
+            }
+        })
+    }
 
     @HostListener('window:resize', ['$event']) onResize(event: { target: { innerWidth: any; }; }) { }
 
