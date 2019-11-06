@@ -23,6 +23,7 @@ import { DriverListResolverService } from './../drivers/driver-list-resolver.ser
 import { PickupPointListResolverService } from '../pickupPoints/pickupPoint-list-resolver.service';
 import { PortListResolverService } from '../ports/port-list-resolver.service';
 import { RouteListResolverService } from '../routes/port-list-resolver.service';
+import { TaxOfficeListResolverService } from '../taxOffices/port-list-resolver.service';
 
 const appRoutes: Routes = [
 	{ path: '', component: HomeComponent, pathMatch: 'full' },
@@ -33,7 +34,7 @@ const appRoutes: Routes = [
 	{ path: 'pickupPoints', component: PickupPointListComponent, resolve: { pickupPointList: PickupPointListResolverService } }, { path: 'pickupPoints/new', component: PickupPointFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'pickupPoints/:id', component: PickupPointFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'ports', component: PortListComponent, resolve: { portList: PortListResolverService } }, { path: 'ports/new', component: PortFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'ports/:id', component: PortFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'routes', component: RouteListComponent, resolve: { routeList: RouteListResolverService } }, { path: 'routes/new', component: RouteFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'routes/:id', component: RouteFormComponent, canDeactivate: [CanDeactivateGuard] },
-	{ path: 'taxOffices', component: TaxOfficeListComponent }, { path: 'taxOffices/new', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'taxOffices/:id', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] },
+	{ path: 'taxOffices', component: TaxOfficeListComponent, resolve: { taxOfficeList: TaxOfficeListResolverService } }, { path: 'taxOffices/new', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'taxOffices/:id', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'transfers', component: TransfersComponent },
 	{ path: 'vatStates', component: VatStateListComponent }, { path: 'vatStates/new', component: VatStateFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'vatStates/:id', component: VatStateFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'pageNotFound', component: PageNotFoundComponent }

@@ -33,7 +33,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private modalService: BsModalService, private keyboardShortcutsService: KeyboardShortcuts, public dialog: MatDialog) {
+    constructor(private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, public dialog: MatDialog) {
         this.activatedRoute.params.subscribe(p => (this.id = p['id']))
         this.unlisten = null
     }

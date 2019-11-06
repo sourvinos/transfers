@@ -1,9 +1,10 @@
+import { SelectionModel } from '@angular/cdk/collections'
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
+import { MatTableDataSource } from '@angular/material'
+import { ActivatedRoute, Router } from '@angular/router'
+import { ITaxOffice } from '../models/taxOffice'
 import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
-import { TaxOfficeService } from '../services/taxOffice.service'
 import { Utils } from '../shared/classes/utils'
-import { ITaxOffice } from './../models/taxOffice'
 
 @Component({
     selector: 'taxOffice-list',
@@ -13,21 +14,34 @@ import { ITaxOffice } from './../models/taxOffice'
 
 export class TaxOfficeListComponent implements OnInit, OnDestroy {
 
-    //#region Init
+    // #region Init
 
     taxOffices: ITaxOffice[]
     filteredTaxOffices: ITaxOffice[]
 
+    columns = ['id', 'description']
+    fields = ['Id', 'Description']
+    format = ['', '']
+    align = ['center', 'left']
+
     unlisten: Unlisten
 
-    //#endregion
+    dataSource: MatTableDataSource<ITaxOffice>
+    selection: SelectionModel<[]>
 
-    constructor(private service: TaxOfficeService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router) {
+    selectedElement = []
+
+    // #endregion
+
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute) {
+        this.taxOffices = this.route.snapshot.data['taxOfficeList']
+        this.filteredTaxOffices = this.taxOffices
+        this.dataSource = new MatTableDataSource<ITaxOffice>(this.filteredTaxOffices)
+        this.selection = new SelectionModel<[]>(false)
         this.unlisten = null
     }
 
     ngOnInit() {
-        this.getAllTaxOffices()
         this.addShortcuts()
         this.setFocus('searchField')
     }
@@ -37,8 +51,8 @@ export class TaxOfficeListComponent implements OnInit, OnDestroy {
     }
 
     // T
-    filter(query: string) {
-        this.filteredTaxOffices = query ? this.taxOffices.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.taxOffices
+    editRecord() {
+        this.router.navigate(['/taxOffices/', document.querySelector('.mat-row.selected').children[0].textContent])
     }
 
     // T
@@ -46,8 +60,16 @@ export class TaxOfficeListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/taxOffices/new'])
     }
 
+    // T
+    filter(query: string) {
+        this.dataSource.data = query ? this.taxOffices.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.taxOffices
+    }
+
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
+            "Enter": (event: KeyboardEvent): void => {
+                this.editRecord()
+            },
             "Alt.N": (event: KeyboardEvent): void => {
                 event.preventDefault()
                 document.getElementById('new').click()
@@ -56,10 +78,6 @@ export class TaxOfficeListComponent implements OnInit, OnDestroy {
             priority: 1,
             inputs: true
         })
-    }
-
-    private getAllTaxOffices() {
-        this.service.getTaxOffices().subscribe(data => this.filteredTaxOffices = this.taxOffices = data, error => Utils.errorLogger(error))
     }
 
     private setFocus(element: string) {
