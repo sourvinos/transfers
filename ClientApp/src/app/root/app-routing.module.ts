@@ -20,6 +20,8 @@ import { CanDeactivateGuard } from '../services/can-deactivate-guard.service'
 import { CustomerListResolverService } from '../customers/customer-list-resolver.service';
 import { DestinationListResolverService } from '../destinations/destination-list-resolver.service';
 import { DriverListResolverService } from './../drivers/driver-list-resolver.service';
+import { PickupPointListResolverService } from '../pickupPoints/pickupPoint-list-resolver.service';
+import { PortListResolverService } from '../ports/port-list-resolver.service';
 
 const appRoutes: Routes = [
 	{ path: '', component: HomeComponent, pathMatch: 'full' },
@@ -27,8 +29,8 @@ const appRoutes: Routes = [
 	{ path: 'customers', component: CustomerListComponent, resolve: { customerList: CustomerListResolverService } }, { path: 'customers/new', component: CustomerFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'customers/:id', component: CustomerFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'destinations', component: DestinationListComponent, resolve: { destinationList: DestinationListResolverService } }, { path: 'destinations/new', component: DestinationFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'destinations/:id', component: DestinationFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'drivers', component: DriverListComponent, resolve: { driverList: DriverListResolverService } }, { path: 'drivers/new', component: DriverFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'drivers/:id', component: DriverFormComponent, canDeactivate: [CanDeactivateGuard] },
-	{ path: 'pickupPoints', component: PickupPointListComponent }, { path: 'pickupPoints/new', component: PickupPointFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'pickupPoints/:id', component: PickupPointFormComponent, canDeactivate: [CanDeactivateGuard] },
-	{ path: 'ports', component: PortListComponent }, { path: 'ports/new', component: PortFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'ports/:id', component: PortFormComponent, canDeactivate: [CanDeactivateGuard] },
+	{ path: 'pickupPoints', component: PickupPointListComponent, resolve: { pickupPointList: PickupPointListResolverService } }, { path: 'pickupPoints/new', component: PickupPointFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'pickupPoints/:id', component: PickupPointFormComponent, canDeactivate: [CanDeactivateGuard] },
+	{ path: 'ports', component: PortListComponent, resolve: { portList: PortListResolverService } }, { path: 'ports/new', component: PortFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'ports/:id', component: PortFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'routes', component: RouteListComponent }, { path: 'routes/new', component: RouteFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'routes/:id', component: RouteFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'taxOffices', component: TaxOfficeListComponent }, { path: 'taxOffices/new', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'taxOffices/:id', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'transfers', component: TransfersComponent },

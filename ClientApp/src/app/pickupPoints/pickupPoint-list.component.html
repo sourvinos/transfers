@@ -3,36 +3,32 @@
         <h1>Pickup points</h1>
     </div>
     <div id="search-box">
-        <select class="ui dropdown" (change)="onRouteChange()" [(ngModel)]="routeId" name="routeId" #route="ngModel" id="routesDropdown" required>
-            <option value="">Select route</option>
-            <option *ngFor='let route of routes' value='{{ route.id }}'>{{ route.description }}</option>
-        </select>
+        <mat-form-field>
+            <mat-label>Route</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let route of routes" [value]="route.id">{{ route.description }}</mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
     <div class="ui divider"></div>
 </div>
 
 <div id="content">
-    <div id="scrollable">
-        <table class="ui celled table">
-            <thead>
-                <tr>
-                    <th class="center aligned">Description</th>
-                    <th class="center aligned two wide">Time</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let pickupPoint of pickupPoints" routerLink="/pickupPoints/{{ pickupPoint.id }}">
-                    <td>{{ pickupPoint.description }}</td>
-                    <td class="center aligned">{{ pickupPoint.time }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="scrollable">
+        <mat-table [dataSource]="dataSource" id="dataTable">
+            <ng-container *ngFor="let column of columns; index as i" [matColumnDef]="columns[i]">
+                <mat-header-cell *matHeaderCellDef>{{ fields[i] }}</mat-header-cell>
+                <mat-cell *matCellDef=" let element" ngClass="{{ align[i] }}">{{ element[columns[i]] | custom:format[i] }}</mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="columns; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: columns;" [matRowKeyboardSelection]="selection" [rowModel]="row" [selectOnFocus]="true" [toggleOnEnter]="false" [ngClass]="{selected: selection.isSelected(row)}" (enter)="editRecord()" (dblclick)="editRecord()"></mat-row>
+        </mat-table>
     </div>
 </div>
 
 <div id="footer">
-    <div class="ui divider"></div>
+    <mat-divider></mat-divider>
     <div id="buttons">
-        <button class="ui button primary" id="new" (click)="newRecord()">New</button>
+        <button class="mat-flat-button primary" id="new" (click)="newRecord()">New</button>
     </div>
 </div>

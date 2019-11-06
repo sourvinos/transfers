@@ -9,9 +9,9 @@ import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { ModalModule } from 'ngx-bootstrap/modal'
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
-// Material design
+// Material
 import { MatButtonModule } from '@angular/material/button'
-import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS } from '@angular/material'
+import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS, MatSelect } from '@angular/material'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
@@ -19,6 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table'
 import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
 import { MaterialDialogComponent } from './../shared/components/material-dialog/material-dialog.component';
+import { MatSelectModule } from '@angular/material/select';
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
 // Common components
@@ -82,6 +83,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
         BrowserModule,
         FormsModule,
         HttpClientModule,
+        // Material
         MatButtonModule,
         MatDialogModule,
         MatFormFieldModule,
@@ -92,6 +94,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
         MatSnackBarModule,
         MatTableModule,
         MatTableModule,
+        MatSelectModule,
         ReactiveFormsModule,
         ModalModule.forRoot(),
         ButtonsModule.forRoot(),

@@ -33,14 +33,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(
-        private driverService: DriverService,
-        private helperService: HelperService,
-        private formBuilder: FormBuilder,
-        private router: Router,
-        private activatedRoute: ActivatedRoute,
-        public dialog: MatDialog,
-        private keyboardShortcutsService: KeyboardShortcuts) {
+    constructor(private driverService: DriverService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts) {
         this.activatedRoute.params.subscribe(p => (this.id = p['id']))
         this.unlisten = null
     }

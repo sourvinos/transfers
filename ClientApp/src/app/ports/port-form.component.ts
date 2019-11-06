@@ -8,6 +8,9 @@ import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.serv
 import { PortService } from '../services/port.service'
 import { Utils } from '../shared/classes/utils'
 import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
+import { MaterialDialogComponent } from '../shared/components/material-dialog/material-dialog.component'
+import { MatDialog } from '@angular/material'
+import { map } from 'rxjs/operators'
 
 @Component({
     selector: 'app-port-form',
@@ -19,10 +22,9 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Init
 
-    id: number = null
+    id: number
     url: string = '/ports'
 
-    modalRef: BsModalRef
     unlisten: Unlisten
 
     // #endregion     
@@ -33,8 +35,8 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService, private keyboardShortcutsService: KeyboardShortcuts) {
-        route.params.subscribe(p => (this.id = p['id']))
+    constructor(private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private modalService: BsModalService, private keyboardShortcutsService: KeyboardShortcuts, public dialog: MatDialog) {
+        this.activatedRoute.params.subscribe(p => (this.id = p['id']))
         this.unlisten = null
     }
 
@@ -44,7 +46,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        document.getElementById("description").focus()
+        this.focus('description')
     }
 
     ngOnDestroy(): void {
@@ -52,40 +54,48 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // Master
-    canDeactivate(): Observable<boolean> | boolean {
+    canDeactivate() {
         if (this.form.dirty) {
-            const subject = new Subject<boolean>()
-            const modal = this.modalService.show(ModalDialogComponent, {
-                initialState: {
-                    title: 'Confirmation',
-                    message: 'If you continue, all changes in this record will be lost.',
-                    type: 'question'
-                }, animated: true
+            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+                height: '250px',
+                width: '550px',
+                data: {
+                    title: 'Please confirm',
+                    message: 'If you continue, changes in this record will be lost.',
+                    actions: ['cancel', 'ok']
+                },
+                panelClass: 'dialog'
             })
-            modal.content.subject = subject
-            return subject.asObservable()
+            return dialogRef.afterClosed().pipe(map(result => {
+                if (result == 'true') {
+                    return true
+                }
+            }))
+        } else {
+            return true
         }
-        return true
     }
 
     // T
     deleteRecord() {
         if (this.id != undefined) {
-            const subject = new Subject<boolean>()
-            const modal = this.modalService.show(ModalDialogComponent, {
-                initialState: {
-                    title: 'Confirmation',
-                    message: 'If you continue, this record will be deleted.',
-                    type: 'delete'
-                }, animated: true
+            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+                height: '250px',
+                width: '550px',
+                data: {
+                    title: 'Please confirm',
+                    message: 'If you continue, this record will be permanently deleted.',
+                    actions: ['cancel', 'ok']
+                },
+                panelClass: 'dialog'
             })
-            modal.content.subject = subject
-            return subject.asObservable().subscribe(result => {
-                if (result)
+            dialogRef.afterClosed().subscribe(result => {
+                if (result == 'true') {
                     this.portService.deletePort(this.id).subscribe(() => this.router.navigate([this.url]), error => {
                         Utils.errorLogger(error)
                         this.openErrorModal()
                     })
+                }
             })
         }
     }
@@ -93,12 +103,6 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // T
     goBack() {
         this.router.navigate([this.url])
-    }
-
-    // T 
-    isValidInput(description: FormControl, id?: { invalid: any }, lookupArray?: any[]) {
-        if (id == null) return (description.invalid && description.touched)
-        if (id != null) return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(lookupArray, description))
     }
 
     // T
@@ -118,25 +122,51 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    private arrayLookup(lookupArray: any[], givenField: FormControl) {
-        for (let x of lookupArray) {
-            if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
-                return true
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            "Escape": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+                    this.goBack()
+                }
+            },
+            "Alt.D": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                this.deleteRecord()
+            },
+            "Alt.S": (event: KeyboardEvent): void => {
+                this.saveRecord()
+            },
+            "Alt.C": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
+                    document.getElementById('cancel').click()
+                }
+            },
+            "Alt.O": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
+                    document.getElementById('ok').click()
+                }
             }
-        }
+        }, {
+            priority: 2,
+            inputs: true
+        })
+    }
+
+    private focus(field: string) {
+        Utils.setFocus(field)
     }
 
     private openErrorModal() {
-        const subject = new Subject<boolean>()
-        const modal = this.modalService.show(ModalDialogComponent, {
-            initialState: {
+        this.dialog.open(MaterialDialogComponent, {
+            height: '250px',
+            width: '550px',
+            data: {
                 title: 'Error',
-                message: 'This record is in use and cannot be deleted.',
-                type: 'error'
-            }, animated: true
+                message: 'This record is in use and can not be deleted.',
+                actions: ['ok']
+            },
+            panelClass: 'dialog'
         })
-        modal.content.subject = subject
-        return subject.asObservable()
     }
 
     private populateFields() {
@@ -153,36 +183,6 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
                     Utils.errorLogger(error)
                 })
         }
-    }
-
-    private addShortcuts() {
-        this.unlisten = this.keyboardShortcutsService.listen({
-            "Escape": (event: KeyboardEvent): void => {
-                if (!document.getElementsByClassName('modal-dialog')[0]) {
-                    this.goBack()
-                }
-            },
-            "Alt.D": (event: KeyboardEvent): void => {
-                event.preventDefault()
-                this.deleteRecord()
-            },
-            "Alt.S": (event: KeyboardEvent): void => {
-                this.saveRecord()
-            },
-            "Alt.C": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('modal-dialog')[0]) {
-                    document.getElementById('cancel').click()
-                }
-            },
-            "Alt.O": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('modal-dialog')[0]) {
-                    document.getElementById('ok').click()
-                }
-            }
-        }, {
-            priority: 2,
-            inputs: true
-        })
     }
 
     // #region Helper properties

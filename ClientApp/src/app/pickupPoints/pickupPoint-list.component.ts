@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { IPickupPoint } from '../models/pickupPoint'
 import { IRoute } from '../models/route'
 import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 import { PickupPointService } from '../services/pickupPoint.service'
 import { RouteService } from '../services/route.service'
 import { Utils } from '../shared/classes/utils'
-
-declare var $: any
+import { MatTableDataSource } from '@angular/material'
+import { SelectionModel } from '@angular/cdk/collections'
 
 @Component({
     selector: 'pickupPoint-list',
@@ -17,18 +17,29 @@ declare var $: any
 
 export class PickupPointListComponent implements OnInit, OnDestroy {
 
-    //#region Init
+    // #region Init
 
     routeId: number
 
     routes: IRoute[]
     pickupPoints: IPickupPoint[]
+    filteredPickupPoints: IPickupPoint[]
+
+    columns = ['id', 'description', 'time']
+    fields = ['Id', 'Description', 'Time']
+    format = ['', '', '']
+    align = ['center', 'left', 'center']
 
     unlisten: Unlisten
 
+    dataSource: MatTableDataSource<IPickupPoint>
+    selection: SelectionModel<[]>
+
+    selectedElement = []
+
     //#endregion
 
-    constructor(private routeService: RouteService, private pickupPointService: PickupPointService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router) {
+    constructor(private routeService: RouteService, private pickupPointService: PickupPointService, private keyboardShortcutsService: KeyboardShortcuts, private route: ActivatedRoute, private router: Router) {
         this.unlisten = null
     }
 
@@ -37,17 +48,13 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
         this.addShortcuts()
     }
 
-    ngAfterViewInit() {
-        $('.ui.dropdown').dropdown()
-    }
-
     ngOnDestroy(): void {
         (this.unlisten) && this.unlisten();
     }
 
     // T
-    onRouteChange() {
-        this.populatePickupPoints()
+    editRecord() {
+        this.router.navigate(['/pickupPoints/', document.querySelector('.mat-row.selected').children[0].textContent])
     }
 
     // T
@@ -55,8 +62,21 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/pickupPoints/new'])
     }
 
+    // T
+    filter(query: string) {
+        this.dataSource.data = query ? this.pickupPoints.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.pickupPoints
+    }
+
+    // T
+    onRouteChange() {
+        this.populatePickupPoints()
+    }
+
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
+            "Enter": (event: KeyboardEvent): void => {
+                this.editRecord()
+            },
             "Alt.N": (event: KeyboardEvent): void => {
                 event.preventDefault()
                 document.getElementById('new').click()
@@ -68,7 +88,14 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
     }
 
     private populatePickupPoints() {
-        this.pickupPointService.getPickupPoints(this.routeId).subscribe(data => this.pickupPoints = data, error => Utils.errorLogger(error))
+        this.pickupPointService.getPickupPoints(this.routeId).subscribe(data => {
+            this.pickupPoints = data
+            this.filteredPickupPoints = this.pickupPoints
+            this.dataSource = new MatTableDataSource<IPickupPoint>(this.filteredPickupPoints)
+            this.selection = new SelectionModel<[]>(false)
+            this.unlisten = null
+
+        }, error => Utils.errorLogger(error))
     }
 
     private getAllRoutes() {
