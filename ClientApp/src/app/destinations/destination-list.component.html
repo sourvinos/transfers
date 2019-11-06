@@ -4,43 +4,30 @@
     </div>
     <div id="search-box">
         <form class="ui form" autocomplete="off">
-            <div class="field">
-                <div class="ui icon input">
-                    <input type="text" id="searchField" #query (keyup)="filter(query.value)" autocomplete="off">
-                    <i class="search icon"></i>
-                </div>
-            </div>
+            <mat-form-field>
+                <input type="text" matInput placeholder="Search" id="searchField" #query (keyup)="filter(query.value)" autocomplete="off">
+            </mat-form-field>
         </form>
     </div>
-    <div class="ui divider"></div>
+    <mat-divider></mat-divider>
 </div>
 
 <div id="content">
-    <div id="scrollable">
-        <table class="ui celled table">
-            <thead>
-                <tr>
-                    <th class="center aligned one wide">Id</th>
-                    <th class="center aligned one wide">Abbreviation</th>
-                    <th class="center aligned">Description</th>
-                    <th class="center aligned one wide">User</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let destination of filteredDestinations" routerLink="/destinations/{{ destination.id }}">
-                    <td class="center aligned">{{ destination.id }}</td>
-                    <td class="center aligned">{{ destination.abbreviation }}</td>
-                    <td>{{ destination.description }}</td>
-                    <td>{{ destination.userName }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="scrollable">
+        <mat-table [dataSource]="dataSource" id="dataTable">
+            <ng-container *ngFor="let column of columns; index as i" [matColumnDef]="columns[i]">
+                <mat-header-cell *matHeaderCellDef> {{ fields[i] }} </mat-header-cell>
+                <mat-cell *matCellDef=" let element" ngClass="{{ align[i] }}">{{ element[columns[i]] | custom:format[i] }} </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="columns; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: columns;" [matRowKeyboardSelection]="selection" [rowModel]="row" [selectOnFocus]="true" [toggleOnEnter]="false" [ngClass]="{selected: selection.isSelected(row)}" (enter)="editRecord()" (dblclick)="editRecord()"></mat-row>
+        </mat-table>
     </div>
 </div>
 
 <div id="footer">
-    <div class="ui divider"></div>
+    <mat-divider></mat-divider>
     <div id="buttons">
-        <button class="ui button primary" id="new" (click)="newRecord()">New</button>
+        <button class="mat-flat-button primary" id="new" (click)="newRecord()">New</button>
     </div>
 </div>

@@ -99,7 +99,3 @@ table tr:hover {
         margin-left: 3rem !important;
     }
 }
-
-.mat-column-phones {
-    min-width: 300px;
-}

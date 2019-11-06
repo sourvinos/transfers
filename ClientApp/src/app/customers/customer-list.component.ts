@@ -1,9 +1,8 @@
 import { SelectionModel } from '@angular/cdk/collections'
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { MatTableDataSource } from '@angular/material'
-import { Router, ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { ICustomer } from '../models/customer'
-import { CustomerService } from '../services/customer.service'
 import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 import { Utils } from '../shared/classes/utils'
 
@@ -15,7 +14,7 @@ import { Utils } from '../shared/classes/utils'
 
 export class CustomerListComponent implements OnInit, OnDestroy {
 
-    //#region Init
+    // #region Init
 
     customers: ICustomer[]
     filteredCustomers: ICustomer[]
@@ -27,14 +26,14 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     unlisten: Unlisten
 
-    dataSource: MatTableDataSource<ICustomer>;
-    selection: SelectionModel<[]>;
+    dataSource: MatTableDataSource<ICustomer>
+    selection: SelectionModel<[]>
 
     selectedElement = []
 
-    //#endregion
+    // #endregion
 
-    constructor(private service: CustomerService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute) {
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute) {
         this.customers = this.route.snapshot.data['customerList']
         this.filteredCustomers = this.customers
         this.dataSource = new MatTableDataSource<ICustomer>(this.filteredCustomers)
@@ -79,11 +78,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
             priority: 1,
             inputs: true
         })
-    }
-
-    private getAllCustomers() {
-        this.service.getCustomers().subscribe(data => { this.filteredCustomers = this.customers = data; this.dataSource = new MatTableDataSource<ICustomer>(this.filteredCustomers); }, error => Utils.errorLogger(error))
-        this.selection = new SelectionModel<[]>(false);
     }
 
     private setFocus(element: string) {

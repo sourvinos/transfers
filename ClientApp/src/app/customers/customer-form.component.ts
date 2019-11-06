@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
-import { FormBuilder, FormControl, Validators } from '@angular/forms'
+import { FormBuilder, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material'
 import { ActivatedRoute, Router } from '@angular/router'
 import { forkJoin } from 'rxjs'
@@ -50,9 +50,8 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts) {
-        route.params.subscribe(p => (this.id = p['id']))
-        this.unlisten = null
+    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts) {
+        this.activatedRoute.params.subscribe(p => (this.id = p['id'])); this.unlisten = null
     }
 
     ngOnInit() {
@@ -61,7 +60,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        Utils.setFocus('description')
+        this.focus('description')
     }
 
     ngOnDestroy(): void {
@@ -118,12 +117,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // T
     goBack() {
         this.router.navigate([this.url])
-    }
-
-    // T 
-    isValidInput(description: FormControl, id?: { invalid: any }, lookupArray?: any[]) {
-        if (id == null) return (description.invalid && description.touched)
-        if (id != null) return (id.invalid && description.invalid && description.touched) || (description.touched && !this.arrayLookup(lookupArray, description))
     }
 
     // T
@@ -188,14 +181,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             priority: 2,
             inputs: true
         })
-    }
-
-    private arrayLookup(lookupArray: any[], givenField: FormControl) {
-        for (let x of lookupArray) {
-            if (x.description.toLowerCase() == givenField.value.toLowerCase()) {
-                return true
-            }
-        }
     }
 
     private focus(field: string) {
