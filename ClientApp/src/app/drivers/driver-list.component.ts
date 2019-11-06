@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
-import { DriverService } from '../services/driver.service'
+import { Router, ActivatedRoute } from '@angular/router'
 import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 import { Utils } from '../shared/classes/utils'
 import { IDriver } from './../models/driver'
+import { MatTableDataSource } from '@angular/material'
+import { SelectionModel } from '@angular/cdk/collections'
 
 @Component({
     selector: 'driver-list',
@@ -13,21 +14,34 @@ import { IDriver } from './../models/driver'
 
 export class DriverListComponent implements OnInit, OnDestroy {
 
-    //#region Init
+    // #region Init
 
     drivers: IDriver[]
     filteredDrivers: IDriver[]
 
+    columns = ['id', 'description', 'phone']
+    fields = ['Id', 'Description', 'Phone']
+    format = ['', '', '']
+    align = ['center', 'left', 'left']
+
     unlisten: Unlisten
+
+    dataSource: MatTableDataSource<IDriver>
+    selection: SelectionModel<[]>
+
+    selectedElement = []
 
     // #endregion
 
-    constructor(private service: DriverService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router) {
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute) {
+        this.drivers = this.route.snapshot.data['driverList']
+        this.filteredDrivers = this.drivers
+        this.dataSource = new MatTableDataSource<IDriver>(this.filteredDrivers)
+        this.selection = new SelectionModel<[]>(false)
         this.unlisten = null
     }
 
     ngOnInit() {
-        this.getAllDrivers()
         this.addShortcuts()
         this.setFocus('searchField')
     }
@@ -38,7 +52,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
 
     // T
     filter(query: string) {
-        this.filteredDrivers = query ? this.drivers.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.drivers
+        this.dataSource.data = query ? this.drivers.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.drivers
     }
 
     // T
@@ -46,8 +60,16 @@ export class DriverListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/drivers/new'])
     }
 
+    // T
+    editRecord() {
+        this.router.navigate(['/drivers/', document.querySelector('.mat-row.selected').children[0].textContent])
+    }
+
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
+            "Enter": (event: KeyboardEvent): void => {
+                this.editRecord()
+            },
             "Alt.N": (event: KeyboardEvent): void => {
                 event.preventDefault()
                 document.getElementById('new').click()
@@ -56,10 +78,6 @@ export class DriverListComponent implements OnInit, OnDestroy {
             priority: 1,
             inputs: true
         })
-    }
-
-    private getAllDrivers() {
-        this.service.getDrivers().subscribe(data => this.filteredDrivers = this.drivers = data, error => Utils.errorLogger(error))
     }
 
     private setFocus(element: string) {

@@ -130,7 +130,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             "Escape": (event: KeyboardEvent): void => {
-                if (!document.getElementsByClassName('modal-dialog')[0]) {
+                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
                     this.goBack()
                 }
             },
@@ -142,12 +142,12 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
                 this.saveRecord()
             },
             "Alt.C": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('modal-dialog')[0]) {
+                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
                     document.getElementById('cancel').click()
                 }
             },
             "Alt.O": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('modal-dialog')[0]) {
+                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
                     document.getElementById('ok').click()
                 }
             }

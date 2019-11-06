@@ -51,8 +51,8 @@ export class DestinationListComponent implements OnInit, OnDestroy {
     }
 
     // T
-    editRecord() {
-        this.router.navigate(['/destinations/', document.querySelector('.mat-row.selected').children[0].textContent])
+    filter(query: string) {
+        this.dataSource.data = query ? this.destinations.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.destinations
     }
 
     // T
@@ -61,8 +61,8 @@ export class DestinationListComponent implements OnInit, OnDestroy {
     }
 
     // T
-    filter(query: string) {
-        this.dataSource.data = query ? this.destinations.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.destinations
+    editRecord() {
+        this.router.navigate(['/destinations/', document.querySelector('.mat-row.selected').children[0].textContent])
     }
 
     private addShortcuts() {
