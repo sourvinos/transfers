@@ -1,27 +1,30 @@
 <div id="header">
-    <div>
-        <i class="big arrow alternate circle left outline icon navigation-icon" id="goBack" (click)="goBack()"></i>
+    <div id="navigation">
+        <button mat-mini-fab class="navigation">
+            <mat-icon id="goBack" (click)="goBack()">arrow_back</mat-icon>
+        </button>
+    </div>
+    <div id="title">
         <h1>VAT regime</h1>
     </div>
-    <div class="ui divider"></div>
+    <mat-divider></mat-divider>
 </div>
 
 <div id="content">
-    <form [formGroup]='form' class="ui form" autocomplete='off'>
-        <div id="left">
-            <div class="field" [class.error]="isValidInput(description)">
-                <label for="description">Description</label>
-                <input type="text" formControlName="description" tabindex="1" id="description">
-            </div>
+    <form [formGroup]="form" class="ui form" autocomplete="off">
+        <div id="section-one">
+            <mat-form-field>
+                <input type="text" matInput placeholder="Description" formControlName="description" tabindex="1" id="description">
+            </mat-form-field>
         </div>
     </form>
 </div>
 
 <div id="footer">
-    <div class="ui divider"></div>
+    <mat-divider></mat-divider>
     <div id="buttons">
-        <p [class.hidden]=true>{{ form.value | json }} {{ form.valid }} {{ isNewRecord }}</p>
-        <button class="ui button delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
-        <button class="ui button primary" id="save" (click)="saveRecord()">Save</button>
+        <p class="form-value" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
+        <button class="mat-flat-button delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
+        <button class="mat-flat-button primary" id="save" (click)="saveRecord()">Save</button>
     </div>
 </div>

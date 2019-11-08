@@ -19,12 +19,12 @@ export class TaxOfficeFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // #region Init
 
-    id: number
+    id: number = null
     url: string = '/taxOffices'
 
     unlisten: Unlisten
 
-    // #endregion     
+    // #endregion 
 
     form = this.formBuilder.group({
         id: 0,
