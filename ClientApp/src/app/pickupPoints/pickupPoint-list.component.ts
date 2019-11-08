@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
-import { IPickupPoint } from '../models/pickupPoint'
+import { FormBuilder, Validators } from '@angular/forms'
+import { MatDialog } from '@angular/material'
+import { Router } from '@angular/router'
+import { forkJoin } from 'rxjs'
 import { IRoute } from '../models/route'
 import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
-import { PickupPointService } from '../services/pickupPoint.service'
 import { RouteService } from '../services/route.service'
 import { Utils } from '../shared/classes/utils'
-import { MatTableDataSource } from '@angular/material'
-import { SelectionModel } from '@angular/cdk/collections'
+import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
 
 @Component({
     selector: 'pickupPoint-list',
@@ -17,35 +17,25 @@ import { SelectionModel } from '@angular/cdk/collections'
 
 export class PickupPointListComponent implements OnInit, OnDestroy {
 
-    // #region Init
+    id: number
 
-    routeId: number
-
-    routes: IRoute[]
-    pickupPoints: IPickupPoint[]
-    filteredPickupPoints: IPickupPoint[]
-
-    columns = ['id', 'description', 'time']
-    fields = ['Id', 'Description', 'Time']
-    format = ['', '', '']
-    align = ['center', 'left', 'center']
+    routes: IRoute[] = []
 
     unlisten: Unlisten
 
-    dataSource: MatTableDataSource<IPickupPoint>
-    selection: SelectionModel<[]>
+    form = this.formBuilder.group({
+        routeId: 0,
+        routeDescription: ['', [Validators.required, Validators.maxLength(100)]],
+    })
 
-    selectedElement = []
-
-    //#endregion
-
-    constructor(private routeService: RouteService, private pickupPointService: PickupPointService, private keyboardShortcutsService: KeyboardShortcuts, private route: ActivatedRoute, private router: Router) {
+    constructor(private routeService: RouteService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, public dialog: MatDialog, private formBuilder: FormBuilder) {
         this.unlisten = null
     }
 
     ngOnInit() {
-        this.getAllRoutes()
         this.addShortcuts()
+        this.populateDropDowns()
+        this.focus('routeDescription')
     }
 
     ngOnDestroy(): void {
@@ -53,29 +43,26 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
     }
 
     // T
-    editRecord() {
-        this.router.navigate(['/pickupPoints/', document.querySelector('.mat-row.selected').children[0].textContent])
-    }
-
-    // T
-    newRecord() {
-        this.router.navigate(['/pickupPoints/new'])
-    }
-
-    // T
-    filter(query: string) {
-        this.dataSource.data = query ? this.pickupPoints.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.pickupPoints
-    }
-
-    // T
-    onRouteChange() {
-        this.populatePickupPoints()
+    lookupIndex(lookupArray: any[], modalTitle: string, lookupId: any, lookupDescription: any, e: { target: { value: any } }) {
+        const filteredArray = []
+        lookupArray.filter(x => {
+            if (x.description.toUpperCase().includes(e.target.value.toUpperCase())) {
+                filteredArray.push(x)
+            }
+        })
+        if (filteredArray.length > 0) {
+            this.showModalIndex(filteredArray, modalTitle, lookupId, lookupDescription)
+        }
+        if (filteredArray.length == 0) {
+            this.focus(lookupDescription)
+            this.patchFields(null, lookupId, lookupDescription)
+        }
     }
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             "Enter": (event: KeyboardEvent): void => {
-                this.editRecord()
+                this.populatePickupPoints()
             },
             "Alt.N": (event: KeyboardEvent): void => {
                 event.preventDefault()
@@ -87,19 +74,60 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
         })
     }
 
+    private focus(field: string) {
+        Utils.setFocus(field)
+    }
+
+    private patchFields(result: any[], id: any, description: any) {
+        this.form.patchValue({ [id]: result ? result[0] : '' })
+        this.form.patchValue({ [description]: result ? result[1] : '' })
+    }
+
+    private populateDropDowns() {
+        let sources = []
+        sources.push(this.routeService.getRoutes())
+        return forkJoin(sources).subscribe(
+            result => {
+                this.routes = result[0]
+            },
+            error => {
+                if (error.status == 404) {
+                    this.router.navigate(['/error'])
+                }
+            }
+        )
+    }
+
     private populatePickupPoints() {
-        this.pickupPointService.getPickupPoints(this.routeId).subscribe(data => {
-            this.pickupPoints = data
-            this.filteredPickupPoints = this.pickupPoints
-            this.dataSource = new MatTableDataSource<IPickupPoint>(this.filteredPickupPoints)
-            this.selection = new SelectionModel<[]>(false)
-            this.unlisten = null
-
-        }, error => Utils.errorLogger(error))
+        this.router.navigate(['/pickupPoints/routeId/' + this.form.get('routeId').value])
     }
 
-    private getAllRoutes() {
-        this.routeService.getRoutes().subscribe(data => this.routes = data, error => Utils.errorLogger(error))
+    private showModalIndex(filteredArray: any[], modalTitle: string, lookupId: any, lookupDescription: any) {
+        let dialogRef = this.dialog.open(MaterialIndexDialogComponent, {
+            data: {
+                header: modalTitle,
+                columns: ['id', 'description'],
+                fields: ['Id', 'Description'],
+                align: ['center', 'left'],
+                format: ['', ''],
+                records: filteredArray
+            }
+        })
+        dialogRef.afterClosed().subscribe((result) => {
+            this.patchFields(result, lookupId, lookupDescription)
+        })
     }
+
+    // #region Helper properties
+
+    get routeId() {
+        return this.form.get('routeId')
+    }
+
+    get routeDescription() {
+        return this.form.get('routeDescription')
+    }
+
+    // #endregion
 
 }

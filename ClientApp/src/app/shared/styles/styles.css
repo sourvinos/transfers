@@ -10,6 +10,7 @@
 @import "dialogs.css";
 @import "inputs.css";
 @import "tables.css";
+@import "select.css";
 @import "scrollable.css";
 
 * {

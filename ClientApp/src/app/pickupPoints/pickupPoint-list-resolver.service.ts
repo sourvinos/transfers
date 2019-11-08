@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, Resolve } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { IPickupPoint } from '../models/pickupPoint';
 import { PickupPointService } from '../services/pickupPoint.service';
 
@@ -10,13 +11,11 @@ export class PickupPointListResolverService implements Resolve<IPickupPoint[]>{
 
     id: number = 0
 
-    constructor(private pickupPointService: PickupPointService, private activatedRoute: ActivatedRoute) {
-        this.activatedRoute.params.subscribe(p => (this.id = 31))
-        // this.activatedRoute.params.subscribe(p => (this.id = p['id']))
-    }
+    constructor(private pickupPointService: PickupPointService, private activatedRoute: ActivatedRoute) { }
 
-    resolve(): Observable<IPickupPoint[]> {
-        return this.pickupPointService.getPickupPoints(this.id)
+    resolve(activatedRoute: ActivatedRouteSnapshot): Observable<IPickupPoint[]> {
+        let routeId = parseInt(activatedRoute.params.id)
+        return this.pickupPointService.getPickupPoints(routeId).pipe(delay(100))
     }
 
 }

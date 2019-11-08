@@ -35,7 +35,7 @@ namespace Transfers.Controllers
         [HttpGet("pickupPointsForRoute/{routeId}")]
         public async Task<IEnumerable<PickupPoint>> Get(int routeId)
         {
-            return await context.PickupPoints.Include(x => x.Route).Where(m => m.RouteId == routeId).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+            return await context.PickupPoints.Include(x => x.Route).Where(m => m.RouteId == routeId).OrderBy(o => o.Time).ThenBy(o => o.Description).AsNoTracking().ToListAsync();
         }
 
         // GET: api/pickupPoints/5

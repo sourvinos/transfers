@@ -25,6 +25,19 @@ input[type=text]:disabled {
     pointer-events: all !important;
 }
 
+/* Not focused - Not error*/
+.mat-form-field .mat-form-field-label {
+    color: var(--color-input-label) !important;
+}
+
+.mat-form-field .mat-input-element {
+    color: var(--color-input) !important;
+}
+
+.mat-form-field-underline {
+    background-color: var(--color-input-underline) !important
+}
+
 /* Focused */
 .mat-form-field.mat-focused .mat-form-field-label {
     color: var(--color-input-label-focus) !important;

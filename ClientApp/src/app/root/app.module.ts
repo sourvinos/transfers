@@ -33,15 +33,15 @@ import { ModalIndexComponent } from './../shared/components/modal-index/modal-in
 // Routes
 import { HomeComponent } from './../home/home.component'
 import { LoginComponent } from '../login/login.component'
-import { CustomerFormComponent } from '../customers/customer-form.component'; import { CustomerListComponent } from '../customers/customer-list.component'
-import { DestinationFormComponent } from '../destinations/destination-form.component'; import { DestinationListComponent } from '../destinations/destination-list.component'
-import { DriverFormComponent } from './../drivers/driver-form.component'; import { DriverListComponent } from './../drivers/driver-list.component'
-import { PickupPointFormComponent } from '../pickupPoints/pickupPoint-form.component'; import { PickupPointListComponent } from './../pickupPoints/pickupPoint-list.component'
-import { PortFormComponent } from './../ports/port-form.component'; import { PortListComponent } from './../ports/port-list.component'
-import { RouteFormComponent } from '../routes/route-form.component'; import { RouteListComponent } from '../routes/route-list.component'
-import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'; import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component'
+import { CustomerListComponent } from '../customers/customer-list.component'; import { CustomerFormComponent } from '../customers/customer-form.component'
+import { DestinationListComponent } from '../destinations/destination-list.component'; import { DestinationFormComponent } from '../destinations/destination-form.component'
+import { DriverListComponent } from './../drivers/driver-list.component'; import { DriverFormComponent } from './../drivers/driver-form.component'
+import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.component'; import { PickupPointsForRouteListComponent } from '../pickupPoints/pickupPointsForRoute-list.component'; import { PickupPointFormComponent } from '../pickupPoints/pickupPoint-form.component'
+import { PortListComponent } from './../ports/port-list.component'; import { PortFormComponent } from './../ports/port-form.component'
+import { RouteListComponent } from '../routes/route-list.component'; import { RouteFormComponent } from '../routes/route-form.component'
+import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component'; import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'
 import { TransfersComponent } from '../transfers/transfers-component'; import { TransferListComponent } from '../transfers/transfer-list.component'; import { TransferFormComponent } from '../transfers/transfer-form.component'
-import { VatStateFormComponent } from '../vatStates/vatState-form.component'; import { VatStateListComponent } from '../vatStates/vatState-list.component'
+import { VatStateListComponent } from '../vatStates/vatState-list.component'; import { VatStateFormComponent } from '../vatStates/vatState-form.component'
 // Directives
 import { InputFormatDirective } from '../directives/input-format.directive'
 import { MatRowKeyboardSelectionModule } from "mat-row-keyboard-selection";
@@ -63,15 +63,15 @@ import { CustomPipe } from '../pipes/custom.pipe'
         // Routes
         HomeComponent,
         LoginComponent,
-        CustomerFormComponent, CustomerListComponent,
-        DestinationFormComponent, DestinationListComponent,
-        DriverFormComponent, DriverListComponent,
-        PickupPointFormComponent, PickupPointListComponent,
-        PortFormComponent, PortListComponent,
-        RouteFormComponent, RouteListComponent,
-        TaxOfficeFormComponent, TaxOfficeListComponent,
+        CustomerListComponent, CustomerFormComponent,
+        DestinationListComponent, DestinationFormComponent,
+        DriverListComponent, DriverFormComponent,
+        PickupPointListComponent, PickupPointsForRouteListComponent, PickupPointFormComponent,
+        PortListComponent, PortFormComponent,
+        RouteListComponent, RouteFormComponent,
+        TaxOfficeListComponent, TaxOfficeFormComponent,
         TransfersComponent, TransferListComponent, TransferFormComponent,
-        VatStateFormComponent, VatStateListComponent,
+        VatStateListComponent, VatStateFormComponent,
         // Directives
         InputFormatDirective,
         // Pipes

@@ -12,20 +12,16 @@
 
 <div id="content">
     <form [formGroup]='form' class="ui form" autocomplete='off'>
-        <div id="section-one">
-            <mat-form-field>
-                <input type="text" matInput placeholder="Abbreviation" formControlName="abbreviation" tabindex="1" id="abbreviation">
-            </mat-form-field>
-            <div id="section-one">
-                <mat-form-field>
-                    <input type="text" matInput placeholder="Description" formControlName="description" tabindex="2" id="description">
-                </mat-form-field>
-            </div>
-            <mat-form-field>
-                <input type="text" matInput placeholder="Port" formControlName="portDescription" tabindex="3" id="portDescription" (change)="lookupIndex(ports, 'Ports','portId', 'portDescription', $event)">
-                <mat-error *ngIf="portDescription.invalid"></mat-error>
-            </mat-form-field>
-        </div>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Abbreviation" formControlName="abbreviation" tabindex="1" id="abbreviation">
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Description" formControlName="description" tabindex="2" id="description">
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Port" formControlName="portDescription" tabindex="3" id="portDescription" (change)="lookupIndex(ports, 'Ports','portId', 'portDescription', $event)">
+            <mat-error *ngIf="portDescription.invalid"></mat-error>
+        </mat-form-field>
     </form>
 </div>
 

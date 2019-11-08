@@ -70,7 +70,8 @@
     --color-curet: #FFFFFF;
     --color-input-error: #fc3b3b;
     --color-input-label-focus: #FE9F36;
-    --color-input-label: #939393;
+    --color-input-label: #999999;
+    --color-input-underline: #5f5e5e;
     --color-input-underline-focus: #ba680b;
     --color-input: #FFFFFF;
     /* Main background */

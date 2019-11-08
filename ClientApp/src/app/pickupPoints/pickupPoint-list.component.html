@@ -3,32 +3,25 @@
         <h1>Pickup points</h1>
     </div>
     <div id="search-box">
-        <mat-form-field>
-            <mat-label>Route</mat-label>
-            <mat-select>
-                <mat-option *ngFor="let route of routes" [value]="route.id">{{ route.description }}</mat-option>
-            </mat-select>
-        </mat-form-field>
+        <form [formGroup]="form" class="ui form" autocomplete="off">
+            <mat-form-field>
+                <input type="text" matInput placeholder="Route" formControlName="routeDescription" tabindex="0" id="routeDescription" (change)="lookupIndex(routes, 'Routes','routeId', 'routeDescription', $event)">
+                <mat-error *ngIf="routeDescription.invalid"></mat-error>
+            </mat-form-field>
+        </form>
     </div>
-    <div class="ui divider"></div>
 </div>
 
 <div id="content">
     <div class="scrollable">
-        <mat-table [dataSource]="dataSource" id="dataTable">
-            <ng-container *ngFor="let column of columns; index as i" [matColumnDef]="columns[i]">
-                <mat-header-cell *matHeaderCellDef>{{ fields[i] }}</mat-header-cell>
-                <mat-cell *matCellDef=" let element" ngClass="{{ align[i] }}">{{ element[columns[i]] | custom:format[i] }}</mat-cell>
-            </ng-container>
-            <mat-header-row *matHeaderRowDef="columns; sticky: true"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: columns;" [matRowKeyboardSelection]="selection" [rowModel]="row" [selectOnFocus]="true" [toggleOnEnter]="false" [ngClass]="{selected: selection.isSelected(row)}" (enter)="editRecord()" (dblclick)="editRecord()"></mat-row>
-        </mat-table>
+        <router-outlet></router-outlet>
     </div>
 </div>
 
 <div id="footer">
     <mat-divider></mat-divider>
     <div id="buttons">
+        <p class="form-value" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
         <button class="mat-flat-button primary" id="new" (click)="newRecord()">New</button>
     </div>
 </div>
