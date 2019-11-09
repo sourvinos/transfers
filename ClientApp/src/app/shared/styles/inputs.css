@@ -13,8 +13,8 @@ input::selection {
 }
 
 input[type=text] {
-    caret-color: var(--color-curet);
-    color: var(--color-input);
+    caret-color: var(--color-input-text-caret);
+    color: var(--color-input-text-not-focus);
     cursor: text !important;
     font-size: var(--font-size-input);
 }
@@ -27,40 +27,40 @@ input[type=text]:disabled {
 
 /* Not focused - Not error*/
 .mat-form-field .mat-form-field-label {
-    color: var(--color-input-label) !important;
+    color: var(--color-input-text-label) !important;
 }
 
 .mat-form-field .mat-input-element {
-    color: var(--color-input) !important;
+    color: var(--color-input-text-not-focus) !important;
 }
 
 .mat-form-field-underline {
-    background-color: var(--color-input-underline) !important
+    background-color: var(--color-input-text-underline) !important
 }
 
 /* Focused */
 .mat-form-field.mat-focused .mat-form-field-label {
-    color: var(--color-input-label-focus) !important;
+    color: var(--color-input-text-focus) !important;
 }
 
 .mat-form-field.mat-focused .mat-input-element {
-    color: var(--color-input-label-focus) !important;
+    color: var(--color-input-text-focus) !important;
 }
 
 .mat-form-field.mat-focused .mat-form-field-ripple {
-    background-color: var(--color-input-underline-focus) !important
+    background-color: var(--color-input-text-underline-focus) !important
 }
 
 /* Error */
 .mat-form-field.mat-form-field-invalid .mat-form-field-label {
-    color: var(--color-input-error) !important;
+    color: var(--color-input-text-error) !important;
     font-weight: bold !important;
 }
 
 .mat-form-field.mat-form-field-invalid .mat-input-element {
-    color: var(--color-input-error) !important;
+    color: var(--color-input-text-error) !important;
 }
 
 .mat-form-field.mat-form-field-invalid .mat-form-field-ripple {
-    background-color: var(--color-input-error) !important;
+    background-color: var(--color-input-text-error) !important;
 }

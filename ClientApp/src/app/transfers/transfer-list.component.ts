@@ -1,13 +1,33 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
-import { ActivatedRoute, Router } from '@angular/router'
-import * as moment from 'moment'
+import { SelectionModel } from '@angular/cdk/collections';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
+import { ITransfer } from '../models/transfer';
+import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service';
+import { TransferService } from '../services/transfer.service';
+import { ComponentInteractionService } from '../shared/services/component-interaction.service';
+import { Utils } from './../shared/classes/utils';
+import { TransferFormComponent } from './transfer-form.component';
 
-import { ComponentInteractionService } from '../shared/services/component-interaction.service'
-import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
-import { TransferFormComponent } from './transfer-form.component'
-import { TransferService } from '../services/transfer.service'
-import { Utils } from './../shared/classes/utils'
+class Dummy {
+    id: string
+    destination: string
+    route: string
+    customer: string
+    pickupPoint: string
+    time: string
+    adults: number
+    kids: number
+    free: number
+    port: string
+    driver: string
+    dateIn: string
+    totalPersons: number
+    userName: string
+    remarks: string
+}
 
 @Component({
     selector: 'app-transfer-list',
@@ -16,6 +36,8 @@ import { Utils } from './../shared/classes/utils'
 })
 
 export class TransferListComponent implements OnInit, AfterViewInit {
+
+    // #region Init
 
     queryResult: any = {}
     queryResultFiltered: any = {}
@@ -26,6 +48,13 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     selectedDrivers: string[] = []
     selectedPorts: string[] = []
 
+    flatPeople: Dummy[] = []
+
+    columns = ['id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port', 'remarks']
+    fields = ['Id', 'Destination', 'Route', 'Customer', 'Pickup point', 'Time', 'Adults', 'Kids', 'Free', 'Total', 'Driver', 'Port', 'Remarks']
+    format = ['', '', '', '', '', '', '', '', '', '', '', '', '']
+    align = ['center', 'left', 'left', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left', 'left']
+
     form = this.formBuilder.group({
         dateIn: ['', [Validators.required]]
     })
@@ -33,6 +62,11 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     isFormVisible: boolean = false
 
     unlisten: Unlisten
+
+    dataSource: MatTableDataSource<Dummy>
+    selection: SelectionModel<[]>
+
+    // #endregion 
 
     @ViewChild(TransferFormComponent) private transferForm: TransferFormComponent
 
@@ -56,7 +90,51 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
     private async getFilteredTransfers() {
         await this.service.getTransfers(localStorage.getItem('date')).then(data => {
+
             this.queryResult = this.queryResultFiltered = data
+
+            console.log('Data', data)
+            console.log('IQueryResult', this.queryResult)
+            console.log('IQueryResult transfers', this.queryResult.transfers)
+
+            for (var {
+                id: a,
+                destination: {
+                    description: b
+                },
+                customer: {
+                    description: c
+                },
+                adults: d,
+                kids: e,
+                free: f,
+                total: g,
+                pickupPoint: {
+                    description: h,
+                    time: i,
+                    route: {
+                        description: j
+                    } },
+                port: {
+                    description: k
+                },
+                driver: {
+                    description: l
+                },
+                userName: m,
+                dateIn: n,
+                remarks: o
+            } of this.queryResult.transfers) {
+                // console.log(a, b, c, d, e, f, g, h, i, j, k, l)
+                this.flatPeople.push({ id: a, destination: b, customer: c, adults: d, kids: e, free: f, totalPersons: g, pickupPoint: h, time: i, route: j, port: k, driver: l, userName: m, dateIn: n, remarks: o })
+            }
+
+            console.log('Flat ', this.flatPeople)
+
+            this.dataSource = new MatTableDataSource<Dummy>(this.flatPeople)
+            this.selection = new SelectionModel<[]>(false)
+
+            console.log(this.dataSource)
         })
     }
 
@@ -102,7 +180,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         document.getElementById('empty').style.width = this.getBoxWidth() + 'px'
         document.getElementById('list').style.width = this.getBoxWidth() - this.getSummariesWidth() - 151 + 'px'
         document.getElementById('form').style.width = this.getBoxWidth() - this.getSummariesWidth() - 151 + 'px'
-        document.getElementById('summaries').style.height = document.getElementById('scrollable').clientHeight + 'px'
+        document.getElementById('summaries').style.height = document.getElementsByClassName('scrollable')[0].clientHeight + 'px'
     }
 
     private scrollToEmpty() {
@@ -166,8 +244,8 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         })
     }
 
-    getTransfer(id: number) {
-        this.transferForm.getTransfer(id)
+    editRecord(id: number) {
+        this.transferForm.getTransfer(79190)
     }
 
     toggleItem(item: any, lookupArray: string) {

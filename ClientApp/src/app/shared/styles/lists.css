@@ -63,36 +63,6 @@
     position: relative;
 }
 
-table {
-    background-color: var(--color-background) !important;
-    border: 0 !important;
-    font-family: var(--font-family-table);
-    padding-right: 0.1rem;
-}
-
-table th {
-    font-size: var(--font-size-table-headers);
-}
-
-table th {
-    background-color: var(--color-table-header-background) !important;
-    border-radius: 0 !important;
-    border-bottom: 0 !important;
-    border-top: 0 !important;
-    color: var(--color-table-header-text);
-    position: sticky;
-    top: 0;
-}
-
-table tbody {
-    background-color: var(--color-table-rows-background) !important;
-}
-
-table tr:hover {
-    background-color: var(--color-table-row-hover) !important;
-    cursor: pointer !important;
-}
-
 /* ! Narrow screen */
 @media only screen and (max-width: 80rem) {
     h1 {

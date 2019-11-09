@@ -39,6 +39,7 @@ export class DestinationListComponent implements OnInit, OnDestroy {
         this.dataSource = new MatTableDataSource<IDestination>(this.filteredDestinations)
         this.selection = new SelectionModel<[]>(false)
         this.unlisten = null
+        console.log(this.dataSource)
     }
 
     ngOnInit() {

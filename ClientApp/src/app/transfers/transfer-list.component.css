@@ -7,6 +7,10 @@
     width: max-content;
 }
 
+#header #search-box .form .mat-form-field {
+    width: auto !important;
+}
+
 #list {
     background-color: var(--color-background);
     display: grid;
@@ -20,6 +24,7 @@
 
 #form {
     background-color: var(--color-background);
+    display: flex;
 }
 
 .activeItem {
@@ -62,7 +67,7 @@
 }
 
 #summaries::-webkit-scrollbar {
-    width: 0.5rem;
+    width: 0.4rem;
 }
 
 #summaries::-webkit-scrollbar-track {

@@ -1,4 +1,4 @@
 label {
-    color: var(--color-input-label) !important;
+    color: var(--color-input-text-label) !important;
     font-weight: var(--font-weight-labels) !important;
 }

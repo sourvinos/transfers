@@ -5,6 +5,7 @@
 }
 
 * {
+    /* Font sizes */
     /* All headers */
     --font-size-headers: 2rem;
     /* Dialogs */
@@ -28,6 +29,7 @@
 }
 
 * {
+    /* Font families */
     /* Buttons */
     --font-family-buttons: "Lato";
     /* All headers */
@@ -50,9 +52,9 @@
 }
 
 * {
+    /* Colors */
     /* Buttons */
     --color-button-delete: #D67474;
-    --color-button-navigation: #373F46;
     --color-button-primary: #57617B;
     --color-button-secondary: #5A75BC;
     --color-button-text: #FFFDDD;
@@ -64,32 +66,31 @@
     --color-divider: #5c5c5c;
     /* Hamburger */
     --color-hamburger: #939393;
-    /* Headers */
+    /* All headers */
     --color-headers: #939393;
     /* Input boxes */
-    --color-curet: #FFFFFF;
-    --color-input-error: #fc3b3b;
-    --color-input-label-focus: #FE9F36;
-    --color-input-label: #999999;
-    --color-input-underline: #5f5e5e;
-    --color-input-underline-focus: #ba680b;
-    --color-input: #FFFFFF;
+    --color-input-text-caret: #FFFFFF;
+    --color-input-text-error: #fc3b3b;
+    --color-input-text-focus: #FE9F36;
+    --color-input-text-label: #999999;
+    --color-input-text-underline: #5f5e5e;
+    --color-input-text-underline-focus: #ba680b;
+    --color-input-text-not-focus: #FFFFFF;
     /* Main background */
     --color-background: #373F46;
     /* Navigation icon */
-    --color-navigation-icon-hover: #EAF5BA;
-    --color-navigation-icon: #939393;
+    --color-navigation-button: #373F46;
     /* Scrollbars */
     --color-scrollbar: #FE9F36;
     --color-scrollbar-background: #373F46;
     /* Sidebar */
+    --color-sidebar-background: #1D2733;
     --color-company-logo-first-child: #FE9F36;
     --color-company-logo-second-child: #FFE85C;
-    --color-copyright: #FE9F36;
+    --color-copyright: #9F9F9F;
     --color-menu-active-item: #FE9F36;
     --color-menu-list-items: #9F9F9F;
-    --color-sidebar-background: #1D2733;
-    --color-user-info: #939393;
+    --color-user-info: #9F9F9F;
     /* Tables */
     --color-table-header: #b3b2b2;
     --color-table-header-border: #57617b;
