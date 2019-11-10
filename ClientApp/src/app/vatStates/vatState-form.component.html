@@ -24,7 +24,7 @@
     <mat-divider></mat-divider>
     <div id="buttons">
         <p class="form-value" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
-        <button class="mat-flat-button delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
-        <button class="mat-flat-button primary" id="save" (click)="saveRecord()">Save</button>
+        <button mat-flat-button class="delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
+        <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>
     </div>
 </div>

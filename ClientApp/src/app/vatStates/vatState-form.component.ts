@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap';
 import { map } from 'rxjs/operators';
 import { HelperService } from '../services/helper.service';
 import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service';
@@ -33,7 +32,7 @@ export class VatStateFormComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService, private keyboardShortcutsService: KeyboardShortcuts, private activatedRoute: ActivatedRoute, public dialog: MatDialog) {
+    constructor(private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private activatedRoute: ActivatedRoute, public dialog: MatDialog) {
         this.activatedRoute.params.subscribe(p => (this.id = p['id']))
         this.unlisten = null
     }

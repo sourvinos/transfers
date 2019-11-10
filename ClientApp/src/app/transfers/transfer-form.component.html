@@ -1,57 +1,55 @@
 <div id="content">
     <form [formGroup]="form" class="ui form" autocomplete="off">
-        <div id="left">
-            <div class="field" [class.error]="isValidInput(destinationDescription, destinationId, destinations)">
-                <label for="destination">Destination</label>
-                <input type="text" formControlName="destinationDescription" (change)="lookupTable(0, 'destinationId', 'destinationDescription', destinationDescription, 'destination', 'customer')" tabindex="1" id="destination">
-            </div>
-            <div class="field" [class.error]="isValidInput(customerDescription, customerId, customers)">
-                <label for="customer">Customer</label>
-                <input type="text" formControlName="customerDescription" (change)="lookupTable(1, 'customerId', 'customerDescription', customerDescription, 'customer', 'pickupPoint')" tabindex="2" id="customer">
-            </div>
-            <div class="field" [class.error]="isValidInput(pickupPointDescription, pickupPointId, pickupPoints)">
-                <label for="pickupPoint">Pickup point</label>
-                <input type="text" formControlName="pickupPointDescription" (change)="lookupTable(2, 'pickupPointId', 'pickupPointDescription', pickupPointDescription, 'pickupPoint', 'adults')" tabindex="3" id="pickupPoint">
-            </div>
-            <div class="fields">
-                <div class="field numeric" [class.error]="isValidInput(adults)">
-                    <label for="adults">Adults</label>
-                    <input type="text" class="number" formControlName="adults" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()" tabindex="4" id="adults">
-                </div>
-                <div class="field numeric" [class.error]="isValidInput(kids)">
-                    <label for="kids">Kids</label>
-                    <input type="text" class="number" formControlName="kids" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()" tabindex="5" id="kids">
-                </div>
-                <div class="field numeric" [class.error]="isValidInput(kids)">
-                    <label for="free">Free</label>
-                    <input type="text" class="number" formControlName="free" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()" tabindex="6" id="free">
-                </div>
-                <div class="field numeric total">
-                    <label>Total</label>
-                    <input type="text" class="number" formControlName="totalPersons" id="totalPersons">
-                </div>
-            </div>
-            <div class="field" [class.error]="isValidInput(driverDescription, driverId, drivers)">
-                <label for="driver">Driver</label>
-                <input type="text" formControlName="driverDescription" (change)="lookupTable(3, 'driverId', 'driverDescription', driverDescription, 'driver', 'port')" tabindex="7" id="driver">
-            </div>
-            <div class="field" [class.error]="isValidInput(portDescription, portId, ports)">
-                <label for="driver">Port</label>
-                <input type="text" formControlName="portDescription" (change)="lookupTable(4, 'portId', 'portDescription', portDescription, 'port' ,'remarks')" tabindex="8" id="port">
-            </div>
-            <div class="field" [class.error]="isValidInput(remarks)">
-                <label for="remarks">Remarks</label>
-                <input type="text" formControlName="remarks" tabindex="9" id="remarks">
-            </div>
+        <div id="section-one">
+            <mat-form-field>
+                <input type="text" matInput placeholder="Destination" formControlName="destinationDescription" tabindex="1" id="destinationDescription" (change)="lookupIndex(destinations, 'Destinations', 'destinationId', 'destinationDescription', $event)">
+                <mat-error *ngIf="destinationDescription.invalid"></mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" matInput placeholder="Customer" formControlName="customerDescription" tabindex="2" id="customerDescription" (change)="lookupIndex(customers, 'CustomerId','customerId', 'customerDescription', $event)">
+                <mat-error *ngIf="destinationDescription.invalid"></mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" matInput placeholder="PickupPoint" formControlName="pickupPointDescription" tabindex="3" id="pickupPointDescription" (change)="lookupIndex(pickupPoints, 'PickupPointId','pickupPointId', 'pickupPointDescription', $event)">
+                <mat-error *ngIf="pickupPointDescription.invalid"></mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" matInput placeholder="Adults" formControlName="adults" tabindex="4" id="adults" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
+                <mat-error *ngIf="adults.invalid"></mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" matInput placeholder="Kids" formControlName="kids" tabindex="5" id="kids" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
+                <mat-error *ngIf="kids.invalid"></mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" matInput placeholder="Free" formControlName="free" tabindex="6" id="free" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
+                <mat-error *ngIf="free.invalid"></mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" matInput placeholder="Total persons" formControlName="totalPersons" id="totalPersons" class="number">
+                <mat-error *ngIf="totalPersons.invalid"></mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" matInput placeholder="Driver" formControlName="driverDescription" tabindex="7" id="driverDescription" (change)="lookupIndex(drivers, 'driverId','driverId', 'driverDescription', $event)">
+                <mat-error *ngIf="driverDescription.invalid"></mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" matInput placeholder="Port" formControlName="portDescription" tabindex="8" id="portDescription" (change)="lookupIndex(ports, 'PortId','portId', 'portDescription', $event)">
+                <mat-error *ngIf="portDescription.invalid"></mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" matInput placeholder="Remarks" formControlName="remarks" tabindex="9" id="remarks">
+            </mat-form-field>
         </div>
     </form>
 
-    <div id="footer-form">
-        <div class="ui divider"></div>
+    <div id="footer">
+        <mat-divider></mat-divider>
         <div id="buttons">
-            <p [class.hidden]=false>{{ form.value | json }} {{ form.valid }} {{ isNewRecord }}</p>
-            <button class="ui button delete" [class.hidden]="isNewRecord" id="delete" (click)="deleteRecord()">Delete</button>
-            <button class="ui button primary" id="save" (click)="saveRecord()">Save</button>
+            <p class="form-value" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
+            <button mat-flat-button class="delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
+            <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>
         </div>
     </div>
+
 </div>

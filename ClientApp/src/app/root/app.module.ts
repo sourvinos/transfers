@@ -7,19 +7,17 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive'
 import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { ModalModule } from 'ngx-bootstrap/modal'
-import { ButtonsModule } from 'ngx-bootstrap/buttons';
 // Material
 import { MatButtonModule } from '@angular/material/button'
 import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS, MatSelect } from '@angular/material'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table'
-import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
 import { MaterialDialogComponent } from './../shared/components/material-dialog/material-dialog.component';
-import { MatSelectModule } from '@angular/material/select';
+import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
 // Common components
@@ -28,8 +26,6 @@ import { RootComponent } from './root.component'
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component'
 import { LoaderComponent } from '../shared/components/loader/loader.component'
 import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
-import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
-import { ModalIndexComponent } from './../shared/components/modal-index/modal-index.component';
 // Routes
 import { HomeComponent } from './../home/home.component'
 import { LoginComponent } from '../login/login.component'
@@ -56,8 +52,6 @@ import { CustomPipe } from '../pipes/custom.pipe'
         SidebarComponent,
         LoaderComponent,
         PageNotFoundComponent,
-        ModalDialogComponent,
-        ModalIndexComponent,
         MaterialIndexDialogComponent,
         MaterialDialogComponent,
         // Routes
@@ -83,6 +77,8 @@ import { CustomPipe } from '../pipes/custom.pipe'
         BrowserModule,
         FormsModule,
         HttpClientModule,
+        ReactiveFormsModule,
+        NgIdleKeepaliveModule.forRoot(),
         // Material
         MatButtonModule,
         MatDialogModule,
@@ -91,18 +87,12 @@ import { CustomPipe } from '../pipes/custom.pipe'
         MatInputModule,
         MatListModule,
         MatRowKeyboardSelectionModule,
+        MatSelectModule,
         MatSnackBarModule,
         MatTableModule,
         MatTableModule,
-        MatSelectModule,
-        ReactiveFormsModule,
-        ModalModule.forRoot(),
-        ButtonsModule.forRoot(),
-        NgIdleKeepaliveModule.forRoot(),
     ],
     entryComponents: [
-        ModalDialogComponent,
-        ModalIndexComponent,
         MaterialIndexDialogComponent,
         MaterialDialogComponent
     ],

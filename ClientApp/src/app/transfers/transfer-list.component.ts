@@ -93,9 +93,9 @@ export class TransferListComponent implements OnInit, AfterViewInit {
 
             this.queryResult = this.queryResultFiltered = data
 
-            console.log('Data', data)
-            console.log('IQueryResult', this.queryResult)
-            console.log('IQueryResult transfers', this.queryResult.transfers)
+            // console.log('Data', data)
+            // console.log('IQueryResult', this.queryResult)
+            // console.log('IQueryResult transfers', this.queryResult.transfers)
 
             for (var {
                 id: a,
@@ -129,12 +129,12 @@ export class TransferListComponent implements OnInit, AfterViewInit {
                 this.flatPeople.push({ id: a, destination: b, customer: c, adults: d, kids: e, free: f, totalPersons: g, pickupPoint: h, time: i, route: j, port: k, driver: l, userName: m, dateIn: n, remarks: o })
             }
 
-            console.log('Flat ', this.flatPeople)
+            // console.log('Flat ', this.flatPeople)
 
             this.dataSource = new MatTableDataSource<Dummy>(this.flatPeople)
             this.selection = new SelectionModel<[]>(false)
 
-            console.log(this.dataSource)
+            // console.log(this.dataSource)
         })
     }
 
@@ -235,6 +235,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     }
 
     getTransfers() {
+        console.log('Working')
         this.updateLocalStorageWithDate()
         this.getFilteredTransfers().then(() => {
             this.setFocus('dateIn')
@@ -244,8 +245,9 @@ export class TransferListComponent implements OnInit, AfterViewInit {
         })
     }
 
-    editRecord(id: number) {
-        this.transferForm.getTransfer(79190)
+    // T
+    editRecord() {
+        this.transferForm.getTransfer(+document.querySelector('.mat-row.selected').children[0].textContent)
     }
 
     toggleItem(item: any, lookupArray: string) {
@@ -269,7 +271,7 @@ export class TransferListComponent implements OnInit, AfterViewInit {
     addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             "Escape": (event: KeyboardEvent): void => {
-                if (this.isFormVisible && !document.getElementsByClassName('modal-dialog')[0]) { this.goBack() }
+                if (this.isFormVisible && document.getElementsByClassName('cdk-overlay-pane').length == 0) { this.goBack() }
             },
             "Alt.N": (event: KeyboardEvent): void => {
                 if (!this.isFormVisible && !document.getElementById('new').hasAttribute('disabled')) { this.transferForm.newRecord() }

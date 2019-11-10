@@ -39,7 +39,6 @@ export class LoginComponent {
 			error => {
 				this.invalidLogin = true
 				this.ErrorMessage = error.error.loginError
-				console.log(this.ErrorMessage)
 			})
 
 	}

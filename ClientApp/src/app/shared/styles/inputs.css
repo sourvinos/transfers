@@ -2,12 +2,6 @@ input.date {
     text-align: center;
 }
 
-input.number {
-    margin: 0 0.5rem 1rem 0 !important;
-    text-align: right;
-    width: 80px !important;
-}
-
 input::selection {
     background-color: darkgray;
 }

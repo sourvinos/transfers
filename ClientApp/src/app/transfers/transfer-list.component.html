@@ -1,11 +1,10 @@
 <div id="header">
-    <div *ngIf="isFormVisible" id="navigation">
-        <button mat-mini-fab class="navigation">
-            <mat-icon id="goBack" (click)="goBack()">arrow_back</mat-icon>
-        </button>
-    </div>
     <div id="title">
-        <i *ngIf="isFormVisible" class="big arrow alternate circle left outline icon navigation-icon" (click)="goBack()"></i>
+        <div id="navigation" *ngIf="isFormVisible">
+            <button mat-mini-fab class="navigation">
+                <mat-icon id="goBack" (click)="goBack()">arrow_back</mat-icon>
+            </button>
+        </div>
         <h1>Transfers</h1>
     </div>
     <div id="search-box">
@@ -13,10 +12,9 @@
             <mat-form-field>
                 <input type="text" matInput placeholder="Date" class="date" formControlName="dateIn" [appInputFormat]="'date'" id="dateIn">
             </mat-form-field>
-            <button class="mat-flat-button primary" id="go" (click)="getTransfers()">Search</button>
+            <button mat-flat-button class="primary" id="go" (click)="getTransfers()">Search</button>
         </form>
     </div>
-    <mat-divider></mat-divider>
 </div>
 
 <div id="content">
@@ -31,9 +29,11 @@
             </ng-template>
         </div>
         <div id="footer">
-            <div class="ui divider"></div>
+            <mat-divider></mat-divider>
             <div id="buttons">
-                <button class="ui button primary" id="new" [disabled]="queryResult.persons == undefined" (click)="newRecord()">New</button>
+                <p class="form-value" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
+                <button mat-flat-button class="delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
+                <button mat-flat-button class="primary" id="new" [disabled]="queryResult.persons == undefined" (click)="newRecord()">New</button>
             </div>
         </div>
     </div>
@@ -97,13 +97,13 @@
                     <mat-cell *matCellDef=" let element" ngClass="{{ align[i] }}">{{ element[columns[i]] | custom:format[i] }}</mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="columns; sticky: true"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: columns;" [matRowKeyboardSelection]="selection" [rowModel]="row" [selectOnFocus]="true" [toggleOnEnter]="false" [ngClass]="{selected: selection.isSelected(row)}" (enter)="editRecord()" (dblclick)="editRecord()"></mat-row>
+                <mat-row *matRowDef="let row; columns: columns;" [id]="row.id" [matRowKeyboardSelection]="selection" [rowModel]="row" [selectOnFocus]="true" [toggleOnEnter]="false" [ngClass]="{selected: selection.isSelected(row)}" (enter)="editRecord()" (dblclick)="editRecord()"></mat-row>
             </mat-table>
         </div>
         <div id="footer">
             <mat-divider></mat-divider>
             <div id="buttons">
-                <button class="mat-flat-button primary" id="new" [disabled]="queryResult.persons == undefined" (click)="newRecord()">New</button>
+                <button mat-flat-button class="primary" id="new" [disabled]="queryResult.persons == undefined" (click)="newRecord()">New</button>
             </div>
         </div>
     </div>

@@ -1,9 +1,8 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core'
-import { FormBuilder, FormControl, Validators } from '@angular/forms'
-import { ActivatedRoute, Router } from '@angular/router'
-import { BsModalRef, BsModalService } from 'ngx-bootstrap'
-import { forkJoin, Subject } from 'rxjs'
-
+import { AfterViewInit, Component, OnInit } from '@angular/core'
+import { FormBuilder, Validators } from '@angular/forms'
+import { MatDialog } from '@angular/material'
+import { Router } from '@angular/router'
+import { forkJoin } from 'rxjs'
 import { ITransfer } from '../models/transfer'
 import { CustomerService } from '../services/customer.service'
 import { DestinationService } from '../services/destination.service'
@@ -13,27 +12,36 @@ import { PickupPointService } from '../services/pickupPoint.service'
 import { PortService } from '../services/port.service'
 import { TransferService } from '../services/transfer.service'
 import { Utils } from '../shared/classes/utils'
-import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component'
+import { MaterialDialogComponent } from '../shared/components/material-dialog/material-dialog.component'
+import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
 import { ComponentInteractionService } from '../shared/services/component-interaction.service'
-import { ModalIndexComponent } from '../shared/components/modal-index/modal-index.component'
 
 @Component({
     selector: 'app-transfer-form',
     templateUrl: './transfer-form.component.html',
-    styleUrls: ['./transfer-form.component.css']
+    styleUrls: ['../shared/styles/forms.css', './transfer-form.component.css']
 })
 
 export class TransferFormComponent implements OnInit, AfterViewInit {
+
+    // #region Init
 
     id: number
     editMode: boolean = false
 
     tables: any[] = []
 
+    destinations: any
+    customers: any
+    pickupPoints: any
+    drivers: any
+    ports: any
+
     isNewRecord: boolean = false
     isSaving: boolean = false
     isFormVisible: boolean = false
-    modalRef: BsModalRef
+
+    // #endregion     
 
     form = this.formBuilder.group({
         id: 0,
@@ -51,25 +59,25 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private componentInteractionService: ComponentInteractionService, private formBuilder: FormBuilder, private router: Router, private route: ActivatedRoute, private modalService: BsModalService) { }
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private transferService: TransferService, private helperService: HelperService, private componentInteractionService: ComponentInteractionService, private formBuilder: FormBuilder, private router: Router, public dialog: MatDialog) { }
 
     ngOnInit() {
-        this.populateTables()
+        this.populateDropDowns()
     }
 
     ngAfterViewInit() {
-        this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'totalPersons', 'remarks', 'delete', 'save'])
+        this.disableFields(['destinationDescription', 'customerDescription', 'pickupPointDescription', 'adults', 'kids', 'free', 'totalPersons', 'driverDescription', 'portDescription', 'remarks', 'delete', 'save'])
     }
 
-    // PT
+    // PC
     getTransfer(id: number) {
         this.transferService.getTransfer(id).subscribe(result => {
             this.populateFields(result)
             this.setRecordStatus(false)
             this.disableFields(['dateIn', 'go'])
-            this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks', 'delete', 'save'])
+            this.enableFields(['destinationDescription', 'customerDescription', 'pickupPointDescription', 'adults', 'kids', 'free', 'driverDescription', 'portDescription', 'remarks', 'delete', 'save'])
             this.scrollToForm()
-            this.setFocus('destination')
+            this.focus('destinationDescription')
         })
     }
 
@@ -77,11 +85,11 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     newRecord() {
         this.setRecordStatus(true)
         this.disableFields(['dateIn', 'go'])
-        this.enableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'remarks', 'delete', 'save'])
+        this.enableFields(['destinationDescription', 'customerDescription', 'pickupPointDescription', 'adults', 'kids', 'free', 'driverDescription', 'portDescription', 'remarks', 'delete', 'save'])
         this.clearFields()
         this.scrollToList()
         this.scrollToForm()
-        this.setFocus('destination')
+        this.focus('destinationDescription')
     }
 
     // T 
@@ -93,56 +101,76 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     // T 
     canDeactivate() {
         if (this.form.dirty) {
-            const subject = new Subject<boolean>()
-            const modal = this.modalService.show(ModalDialogComponent, {
-                initialState: {
-                    title: 'Confirmation',
-                    message: 'If you continue, all changes in this record will be lost.',
-                    type: 'question'
-                }, animated: true
+            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+                height: '250px',
+                width: '550px',
+                data: {
+                    title: 'Please confirm',
+                    message: 'If you continue, changes in this record will be lost!',
+                    actions: ['cancel', 'ok']
+                },
+                panelClass: 'dialog'
             })
-            modal.content.subject = subject.subscribe(result => {
-                if (result) {
+            return dialogRef.afterClosed().subscribe(result => {
+                if (result == 'true') {
                     this.abortDataEntry()
                 }
             })
+
+            // return dialogRef.afterClosed().pipe(map(result => {
+            //     console.log('Result', result)
+            //     if (result == 'true') {
+            //         this.abortDataEntry()
+            //     }
+            // }))
         } else {
             this.abortDataEntry()
         }
     }
 
-    // T 
+    // T
     deleteRecord() {
-        const subject = new Subject<boolean>()
-        const modal = this.modalService.show(ModalDialogComponent, {
-            initialState: {
-                title: 'Confirmation',
-                message: 'If you continue, this record will be deleted.',
-                type: 'delete'
-            }, animated: true
-        })
-        modal.content.subject = subject.subscribe(result => {
-            if (result)
-                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
-                    this.scrollBackToList()
-                    this.clearFields()
-                }),
-                    (error: Response) => console.log('Record NOT deleted')
-        })
-    }
-
-    // T 
-    isValidInput(description: FormControl, id?: { invalid: any }, lookupArray?: any[]) {
-        if (id == null) return (description.invalid && description.touched)
+        if (this.form.value.id == 0 != undefined) {
+            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+                height: '250px',
+                width: '550px',
+                data: {
+                    title: 'Please confirm',
+                    message: 'If you continue, this record will be permanently deleted.',
+                    actions: ['cancel', 'ok']
+                },
+                panelClass: 'dialog'
+            })
+            dialogRef.afterClosed().subscribe(result => {
+                if (result == 'true') {
+                    this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
+                        this.removeRow(this.form.value.id)
+                        this.scrollBackToList()
+                        this.clearFields()
+                    }, error => {
+                        Utils.errorLogger(error)
+                        this.openErrorModal()
+                    })
+                }
+            })
+        }
     }
 
     // T
-    lookupTable(tableIndex: number, id: string, description: string, controlName: FormControl, currentFocus: string, nextFocus: string) {
-        let lookupInput = controlName.value.toUpperCase()
-        let lookupResults = this.tables[tableIndex].filter((item: { description: string; }) => {
-            return item.description.includes(lookupInput)
+    lookupIndex(lookupArray: any[], modalTitle: string, lookupId: any, lookupDescription: any, e: { target: { value: any } }) {
+        const filteredArray = []
+        lookupArray.filter(x => {
+            if (x.description.toUpperCase().includes(e.target.value.toUpperCase())) {
+                filteredArray.push(x)
+            }
         })
-        if (lookupResults.length > 0) this.showModalIndex(id, description, lookupResults, currentFocus, nextFocus)
+        if (filteredArray.length > 0) {
+            this.showModalIndex(filteredArray, modalTitle, lookupId, lookupDescription)
+        }
+        if (filteredArray.length == 0) {
+            this.focus(lookupDescription)
+            this.patchFields(null, lookupId, lookupDescription)
+        }
     }
 
     // T 
@@ -153,7 +181,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
                 this.clearFields()
-                this.setFocus('destination')
+                this.focus('destinationDescription')
             }, error => Utils.errorLogger(error))
         }
         else {
@@ -163,22 +191,12 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         }
     }
 
-    private populateFields(transfer: ITransfer) {
-        this.form.setValue({
-            id: transfer.id,
-            dateIn: transfer.dateIn,
-            destinationId: transfer.destination.id, destinationDescription: transfer.destination.description,
-            customerId: transfer.customer.id, customerDescription: transfer.customer.description,
-            pickupPointId: transfer.pickupPoint.id, pickupPointDescription: transfer.pickupPoint.description,
-            driverId: transfer.driver.id, driverDescription: transfer.driver.description,
-            portId: transfer.port.id, portDescription: transfer.port.description,
-            adults: transfer.adults,
-            kids: transfer.kids,
-            free: transfer.free,
-            totalPersons: transfer.totalPersons,
-            remarks: transfer.remarks,
-            userName: transfer.userName
-        })
+    private abortDataEntry() {
+        this.clearFields()
+        this.disableFields(['destinationDescription', 'customerDescription', 'pickupPointDescription', 'adults', 'kids', 'free', 'totalPersons', 'driverDescription', 'portDescription', 'remarks', 'delete', 'save'])
+        this.scrollBackToList()
+        this.enableFields(['dateIn', 'go'])
+        this.focus('dateIn')
     }
 
     private clearFields() {
@@ -200,70 +218,36 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     }
 
     private disableFields(fields: string[]) {
-        // Utils.disableFields(fields)
+        Utils.disableFields(fields)
     }
 
     private enableFields(fields: string[]) {
-        // Utils.enableFields(fields)
+        Utils.enableFields(fields)
     }
 
-    private scrollToForm() {
-        this.componentInteractionService.emitChange([true])
-        document.getElementById('list').style.zIndex = '-1'
-        document.getElementById('list').style.marginLeft = -parseInt(document.getElementById('form').style.width) - 25 + 'px'
+    private focus(field: string) {
+        Utils.setFocus(field)
     }
 
-    private setRecordStatus(status: boolean) {
-        this.isNewRecord = status
-    }
-
-    private setFocus(element: string) {
-        Utils.setFocus(element)
-    }
-
-    private scrollToList() {
-        this.componentInteractionService.emitChange([false])
-        document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) + 'px'
-    }
-
-    private abortDataEntry() {
-        this.clearFields()
-        this.disableFields(['destination', 'customer', 'pickupPoint', 'driver', 'port', 'adults', 'kids', 'free', 'totalPersons', 'remarks', 'delete', 'save'])
-        this.scrollBackToList()
-        this.enableFields(['dateIn', 'go'])
-        this.setFocus('dateIn')
-    }
-
-    private scrollBackToList() {
-        this.componentInteractionService.emitChange([false])
-        document.getElementById('list').style.zIndex = '0'
-        document.getElementById('list').style.marginLeft = 0 + 'px'
-    }
-
-    private showModalIndex(id: string, description: string, list: any, currentFocus: string, nextFocus: string) {
-        const subject = new Subject<any>()
-        const modal = this.modalService.show(ModalIndexComponent, {
-            initialState: {
-                title: 'Destinations',
-                list: list,
-                type: 'delete'
-            }, animated: true
-        })
-        modal.content.subject = subject.subscribe(result => {
-            if (result != '') {
-                this.updateFormFields(result, id, description)
-                this.setFocus(nextFocus)
-            } else {
-                this.setFocus(currentFocus)
-            }
+    private openErrorModal() {
+        this.dialog.open(MaterialDialogComponent, {
+            height: '250px',
+            width: '550px',
+            data: {
+                title: 'Error',
+                message: 'This record is in use and can not be deleted.',
+                actions: ['ok']
+            },
+            panelClass: 'dialog'
         })
     }
 
-    private updateFormFields(result: any, id: string, description: string) {
-        this.form.patchValue({ [id]: result.id, [description]: result.description })
+    private patchFields(result: any[], id: any, description: any) {
+        this.form.patchValue({ [id]: result ? result[0] : '' })
+        this.form.patchValue({ [description]: result ? result[1] : '' })
     }
 
-    private populateTables() {
+    private populateDropDowns() {
         let sources = []
         sources.push(this.destinationService.getDestinations())
         sources.push(this.customerService.getCustomers())
@@ -272,11 +256,11 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         sources.push(this.portService.getPorts())
         return forkJoin(sources).subscribe(
             result => {
-                this.tables.push(result[0])
-                this.tables.push(result[1])
-                this.tables.push(result[2])
-                this.tables.push(result[3])
-                this.tables.push(result[4])
+                this.destinations = result[0]
+                this.customers = result[1]
+                this.pickupPoints = result[2]
+                this.drivers = result[3]
+                this.ports = result[4]
             },
             error => {
                 if (error.status == 404) {
@@ -284,6 +268,67 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
                 }
             }
         )
+    }
+
+    private populateFields(transfer: ITransfer) {
+        // this.id = transfer.id
+        this.form.setValue({
+            id: transfer.id,
+            dateIn: transfer.dateIn,
+            destinationId: transfer.destination.id, destinationDescription: transfer.destination.description,
+            customerId: transfer.customer.id, customerDescription: transfer.customer.description,
+            pickupPointId: transfer.pickupPoint.id, pickupPointDescription: transfer.pickupPoint.description,
+            driverId: transfer.driver.id, driverDescription: transfer.driver.description,
+            portId: transfer.port.id, portDescription: transfer.port.description,
+            adults: transfer.adults,
+            kids: transfer.kids,
+            free: transfer.free,
+            totalPersons: transfer.totalPersons,
+            remarks: transfer.remarks,
+            userName: transfer.userName
+        })
+    }
+
+    private removeRow(id: string) {
+        document.getElementById(id).remove()
+    }
+
+    private setRecordStatus(status: boolean) {
+        this.isNewRecord = status
+    }
+
+    private scrollToForm() {
+        this.componentInteractionService.emitChange([true])
+        document.getElementById('list').style.zIndex = '-1'
+        document.getElementById('list').style.marginLeft = -parseInt(document.getElementById('form').style.width) - 25 + 'px'
+    }
+
+    private scrollBackToList() {
+        this.componentInteractionService.emitChange([false])
+        document.getElementById('list').style.zIndex = '0'
+        document.getElementById('list').style.marginLeft = 0 + 'px'
+        document.getElementById('go').click()
+    }
+
+    private scrollToList() {
+        this.componentInteractionService.emitChange([false])
+        document.getElementById('content').style.left = -parseInt(document.getElementById('empty').style.width) + 'px'
+    }
+
+    private showModalIndex(filteredArray: any[], modalTitle: string, lookupId: any, lookupDescription: any) {
+        let dialogRef = this.dialog.open(MaterialIndexDialogComponent, {
+            data: {
+                header: modalTitle,
+                columns: ['id', 'description'],
+                fields: ['Id', 'Description'],
+                align: ['center', 'left'],
+                format: ['', ''],
+                records: filteredArray
+            }
+        })
+        dialogRef.afterClosed().subscribe((result) => {
+            this.patchFields(result, lookupId, lookupDescription)
+        })
     }
 
     // #region Get field values - called from the template
@@ -324,6 +369,10 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
         return this.form.get('free')
     }
 
+    get totalPersons() {
+        return this.form.get('totalPersons')
+    }
+
     get driverId() {
         return this.form.get('driverId')
     }
@@ -345,44 +394,5 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     }
 
     //#endregion
-
-    // #region Update dropdowns with values - called from the template
-
-    updateDestinationId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ destinationId: list ? list.id : '' })
-    }
-
-    updateCustomerId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ customerId: list ? list.id : '' })
-    }
-
-    updatePickupPointId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ pickupPointId: list ? list.id : '' })
-    }
-
-    updateDriverId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ driverId: list ? list.id : '' })
-    }
-
-    updatePortId(lookupArray: any[], e: { target: { value: any } }): void {
-        let name = e.target.value
-        let list = lookupArray.filter(x => x.description === name)[0]
-
-        this.form.patchValue({ portId: list ? list.id : '' })
-    }
-
-    // #endregion Update dropdowns with values
 
 }

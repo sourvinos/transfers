@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core'
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material'
 import { ActivatedRoute, Router } from '@angular/router'
-import { BsModalService } from 'ngx-bootstrap'
-import { forkJoin, Observable } from 'rxjs'
+import { forkJoin } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { HelperService } from '../services/helper.service'
 import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
@@ -42,7 +41,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    constructor(private routeService: RouteService, private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private modalService: BsModalService, private keyboardShortcutsService: KeyboardShortcuts, public dialog: MatDialog) {
+    constructor(private routeService: RouteService, private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, public dialog: MatDialog) {
         this.activatedRoute.params.subscribe(p => (this.id = p['id']))
         this.unlisten = null
     }
