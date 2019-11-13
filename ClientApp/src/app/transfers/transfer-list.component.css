@@ -19,12 +19,11 @@
         "footer";
     grid-template-rows: auto min-content;
     margin-right: 25px;
-    transition: 0.2s ease-out;
 }
 
 #form {
     background-color: var(--color-background);
-    display: flex;
+    display: grid;
 }
 
 .activeItem {

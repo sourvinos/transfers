@@ -19,7 +19,7 @@ import { ComponentInteractionService } from '../shared/services/component-intera
 @Component({
     selector: 'app-transfer-form',
     templateUrl: './transfer-form.component.html',
-    styleUrls: ['../shared/styles/forms.css', './transfer-form.component.css']
+    styleUrls: ['./transfer-form.component.css']
 })
 
 export class TransferFormComponent implements OnInit, AfterViewInit {
@@ -38,7 +38,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     ports: any
 
     isNewRecord: boolean = false
-    isSaving: boolean = false
     isFormVisible: boolean = false
 
     // #endregion     
@@ -116,13 +115,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
                     this.abortDataEntry()
                 }
             })
-
-            // return dialogRef.afterClosed().pipe(map(result => {
-            //     console.log('Result', result)
-            //     if (result == 'true') {
-            //         this.abortDataEntry()
-            //     }
-            // }))
         } else {
             this.abortDataEntry()
         }
@@ -176,7 +168,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit {
     // T 
     saveRecord() {
         if (!this.form.valid) return
-        this.isSaving = true
         this.componentInteractionService.emitChange([true])
         if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
