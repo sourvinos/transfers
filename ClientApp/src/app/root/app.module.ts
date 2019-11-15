@@ -36,7 +36,7 @@ import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.compo
 import { PortListComponent } from './../ports/port-list.component'; import { PortFormComponent } from './../ports/port-form.component'
 import { RouteListComponent } from '../routes/route-list.component'; import { RouteFormComponent } from '../routes/route-form.component'
 import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component'; import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'
-import { TransfersComponent } from '../transfers/transfers-component'; import { TransferListComponent } from '../transfers/transfer-list.component'; import { TransferFormComponent } from '../transfers/transfer-form.component'
+import { TransfersComponent } from '../transfers/user-interface/wrapper-transfers'; import { TransferListComponent } from '../transfers/user-interface/list-transfers'; import { TransferFormComponent } from '../transfers/user-interface/form-transfer'; import { ModalTransferFormComponent } from '../transfers/user-interface/modal-form'
 import { VatStateListComponent } from '../vatStates/vatState-list.component'; import { VatStateFormComponent } from '../vatStates/vatState-form.component'
 // Directives
 import { InputFormatDirective } from '../directives/input-format.directive'
@@ -69,7 +69,9 @@ import { CustomPipe } from '../pipes/custom.pipe'
         // Directives
         InputFormatDirective,
         // Pipes
-        CustomPipe
+        CustomPipe,
+        // Modal entry forms
+        ModalTransferFormComponent
     ],
     imports: [
         AppRoutingModule,
@@ -94,7 +96,8 @@ import { CustomPipe } from '../pipes/custom.pipe'
     ],
     entryComponents: [
         MaterialIndexDialogComponent,
-        MaterialDialogComponent
+        MaterialDialogComponent,
+        ModalTransferFormComponent
     ],
     providers: [{ provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } }],
     bootstrap: [RootComponent]

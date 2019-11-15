@@ -3,7 +3,7 @@
         <h1>Pickup points</h1>
     </div>
     <div id="search-box">
-        <form [formGroup]="form" class="ui form" autocomplete="off">
+        <form [formGroup]="form" autocomplete="off">
             <mat-form-field>
                 <input type="text" matInput placeholder="Route" formControlName="routeDescription" tabindex="0" id="routeDescription" (change)="lookupIndex(routes, 'Routes','routeId', 'routeDescription', $event)">
                 <mat-error *ngIf="routeDescription.invalid"></mat-error>

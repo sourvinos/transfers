@@ -56,10 +56,14 @@ p {
 }
 
 #section-one {
+    display: flex;
+    flex-direction: column;
     grid-area: "section-one";
 }
 
 #section-two {
+    display: flex;
+    flex-direction: column;
     grid-area: "section-two";
 }
 

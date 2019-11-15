@@ -25,9 +25,9 @@ namespace Transfers.Controllers
             this.context = context;
         }
 
-        // GET: api/transfers/getByDate/YYYY-MM-DDT00:00:00
-        [HttpGet("getByDate/{dateIn}")]
-        public TransferGroupResultResource<TransferResource> getTransfers(DateTime dateIn)
+        // GET: api/transfers/date/YYYY-MM-DDT00:00:00
+        [HttpGet("date/{date}")]
+        public TransferGroupResultResource<TransferResource> getTransfers(DateTime date)
         {
             var details = context.Transfers
                 .Include(x => x.Customer)
@@ -37,13 +37,13 @@ namespace Transfers.Controllers
                 .Include(x => x.Port)
                 .Include(x => x.Driver)
                 .Include(x => x.Port)
-                .Where(x => x.DateIn == dateIn).OrderBy(x => x.Id);
+                .Where(x => x.DateIn == date).OrderBy(x => x.Id);
             // .Where(x => x.DateIn == dateIn).OrderBy(x => x.PickupPoint.Route.Description);
-            var totalPersonsPerCustomer = context.Transfers.Include(x => x.Customer).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.Customer.Description }).Select(x => new TotalPersonsPerCustomer { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
-            var totalPersonsPerDestination = context.Transfers.Include(x => x.Destination).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.Destination.Description }).Select(x => new TotalPersonsPerDestination { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
-            var totalPersonsPerRoute = context.Transfers.Include(x => x.PickupPoint.Route).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.PickupPoint.Route.Description }).Select(x => new TotalPersonsPerRoute { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
-            var totalPersonsPerDriver = context.Transfers.Include(x => x.Driver).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.Driver.Description }).Select(x => new TotalPersonsPerDriver { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
-            var totalPersonsPerPort = context.Transfers.Include(x => x.Port).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.Port.Description }).Select(x => new TotalPersonsPerPort { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
+            var totalPersonsPerCustomer = context.Transfers.Include(x => x.Customer).Where(x => x.DateIn == date).GroupBy(x => new { x.Customer.Description }).Select(x => new TotalPersonsPerCustomer { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
+            var totalPersonsPerDestination = context.Transfers.Include(x => x.Destination).Where(x => x.DateIn == date).GroupBy(x => new { x.Destination.Description }).Select(x => new TotalPersonsPerDestination { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
+            var totalPersonsPerRoute = context.Transfers.Include(x => x.PickupPoint.Route).Where(x => x.DateIn == date).GroupBy(x => new { x.PickupPoint.Route.Description }).Select(x => new TotalPersonsPerRoute { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
+            var totalPersonsPerDriver = context.Transfers.Include(x => x.Driver).Where(x => x.DateIn == date).GroupBy(x => new { x.Driver.Description }).Select(x => new TotalPersonsPerDriver { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
+            var totalPersonsPerPort = context.Transfers.Include(x => x.Port).Where(x => x.DateIn == date).GroupBy(x => new { x.Port.Description }).Select(x => new TotalPersonsPerPort { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
 
             var groupResult = new TransferGroupResult<Transfer>
             {

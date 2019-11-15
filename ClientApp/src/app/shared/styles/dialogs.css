@@ -2,9 +2,7 @@
     background-color: var(--color-dialog-background) !important;
     border-radius: 5px !important;
     display: flex !important;
-    height: 574px !important;
-    padding: 25px !important;
-    width: 700px !important;
+    padding: 0 !important;
 }
 
 .mat-dialog-title {

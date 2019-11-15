@@ -40,12 +40,14 @@
     border-left: 4px solid var(--color-table-left-border-selected) !important;
 }
 
+/* Cells */
 .mat-cell:not(:first-child) {
     color: var(--color-table-row) !important;
     font-size: var(--font-size-table-row) !important;
     padding-left: 10px !important;
 }
 
+/* Extras */
 .left {
     justify-content: flex-start !important;
 }

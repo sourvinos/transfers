@@ -19,6 +19,7 @@
         "footer";
     grid-template-rows: auto min-content;
     margin-right: 25px;
+    height: 500px;
 }
 
 #form {

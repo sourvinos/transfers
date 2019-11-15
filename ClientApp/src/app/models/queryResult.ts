@@ -1,4 +1,4 @@
-import { ITransfer } from "./transfer"
+import { ITransfer } from "../transfers/classes/model-transfer";
 
 export interface IQueryResult {
 	persons: number

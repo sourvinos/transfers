@@ -2,8 +2,8 @@ import { HttpClient } from "@angular/common/http"
 import { Injectable } from "@angular/core"
 import { Observable, Subject } from "rxjs"
 import { tap } from "rxjs/operators"
-import { IQueryResult } from "../models/queryResult"
-import { ITransfer } from "../models/transfer"
+import { IQueryResult } from "src/app/models/queryResult"
+import { ITransfer } from "./model-transfer"
 
 @Injectable({ providedIn: "root" })
 
@@ -18,8 +18,8 @@ export class TransferService {
         return this.isRefreshNeeded
     }
 
-    async getTransfers(date: string) {
-        return await this.http.get<IQueryResult[]>(this.url + "/" + "getByDate" + "/" + date).toPromise()
+    getTransfers(date: string): Observable<IQueryResult[]> {
+        return this.http.get<IQueryResult[]>(this.url + "/date/" + date)
     }
 
     getTransfer(id: number): Observable<ITransfer> {

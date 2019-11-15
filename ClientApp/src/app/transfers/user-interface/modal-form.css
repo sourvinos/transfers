@@ -1,0 +1,11 @@
+form {
+    flex-direction: row !important;
+}
+
+#section-one {
+    margin-right: 1rem;
+}
+
+#footer {
+    padding: 2rem 2rem 3rem 2rem;
+}

@@ -30,7 +30,7 @@
 
 #header #navigation {
     display: flex;
-    grid-area: navigation;
+    grid-area: "navigation";
     justify-content: flex-start;
     margin: 0 0 0 1rem;
 }
@@ -52,6 +52,8 @@
 
 #footer {
     grid-area: "footer";
+    margin: 0;
+    padding: 2rem 2rem 2rem 2rem;
 }
 
 #section-one, #section-two {
