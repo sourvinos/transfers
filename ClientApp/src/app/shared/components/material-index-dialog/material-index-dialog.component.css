@@ -1,3 +1,11 @@
+#container {
+    /* background-color: cornsilk; */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 2rem !important;
+}
+
 .mat-dialog-actions {
     justify-content: flex-end;
     margin-bottom: 0;

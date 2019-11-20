@@ -8,3 +8,13 @@ h1 {
 h3 {
     font-weight: var(--font-weight-headers) !important;
 }
+
+label.customLabel {
+    font-family: var(--font-family-labels) !important;
+    font-size: var(--font-size-labels) !important;
+}
+
+input.customInput {
+    font-family: var(--font-family-customInput) !important;
+    font-size: var(--font-size-customInput) !important;
+}

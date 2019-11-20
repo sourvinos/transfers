@@ -1,0 +1,41 @@
+#wrapper {
+    display: grid;
+    grid-template-areas:
+        "header"
+        "list"
+        "footer";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+}
+
+#header {
+    display: grid;
+    grid-area: header;
+    grid-template-areas:
+        "title"
+        "search-box";
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    margin: 2rem 3rem;
+}
+
+#header #title {
+    align-self: center;
+}
+
+#header #search-box {
+    display: flex;
+    align-items: center;
+    justify-self: end;
+}
+
+#list {
+    grid-area: list;
+    margin: 0 2rem 2rem 2rem;
+    overflow: hidden;
+}
+
+#footer {
+    grid-area: footer;
+}

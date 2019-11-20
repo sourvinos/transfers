@@ -1,0 +1,20 @@
+#form {
+    display: grid;
+    grid-template-areas:
+        "formContent"
+        "formFooter";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    height: 100%;
+}
+
+#formContent {
+    grid-area: formContent;
+}
+
+#formFooter {
+    align-self: end;
+    grid-area: formFooter;
+    justify-self: end;
+    margin: 0 1rem;
+}

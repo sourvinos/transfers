@@ -21,7 +21,7 @@ import { Utils } from './../shared/classes/utils'
 
 export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Init
+    // #region Variables
 
     id: number
     url: string = '/customers'
@@ -30,8 +30,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     vatStates: any
 
     unlisten: Unlisten
-
-    // #endregion     
 
     form = this.formBuilder.group({
         id: 0,
@@ -49,6 +47,8 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         accountCode: ['', [Validators.maxLength(100)]],
         userName: [this.helperService.getUsernameFromLocalStorage()]
     })
+
+    // #endregion
 
     constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts) {
         this.activatedRoute.params.subscribe(p => (this.id = p['id']))
@@ -117,7 +117,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // T
     goBack() {
-        this.router.navigate([this.url])
+        this.router.navigate(['../'], { relativeTo: this.activatedRoute })
     }
 
     // T

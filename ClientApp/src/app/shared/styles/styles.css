@@ -83,6 +83,20 @@ p {
     margin: 2rem 0 !important;
 }
 
+.scrollable::-webkit-scrollbar {
+    width: 0.4rem;
+}
+
+.scrollable::-webkit-scrollbar-track {
+    background-color: var(--color-scrollbar-background);
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background-color: var(--color-scrollbar);
+    border-radius: 0;
+    min-height: 6.25rem;
+}
+
 /* ! Wide screen */
 @media only screen and (min-width: 80.0625rem) {
     .icon {

@@ -9,7 +9,7 @@ import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 // Material
 import { MatButtonModule } from '@angular/material/button'
-import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS, MatSelect } from '@angular/material'
+import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS } from '@angular/material'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
@@ -36,13 +36,14 @@ import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.compo
 import { PortListComponent } from './../ports/port-list.component'; import { PortFormComponent } from './../ports/port-form.component'
 import { RouteListComponent } from '../routes/route-list.component'; import { RouteFormComponent } from '../routes/route-form.component'
 import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component'; import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'
-import { TransfersComponent } from '../transfers/user-interface/wrapper-transfers'; import { TransferListComponent } from '../transfers/user-interface/list-transfers'; import { TransferFormComponent } from '../transfers/user-interface/form-transfer'; import { ModalTransferFormComponent } from '../transfers/user-interface/modal-form'
+import { TransferWrapperComponent } from '../transfers/user-interface/wrapper-transfer'; import { TransferListComponent } from '../transfers/user-interface/list-transfer'; import { TransferFormComponent } from '../transfers/user-interface/form-transfer'
 import { VatStateListComponent } from '../vatStates/vatState-list.component'; import { VatStateFormComponent } from '../vatStates/vatState-form.component'
 // Directives
 import { InputFormatDirective } from '../directives/input-format.directive'
 import { MatRowKeyboardSelectionModule } from "mat-row-keyboard-selection";
 // Pipes
 import { CustomPipe } from '../pipes/custom.pipe'
+
 
 @NgModule({
     declarations: [
@@ -64,14 +65,12 @@ import { CustomPipe } from '../pipes/custom.pipe'
         PortListComponent, PortFormComponent,
         RouteListComponent, RouteFormComponent,
         TaxOfficeListComponent, TaxOfficeFormComponent,
-        TransfersComponent, TransferListComponent, TransferFormComponent,
+        TransferWrapperComponent, TransferListComponent, TransferFormComponent,
         VatStateListComponent, VatStateFormComponent,
         // Directives
         InputFormatDirective,
         // Pipes
         CustomPipe,
-        // Modal entry forms
-        ModalTransferFormComponent
     ],
     imports: [
         AppRoutingModule,
@@ -96,8 +95,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
     ],
     entryComponents: [
         MaterialIndexDialogComponent,
-        MaterialDialogComponent,
-        ModalTransferFormComponent
+        MaterialDialogComponent
     ],
     providers: [{ provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } }],
     bootstrap: [RootComponent]

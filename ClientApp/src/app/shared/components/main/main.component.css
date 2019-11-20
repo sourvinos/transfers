@@ -29,11 +29,6 @@
     transform: translateY(-10px) rotate(-45deg);
 }
 
-#content {
-    display: flex;
-    height: 100%;
-}
-
 /* ! Wide screen */
 @media only screen and (min-width: 80.0625rem) {
     #hamburger {

@@ -16,6 +16,8 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     // #region Init
 
+    date: string = ''
+
     customers: ICustomer[]
     filteredCustomers: ICustomer[]
 
@@ -46,7 +48,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         this.setFocus('searchField')
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy() {
         (this.unlisten) && this.unlisten()
     }
 

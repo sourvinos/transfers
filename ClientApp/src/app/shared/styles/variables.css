@@ -8,15 +8,17 @@
     /* Font sizes */
     /* All headers */
     --font-size-headers: 2rem;
+    /* Labels */
+    --font-size-labels: 0.8rem;
     /* Dialogs */
     --font-size-mat-dialog-title: 2.0rem;
     --font-size-mat-dialog-content: 1.0rem;
     /* Input boxes */
-    --font-size-input: 1.0rem;
+    --font-size-customInput: 1.0rem;
     /* Transfer summary boxes */
     --font-size-summary-block-header: 1.7rem;
     --font-size-summary-block-item-total: 1.2rem;
-    --font-size-summary-block-item: 1.2rem;
+    --font-size-summary-block-item: 1.0rem;
     /* Sidebar - Menu */
     --font-size-copyright: 0.6rem;
     --font-size-logo-first-child: 4.375rem;
@@ -34,6 +36,10 @@
     --font-family-buttons: "Lato";
     /* All headers */
     --font-family-headers: "Lato";
+    /* Labels */
+    --font-family-labels: "Roboto";
+    /* Custom inputs */
+    --font-family-customInput: "Roboto";
     /* Dialogs */
     --font-family-dialog-header: 'Lato';
     --font-family-dialog-content: 'Lato';
@@ -61,7 +67,7 @@
     /* Dialogs */
     --color-dialog-background: #424242;
     --color-dialog-content: #FFFDDD;
-    --color-dialog-title: #D67474;
+    --color-dialog-title: #939393;
     /* Divider lines */
     --color-divider: #5c5c5c;
     /* Hamburger */
@@ -101,9 +107,10 @@
     --color-table-left-border-unselected: #373f46;
     --color-table-rows-background: #373f46;
     /* Transfer summary boxes */
-    --color-summary-block-background: #f5f5f5;
+    --color-summary-block-background: #373F46;
     --color-summary-block-border-active: #FE9F36;
     --color-summary-block-border-inactive: #939393;
-    --color-summary-block-item-hover: #FFFFFF;
+    --color-summary-block-item-hover-background: #373F46;
+    --color-summary-block-item-hover-color: #7fffd4;
     --color-summary-block-item: #939393;
 }

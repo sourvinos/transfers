@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 
+// Routes
 import { HomeComponent } from '../home/home.component'
 import { LoginComponent } from '../login/login.component'
 import { CustomerListComponent } from '../customers/customer-list.component'; import { CustomerFormComponent } from '../customers/customer-form.component'
@@ -10,12 +11,14 @@ import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.compo
 import { PortListComponent } from '../ports/port-list.component'; import { PortFormComponent } from '../ports/port-form.component'
 import { RouteListComponent } from '../routes/route-list.component'; import { RouteFormComponent } from '../routes/route-form.component'
 import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component'; import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'
-import { TransfersComponent } from '../transfers/user-interface/wrapper-transfers'; import { TransferListComponent } from '../transfers/user-interface/list-transfers'; import { TransferFormComponent } from '../transfers/user-interface/form-transfer'
+import { TransferWrapperComponent } from '../transfers/user-interface/wrapper-transfer'; import { TransferListComponent } from '../transfers/user-interface/list-transfer'; import { TransferFormComponent } from '../transfers/user-interface/form-transfer'
 import { VatStateListComponent } from '../vatStates/vatState-list.component'; import { VatStateFormComponent } from '../vatStates/vatState-form.component'
 import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
 
+// Guards
 import { CanDeactivateGuard } from '../services/can-deactivate-guard.service'
 
+// Resolvers
 import { CustomerListResolverService } from '../customers/customer-list-resolver.service';
 import { DestinationListResolverService } from '../destinations/destination-list-resolver.service';
 import { DriverListResolverService } from './../drivers/driver-list-resolver.service';
@@ -25,8 +28,7 @@ import { RouteListResolverService } from '../routes/route-list-resolver.service'
 import { TaxOfficeListResolverService } from '../taxOffices/port-list-resolver.service';
 import { VatStateListResolverService } from '../vatStates/vatState-list-resolver.service';
 import { TransferEditResolverService } from '../transfers/classes/resolver-edit-transfer';
-import { TransferListResolverService } from '../transfers/classes/resolver-list-transfers';
-
+import { TransferListResolverService } from '../transfers/classes/resolver-list-transfer';
 
 const appRoutes: Routes = [
 	{ path: '', component: HomeComponent, pathMatch: 'full' },
@@ -39,12 +41,12 @@ const appRoutes: Routes = [
 	{ path: 'routes', component: RouteListComponent, resolve: { routeList: RouteListResolverService } }, { path: 'routes/new', component: RouteFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'routes/:id', component: RouteFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'taxOffices', component: TaxOfficeListComponent, resolve: { taxOfficeList: TaxOfficeListResolverService } }, { path: 'taxOffices/new', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'taxOffices/:id', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{
-		path: 'transfers', component: TransfersComponent, children: [{
-			path: 'date/:date', component: TransferListComponent, resolve: { transferList: TransferListResolverService }, children: [
-				{ path: 'transfer/:transferId', component: TransferFormComponent, resolve: { transferEdit: TransferEditResolverService } },
-				{ path: 'transfer/new', component: TransferFormComponent, resolve: { transferEdit: TransferEditResolverService } }
+		path: 'transfers', component: TransferWrapperComponent, children: [{
+			path: 'dateIn/:dateIn', component: TransferListComponent, resolve: { transferList: TransferListResolverService }, children: [
+				{ path: 'transfer/new', component: TransferFormComponent, canDeactivate: [CanDeactivateGuard] },
+				{ path: 'transfer/:transferId', component: TransferFormComponent, canDeactivate: [CanDeactivateGuard], resolve: { transferForm: TransferEditResolverService } }
 			]
-		}]
+		}], runGuardsAndResolvers: 'always'
 	},
 	{ path: 'vatStates', component: VatStateListComponent, resolve: { vatStateList: VatStateListResolverService } }, { path: 'vatStates/new', component: VatStateFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'vatStates/:id', component: VatStateFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'pageNotFound', component: PageNotFoundComponent }
