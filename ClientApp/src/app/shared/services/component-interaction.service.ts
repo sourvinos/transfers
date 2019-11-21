@@ -9,7 +9,7 @@ export class ComponentInteractionService {
 
     changeEmitted = this.emitChangeSource.asObservable()
 
-    emitChange(change: any[]) {
+    emitChange(change: any) {
         this.emitChangeSource.next(change)
     }
 

@@ -14,7 +14,7 @@
     grid-template-areas:
         "title searchbox"
         "divider divider";
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr auto;
     grid-template-rows: 45px auto;
     margin: 0;
     padding: 2rem;
@@ -33,6 +33,7 @@
     grid-area: searchbox;
     justify-content: flex-end;
     margin: 0 1rem 0 0;
+    width: 15rem;
 }
 
 #header #search-box .form {
@@ -45,7 +46,7 @@
 }
 
 #searchField {
-    width: 30rem !important;
+    /* width: 30rem !important; */
 }
 
 #header mat-divider {

@@ -128,7 +128,7 @@
 }
 
 /* ! Wide = menu always visible */
-@media only screen and (min-width: 80.0625rem) {
+@media only screen and (min-width: 1367px) {
     #sidebar {
         width: 17rem !important;
     }
@@ -139,7 +139,7 @@
 }
 
 /* ! Narrow = menu always hidden */
-@media only screen and (max-width: 80rem) {
+@media only screen and (max-width: 1366px) {
     #sidebar {
         width: 0;
     }

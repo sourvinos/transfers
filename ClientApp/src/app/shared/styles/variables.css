@@ -16,14 +16,14 @@
     /* Input boxes */
     --font-size-customInput: 1.0rem;
     /* Transfer summary boxes */
-    --font-size-summary-block-header: 1.7rem;
-    --font-size-summary-block-item-total: 1.2rem;
+    --font-size-summary-block-header: 1.5rem;
+    --font-size-summary-block-header-total: 1.3rem;
     --font-size-summary-block-item: 1.0rem;
     /* Sidebar - Menu */
     --font-size-copyright: 0.6rem;
     --font-size-logo-first-child: 4.375rem;
     --font-size-logo-second-child: 2.5rem;
-    --font-size-menu-list-item-active: 1.5rem;
+    --font-size-menu-list-item-active: 1.4rem;
     --font-size-menu-list-items: 1.4rem;
     --font-size-user-info: 0.9rem;
     /* Tables */
@@ -44,11 +44,9 @@
     --font-family-dialog-header: 'Lato';
     --font-family-dialog-content: 'Lato';
     /* Tables */
-    --font-family-table: 'Roboto';
+    --font-family-table: 'Roboto Condensed';
     /* Transfer summary boxes */
-    --font-family-summary-block-header-total: "Roboto Condensed";
-    --font-family-summary-block-header: "Roboto Condensed";
-    --font-family-summary-block-item: "Roboto Condensed";
+    --font-family-summary-block: "Roboto Condensed";
     /* Sidebar  */
     --font-family-copyright: "lato";
     --font-family-logo: "Anton";
@@ -112,5 +110,5 @@
     --color-summary-block-border-inactive: #939393;
     --color-summary-block-item-hover-background: #373F46;
     --color-summary-block-item-hover-color: #7fffd4;
-    --color-summary-block-item: #939393;
+    --color-summary-block-item: #b3b2b2;
 }

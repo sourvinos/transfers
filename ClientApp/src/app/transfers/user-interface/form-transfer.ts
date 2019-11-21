@@ -1,6 +1,6 @@
 import { ITransfer } from './../classes/model-transfer';
 import { PickupPointService } from './../../services/pickupPoint.service';
-import { Component, OnDestroy, AfterViewInit, OnInit } from "@angular/core"
+import { Component, OnDestroy, AfterViewInit, OnInit, Output, EventEmitter, Injector } from "@angular/core"
 import { Unlisten, KeyboardShortcuts } from "src/app/services/keyboard-shortcuts.service"
 import { Validators, FormBuilder } from "@angular/forms"
 import { DestinationService } from "src/app/services/destination.service"
@@ -15,6 +15,8 @@ import { MaterialDialogComponent } from 'src/app/shared/components/material-dial
 import { Utils } from 'src/app/shared/classes/utils';
 import { forkJoin } from 'rxjs';
 import { MaterialIndexDialogComponent } from 'src/app/shared/components/material-index-dialog/material-index-dialog.component';
+import { ComponentInteractionService } from 'src/app/shared/services/component-interaction.service';
+import { TransferListComponent } from './list-transfer';
 
 @Component({
     selector: 'app-transfer-form',
@@ -56,7 +58,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #endregion Variables
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts) {
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private sharedService: ComponentInteractionService, private injector: Injector) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['transferId']
             if (this.id) {
@@ -166,6 +168,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.form.valid) return
         if (!this.id) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
+                this.updateSummaries()
                 this.clearFields()
                 this.focus('destinationDescription')
             }, error => Utils.errorLogger(error))
@@ -305,7 +308,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private populateFields(result: ITransfer) {
-        console.log(result)
         this.form.setValue({
             id: result.id,
             dateIn: result.dateIn,
@@ -323,6 +325,9 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
+    private updateSummaries() {
+        this.injector.get(TransferListComponent).updateSummaries();
+    }
     // #region Get field values - called from the template
 
     get destinationId() {

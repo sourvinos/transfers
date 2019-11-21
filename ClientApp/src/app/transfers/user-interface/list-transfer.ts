@@ -1,5 +1,3 @@
-
-import { ITransfer } from './../classes/model-transfer';
 import { Component, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router, Params, NavigationEnd } from '@angular/router';
 import { TransferService } from '../classes/service-transfer';
@@ -7,6 +5,8 @@ import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { MatTableDataSource } from '@angular/material';
 import { ITransferFlat } from 'src/app/models/transfer-flat';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Utils } from 'src/app/shared/classes/utils';
+import { ComponentInteractionService } from 'src/app/shared/services/component-interaction.service';
 
 @Component({
     selector: 'app-transfer-list',
@@ -36,27 +36,31 @@ export class TransferListComponent implements AfterViewInit {
     dataSource: MatTableDataSource<ITransferFlat>
     selection: SelectionModel<[]>
 
-    transfers: ITransfer[]
-    transfersClone: ITransfer[]
     transfersFlat: ITransferFlat[] = []
 
     columns = ['id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
-    fields = ['Id', 'Destination', 'Route', 'Customer', 'Pickup point', 'Time', 'Adults', 'Kids', 'Free', 'Total', 'Driver', 'Port']
+    fields = ['Id', 'Destination', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
     format = ['', '', '', '', '', '', '', '', '', '', '', '']
     width = ['0', '500', '300', '300', '300', '100', '100', '100', '100', '100', '200', '200']
-    align = ['center', 'left', 'left', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
+    align = ['center', 'center', 'left', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
 
     navigationSubscription: any
 
     // #endregion
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private sharedService: ComponentInteractionService) {
         this.activatedRoute.params.subscribe((params: Params) => { this.dateIn = params['dateIn'] })
         this.navigationSubscription = this.router.events.subscribe((e: any) => {
             if (e instanceof NavigationEnd) {
-                this.getTransfers()
+                this.updateSummaries()
+                this.focus('dateIn')
             }
         })
+    }
+
+    updateSummaries() {
+        this.loadTransfers()
+        this.selectGroupItems()
     }
 
     ngAfterViewInit() {
@@ -91,17 +95,13 @@ export class TransferListComponent implements AfterViewInit {
         this.dataSource = new MatTableDataSource<ITransferFlat>(this.transfersFlat)
     }
 
-    private getTransfers() {
-        // console.log('Getting transfers')
+    private loadTransfers() {
         this.transferService.getTransfers(localStorage.getItem('date')).subscribe((result: any) => {
             this.queryResult = result
             this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
-            // console.log('Source', this.queryResult)
-            // console.log('Clone', this.queryResultClone)
             this.flattenResults()
             this.dataSource = new MatTableDataSource<ITransferFlat>(this.transfersFlat)
             this.selection = new SelectionModel<[]>(false)
-            this.selectGroupItems()
         })
     }
 
@@ -134,14 +134,14 @@ export class TransferListComponent implements AfterViewInit {
                 element.classList.add('activeItem')
                 eval(lookupArray).push(element.id)
             }
-        }, (500))
+        }, (200))
     }
 
     private flattenResults() {
         this.transfersFlat.splice(0)
         for (var {
             id: a,
-            destination: { description: b },
+            destination: { abbreviation: b },
             customer: { description: c },
             adults: d,
             kids: e,
@@ -156,7 +156,7 @@ export class TransferListComponent implements AfterViewInit {
         } of this.queryResultClone.transfers) {
             this.transfersFlat.push({ id: a, destination: b, customer: c, adults: d, kids: e, free: f, totalPersons: g, pickupPoint: h, time: i, route: j, port: k, driver: l, userName: m, dateIn: n, remarks: o })
         }
-        // console.log('Flat', this.transfersFlat)
+        // console.log('Flat', this.transfersFlat.length)
     }
 
     private adjustListHeight() {
@@ -169,7 +169,11 @@ export class TransferListComponent implements AfterViewInit {
         let listRouterHeight = windowHeight - headerHeight - footerHeight
         console.log('Router height', listRouterHeight)
 
-        document.getElementById('what').style.height = listRouterHeight + 'px'
+        document.getElementById('results').style.height = listRouterHeight + 'px'
+    }
+
+    private focus(field: string) {
+        Utils.setFocus(field)
     }
 
 }

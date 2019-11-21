@@ -5,23 +5,25 @@
             <h1>Transfers</h1>
         </div>
         <div id="search-box">
-            <div id="date">
-                <label class="customLabel">Date</label>
-                <input class="customInput date" type="text" placeholder="Date" [(ngModel)]="dateIn" [appInputFormat]="'date'" id="dateIn" autocomplete="off">
-            </div>
-            <button mat-flat-button class="primary" (click)="loadTransfers()">Search</button>
+            <mat-form-field>
+                <input type="text" matInput placeholder="Date" [(ngModel)]="dateIn" [appInputFormat]="'date'" id="dateIn" autocomplete="off">
+            </mat-form-field>
+            <button mat-flat-button id="search" class="primary" (click)="loadTransfers()">Search</button>
         </div>
+        <!-- <div id="divider">
+            <mat-divider></mat-divider>
+        </div> -->
     </div>
 
     <div id="list">
         <router-outlet></router-outlet>
     </div>
 
-    <!-- <div id="footer">
+    <div id="footer">
         <mat-divider></mat-divider>
         <div id="buttons">
             <button mat-flat-button class="primary" id="new" (click)="newRecord()">New</button>
         </div>
-    </div> -->
+    </div>
 
 </div>

@@ -9,26 +9,42 @@
     height: 100vh;
 }
 
-#header {
+/* #header {
     display: grid;
     grid-area: header;
     grid-template-areas:
-        "title"
-        "search-box";
+        "title search-box"
+        "divider divider";
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1fr;
+    grid-template-rows: repeat(2, 1fr);
     margin: 2rem 3rem;
 }
 
-#header #title {
-    align-self: center;
+#title {
+    grid-area: title;
+    align-self: flex-start;
 }
 
-#header #search-box {
-    display: flex;
-    align-items: center;
-    justify-self: end;
+#search-box {
+    align-items: start;
+    display: grid;
+    grid-area: search-box;
+    grid-template-columns: 1fr auto;
+    height: 2.8rem;
+    justify-self: right;
+} */
+
+#divider {
+    grid-area: divider;
 }
+
+#dateIn {
+    text-align: center;
+}
+
+/* #search {
+    top: 0.3125rem;
+} */
 
 #list {
     grid-area: list;

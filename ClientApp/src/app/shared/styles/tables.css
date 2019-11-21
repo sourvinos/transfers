@@ -1,7 +1,7 @@
 /* Header */
 .mat-header-row {
     background-color: var(--color-table-header-background) !important;
-    font-family: 'Lato';
+    font-family: var(--font-family-table);
 }
 
 .mat-header-cell:first-child, .mat-cell:first-child {
