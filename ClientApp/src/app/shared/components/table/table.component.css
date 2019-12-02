@@ -1,0 +1,51 @@
+:host {
+    display: grid;
+    width: 100%;
+}
+
+* {
+    box-sizing: border-box !important;
+}
+
+#index-table {
+    margin-right: 0.2rem;
+}
+
+table {
+    -webkit-border-horizontal-spacing: 2px;
+    -webkit-border-vertical-spacing: 0;
+}
+
+thead tr th {
+    background-color: var(--color-table-header-background);
+    border: 1px dotted var(--color-table-header-border);
+    color: var(--color-table-header);
+    font-family: var(--font-family-table);
+    font-size: var(--font-size-table-header);
+    padding: 1rem;
+    position: sticky;
+    text-align: center;
+    top: 0;
+}
+
+
+tbody tr:nth-child(even) {
+    background-color: var(--color-table-row-alternative);
+}
+
+tr.selected {
+    background-color: var(--color-table-row-selected) !important
+}
+
+tr:hover {
+    background-color: var(--color-table-rows-hover) !important;
+    cursor: pointer;
+}
+
+
+td {
+    color: var(--color-table-row);
+    font-family: var(--font-family-table);
+    font-size: var(--font-size-table-rows);
+    padding: 0.7rem;
+}

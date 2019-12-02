@@ -17,13 +17,15 @@ export class MainComponent implements AfterViewInit {
 	}
 
 	toggleMenu() {
-		document.getElementById("hamburger").classList.toggle("open")
-		var sidebar = document.getElementById("sidebar")
-		sidebar.style.width = sidebar.style.width == "20rem" ? "0" : "20rem"
+		document.getElementById('hamburger').classList.toggle('open')
+		var sidebar = document.getElementById('sidebar')
+		var main = document.getElementById('main')
+		sidebar.style.width = sidebar.style.width == '20rem' ? '0' : '20rem'
+		// main.style.paddingLeft = '20rem'
 	}
 
 	private positionHamburger() {
-		var hamburger = document.getElementById("hamburger")
+		var hamburger = document.getElementById('hamburger')
 		hamburger.style.top = window.innerHeight - 68 + 'px'
 	}
 

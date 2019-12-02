@@ -29,11 +29,9 @@
 }
 
 #header #search-box {
-    display: flex;
     grid-area: searchbox;
-    justify-content: flex-end;
     margin: 0 1rem 0 0;
-    width: 15rem;
+    width: 20rem;
 }
 
 #header #search-box .form {
@@ -45,23 +43,36 @@
     width: 100% !important;
 }
 
-#searchField {
-    /* width: 30rem !important; */
-}
-
 #header mat-divider {
     grid-area: divider;
 }
 
 #content {
-    display: flex;
-    flex-direction: row;
     grid-area: content;
     grid-auto-rows: 100%;
+    margin-right: 1rem;
     overflow-x: hidden;
-    overflow-y: hidden;
-    padding: 0 2rem;
-    position: relative;
+    overflow-y: scroll;
+    padding: 0 0 0 2rem;
+}
+
+#content::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+#content::-webkit-scrollbar-track {
+    background-color: var(--color-scrollbar-background);
+    margin-top: 53px;
+}
+
+#content::-webkit-scrollbar-thumb {
+    background-color: var(--color-scrollbar);
+    border-radius: 0;
+    min-height: 6.25rem;
+}
+
+.hidden-scrollbar::-webkit-scrollbar {
+    visibility: hidden;
 }
 
 /* ! Narrow screen */

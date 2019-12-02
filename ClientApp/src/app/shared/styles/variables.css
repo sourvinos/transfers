@@ -27,32 +27,34 @@
     --font-size-menu-list-items: 1.4rem;
     --font-size-user-info: 0.9rem;
     /* Tables */
-    --font-size-table-row: 0.9rem;
+    --font-size-table-header: 1.0rem;
+    --font-size-table-rows: 1.0rem;
+
 }
 
 * {
     /* Font families */
     /* Buttons */
-    --font-family-buttons: "Lato";
+    --font-family-buttons: "Play";
     /* All headers */
-    --font-family-headers: "Lato";
+    --font-family-headers: "Play";
     /* Labels */
-    --font-family-labels: "Roboto";
+    --font-family-labels: "Play";
     /* Custom inputs */
-    --font-family-customInput: "Roboto";
+    --font-family-customInput: "Play";
     /* Dialogs */
-    --font-family-dialog-header: 'Lato';
-    --font-family-dialog-content: 'Lato';
+    --font-family-dialog-header: 'Play';
+    --font-family-dialog-content: 'Play';
     /* Tables */
-    --font-family-table: 'Roboto Condensed';
+    --font-family-table: 'Play';
     /* Transfer summary boxes */
     --font-family-summary-block: "Roboto Condensed";
     /* Sidebar  */
-    --font-family-copyright: "lato";
+    --font-family-copyright: "Play";
     --font-family-logo: "Anton";
     --font-family-logo: "Anton";
-    --font-family-menu-list-items: "Lato";
-    --font-family-user-info: "Lato";
+    --font-family-menu-list-items: "Play";
+    --font-family-user-info: "Play";
 }
 
 * {
@@ -94,16 +96,15 @@
     --color-copyright: #FE9F36;
     --color-menu-active-item: #FE9F36;
     --color-menu-list-items: #9F9F9F;
-    --color-user-info: #FE9F36;
+    --color-user-info: #9F9F9F;
     /* Tables */
     --color-table-header: #b3b2b2;
     --color-table-header-border: #57617b;
-    --color-table-header-background: #373f46;
+    --color-table-header-background: #373F46;
     --color-table-row: #b3b2b2;
-    --color-table-row-selected: #373f46;
-    --color-table-left-border-selected: #FE9F36;
-    --color-table-left-border-unselected: #373f46;
-    --color-table-rows-background: #373f46;
+    --color-table-row-alternative: #363d44;
+    --color-table-row-selected: #5F3404;
+    --color-table-rows-hover: #6b3b04;
     /* Transfer summary boxes */
     --color-summary-block-background: #373F46;
     --color-summary-block-border-active: #FE9F36;

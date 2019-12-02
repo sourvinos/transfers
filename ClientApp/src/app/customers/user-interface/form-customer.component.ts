@@ -1,22 +1,23 @@
+import { InteractionService } from './../../shared/services/interaction.service';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material'
 import { ActivatedRoute, Router } from '@angular/router'
 import { forkJoin } from 'rxjs'
 import { map } from 'rxjs/operators'
-import { CustomerService } from '../services/customer.service'
-import { HelperService } from '../services/helper.service'
-import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
-import { TaxOfficeService } from '../services/taxOffice.service'
-import { VatStateService } from '../services/vatState.service'
-import { MaterialDialogComponent } from '../shared/components/material-dialog/material-dialog.component'
-import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
-import { Utils } from './../shared/classes/utils'
+import { CustomerService } from '../../services/customer.service'
+import { HelperService } from '../../services/helper.service'
+import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.service'
+import { TaxOfficeService } from '../../services/taxOffice.service'
+import { VatStateService } from '../../services/vatState.service'
+import { MaterialDialogComponent } from '../../shared/components/material-dialog/material-dialog.component'
+import { MaterialIndexDialogComponent } from '../../shared/components/material-index-dialog/material-index-dialog.component'
+import { Utils } from '../../shared/classes/utils'
 
 @Component({
-    selector: 'app-customer-form',
-    templateUrl: './customer-form.component.html',
-    styleUrls: ['../shared/styles/forms.css']
+    selector: 'form-customer',
+    templateUrl: './form-customer.component.html',
+    styleUrls: ['../../shared/styles/forms.css']
 })
 
 export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -50,7 +51,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #endregion
 
-    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts) {
+    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: InteractionService) {
         this.activatedRoute.params.subscribe(p => (this.id = p['id']))
         this.unlisten = null
     }
@@ -83,10 +84,12 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             })
             return dialogRef.afterClosed().pipe(map(result => {
                 if (result == 'true') {
+                    this.updateLocalStorageWithId()
                     return true
                 }
             }))
         } else {
+            this.updateLocalStorageWithId()
             return true
         }
     }
@@ -166,14 +169,17 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.deleteRecord()
             },
             "Alt.S": (event: KeyboardEvent): void => {
+                event.preventDefault()
                 this.saveRecord()
             },
             "Alt.C": (event: KeyboardEvent): void => {
+                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
                     document.getElementById('cancel').click()
                 }
             },
             "Alt.O": (event: KeyboardEvent): void => {
+                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
                     document.getElementById('ok').click()
                 }
@@ -270,6 +276,10 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         dialogRef.afterClosed().subscribe((result) => {
             this.patchFields(result, lookupId, lookupDescription)
         })
+    }
+
+    private updateLocalStorageWithId() {
+        localStorage.setItem('id', this.id.toString())
     }
 
     // #region Helper properties

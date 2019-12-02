@@ -41,7 +41,7 @@ export class TransferListComponent implements AfterViewInit {
     columns = ['id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
     fields = ['Id', 'Destination', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
     format = ['', '', '', '', '', '', '', '', '', '', '', '']
-    width = ['0', '500', '300', '300', '300', '100', '100', '100', '100', '100', '200', '200']
+    width = [0, 500, 300, 300, 300, 100, 100, 100, 100, 100, 200, 200]
     align = ['center', 'center', 'left', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
 
     navigationSubscription: any

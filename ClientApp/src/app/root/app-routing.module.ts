@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router'
 // Routes
 import { HomeComponent } from '../home/home.component'
 import { LoginComponent } from '../login/login.component'
-import { CustomerListComponent } from '../customers/customer-list.component'; import { CustomerFormComponent } from '../customers/customer-form.component'
+import { CustomerListComponent } from '../customers/user-interface/list-customer.component'; import { CustomerFormComponent } from '../customers/user-interface/form-customer.component'
 import { DestinationListComponent } from '../destinations/destination-list.component'; import { DestinationFormComponent } from '../destinations/destination-form.component'
 import { DriverListComponent } from '../drivers/driver-list.component'; import { DriverFormComponent } from '../drivers/driver-form.component'
 import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.component'; import { PickupPointsForRouteListComponent } from '../pickupPoints/pickupPointsForRoute-list.component'; import { PickupPointFormComponent } from '../pickupPoints/pickupPoint-form.component'
@@ -19,7 +19,7 @@ import { PageNotFoundComponent } from '../shared/components/page-not-found/page-
 import { CanDeactivateGuard } from '../services/can-deactivate-guard.service'
 
 // Resolvers
-import { CustomerListResolverService } from '../customers/customer-list-resolver.service';
+import { CustomerListResolverService } from '../customers/classes/resolver-list-customer';
 import { DestinationListResolverService } from '../destinations/destination-list-resolver.service';
 import { DriverListResolverService } from './../drivers/driver-list-resolver.service';
 import { PickupPointListResolverService } from '../pickupPoints/pickupPoint-list-resolver.service';

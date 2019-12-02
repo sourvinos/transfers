@@ -30,14 +30,14 @@
 }
 
 /* ! Wide screen */
-@media only screen and (min-width: 80.0625rem) {
+@media only screen and (min-width: 1367px) {
     #hamburger {
         display: none;
     }
 }
 
 /* ! Narrow screen */
-@media only screen and (max-width: 80rem) {
+@media only screen and (max-width: 1366px) {
     #hamburger {
         display: block;
     }
