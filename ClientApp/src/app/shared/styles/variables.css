@@ -29,7 +29,6 @@
     /* Tables */
     --font-size-table-header: 1.0rem;
     --font-size-table-rows: 1.0rem;
-
 }
 
 * {
@@ -98,9 +97,9 @@
     --color-menu-list-items: #9F9F9F;
     --color-user-info: #9F9F9F;
     /* Tables */
+    --color-table-background: #373F46;
     --color-table-header: #b3b2b2;
     --color-table-header-border: #57617b;
-    --color-table-header-background: #373F46;
     --color-table-row: #b3b2b2;
     --color-table-row-alternative: #363d44;
     --color-table-row-selected: #5F3404;

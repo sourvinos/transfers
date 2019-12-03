@@ -98,7 +98,8 @@ import { CustomPipe } from '../pipes/custom.pipe'
     ],
     entryComponents: [
         MaterialIndexDialogComponent,
-        MaterialDialogComponent
+        MaterialDialogComponent,
+        IndexDialogComponent
     ],
     providers: [{ provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } }],
     bootstrap: [RootComponent]

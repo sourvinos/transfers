@@ -3,7 +3,7 @@
 }
 
 #index-dialog {
-    background-color: #68828c;
+    background-color: var(--color-table-background);
     display: grid;
     grid-template-areas:
         "header"
@@ -15,10 +15,9 @@
 }
 
 #index-dialog-header {
-    background-color: #68828c;
     grid-area: header;
     margin: 0;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 #index-dialog-header h1 {
@@ -27,15 +26,14 @@
 
 #index-dialog-content {
     grid-area: content;
-    margin: 1rem 1.9rem 2rem 2rem;
+    margin: 1rem 1rem 1rem 1rem;
     overflow-x: hidden;
     overflow-y: scroll;
 }
 
 #index-dialog-footer {
-    background-color: #68828c;
     grid-area: footer;
-    padding: 2rem 0 2rem 2rem;
+    padding: 1rem;
     text-align: end;
     width: 100%;
 }
@@ -49,12 +47,12 @@
 }
 
 #index-dialog-content::-webkit-scrollbar-track {
-    background-color: #68828c;
-    margin-top: 45px;
+    background-color: var(--color-scrollbar-background);
+    margin-top: 53px;
 }
 
 #index-dialog-content::-webkit-scrollbar-thumb {
-    background-color: indianred;
+    background-color: var(--color-scrollbar);
     border-radius: 0;
-    min-height: 6.25rem;
+    min-height: 328px;
 }

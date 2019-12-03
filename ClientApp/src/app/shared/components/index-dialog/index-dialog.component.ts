@@ -1,3 +1,4 @@
+import { InteractionService } from './../../services/interaction.service';
 import { Component, EventEmitter, HostListener, Inject, Output } from '@angular/core'
 import { MAT_DIALOG_DATA } from '@angular/material/dialog'
 
@@ -21,26 +22,20 @@ export class IndexDialogComponent {
 
 	selectedRecord: any
 
-	@Output() selectEvent = new EventEmitter()
-
-	constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-
+	constructor(private interactionService: InteractionService, @Inject(MAT_DIALOG_DATA) public data: any) {
 		this.title = data.title
-
 		this.fields = data.fields
 		this.headers = data.headers
 		this.justify = data.justify
 		this.visibility = data.visibility
 		this.widths = data.widths
-
 		this.records = data.records
-
 	}
 
-	@HostListener('document:keydown', ['$event']) anyEvent(event: { key: string }) {
-		if (event.key == 'Enter') {
-			console.log('Closing index-dialog')
-		}
+	ngOnInit() {
+		this.interactionService.data.subscribe(response => {
+			this.selectedRecord = response
+		})
 	}
 
 	ngAfterViewInit() {
@@ -53,13 +48,6 @@ export class IndexDialogComponent {
 		document.getElementById('index-dialog-footer').style.paddingRight =
 			document.getElementById('index-dialog').offsetWidth -
 			document.getElementById('index-table').offsetWidth - 20 + 'px'
-	}
-
-	// Gets an object from the table
-	// and updates the local variable
-	// which will be displayed in the template
-	select(input: any) {
-		this.selectedRecord = input
 	}
 
 }

@@ -5,12 +5,11 @@
     </div>
 
     <div id="index-dialog-content">
-        <app-table [records]="data.records" [headers]="data.headers" [widths]="data.widths" [visibility]="data.visibility" [justify]="data.justify" [fields]="data.fields" (selectEvent)="select($event)"></app-table>
+        <app-table [records]="data.records" [headers]="data.headers" [widths]="data.widths" [visibility]="data.visibility" [justify]="data.justify" [fields]="data.fields"></app-table>
     </div>
 
     <div id="index-dialog-footer">
         <button id="close" mat-flat-button class="primary" [mat-dialog-close]="selectedRecord">Select</button>
-        <!-- {{ selectedRecord | json }} -->
     </div>
 
 </div>

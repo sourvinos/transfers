@@ -1,18 +1,17 @@
-import { InteractionService } from './../../shared/services/interaction.service';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
-import { MatDialog } from '@angular/material'
-import { ActivatedRoute, Router } from '@angular/router'
-import { forkJoin } from 'rxjs'
-import { map } from 'rxjs/operators'
-import { CustomerService } from '../../services/customer.service'
-import { HelperService } from '../../services/helper.service'
-import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.service'
-import { TaxOfficeService } from '../../services/taxOffice.service'
-import { VatStateService } from '../../services/vatState.service'
-import { MaterialDialogComponent } from '../../shared/components/material-dialog/material-dialog.component'
-import { MaterialIndexDialogComponent } from '../../shared/components/material-index-dialog/material-index-dialog.component'
-import { Utils } from '../../shared/classes/utils'
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { IndexDialogComponent } from 'src/app/shared/components/index-dialog/index-dialog.component';
+import { CustomerService } from '../../services/customer.service';
+import { HelperService } from '../../services/helper.service';
+import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.service';
+import { TaxOfficeService } from '../../services/taxOffice.service';
+import { VatStateService } from '../../services/vatState.service';
+import { Utils } from '../../shared/classes/utils';
+import { MaterialDialogComponent } from '../../shared/components/material-dialog/material-dialog.component';
 
 @Component({
     selector: 'form-customer',
@@ -51,7 +50,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #endregion
 
-    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: InteractionService) {
+    constructor(private customerService: CustomerService, private taxOfficeService: TaxOfficeService, private vatStateService: VatStateService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts) {
         this.activatedRoute.params.subscribe(p => (this.id = p['id']))
         this.unlisten = null
     }
@@ -84,12 +83,10 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             })
             return dialogRef.afterClosed().pipe(map(result => {
                 if (result == 'true') {
-                    this.updateLocalStorageWithId()
                     return true
                 }
             }))
         } else {
-            this.updateLocalStorageWithId()
             return true
         }
     }
@@ -124,20 +121,21 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // T
-    lookupIndex(lookupArray: any[], modalTitle: string, lookupId: any, lookupDescription: any, e: { target: { value: any } }) {
+    lookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
-            if (x.description.toUpperCase().includes(e.target.value.toUpperCase())) {
+            if (x.description.toUpperCase().includes(value.target.value.toUpperCase())) {
                 filteredArray.push(x)
             }
         })
         if (filteredArray.length > 0) {
-            this.showModalIndex(filteredArray, modalTitle, lookupId, lookupDescription)
+            this.showModalIndex(filteredArray, title, formFields, fields, headers, widths, visibility, justify)
         }
         if (filteredArray.length == 0) {
-            this.focus(lookupDescription)
-            this.patchFields(null, lookupId, lookupDescription)
+            this.patchFields(null, formFields[0], formFields[1])
+            this.focus(formFields[1])
         }
+
     }
 
     // T
@@ -192,6 +190,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private focus(field: string) {
         Utils.setFocus(field)
+
     }
 
     private openErrorModal() {
@@ -207,9 +206,9 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private patchFields(result: any[], id: any, description: any) {
-        this.form.patchValue({ [id]: result ? result[0] : '' })
-        this.form.patchValue({ [description]: result ? result[1] : '' })
+    private patchFields(result: any, id: any, description: any) {
+        this.form.patchValue({ [id]: result ? result.id : '' })
+        this.form.patchValue({ [description]: result ? result.description : '' })
     }
 
     private populateDropDowns() {
@@ -262,25 +261,36 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    private showModalIndex(filteredArray: any[], modalTitle: string, lookupId: any, lookupDescription: any) {
-        let dialogRef = this.dialog.open(MaterialIndexDialogComponent, {
+    private showModalIndex(
+        elements: any,
+        title: string,
+        formFields: any[],
+        fields: any[],
+        headers: any[],
+        widths: any[],
+        visibility: any[],
+        justify: any[]) {
+        const dialog = this.dialog.open(IndexDialogComponent, {
+            height: '640px',
+            width: '600px',
             data: {
-                header: modalTitle,
-                columns: ['id', 'description'],
-                fields: ['Id', 'Description'],
-                align: ['center', 'left'],
-                format: ['', ''],
-                records: filteredArray
+                records: elements,
+                title: title,
+                fields: fields,
+                headers: headers,
+                widths: widths,
+                visibility: visibility,
+                justify: justify
             }
         })
-        dialogRef.afterClosed().subscribe((result) => {
-            this.patchFields(result, lookupId, lookupDescription)
+        dialog.afterClosed().subscribe((result) => {
+            this.patchFields(result, formFields[0], formFields[1])
         })
     }
 
-    private updateLocalStorageWithId() {
-        localStorage.setItem('id', this.id.toString())
-    }
+    // private updateLocalStorageWithId() {
+    //     localStorage.setItem('id', this.id.toString())
+    // }
 
     // #region Helper properties
 

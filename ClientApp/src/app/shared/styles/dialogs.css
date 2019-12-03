@@ -1,8 +1,7 @@
 .mat-dialog-container {
-    background-color: var(--color-dialog-background) !important;
+    background-color: var(--color-table-background) !important;
     border-radius: 5px !important;
     display: flex !important;
-    padding: 2rem !important;
     width: auto;
 }
 

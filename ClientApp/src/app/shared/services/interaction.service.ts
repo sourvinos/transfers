@@ -9,8 +9,8 @@ export class InteractionService {
 
     data = this.messageSource.asObservable()
 
-    sendData(message: any) {
-        this.messageSource.next(message)
+    sendObject(data: any) {
+        this.messageSource.next(data)
     }
 
 }

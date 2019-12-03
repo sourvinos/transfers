@@ -1,10 +1,8 @@
-import { Component, OnDestroy, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.service';
 import { Utils } from '../../shared/classes/utils';
 import { ICustomer } from '../classes/model-customer';
-import { InteractionService } from 'src/app/shared/services/interaction.service';
-import { TableComponent } from 'src/app/shared/components/table/table.component';
 
 @Component({
     selector: 'list-customer',
@@ -12,7 +10,7 @@ import { TableComponent } from 'src/app/shared/components/table/table.component'
     styleUrls: ['../../shared/styles/lists.css']
 })
 
-export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CustomerListComponent implements OnInit, OnDestroy {
 
     // #region Init
 
@@ -20,7 +18,7 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy {
     filteredCustomers: ICustomer[]
 
     headers = ['Id', 'Description', 'Phones', 'Email']
-    widths = ['0px', '0px', '400px', '400px']
+    widths = ['0px', '50%', '25%', '25%']
     visibility = ['none', '', '', '']
     justify = ['center', 'left', 'left', 'left']
     fields = ['id', 'description', 'phones', 'email']
@@ -29,9 +27,7 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #endregion
 
-    @ViewChild(TableComponent) private varName: TableComponent
-
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute, private interactionService: InteractionService) {
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute) {
         this.customers = this.route.snapshot.data['customerList']
         this.filteredCustomers = this.customers
         this.unlisten = null
@@ -42,15 +38,8 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.setFocus('searchField')
     }
 
-    ngAfterViewInit() {
-        setTimeout(() => {
-            this.gotoLastKnownRow()
-        }, 100);
-    }
-
     ngOnDestroy() {
-        this.deleteIdFromLocalStorage()
-        this.unlisten && this.unlisten()
+        this.unlisten && this.unlisten();
     }
 
     // T
@@ -87,25 +76,8 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private gotoLastKnownRow() {
-        let id = localStorage.getItem('id')
-        if (id) {
-            let item = document.getElementsByClassName(id)[0].id
-            this.varName.gotoRow(item)
-        }
-    }
-
     private setFocus(element: string) {
         Utils.setFocus(element)
     }
-
-    private deleteIdFromLocalStorage() {
-        localStorage.setItem('id', '')
-    }
-
-    startTimer() {
-        // this.varName.gotoRow()
-    }
-
 
 }

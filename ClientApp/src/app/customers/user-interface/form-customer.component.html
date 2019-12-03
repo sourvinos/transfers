@@ -46,11 +46,11 @@
                 <mat-error *ngIf="accountCode.invalid"></mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Tax office" formControlName="taxOfficeDescription" tabindex="9" id="taxOfficeDescription" (change)="lookupIndex(taxOffices, 'Tax offices', 'taxOfficeId', 'taxOfficeDescription', $event)">
+                <input type="text" matInput placeholder="Tax office" formControlName="taxOfficeDescription" tabindex="9" id="taxOfficeDescription" (change)="lookupIndex(taxOffices, 'Tax offices', ['taxOfficeId','taxOfficeDescription'], ['id','description'], ['Id','Description'], ['1px','440px'], ['',''], ['center','left'], $event)">
                 <mat-error *ngIf="taxOfficeDescription.invalid"></mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="VAT regime" formControlName="vatStateDescription" tabindex="10" id="vatStateDescription" (change)="lookupIndex(vatStates, 'VAT regimes', 'vatStateId', 'vatStateDescription', $event)">
+                <input type="text" matInput placeholder="VAT regime" formControlName="vatStateDescription" tabindex="10" id="vatStateDescription" (change)="lookupIndex(vatStates, 'VAT regimes', ['vatStateId','vatStateDescription'], ['id','description'], ['Id','Description'], ['1px','440px'], ['',''], ['center','left'], $event)">
                 <mat-error *ngIf="vatStateDescription.invalid"></mat-error>
             </mat-form-field>
         </div>

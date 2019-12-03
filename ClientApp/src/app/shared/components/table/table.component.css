@@ -16,8 +16,8 @@ table {
     -webkit-border-vertical-spacing: 0;
 }
 
-thead tr th {
-    background-color: var(--color-table-header-background);
+table thead tr th {
+    background-color: var(--color-table-background);
     border: 1px dotted var(--color-table-header-border);
     color: var(--color-table-header);
     font-family: var(--font-family-table);
