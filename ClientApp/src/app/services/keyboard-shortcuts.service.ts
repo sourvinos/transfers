@@ -151,17 +151,17 @@ export class KeyboardShortcuts {
                             return (handler(event))
                         }
                     )
-                    if (result === false) {
+                    if (result == false) {
                         return
-                    } else if (result === true) {
+                    } else if (result == true) {
                         continue
                     }
                 }
-                if (listener.terminal === "match") {
+                if (listener.terminal == "match") {
                     return
                 }
             }
-            if ((listener.terminal === true) && !listener.terminalWhitelist[key]) {
+            if ((listener.terminal == true) && !listener.terminalWhitelist[key]) {
                 return
             }
         }
@@ -194,7 +194,7 @@ export class KeyboardShortcuts {
 
     // I normalize the inputs option.
     private normalizeInputs(inputs: boolean | undefined): boolean {
-        if (inputs === undefined) {
+        if (inputs == undefined) {
             return (false)
         }
         return (inputs)
@@ -219,7 +219,7 @@ export class KeyboardShortcuts {
 
     // I normalize the terminal option.
     private normalizeTerminal(terminal: Terminal | undefined): Terminal {
-        if (terminal === undefined) {
+        if (terminal == undefined) {
             return (true)
         }
         return (terminal)
@@ -240,7 +240,7 @@ export class KeyboardShortcuts {
     private removeListener(listenerToRemove: Listener): void {
         this.listeners = this.listeners.filter(
             (listener: Listener): boolean => {
-                return (listener !== listenerToRemove)
+                return (listener != listenerToRemove)
             }
         )
     }

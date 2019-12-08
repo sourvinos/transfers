@@ -18,6 +18,11 @@
     grid-template-rows: auto auto;
 }
 
+#sectionOne, #sectionTwo {
+    display: flex;
+    flex-direction: column;
+}
+
 #formFooter {
     align-self: end;
     grid-area: formFooter;

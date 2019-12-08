@@ -7,7 +7,7 @@ import { IRoute } from '../models/route'
 import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 import { RouteService } from '../services/route.service'
 import { Utils } from '../shared/classes/utils'
-import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
+import { DialogIndexComponent } from '../shared/components/dialog-index/dialog-index.component'
 
 @Component({
     selector: 'pickupPoint-list',
@@ -103,7 +103,7 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
     }
 
     private showModalIndex(filteredArray: any[], modalTitle: string, lookupId: any, lookupDescription: any) {
-        let dialogRef = this.dialog.open(MaterialIndexDialogComponent, {
+        let dialogRef = this.dialog.open(DialogIndexComponent, {
             data: {
                 header: modalTitle,
                 columns: ['id', 'description'],

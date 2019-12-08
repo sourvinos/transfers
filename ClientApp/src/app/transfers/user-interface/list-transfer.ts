@@ -1,12 +1,10 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, Router, Params, NavigationEnd } from '@angular/router';
-import { TransferService } from '../classes/service-transfer';
-import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
-import { MatTableDataSource } from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { ITransferFlat } from 'src/app/models/transfer-flat';
-import { SelectionModel } from '@angular/cdk/collections';
+import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
-import { ComponentInteractionService } from 'src/app/shared/services/component-interaction.service';
+import { InteractionService } from 'src/app/shared/services/interaction.service';
+import { TransferService } from '../classes/service-api-transfer';
 
 @Component({
     selector: 'app-transfer-list',
@@ -14,7 +12,7 @@ import { ComponentInteractionService } from 'src/app/shared/services/component-i
     styleUrls: ['./list-transfer.css']
 })
 
-export class TransferListComponent implements AfterViewInit {
+export class TransferListComponent implements OnInit {
 
     // #region Init
 
@@ -33,45 +31,31 @@ export class TransferListComponent implements AfterViewInit {
 
     unlisten: Unlisten
 
-    dataSource: MatTableDataSource<ITransferFlat>
-    selection: SelectionModel<[]>
-
     transfersFlat: ITransferFlat[] = []
 
-    columns = ['id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
-    fields = ['Id', 'Destination', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
-    format = ['', '', '', '', '', '', '', '', '', '', '', '']
-    width = [0, 500, 300, 300, 300, 100, 100, 100, 100, 100, 200, 200]
-    align = ['center', 'center', 'left', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
+    headers = ['Id', 'Dest', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
+    widths = ['100px', '50px', '100px', '200px', '200px', '60px', '40px', '40px', '40px', '40px', '100px', '100px']
+    visibility = ['', '', '', '', '', '', '', '', '', '', '', '']
+    justify = ['center', 'center', 'center', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
+    fields = ['id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
 
     navigationSubscription: any
 
     // #endregion
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private sharedService: ComponentInteractionService) {
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private interactionService: InteractionService) {
         this.activatedRoute.params.subscribe((params: Params) => { this.dateIn = params['dateIn'] })
         this.navigationSubscription = this.router.events.subscribe((e: any) => {
-            if (e instanceof NavigationEnd) {
-                this.updateSummaries()
-                this.focus('dateIn')
+            if (e instanceof NavigationEnd && this.dateIn != '') {
+                this.loadTransfers()
+                this.selectGroupItems()
             }
         })
     }
 
-    updateSummaries() {
-        this.loadTransfers()
-        this.selectGroupItems()
-    }
-
-    ngAfterViewInit() {
-        // this.adjustListHeight()
-    }
-
-    // T
-    getTransfer(transferId: number) {
-        this.router.navigate(['transfer/', transferId], {
-            relativeTo: this.activatedRoute
-        })
+    ngOnInit() {
+        this.addShortcuts()
+        this.subscribeToInderactionService()
     }
 
     // T
@@ -79,7 +63,7 @@ export class TransferListComponent implements AfterViewInit {
         var element = document.getElementById(item.description)
         if (element.classList.contains('activeItem')) {
             for (var i = 0; i < eval(lookupArray).length; i++) {
-                if (eval(lookupArray)[i] === item.description) {
+                if (eval(lookupArray)[i] == item.description) {
                     eval(lookupArray).splice(i, 1)
                     i--
                     element.classList.remove('activeItem')
@@ -92,30 +76,51 @@ export class TransferListComponent implements AfterViewInit {
         }
         this.filterByCriteria()
         this.flattenResults()
-        this.dataSource = new MatTableDataSource<ITransferFlat>(this.transfersFlat)
+    }
+
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            "Alt.F": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                this.setFocus('searchField')
+            },
+            "Alt.N": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                document.getElementById('new').click()
+            }
+        }, {
+            priority: 1,
+            inputs: true
+        })
+    }
+
+    private disableFields(fields: string[]) {
+        Utils.disableFields(fields)
+    }
+
+    private editRecord(id: number) {
+        this.router.navigate(['transfer/', id], { relativeTo: this.activatedRoute })
     }
 
     private loadTransfers() {
-        this.transferService.getTransfers(localStorage.getItem('date')).subscribe((result: any) => {
+        this.transferService.getTransfers(this.dateIn).subscribe((result: any) => {
             this.queryResult = result
             this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
             this.flattenResults()
-            this.dataSource = new MatTableDataSource<ITransferFlat>(this.transfersFlat)
-            this.selection = new SelectionModel<[]>(false)
+            // console.log(this.queryResult)
         })
     }
 
     private filterByCriteria() {
         this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
-        // console.log('BF Source array', this.queryResult.transfers)
         this.queryResultClone.transfers = this.queryResultClone.transfers
-            .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) !== -1 })
-            .filter((y: { customer: { description: string } }) => { return this.selectedCustomers.indexOf(y.customer.description) !== -1 })
-            .filter((z: { pickupPoint: { route: { description: string } } }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.description) !== -1 })
-            .filter((o: { driver: { description: string } }) => { return this.selectedDrivers.indexOf(o.driver.description) !== -1 })
-            .filter((p: { port: { description: string } }) => { return this.selectedPorts.indexOf(p.port.description) !== -1 })
-        // console.log('AF Source array', this.queryResult.transfers)
-        // console.log('AF Filtered array', this.queryResultClone.transfers)
+            .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) != -1 })
+            .filter((y: { customer: { description: string } }) => { return this.selectedCustomers.indexOf(y.customer.description) != -1 })
+            .filter((z: { pickupPoint: { route: { abbreviation: string } } }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.abbreviation) != -1 })
+            .filter((o: { driver: { description: string } }) => { return this.selectedDrivers.indexOf(o.driver.description) != -1 })
+            .filter((p: { port: { description: string } }) => { return this.selectedPorts.indexOf(p.port.description) != -1 })
+        // console.log('Results', this.queryResult)
+        // console.log('Cloned Transfers', this.queryResultClone.transfers)
     }
 
     private selectGroupItems() {
@@ -134,7 +139,7 @@ export class TransferListComponent implements AfterViewInit {
                 element.classList.add('activeItem')
                 eval(lookupArray).push(element.id)
             }
-        }, (200))
+        }, 500);
     }
 
     private flattenResults() {
@@ -146,7 +151,7 @@ export class TransferListComponent implements AfterViewInit {
             adults: d,
             kids: e,
             free: f,
-            total: g,
+            totalPersons: g,
             pickupPoint: { description: h, time: i, route: { abbreviation: j } },
             port: { description: k },
             driver: { description: l },
@@ -156,24 +161,16 @@ export class TransferListComponent implements AfterViewInit {
         } of this.queryResultClone.transfers) {
             this.transfersFlat.push({ id: a, destination: b, customer: c, adults: d, kids: e, free: f, totalPersons: g, pickupPoint: h, time: i, route: j, port: k, driver: l, userName: m, dateIn: n, remarks: o })
         }
-        // console.log('Flat', this.transfersFlat.length)
     }
 
-    private adjustListHeight() {
-        let windowHeight = document.getElementById('sidebar').offsetHeight
-        let headerHeight = document.getElementById('header').offsetHeight
-        let footerHeight = document.getElementById('footer').offsetHeight
-        console.log('Window height', windowHeight)
-        console.log('Header height', headerHeight)
-        console.log('Footer height', footerHeight)
-        let listRouterHeight = windowHeight - headerHeight - footerHeight
-        console.log('Router height', listRouterHeight)
-
-        document.getElementById('results').style.height = listRouterHeight + 'px'
-    }
-
-    private focus(field: string) {
+    private setFocus(field: string) {
         Utils.setFocus(field)
+    }
+
+    private subscribeToInderactionService() {
+        this.interactionService.data.subscribe(response => {
+            this.editRecord(response['id'])
+        })
     }
 
 }

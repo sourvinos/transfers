@@ -95,7 +95,7 @@ export class JwtInterceptor implements HttpInterceptor {
         }
         else {
             this.isTokenRefreshing = false
-            return this.tokenSubject.pipe(filter(token => token !== null), take(1), switchMap(token => { return next.handle(this.attachTokenToRequest(request)) }))
+            return this.tokenSubject.pipe(filter(token => token != null), take(1), switchMap(token => { return next.handle(this.attachTokenToRequest(request)) }))
         }
 
     }

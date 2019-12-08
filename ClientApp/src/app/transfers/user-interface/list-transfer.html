@@ -5,68 +5,55 @@
 <ng-template #showResults>
     <div id="results">
         <div class="scrollable" id="summaries">
-            <div class="summaryBlock">
-                <div class="summaryHeader">
+            <mat-expansion-panel expanded="true" class="summaryBlock">
+                <mat-expansion-panel-header class="summaryHeader">
                     <header>Destinations</header>
-                    <header class="total">{{ queryResult.persons }}</header>
-                </div>
+                </mat-expansion-panel-header>
                 <div *ngFor="let item of queryResult.personsPerDestination" (click)="toggleItem(item, this.selectedDestinations)" class="item destination" [class.active]="item.isSelected" [id]="item.description">
                     <div class="description"> {{ item.description }} </div>
                     <div class="total"> {{ item.persons }} </div>
                 </div>
-            </div>
-            <div class="summaryBlock">
-                <div class="summaryHeader">
+            </mat-expansion-panel>
+            <mat-expansion-panel class="summaryBlock">
+                <mat-expansion-panel-header class="summaryHeader">
                     <header>Customers</header>
-                    <header class="total">{{ queryResult.persons }}</header>
-                </div>
+                </mat-expansion-panel-header>
                 <div *ngFor="let item of queryResult.personsPerCustomer" (click)="toggleItem(item, this.selectedCustomers)" class="item customer" [class.active]="item.isSelected" [id]="item.description">
                     <div class="description"> {{ item.description }} </div>
                     <div class="total"> {{ item.persons }} </div>
                 </div>
-            </div>
-            <div class="summaryBlock">
-                <div class="summaryHeader">
+            </mat-expansion-panel>
+            <mat-expansion-panel class="summaryBlock">
+                <mat-expansion-panel-header class="summaryHeader">
                     <header>Routes</header>
-                    <header class="total">{{ queryResult.persons }}</header>
-                </div>
+                </mat-expansion-panel-header>
                 <div *ngFor="let item of queryResult.personsPerRoute" (click)="toggleItem(item, this.selectedRoutes)" class="item route" [class.activeItem]="item.isSelected" [id]="item.description">
                     <div class="description"> {{ item.description }} </div>
                     <div class="total"> {{ item.persons }} </div>
                 </div>
-            </div>
-            <div class="summaryBlock">
-                <div class="summaryHeader">
+            </mat-expansion-panel>
+            <mat-expansion-panel class="summaryBlock">
+                <mat-expansion-panel-header class="summaryHeader">
                     <header>Drivers</header>
-                    <header class="total">{{ queryResult.persons }}</header>
-                </div>
+                </mat-expansion-panel-header>
                 <div *ngFor="let item of queryResult.personsPerDriver" (click)="toggleItem(item, this.selectedDrivers)" class="item driver" [class.active]="item.isSelected" [id]="item.description">
                     <div class="description"> {{ item.description }} </div>
                     <div class="total"> {{ item.persons }} </div>
                 </div>
-            </div>
-            <div class="summaryBlock">
-                <div class="summaryHeader">
+            </mat-expansion-panel>
+            <mat-expansion-panel class="summaryBlock">
+                <mat-expansion-panel-header class="summaryHeader">
                     <header>Ports</header>
-                    <header class="total">{{ queryResult.persons }}</header>
-                </div>
+                </mat-expansion-panel-header>
                 <div *ngFor="let item of queryResult.personsPerPort" (click)="toggleItem(item, this.selectedPorts)" class="item port" [class.active]="item.isSelected" [id]="item.description">
                     <div class="description"> {{ item.description }} </div>
                     <div class="total"> {{ item.persons }} </div>
                 </div>
-            </div>
+            </mat-expansion-panel>
         </div>
         <div id="listFormCombo">
             <div class="scrollable" id="transfersList">
-                <mat-table [dataSource]="dataSource" id="dataTable">
-                    <ng-container *ngFor="let column of columns; index as i" [matColumnDef]="columns[i]">
-                        <mat-header-cell *matHeaderCellDef>{{ fields[i] }}</mat-header-cell>
-                        <!-- <div id="snackbar" [ngStyle]="{ backgroundColor : message.type }"> -->
-                        <mat-cell *matCellDef="let element" ngClass="{{ align[i] }}">{{ element[columns[i]] | custom:format[i] }}</mat-cell>
-                    </ng-container>
-                    <mat-header-row *matHeaderRowDef="columns; sticky: true"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: columns;" [matRowKeyboardSelection]="selection" [rowModel]="row" [selectOnFocus]="true" [toggleOnEnter]="false" [ngClass]="{selected: selection.isSelected(row)}" (enter)="getTransfer(row.id)" (dblclick)="getTransfer(row.id)"></mat-row>
-                </mat-table>
+                <app-table [records]="transfersFlat" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></app-table>
             </div>
             <router-outlet></router-outlet>
         </div>

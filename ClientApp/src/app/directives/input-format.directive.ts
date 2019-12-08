@@ -1,27 +1,15 @@
 import * as moment from 'moment'
 import { Directive, HostListener, ElementRef, Input } from '@angular/core'
 
-@Directive({
-    selector: '[appInputFormat]'
-})
+@Directive({ selector: '[inputFormat]' })
 
 export class InputFormatDirective {
 
-    @Input('appInputFormat') format: string
+    @Input('inputFormat') format: string
 
     constructor(private el: ElementRef) { }
 
-    @HostListener('focus') onFocus() { }
-
     @HostListener('blur') onBlur() {
-        if (this.format == 'lowerCase') {
-            let value: string = this.el.nativeElement.value
-            this.el.nativeElement.value = value.toLowerCase()
-        }
-        if (this.format == 'upperCase') {
-            let value: string = this.el.nativeElement.value
-            this.el.nativeElement.value = value.toUpperCase()
-        }
         if (this.format == 'date') {
             this.el.nativeElement.value = this.formatDate(this.el.nativeElement.value)
         }
@@ -46,7 +34,7 @@ export class InputFormatDirective {
         let seperatorCount = 0
         let position = value.indexOf('/')
         // Count the seperators
-        while (position !== -1) {
+        while (position != -1) {
             seperatorCount++
             position = value.indexOf('/', position + 1)
         }
@@ -75,6 +63,7 @@ export class InputFormatDirective {
                     return ""
             }
         }
+        return ""
     }
 
 }

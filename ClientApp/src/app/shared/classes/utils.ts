@@ -22,7 +22,7 @@ export class Utils {
 		setTimeout(() => {
 			document.getElementById(element).focus()
 			document.execCommand('selectAll')
-		}, 100)
+		}, 200)
 	}
 
 }

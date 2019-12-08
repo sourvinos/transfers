@@ -7,7 +7,7 @@ import { DestinationService } from '../services/destination.service'
 import { HelperService } from '../services/helper.service'
 import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.service'
 import { Utils } from '../shared/classes/utils'
-import { MaterialDialogComponent } from '../shared/components/material-dialog/material-dialog.component'
+import { DialogAlertComponent } from '../shared/components/dialog-alert/dialog-alert.component'
 
 @Component({
     selector: 'app-destination-form',
@@ -61,7 +61,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
     // Master
     canDeactivate() {
         if (this.form.dirty) {
-            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+            const dialogRef = this.dialog.open(DialogAlertComponent, {
                 height: '250px',
                 width: '550px',
                 data: {
@@ -84,7 +84,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
     // T
     deleteRecord() {
         if (this.id != undefined) {
-            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+            const dialogRef = this.dialog.open(DialogAlertComponent, {
                 height: '250px',
                 width: '550px',
                 data: {
@@ -162,7 +162,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     private openErrorModal() {
-        this.dialog.open(MaterialDialogComponent, {
+        this.dialog.open(DialogAlertComponent, {
             height: '250px',
             width: '550px',
             data: {

@@ -15,7 +15,7 @@
         "title searchbox"
         "divider divider";
     grid-template-columns: 1fr auto;
-    grid-template-rows: 45px auto;
+    grid-template-rows: auto auto;
     margin: 0;
     padding: 2rem;
 }
@@ -29,18 +29,10 @@
 }
 
 #header #search-box {
+    align-items: center;
+    display: flex;
     grid-area: searchbox;
     margin: 0 1rem 0 0;
-    width: 20rem;
-}
-
-#header #search-box .form {
-    text-align: end;
-    width: 50% !important;
-}
-
-#header #search-box .form .mat-form-field {
-    width: 100% !important;
 }
 
 #header mat-divider {

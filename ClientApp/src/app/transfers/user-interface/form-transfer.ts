@@ -1,22 +1,22 @@
-import { ITransfer } from './../classes/model-transfer';
-import { PickupPointService } from './../../services/pickupPoint.service';
-import { Component, OnDestroy, AfterViewInit, OnInit, Output, EventEmitter, Injector } from "@angular/core"
-import { Unlisten, KeyboardShortcuts } from "src/app/services/keyboard-shortcuts.service"
-import { Validators, FormBuilder } from "@angular/forms"
-import { DestinationService } from "src/app/services/destination.service"
-import { CustomerService } from "src/app/services/customer.service"
-import { DriverService } from 'src/app/services/driver.service';
-import { PortService } from 'src/app/services/port.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { TransferService } from '../classes/service-transfer';
+import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
+import { FormBuilder, Validators } from "@angular/forms";
 import { MatDialog } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, Subject } from 'rxjs';
+import { CustomerService } from "src/app/services/customer.service";
+import { DestinationService } from "src/app/services/destination.service";
+import { DriverService } from 'src/app/services/driver.service';
 import { HelperService } from 'src/app/services/helper.service';
-import { MaterialDialogComponent } from 'src/app/shared/components/material-dialog/material-dialog.component';
+import { KeyboardShortcuts, Unlisten } from "src/app/services/keyboard-shortcuts.service";
+import { PortService } from 'src/app/services/port.service';
 import { Utils } from 'src/app/shared/classes/utils';
-import { forkJoin } from 'rxjs';
-import { MaterialIndexDialogComponent } from 'src/app/shared/components/material-index-dialog/material-index-dialog.component';
-import { ComponentInteractionService } from 'src/app/shared/services/component-interaction.service';
-import { TransferListComponent } from './list-transfer';
+import { TransferService } from '../classes/service-api-transfer';
+import { InteractionTransferService } from "../classes/service-interaction-transfer";
+import { PickupPointService } from './../../services/pickupPoint.service';
+import { ITransfer } from './../classes/model-transfer';
+import { takeUntil } from "rxjs/operators";
+import { DialogAlertComponent } from "src/app/shared/components/dialog-alert/dialog-alert.component";
+import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component";
 
 @Component({
     selector: 'app-transfer-form',
@@ -39,6 +39,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     ports: any[]
 
     unlisten: Unlisten
+    ngUnsubscribe = new Subject<void>();
 
     form = this.formBuilder.group({
         id: 0,
@@ -58,11 +59,14 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #endregion Variables
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private sharedService: ComponentInteractionService, private injector: Injector) {
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionTransferService: InteractionTransferService) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['transferId']
             if (this.id) {
                 this.getTransfer()
+                this.interactionTransferService.sendData('editRecord')
+            } else {
+                this.interactionTransferService.sendData('newRecord')
             }
         })
         this.unlisten = null
@@ -72,6 +76,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.scrollToForm()
         this.addShortcuts()
         this.populateDropDowns()
+        this.subscribeToInderactionService()
     }
 
     ngAfterViewInit(): void {
@@ -80,12 +85,14 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnDestroy(): void {
         (this.unlisten) && this.unlisten()
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     // Master
     canDeactivate() {
         if (this.form.dirty) {
-            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+            const dialogRef = this.dialog.open(DialogAlertComponent, {
                 height: '250px',
                 width: '550px',
                 data: {
@@ -98,11 +105,13 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             return dialogRef.afterClosed().subscribe(result => {
                 if (result == "true") {
                     this.form.reset()
+                    this.enableFields(['dateIn'])
                     this.scrollToList()
                     this.goBack()
                 }
             })
         } else {
+            this.enableFields(['dateIn'])
             this.scrollToList()
             return true
         }
@@ -117,7 +126,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // T
     deleteRecord() {
         if (this.form.value.id == 0 != undefined) {
-            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+            const dialogRef = this.dialog.open(DialogAlertComponent, {
                 height: '250px',
                 width: '550px',
                 data: {
@@ -130,8 +139,8 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             dialogRef.afterClosed().subscribe(result => {
                 if (result == 'true') {
                     this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
-                        // this.removeRow(this.form.value.id)
-                        // this.clearFields()
+                        this.abortDataEntry()
+                        this.goBack()
                     }, error => {
                         Utils.errorLogger(error)
                         this.openErrorModal()
@@ -143,6 +152,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // T
     goBack() {
+        this.interactionTransferService.sendData('')
         this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
@@ -168,7 +178,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.form.valid) return
         if (!this.id) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
-                this.updateSummaries()
                 this.clearFields()
                 this.focus('destinationDescription')
             }, error => Utils.errorLogger(error))
@@ -183,9 +192,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private abortDataEntry() {
         this.clearFields()
-        this.disableFields(['destinationDescription', 'customerDescription', 'pickupPointDescription', 'adults', 'kids', 'free', 'totalPersons', 'driverDescription', 'portDescription', 'remarks', 'delete', 'save'])
-        // this.enableFields(['dateIn', 'go'])
-        // this.focus('dateIn')
+        this.disableFields(['destinationDescription', 'customerDescription', 'pickupPointDescription', 'adults', 'kids', 'free', 'totalPersons', 'driverDescription', 'portDescription', 'remarks'])
     }
 
     private addShortcuts() {
@@ -272,7 +279,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private openErrorModal() {
-        this.dialog.open(MaterialDialogComponent, {
+        this.dialog.open(DialogAlertComponent, {
             height: '250px',
             width: '550px',
             data: {
@@ -285,7 +292,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private showModalIndex(filteredArray: any[], modalTitle: string, lookupId: any, lookupDescription: any) {
-        let dialogRef = this.dialog.open(MaterialIndexDialogComponent, {
+        let dialogRef = this.dialog.open(DialogIndexComponent, {
             height: '686px',
             width: '700px',
             data: {
@@ -325,9 +332,35 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private updateSummaries() {
-        this.injector.get(TransferListComponent).updateSummaries();
+    private getTransfer() {
+        if (this.id) {
+            this.transferService.getTransfer(this.id).subscribe(result => {
+                this.transfer = result
+                this.populateFields(this.transfer)
+                this.disableFields(['index-table'])
+                this.scrollToForm()
+            }, error => {
+                console.log('Error getting record')
+            })
+        }
     }
+
+    private scrollToForm() {
+        document.getElementById('transfersList').style.height = '0'
+    }
+
+    private scrollToList() {
+        document.getElementById('form').style.height = '0'
+        document.getElementById('transfersList').style.height = '100%'
+    }
+
+    private subscribeToInderactionService() {
+        this.interactionTransferService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+            if (response == 'saveRecord') this.saveRecord()
+            if (response == 'deleteRecord') this.deleteRecord()
+        })
+    }
+
     // #region Get field values - called from the template
 
     get destinationId() {
@@ -391,27 +424,5 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // #endregion
-
-    private getTransfer() {
-        if (this.id) {
-            this.transferService.getTransfer(this.id).subscribe(result => {
-                this.transfer = result
-                this.populateFields(this.transfer)
-                this.scrollToForm()
-            }, error => {
-                console.log('Error getting record')
-            })
-        }
-
-    }
-
-    private scrollToForm() {
-        document.getElementById('transfersList').style.height = '0px'
-    }
-
-    private scrollToList() {
-        document.getElementById('form').style.height = '0px'
-        document.getElementById('transfersList').style.height = '100%'
-    }
 
 }

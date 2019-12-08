@@ -1,5 +1,8 @@
-import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.service';
 import { Utils } from '../../shared/classes/utils';
 import { ICustomer } from '../classes/model-customer';
@@ -25,9 +28,11 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     unlisten: Unlisten
 
+    ngUnsubscribe = new Subject<void>();
+
     // #endregion
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute) {
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute, private interactionService: InteractionService) {
         this.customers = this.route.snapshot.data['customerList']
         this.filteredCustomers = this.customers
         this.unlisten = null
@@ -36,15 +41,18 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.addShortcuts()
         this.setFocus('searchField')
+        this.subscribeToInderactionService()
     }
 
     ngOnDestroy() {
         this.unlisten && this.unlisten();
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     // T
-    editRecord() {
-        this.router.navigate(['/customers/', document.querySelector('tr.selected').children[0].textContent])
+    editRecord(id: number) {
+        this.router.navigate(['/customers/', id])
     }
 
     // T
@@ -59,9 +67,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            "Enter": (): void => {
-                this.editRecord()
-            },
             "Alt.F": (event: KeyboardEvent): void => {
                 event.preventDefault()
                 this.setFocus('searchField')
@@ -78,6 +83,13 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     private setFocus(element: string) {
         Utils.setFocus(element)
+    }
+
+    private subscribeToInderactionService() {
+        this.interactionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+            console.log('list-customer', response)
+            this.editRecord(response['id'])
+        })
     }
 
 }

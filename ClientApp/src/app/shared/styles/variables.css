@@ -36,16 +36,16 @@
     /* Buttons */
     --font-family-buttons: "Play";
     /* All headers */
-    --font-family-headers: "Play";
+    --font-family-headers: "Lato";
     /* Labels */
-    --font-family-labels: "Play";
+    --font-family-labels: "Lato";
     /* Custom inputs */
     --font-family-customInput: "Play";
     /* Dialogs */
-    --font-family-dialog-header: 'Play';
-    --font-family-dialog-content: 'Play';
+    --font-family-dialog-header: "Lato";
+    --font-family-dialog-content: "Lato";
     /* Tables */
-    --font-family-table: 'Play';
+    --font-family-table: 'Roboto Condensed';
     /* Transfer summary boxes */
     --font-family-summary-block: "Roboto Condensed";
     /* Sidebar  */
@@ -75,11 +75,11 @@
     --color-headers: #939393;
     /* Input boxes */
     --color-input-text-caret: #FFFFFF;
-    --color-input-text-error: #fc3b3b;
+    --color-input-text-error: #FC3B3B;
     --color-input-text-focus: #FE9F36;
     --color-input-text-label: #999999;
-    --color-input-text-underline: #5f5e5e;
-    --color-input-text-underline-focus: #ba680b;
+    --color-input-text-underline: #5F5E5E;
+    --color-input-text-underline-focus: #BA680B;
     --color-input-text-not-focus: #FFFFFF;
     /* Main background */
     --color-background: #373F46;
@@ -99,16 +99,18 @@
     /* Tables */
     --color-table-background: #373F46;
     --color-table-header: #b3b2b2;
-    --color-table-header-border: #57617b;
-    --color-table-row: #b3b2b2;
-    --color-table-row-alternative: #363d44;
-    --color-table-row-selected: #5F3404;
-    --color-table-rows-hover: #6b3b04;
+    --color-table-header-border: #57617B;
+    --color-table-row: #B3B2B2;
+    --color-table-row-alternative: #363D44;
+    --color-table-row-selected: #394D59;
+    --color-table-rows-hover: #394D59;
     /* Transfer summary boxes */
     --color-summary-block-background: #373F46;
-    --color-summary-block-border-active: #FE9F36;
-    --color-summary-block-border-inactive: #939393;
+    --color-summary-block-border: #4B4B4B;
+    --color-summary-block-expansion-indicator: #939393;
+    --color-summary-block-item-border-active: #FE9F36;
+    --color-summary-block-item-border-inactive: #939393;
     --color-summary-block-item-hover-background: #373F46;
-    --color-summary-block-item-hover-color: #7fffd4;
-    --color-summary-block-item: #b3b2b2;
+    --color-summary-block-item-hover-color: #FFFFFF;
+    --color-summary-block-item: #B3B2B2;
 }

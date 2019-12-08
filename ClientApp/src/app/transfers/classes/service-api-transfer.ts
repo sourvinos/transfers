@@ -1,7 +1,6 @@
 import { HttpClient } from "@angular/common/http"
 import { Injectable } from "@angular/core"
-import { Observable, Subject } from "rxjs"
-import { tap } from "rxjs/operators"
+import { Observable } from "rxjs"
 import { IQueryResult } from "src/app/models/queryResult"
 import { ITransfer } from "./model-transfer"
 
@@ -10,13 +9,8 @@ import { ITransfer } from "./model-transfer"
 export class TransferService {
 
     private url: string = "/api/transfers"
-    private isRefreshNeeded = new Subject<void>()
 
     constructor(private http: HttpClient) { }
-
-    get refreshNeeded() {
-        return this.isRefreshNeeded
-    }
 
     getTransfers(date: string): Observable<IQueryResult[]> {
         return this.http.get<IQueryResult[]>(this.url + "/date/" + date)
@@ -27,15 +21,15 @@ export class TransferService {
     }
 
     addTransfer(formData: ITransfer): Observable<ITransfer> {
-        return this.http.post<ITransfer>(this.url, formData).pipe(tap(() => this.isRefreshNeeded.next()))
+        return this.http.post<ITransfer>(this.url, formData)
     }
 
     updateTransfer(id: number, formData: ITransfer): Observable<ITransfer> {
-        return this.http.put<ITransfer>(this.url + "/" + id, formData).pipe(tap(() => { this.isRefreshNeeded.next() }))
+        return this.http.put<ITransfer>(this.url + "/" + id, formData)
     }
 
     deleteTransfer(id: number): Observable<ITransfer> {
-        return this.http.delete<ITransfer>(this.url + "/" + id).pipe(tap(() => { this.isRefreshNeeded.next() }))
+        return this.http.delete<ITransfer>(this.url + "/" + id)
     }
 
 }

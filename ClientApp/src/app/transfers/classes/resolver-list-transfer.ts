@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IQueryResult } from '../../models/queryResult';
-import { TransferService } from './service-transfer';
+import { TransferService } from './service-api-transfer';
 
 @Injectable({ providedIn: 'root' })
 

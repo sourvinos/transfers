@@ -9,8 +9,8 @@ import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.serv
 import { PortService } from '../services/port.service'
 import { RouteService } from '../services/route.service'
 import { Utils } from '../shared/classes/utils'
-import { MaterialDialogComponent } from '../shared/components/material-dialog/material-dialog.component'
-import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
+import { DialogAlertComponent } from '../shared/components/dialog-alert/dialog-alert.component'
+import { DialogIndexComponent } from '../shared/components/dialog-index/dialog-index.component'
 
 @Component({
     selector: 'app-route-form',
@@ -61,7 +61,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // Master
     canDeactivate() {
         if (this.form.dirty) {
-            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+            const dialogRef = this.dialog.open(DialogAlertComponent, {
                 height: '250px',
                 width: '550px',
                 data: {
@@ -84,7 +84,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // T
     deleteRecord() {
         if (this.id != undefined) {
-            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+            const dialogRef = this.dialog.open(DialogAlertComponent, {
                 height: '250px',
                 width: '550px',
                 data: {
@@ -179,7 +179,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private openErrorModal() {
-        this.dialog.open(MaterialDialogComponent, {
+        this.dialog.open(DialogAlertComponent, {
             height: '250px',
             width: '550px',
             data: {
@@ -237,7 +237,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private showModalIndex(filteredArray: any[], modalTitle: string, lookupId: any, lookupDescription: any) {
-        let dialogRef = this.dialog.open(MaterialIndexDialogComponent, {
+        let dialogRef = this.dialog.open(DialogIndexComponent, {
             data: {
                 header: modalTitle,
                 columns: ['id', 'description'],

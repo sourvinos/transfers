@@ -9,25 +9,24 @@ import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 // Material
 import { MatButtonModule } from '@angular/material/button'
-import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS } from '@angular/material'
+import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS, MatExpansionModule } from '@angular/material'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table'
-import { MaterialDialogComponent } from './../shared/components/material-dialog/material-dialog.component';
-import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
 // Common components
 import { RootComponent } from './root.component'
 import { MainComponent } from './../shared/components/main/main.component'
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component'
-import { IndexDialogComponent } from '../shared/components/index-dialog/index-dialog.component'
 import { TableComponent } from '../shared/components/table/table.component'
 import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
 import { LoaderComponent } from '../shared/components/loader/loader.component'
+import { DialogIndexComponent } from '../shared/components/dialog-index/dialog-index.component'
+import { DialogAlertComponent } from '../shared/components/dialog-alert/dialog-alert.component'
 // Routes
 import { HomeComponent } from './../home/home.component'
 import { LoginComponent } from '../login/login.component'
@@ -54,9 +53,8 @@ import { CustomPipe } from '../pipes/custom.pipe'
         SidebarComponent,
         LoaderComponent,
         PageNotFoundComponent,
-        MaterialIndexDialogComponent,
-        MaterialDialogComponent,
-        IndexDialogComponent,
+        DialogIndexComponent,
+        DialogAlertComponent,
         TableComponent,
         // Routes
         HomeComponent,
@@ -86,6 +84,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
         // Material
         MatButtonModule,
         MatDialogModule,
+        MatExpansionModule,
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
@@ -97,9 +96,8 @@ import { CustomPipe } from '../pipes/custom.pipe'
         MatTableModule,
     ],
     entryComponents: [
-        MaterialIndexDialogComponent,
-        MaterialDialogComponent,
-        IndexDialogComponent
+        DialogIndexComponent,
+        DialogAlertComponent,
     ],
     providers: [{ provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } }],
     bootstrap: [RootComponent]

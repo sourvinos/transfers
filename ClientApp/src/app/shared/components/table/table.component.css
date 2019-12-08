@@ -9,6 +9,7 @@
 
 #index-table {
     margin-right: 0.2rem;
+    table-layout: fixed;
 }
 
 table {
@@ -22,10 +23,15 @@ table thead tr th {
     color: var(--color-table-header);
     font-family: var(--font-family-table);
     font-size: var(--font-size-table-header);
-    padding: 1rem;
+    padding: 1rem 0;
     position: sticky;
     text-align: center;
     top: 0;
+}
+
+tr {
+    transition: background-color;
+    transition-duration: 200ms;
 }
 
 
@@ -47,5 +53,9 @@ td {
     color: var(--color-table-row);
     font-family: var(--font-family-table);
     font-size: var(--font-size-table-rows);
-    padding: 0.7rem;
+    max-width: 0;
+    overflow: hidden;
+    padding: 1rem 0.5rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

@@ -25,10 +25,6 @@ button.navigation {
     outline: 0 !important;
 }
 
-button:active {
-    transform: translateY(3px);
-}
-
 button::first-letter {
     text-decoration: underline;
 }

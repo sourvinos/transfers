@@ -79,13 +79,13 @@ p {
     margin-top: -2px !important;
 }
 
-.mat-form-field {
-    width: 100%;
-}
-
 .mat-divider {
     background-color: var(--color-divider) !important;
     margin: 2rem 0 !important;
+}
+
+.mat-expansion-indicator::after {
+    color: var(--color-summary-block-expansion-indicator) !important;
 }
 
 .scrollable::-webkit-scrollbar {

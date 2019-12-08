@@ -2,16 +2,16 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IndexDialogComponent } from 'src/app/shared/components/index-dialog/index-dialog.component';
+import { DialogAlertComponent } from 'src/app/shared/components/dialog-alert/dialog-alert.component';
+import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
 import { CustomerService } from '../../services/customer.service';
 import { HelperService } from '../../services/helper.service';
 import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.service';
 import { TaxOfficeService } from '../../services/taxOffice.service';
 import { VatStateService } from '../../services/vatState.service';
 import { Utils } from '../../shared/classes/utils';
-import { MaterialDialogComponent } from '../../shared/components/material-dialog/material-dialog.component';
 
 @Component({
     selector: 'form-customer',
@@ -30,6 +30,8 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     vatStates: any
 
     unlisten: Unlisten
+
+    ngUnsubscribe = new Subject<void>();
 
     form = this.formBuilder.group({
         id: 0,
@@ -71,7 +73,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // Master
     canDeactivate() {
         if (this.form.dirty) {
-            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+            const dialogRef = this.dialog.open(DialogAlertComponent, {
                 height: '250px',
                 width: '550px',
                 data: {
@@ -94,7 +96,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // T
     deleteRecord() {
         if (this.id != undefined) {
-            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+            const dialogRef = this.dialog.open(DialogAlertComponent, {
                 height: '250px',
                 width: '550px',
                 data: {
@@ -167,8 +169,10 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.deleteRecord()
             },
             "Alt.S": (event: KeyboardEvent): void => {
-                event.preventDefault()
-                this.saveRecord()
+                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+                    event.preventDefault()
+                    this.saveRecord()
+                }
             },
             "Alt.C": (event: KeyboardEvent): void => {
                 event.preventDefault()
@@ -190,11 +194,10 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private focus(field: string) {
         Utils.setFocus(field)
-
     }
 
     private openErrorModal() {
-        this.dialog.open(MaterialDialogComponent, {
+        this.dialog.open(DialogAlertComponent, {
             height: '250px',
             width: '550px',
             data: {
@@ -270,7 +273,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         widths: any[],
         visibility: any[],
         justify: any[]) {
-        const dialog = this.dialog.open(IndexDialogComponent, {
+        const dialog = this.dialog.open(DialogIndexComponent, {
             height: '640px',
             width: '600px',
             data: {
@@ -287,10 +290,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.patchFields(result, formFields[0], formFields[1])
         })
     }
-
-    // private updateLocalStorageWithId() {
-    //     localStorage.setItem('id', this.id.toString())
-    // }
 
     // #region Helper properties
 

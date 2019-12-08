@@ -1,12 +1,4 @@
 input.date {
-    background-color: rgba(0, 0, 0, 0);
-    border: 0;
-    border-bottom: 1px solid #5f5e5e;
-    display: grid;
-    font-family: var(--font-family-headers);
-    margin: 0;
-    outline: 0;
-    padding: 0.5rem;
     text-align: center;
 }
 

@@ -3,7 +3,7 @@
     <form id="formFields" [formGroup]="form" autocomplete="off">
         <div id="sectionOne">
             <mat-form-field>
-                <input type="text" matInput placeholder="Destination" formControlName="destinationDescription" tabindex="1" id="destinationDescription" (change)="lookupIndex(destinations, 'Destinations', 'destinationId', 'destinationDescription', $event)">
+                <input type="text" matInput placeholder="Destination" formControlName="destinationDescription" tabindex="1" id="destinationDescription" (change)="lookupIndex(destinations, 'Destinations', ['destinationId','destinationDescription'], ['id','description'], ['Id','Description'], ['1px','440px'], ['none',''], ['center','left'], $event)">
                 <mat-error *ngIf="destinationDescription.invalid"></mat-error>
             </mat-form-field>
             <mat-form-field>
@@ -45,13 +45,5 @@
             </mat-form-field>
         </div>
     </form>
-
-    <div id="formFooter">
-        <div id="buttons">
-            <p class="form-value" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
-            <button mat-flat-button class="delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
-            <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>
-        </div>
-    </div>
 
 </div>

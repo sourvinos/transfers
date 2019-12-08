@@ -1,14 +1,16 @@
-import { InteractionService } from './../../services/interaction.service';
+import { InteractionService } from '../../services/interaction.service';
 import { Component, EventEmitter, HostListener, Inject, Output } from '@angular/core'
 import { MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
-	selector: 'index-dialog',
-	templateUrl: './index-dialog.component.html',
-	styleUrls: ['./index-dialog.component.css']
+	selector: 'dialog-index',
+	templateUrl: './dialog-index.component.html',
+	styleUrls: ['./dialog-index.component.css']
 })
 
-export class IndexDialogComponent {
+export class DialogIndexComponent {
 
 	title: string
 
@@ -22,6 +24,8 @@ export class IndexDialogComponent {
 
 	selectedRecord: any
 
+	ngUnsubscribe = new Subject<void>();
+
 	constructor(private interactionService: InteractionService, @Inject(MAT_DIALOG_DATA) public data: any) {
 		this.title = data.title
 		this.fields = data.fields
@@ -33,9 +37,7 @@ export class IndexDialogComponent {
 	}
 
 	ngOnInit() {
-		this.interactionService.data.subscribe(response => {
-			this.selectedRecord = response
-		})
+		this.subscribeToInderactionService()
 	}
 
 	ngAfterViewInit() {
@@ -48,6 +50,13 @@ export class IndexDialogComponent {
 		document.getElementById('index-dialog-footer').style.paddingRight =
 			document.getElementById('index-dialog').offsetWidth -
 			document.getElementById('index-table').offsetWidth - 20 + 'px'
+	}
+
+	private subscribeToInderactionService() {
+		this.interactionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+			this.selectedRecord = response
+			console.log('dialog-index', this.selectedRecord)
+		})
 	}
 
 }

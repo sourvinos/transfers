@@ -80,7 +80,7 @@ export class AccountService {
         var loginCookie = localStorage.getItem("loginStatus")
 
         if (loginCookie == "1") {
-            if (localStorage.getItem('jwt') !== null || localStorage.getItem('jwt') !== undefined) {
+            if (localStorage.getItem('jwt') != null || localStorage.getItem('jwt') != undefined) {
                 return true
             }
         }

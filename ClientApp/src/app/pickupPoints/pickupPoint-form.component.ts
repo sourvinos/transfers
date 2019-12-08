@@ -9,8 +9,7 @@ import { KeyboardShortcuts, Unlisten } from '../services/keyboard-shortcuts.serv
 import { PickupPointService } from '../services/pickupPoint.service'
 import { RouteService } from '../services/route.service'
 import { Utils } from '../shared/classes/utils'
-import { MaterialDialogComponent } from '../shared/components/material-dialog/material-dialog.component'
-import { MaterialIndexDialogComponent } from '../shared/components/material-index-dialog/material-index-dialog.component'
+import { DialogAlertComponent } from '../shared/components/dialog-alert/dialog-alert.component'
 
 @Component({
     selector: 'app-pickupPoint-form',
@@ -62,7 +61,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     // Master
     canDeactivate() {
         if (this.form.dirty) {
-            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+            const dialogRef = this.dialog.open(DialogAlertComponent, {
                 height: '250px',
                 width: '550px',
                 data: {
@@ -85,7 +84,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     // T
     deleteRecord() {
         if (this.id != undefined) {
-            const dialogRef = this.dialog.open(MaterialDialogComponent, {
+            const dialogRef = this.dialog.open(DialogAlertComponent, {
                 height: '250px',
                 width: '550px',
                 data: {
@@ -181,7 +180,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     private openErrorModal() {
-        this.dialog.open(MaterialDialogComponent, {
+        this.dialog.open(DialogAlertComponent, {
             height: '250px',
             width: '550px',
             data: {
@@ -240,7 +239,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     private showModalIndex(filteredArray: any[], modalTitle: string, lookupId: any, lookupDescription: any) {
-        let dialogRef = this.dialog.open(MaterialIndexDialogComponent, {
+        let dialogRef = this.dialog.open(DialogAlertComponent, {
             data: {
                 header: modalTitle,
                 columns: ['id', 'description'],
