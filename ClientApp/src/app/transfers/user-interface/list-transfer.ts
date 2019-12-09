@@ -97,13 +97,12 @@ export class TransferListComponent implements OnInit {
      * @param lookupArray 
      */
     toggleItems(className: string, lookupArray: { splice: (arg0: number) => void; }, checkedArray: any) {
+        // console.log('1/4 toggleItems')
         event.stopPropagation()
         lookupArray.splice(0)
         this.selectItems(className, lookupArray, !checkedArray)
-        setTimeout(() => {
-            this.filterByCriteria()
-            this.flattenResults()
-        }, 500);
+        this.filterByCriteria()
+        this.flattenResults()
     }
 
     private addShortcuts() {
@@ -134,6 +133,7 @@ export class TransferListComponent implements OnInit {
      * Called from the constructor on every page refresh and if the given date is valid
      */
     private loadTransfers() {
+        // console.log('loadTransfers')
         this.transferService.getTransfers(this.dateIn).subscribe((result: any) => {
             this.queryResult = result
             this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
@@ -146,7 +146,12 @@ export class TransferListComponent implements OnInit {
      * after checkbox click from toggleItems()
      */
     private filterByCriteria() {
-        // console.log('Selected destinations', this.selectedDestinations)
+        // console.log('3/4 filterByCriteria')
+        // console.log('3/4', this.selectedDestinations)
+        // console.log('3/4', this.selectedCustomers)
+        // console.log('3/4', this.selectedRoutes)
+        // console.log('3/4', this.selectedDrivers)
+        // console.log('3/4', this.selectedPorts)
         this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
         this.queryResultClone.transfers = this.queryResultClone.transfers
             .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) != -1 })
@@ -163,11 +168,14 @@ export class TransferListComponent implements OnInit {
      * Called on every page refresh for all summary filters
      */
     private selectGroupItems() {
-        this.selectItems('item destination', this.selectedDestinations, true)
-        this.selectItems('item customer', this.selectedCustomers, true)
-        this.selectItems('item route', this.selectedRoutes, true)
-        this.selectItems('item driver', this.selectedDrivers, true)
-        this.selectItems('item port', this.selectedPorts, true)
+        // console.log('selectGroupItems')
+        setTimeout(() => {
+            this.selectItems('item destination', this.selectedDestinations, true)
+            this.selectItems('item customer', this.selectedCustomers, true)
+            this.selectItems('item route', this.selectedRoutes, true)
+            this.selectItems('item driver', this.selectedDrivers, true)
+            this.selectItems('item port', this.selectedPorts, true)
+        }, 500);
     }
 
     /**
@@ -180,18 +188,17 @@ export class TransferListComponent implements OnInit {
      * @param checked 
      */
     private selectItems(className: string, lookupArray: any, checked: boolean) {
-        setTimeout(() => {
-            let elements = document.getElementsByClassName(className)
-            for (let index = 0; index < elements.length; index++) {
-                const element = elements[index]
-                if (checked) {
-                    element.classList.add('activeItem')
-                    eval(lookupArray).push(element.id)
-                } else {
-                    element.classList.remove('activeItem')
-                }
+        // console.log('2/4 selectItems')
+        let elements = document.getElementsByClassName(className)
+        for (let index = 0; index < elements.length; index++) {
+            const element = elements[index]
+            if (checked) {
+                element.classList.add('activeItem')
+                eval(lookupArray).push(element.id)
+            } else {
+                element.classList.remove('activeItem')
             }
-        }, 500);
+        }
     }
 
     /**
@@ -199,6 +206,7 @@ export class TransferListComponent implements OnInit {
      * The transfersFlat  will be input for the table on the template
      */
     private flattenResults() {
+        // console.log('4/4 flattenResults')
         this.transfersFlat.splice(0)
         for (var {
             id: a,
