@@ -21,13 +21,14 @@ export class TransferListComponent implements OnInit {
 
     queryResult: any = {}
     queryResultClone: any = {}
-    queryResultFiltered: any = {}
 
     selectedDestinations: string[] = []
     selectedCustomers: string[] = []
     selectedRoutes: string[] = []
     selectedDrivers: string[] = []
     selectedPorts: string[] = []
+
+    checkedDestinations: boolean = true
 
     unlisten: Unlisten
 
@@ -56,26 +57,6 @@ export class TransferListComponent implements OnInit {
     ngOnInit() {
         this.addShortcuts()
         this.subscribeToInderactionService()
-    }
-
-    // T
-    toggleItem(item: any, lookupArray: string) {
-        var element = document.getElementById(item.description)
-        if (element.classList.contains('activeItem')) {
-            for (var i = 0; i < eval(lookupArray).length; i++) {
-                if (eval(lookupArray)[i] == item.description) {
-                    eval(lookupArray).splice(i, 1)
-                    i--
-                    element.classList.remove('activeItem')
-                    break
-                }
-            }
-        } else {
-            element.classList.add('activeItem')
-            eval(lookupArray).push(item.description)
-        }
-        this.filterByCriteria()
-        this.flattenResults()
     }
 
     private addShortcuts() {
@@ -112,6 +93,7 @@ export class TransferListComponent implements OnInit {
     }
 
     private filterByCriteria() {
+        console.log('Selected destinations', this.selectedDestinations)
         this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
         this.queryResultClone.transfers = this.queryResultClone.transfers
             .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) != -1 })
@@ -119,25 +101,63 @@ export class TransferListComponent implements OnInit {
             .filter((z: { pickupPoint: { route: { abbreviation: string } } }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.abbreviation) != -1 })
             .filter((o: { driver: { description: string } }) => { return this.selectedDrivers.indexOf(o.driver.description) != -1 })
             .filter((p: { port: { description: string } }) => { return this.selectedPorts.indexOf(p.port.description) != -1 })
-        // console.log('Results', this.queryResult)
-        // console.log('Cloned Transfers', this.queryResultClone.transfers)
+        console.log('Results', this.queryResult)
+        console.log('Cloned results', this.queryResultClone)
+        console.log('Filtered Transfers', this.queryResultClone.transfers)
     }
 
+    // T
+    toggleItem(item: any, lookupArray: string) {
+        var element = document.getElementById(item.description)
+        if (element.classList.contains('activeItem')) {
+            for (var i = 0; i < eval(lookupArray).length; i++) {
+                if (eval(lookupArray)[i] == item.description) {
+                    eval(lookupArray).splice(i, 1)
+                    i--
+                    element.classList.remove('activeItem')
+                    break
+                }
+            }
+        } else {
+            element.classList.add('activeItem')
+            eval(lookupArray).push(item.description)
+        }
+        this.filterByCriteria()
+        this.flattenResults()
+    }
+
+    // Called on every checkbox click
+    toggleItems() {
+        event.stopPropagation()
+        this.selectedDestinations.splice(0)
+        this.selectItems('item destination', this.selectedDestinations, !this.checkedDestinations)
+        setTimeout(() => {
+            this.filterByCriteria()
+            this.flattenResults()
+        }, 1000);
+    }
+
+    // Called on every page refresh
     private selectGroupItems() {
-        this.selectItems('item destination', this.selectedDestinations)
-        this.selectItems('item customer', this.selectedCustomers)
-        this.selectItems('item route', this.selectedRoutes)
-        this.selectItems('item driver', this.selectedDrivers)
-        this.selectItems('item port', this.selectedPorts)
+        this.selectItems('item destination', this.selectedDestinations, true)
+        this.selectItems('item customer', this.selectedCustomers, true)
+        this.selectItems('item route', this.selectedRoutes, true)
+        this.selectItems('item driver', this.selectedDrivers, true)
+        this.selectItems('item port', this.selectedPorts, true)
     }
 
-    private selectItems(className: string, lookupArray: any) {
+    // Called on every page refresh and on every checkbox click
+    private selectItems(className: string, lookupArray: any, state: boolean) {
         setTimeout(() => {
             let elements = document.getElementsByClassName(className)
             for (let index = 0; index < elements.length; index++) {
                 const element = elements[index]
-                element.classList.add('activeItem')
-                eval(lookupArray).push(element.id)
+                if (state) {
+                    element.classList.add('activeItem')
+                    eval(lookupArray).push(element.id)
+                } else {
+                    element.classList.remove('activeItem')
+                }
             }
         }, 500);
     }

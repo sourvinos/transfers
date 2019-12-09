@@ -4,15 +4,16 @@
 @import url('https://fonts.googleapis.com/css?family=Play&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-@import "variables.css";
-@import "headers.css";
-@import "labels.css";
 @import "buttons.css";
+@import "checkbox.css";
 @import "dialogs.css";
+@import "headers.css";
 @import "inputs.css";
-@import "tables.css";
-@import "select.css";
+@import "labels.css";
 @import "scrollable.css";
+@import "select.css";
+@import "tables.css";
+@import "variables.css";
 
 * {
     box-sizing: border-box !important;
@@ -28,6 +29,7 @@ body, h1, h3, h6 {
 
 p {
     color: whitesmoke !important;
+    font-family: var(--font-family-labels);
 }
 
 #footer {

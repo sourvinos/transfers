@@ -1,3 +1,4 @@
+import { MatTableModule } from '@angular/material/table';
 // Base
 import { AppRoutingModule } from './app-routing.module'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
@@ -9,13 +10,12 @@ import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 // Material
 import { MatButtonModule } from '@angular/material/button'
-import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS, MatExpansionModule } from '@angular/material'
+import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS, MatExpansionModule, MatCheckboxModule } from '@angular/material'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTableModule } from '@angular/material/table'
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
 // Common components
@@ -83,6 +83,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
         NgIdleKeepaliveModule.forRoot(),
         // Material
         MatButtonModule,
+        MatCheckboxModule,
         MatDialogModule,
         MatExpansionModule,
         MatFormFieldModule,
@@ -92,8 +93,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
         MatRowKeyboardSelectionModule,
         MatSelectModule,
         MatSnackBarModule,
-        MatTableModule,
-        MatTableModule,
+        MatTableModule
     ],
     entryComponents: [
         DialogIndexComponent,

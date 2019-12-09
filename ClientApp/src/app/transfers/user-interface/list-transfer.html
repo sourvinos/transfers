@@ -7,6 +7,7 @@
         <div class="scrollable" id="summaries">
             <mat-expansion-panel expanded="true" class="summaryBlock">
                 <mat-expansion-panel-header class="summaryHeader">
+                    <mat-checkbox class="checkbox destination" [(ngModel)]="checkedDestinations" (click)="toggleItems()"></mat-checkbox>
                     <header>Destinations</header>
                 </mat-expansion-panel-header>
                 <div *ngFor="let item of queryResult.personsPerDestination" (click)="toggleItem(item, this.selectedDestinations)" class="item destination" [class.active]="item.isSelected" [id]="item.description">
@@ -52,6 +53,10 @@
             </mat-expansion-panel>
         </div>
         <div id="listFormCombo">
+            <p>
+                {{ checkedDestinations }}
+                {{ selectedDestinations | json }}
+            </p>
             <div class="scrollable" id="transfersList">
                 <app-table [records]="transfersFlat" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></app-table>
             </div>
