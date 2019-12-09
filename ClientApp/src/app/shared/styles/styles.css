@@ -29,7 +29,6 @@ body, h1, h3, h6 {
 
 p {
     color: whitesmoke !important;
-    font-family: var(--font-family-labels);
 }
 
 #footer {

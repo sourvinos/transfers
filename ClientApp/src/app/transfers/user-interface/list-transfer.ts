@@ -29,6 +29,10 @@ export class TransferListComponent implements OnInit {
     selectedPorts: string[] = []
 
     checkedDestinations: boolean = true
+    checkedCustomers: boolean = true
+    checkedRoutes: boolean = true
+    checkedDrivers: boolean = true
+    checkedPorts: boolean = true
 
     unlisten: Unlisten
 
@@ -59,6 +63,49 @@ export class TransferListComponent implements OnInit {
         this.subscribeToInderactionService()
     }
 
+    /**
+     * Called from the template on every summary item click
+     * Adds or removes the class 'activeItem' for the selected item (item)
+     * Adds or removes the item to the array of selected items (lookupArray)
+     * @param item 
+     * @param lookupArray 
+     */
+    toggleItem(item: any, lookupArray: string) {
+        var element = document.getElementById(item.description)
+        if (element.classList.contains('activeItem')) {
+            for (var i = 0; i < eval(lookupArray).length; i++) {
+                if (eval(lookupArray)[i] == item.description) {
+                    eval(lookupArray).splice(i, 1)
+                    i--
+                    element.classList.remove('activeItem')
+                    break
+                }
+            }
+        } else {
+            element.classList.add('activeItem')
+            eval(lookupArray).push(item.description)
+        }
+        this.filterByCriteria()
+        this.flattenResults()
+    }
+
+    /**
+     * Called from the template on every checkbox click
+     * It stops the panel's default behavior to expand or collapse
+     * Clears all items from the selected array (lookupArray)
+     * Calls the 'selectItems' method
+     * @param lookupArray 
+     */
+    toggleItems(className: string, lookupArray: { splice: (arg0: number) => void; }, checkedArray: any) {
+        event.stopPropagation()
+        lookupArray.splice(0)
+        this.selectItems(className, lookupArray, !checkedArray)
+        setTimeout(() => {
+            this.filterByCriteria()
+            this.flattenResults()
+        }, 500);
+    }
+
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             "Alt.F": (event: KeyboardEvent): void => {
@@ -83,17 +130,23 @@ export class TransferListComponent implements OnInit {
         this.router.navigate(['transfer/', id], { relativeTo: this.activatedRoute })
     }
 
+    /**
+     * Called from the constructor on every page refresh and if the given date is valid
+     */
     private loadTransfers() {
         this.transferService.getTransfers(this.dateIn).subscribe((result: any) => {
             this.queryResult = result
             this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
             this.flattenResults()
-            // console.log(this.queryResult)
         })
     }
 
+    /**
+     * Called on item click from toggleItem() and
+     * after checkbox click from toggleItems()
+     */
     private filterByCriteria() {
-        console.log('Selected destinations', this.selectedDestinations)
+        // console.log('Selected destinations', this.selectedDestinations)
         this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
         this.queryResultClone.transfers = this.queryResultClone.transfers
             .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) != -1 })
@@ -101,43 +154,14 @@ export class TransferListComponent implements OnInit {
             .filter((z: { pickupPoint: { route: { abbreviation: string } } }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.abbreviation) != -1 })
             .filter((o: { driver: { description: string } }) => { return this.selectedDrivers.indexOf(o.driver.description) != -1 })
             .filter((p: { port: { description: string } }) => { return this.selectedPorts.indexOf(p.port.description) != -1 })
-        console.log('Results', this.queryResult)
-        console.log('Cloned results', this.queryResultClone)
-        console.log('Filtered Transfers', this.queryResultClone.transfers)
+        // console.log('Results', this.queryResult)
+        // console.log('Cloned results', this.queryResultClone)
+        // console.log('Filtered Transfers', this.queryResultClone.transfers)
     }
 
-    // T
-    toggleItem(item: any, lookupArray: string) {
-        var element = document.getElementById(item.description)
-        if (element.classList.contains('activeItem')) {
-            for (var i = 0; i < eval(lookupArray).length; i++) {
-                if (eval(lookupArray)[i] == item.description) {
-                    eval(lookupArray).splice(i, 1)
-                    i--
-                    element.classList.remove('activeItem')
-                    break
-                }
-            }
-        } else {
-            element.classList.add('activeItem')
-            eval(lookupArray).push(item.description)
-        }
-        this.filterByCriteria()
-        this.flattenResults()
-    }
-
-    // Called on every checkbox click
-    toggleItems() {
-        event.stopPropagation()
-        this.selectedDestinations.splice(0)
-        this.selectItems('item destination', this.selectedDestinations, !this.checkedDestinations)
-        setTimeout(() => {
-            this.filterByCriteria()
-            this.flattenResults()
-        }, 1000);
-    }
-
-    // Called on every page refresh
+    /**
+     * Called on every page refresh for all summary filters
+     */
     private selectGroupItems() {
         this.selectItems('item destination', this.selectedDestinations, true)
         this.selectItems('item customer', this.selectedCustomers, true)
@@ -146,13 +170,21 @@ export class TransferListComponent implements OnInit {
         this.selectItems('item port', this.selectedPorts, true)
     }
 
-    // Called on every page refresh and on every checkbox click
-    private selectItems(className: string, lookupArray: any, state: boolean) {
+    /**
+     * Called on page refresh and on checkbox click
+     * According to the (checked = true / false) does the following:
+     * Adds or removes the class 'activeItem' for every item (className)
+     * Adds or removes all the items to the array of selected items (lookupArray)
+     * @param className 
+     * @param lookupArray 
+     * @param checked 
+     */
+    private selectItems(className: string, lookupArray: any, checked: boolean) {
         setTimeout(() => {
             let elements = document.getElementsByClassName(className)
             for (let index = 0; index < elements.length; index++) {
                 const element = elements[index]
-                if (state) {
+                if (checked) {
                     element.classList.add('activeItem')
                     eval(lookupArray).push(element.id)
                 } else {
@@ -162,6 +194,10 @@ export class TransferListComponent implements OnInit {
         }, 500);
     }
 
+    /**
+     * Flattens the queryResultClone array and populates the transfersFlat array with its output
+     * The transfersFlat  will be input for the table on the template
+     */
     private flattenResults() {
         this.transfersFlat.splice(0)
         for (var {
