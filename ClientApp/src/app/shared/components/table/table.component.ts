@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
-import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { InteractionService } from './../../services/interaction.service';
 
 @Component({
@@ -38,7 +37,6 @@ export class TableComponent implements AfterViewInit {
 
     // T
     editRecord(rowIndex: any) {
-        console.log('table - editing', this.records[rowIndex])
         this.interactionService.sendObject(this.records[rowIndex])
     }
 
@@ -51,6 +49,7 @@ export class TableComponent implements AfterViewInit {
     private calculateDimensions() {
         this.table = document.getElementById('index-table')
         this.tableParentNode = document.getElementById('index-table').parentNode.parentNode
+        console.log('Parent node', this.tableParentNode)
         this.rowHeight = this.table.rows[1].offsetHeight
         if (this.tableParentNode.scrollHeight <= this.tableParentNode.offsetHeight) {
             this.tableParentNode.style.overflowY = 'hidden'
@@ -66,8 +65,7 @@ export class TableComponent implements AfterViewInit {
 
     private gotoRow(table: HTMLTableElement, rowIndex: number) {
         table.rows[rowIndex].classList.toggle('selected')
-        // this.interactionService.sendObject(this.records[rowIndex - 1])
-        console.log('table', this.records[rowIndex - 1])
+        this.interactionService.sendObject(this.records[rowIndex - 1])
     }
 
 }

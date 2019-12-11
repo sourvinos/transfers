@@ -157,19 +157,19 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // T
-    lookupIndex(lookupArray: any[], modalTitle: string, lookupId: any, lookupDescription: any, e: { target: { value: any } }) {
+    lookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
-            if (x.description.toUpperCase().includes(e.target.value.toUpperCase())) {
+            if (x.description.toUpperCase().includes(value.target.value.toUpperCase())) {
                 filteredArray.push(x)
             }
         })
         if (filteredArray.length > 0) {
-            this.showModalIndex(filteredArray, modalTitle, lookupId, lookupDescription)
+            this.showModalIndex(filteredArray, title, formFields, fields, headers, widths, visibility, justify)
         }
         if (filteredArray.length == 0) {
-            this.focus(lookupDescription)
-            this.patchFields(null, lookupId, lookupDescription)
+            this.patchFields(null, formFields[0], formFields[1])
+            this.focus(formFields[1])
         }
     }
 
@@ -291,21 +291,30 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private showModalIndex(filteredArray: any[], modalTitle: string, lookupId: any, lookupDescription: any) {
-        let dialogRef = this.dialog.open(DialogIndexComponent, {
-            height: '686px',
-            width: '700px',
+    private showModalIndex(
+        elements: any,
+        title: string,
+        formFields: any[],
+        fields: any[],
+        headers: any[],
+        widths: any[],
+        visibility: any[],
+        justify: any[]) {
+        const dialog = this.dialog.open(DialogIndexComponent, {
+            height: '640px',
+            width: '600px',
             data: {
-                header: modalTitle,
-                columns: ['id', 'description'],
-                fields: ['Id', 'Description'],
-                align: ['center', 'left'],
-                format: ['', ''],
-                records: filteredArray
+                records: elements,
+                title: title,
+                fields: fields,
+                headers: headers,
+                widths: widths,
+                visibility: visibility,
+                justify: justify
             }
         })
-        dialogRef.afterClosed().subscribe((result) => {
-            this.patchFields(result, lookupId, lookupDescription)
+        dialog.afterClosed().subscribe((result) => {
+            this.patchFields(result, formFields[0], formFields[1])
         })
     }
 

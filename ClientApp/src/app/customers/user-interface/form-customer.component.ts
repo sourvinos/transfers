@@ -137,7 +137,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.patchFields(null, formFields[0], formFields[1])
             this.focus(formFields[1])
         }
-
     }
 
     // T

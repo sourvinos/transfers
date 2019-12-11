@@ -1,8 +1,8 @@
-import { InteractionService } from '../../services/interaction.service';
-import { Component, EventEmitter, HostListener, Inject, Output } from '@angular/core'
-import { MAT_DIALOG_DATA } from '@angular/material/dialog'
-import { takeUntil } from 'rxjs/operators';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { InteractionService } from '../../services/interaction.service';
 
 @Component({
 	selector: 'dialog-index',
@@ -55,7 +55,6 @@ export class DialogIndexComponent {
 	private subscribeToInderactionService() {
 		this.interactionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
 			this.selectedRecord = response
-			console.log('dialog-index', this.selectedRecord)
 		})
 	}
 

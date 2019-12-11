@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { ITransferFlat } from 'src/app/models/transfer-flat';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
@@ -12,7 +12,7 @@ import { TransferService } from '../classes/service-api-transfer';
     styleUrls: ['./list-transfer.css']
 })
 
-export class TransferListComponent implements OnInit {
+export class TransferListComponent implements OnInit, OnDestroy {
 
     // #region Init
 
@@ -49,7 +49,7 @@ export class TransferListComponent implements OnInit {
     // #endregion
 
     constructor(private keyboardShortcutsService: KeyboardShortcuts, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private interactionService: InteractionService) {
-        this.activatedRoute.params.subscribe((params: Params) => { this.dateIn = params['dateIn'] })
+        this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.navigationSubscription = this.router.events.subscribe((e: any) => {
             if (e instanceof NavigationEnd && this.dateIn != '') {
                 this.loadTransfers()
@@ -61,6 +61,10 @@ export class TransferListComponent implements OnInit {
     ngOnInit() {
         this.addShortcuts()
         this.subscribeToInderactionService()
+    }
+
+    ngOnDestroy() {
+        this.removeAllSummaryItemsFromLocalStorage()
     }
 
     /**
@@ -92,12 +96,13 @@ export class TransferListComponent implements OnInit {
     /**
      * Called from the template on every checkbox click
      * It stops the panel's default behavior to expand or collapse
-     * Clears all items from the selected array (lookupArray)
-     * Calls the 'selectItems' method
+     * Clears all items from the lookupArray
+     * Calls 'selectItems' method to either select or deselect all items
+     * Calls 'filterByCriteria' 
+     * Calls 'flattenResults'
      * @param lookupArray 
      */
     toggleItems(className: string, lookupArray: { splice: (arg0: number) => void; }, checkedArray: any) {
-        // console.log('1/4 toggleItems')
         event.stopPropagation()
         lookupArray.splice(0)
         this.selectItems(className, lookupArray, !checkedArray)
@@ -126,14 +131,15 @@ export class TransferListComponent implements OnInit {
     }
 
     private editRecord(id: number) {
-        this.router.navigate(['transfer/', id], { relativeTo: this.activatedRoute })
+        this.removeAllSummaryItemsFromLocalStorage()
+        this.saveSelectedSummaryItemsToLocalStorage()
+        this.navigateToEditRoute(id)
     }
 
     /**
      * Called from the constructor on every page refresh and if the given date is valid
      */
     private loadTransfers() {
-        // console.log('loadTransfers')
         this.transferService.getTransfers(this.dateIn).subscribe((result: any) => {
             this.queryResult = result
             this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
@@ -142,16 +148,10 @@ export class TransferListComponent implements OnInit {
     }
 
     /**
-     * Called on item click from toggleItem() and
-     * after checkbox click from toggleItems()
+     * Called from 'toggleItem' on item click 
+     * Called from 'toggleItems' on checkbox click
      */
     private filterByCriteria() {
-        // console.log('3/4 filterByCriteria')
-        // console.log('3/4', this.selectedDestinations)
-        // console.log('3/4', this.selectedCustomers)
-        // console.log('3/4', this.selectedRoutes)
-        // console.log('3/4', this.selectedDrivers)
-        // console.log('3/4', this.selectedPorts)
         this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
         this.queryResultClone.transfers = this.queryResultClone.transfers
             .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) != -1 })
@@ -159,36 +159,42 @@ export class TransferListComponent implements OnInit {
             .filter((z: { pickupPoint: { route: { abbreviation: string } } }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.abbreviation) != -1 })
             .filter((o: { driver: { description: string } }) => { return this.selectedDrivers.indexOf(o.driver.description) != -1 })
             .filter((p: { port: { description: string } }) => { return this.selectedPorts.indexOf(p.port.description) != -1 })
-        // console.log('Results', this.queryResult)
-        // console.log('Cloned results', this.queryResultClone)
-        // console.log('Filtered Transfers', this.queryResultClone.transfers)
     }
 
     /**
-     * Called on every page refresh for all summary filters
+     * Called from the constructor on every page refresh
      */
     private selectGroupItems() {
-        // console.log('selectGroupItems')
-        setTimeout(() => {
-            this.selectItems('item destination', this.selectedDestinations, true)
-            this.selectItems('item customer', this.selectedCustomers, true)
-            this.selectItems('item route', this.selectedRoutes, true)
-            this.selectItems('item driver', this.selectedDrivers, true)
-            this.selectItems('item port', this.selectedPorts, true)
-        }, 500);
+        let summaryItems = JSON.parse(localStorage.getItem('transfers'))
+        if (summaryItems) {
+            setTimeout(() => {
+                this.selectedDestinations = JSON.parse(summaryItems.destinations)
+                this.addActiveClassToItems(this.selectedDestinations, 'destination')
+                this.filterByCriteria()
+                this.flattenResults()
+            }, 500)
+        }
+        else {
+            setTimeout(() => {
+                this.selectItems('item destination', this.selectedDestinations, true)
+                this.selectItems('item customer', this.selectedCustomers, true)
+                this.selectItems('item route', this.selectedRoutes, true)
+                this.selectItems('item driver', this.selectedDrivers, true)
+                this.selectItems('item port', this.selectedPorts, true)
+            }, 1000)
+        }
     }
 
     /**
-     * Called on page refresh and on checkbox click
-     * According to the (checked = true / false) does the following:
-     * Adds or removes the class 'activeItem' for every item (className)
-     * Adds or removes all the items to the array of selected items (lookupArray)
+     * Called from the constructor and on checkbox click
+     * According to the (checked = true / false)
+     * Toggles the class 'activeItem' for every item with the given className
+     * Adds/removes all items to the array of selected items (lookupArray)
      * @param className 
      * @param lookupArray 
      * @param checked 
      */
     private selectItems(className: string, lookupArray: any, checked: boolean) {
-        // console.log('2/4 selectItems')
         let elements = document.getElementsByClassName(className)
         for (let index = 0; index < elements.length; index++) {
             const element = elements[index]
@@ -203,10 +209,10 @@ export class TransferListComponent implements OnInit {
 
     /**
      * Flattens the queryResultClone array and populates the transfersFlat array with its output
-     * The transfersFlat  will be input for the table on the template
+     * This is the last step of the filtering process
+     * The transfersFlat array will be the input for the table on the template
      */
     private flattenResults() {
-        // console.log('4/4 flattenResults')
         this.transfersFlat.splice(0)
         for (var {
             id: a,
@@ -234,6 +240,35 @@ export class TransferListComponent implements OnInit {
     private subscribeToInderactionService() {
         this.interactionService.data.subscribe(response => {
             this.editRecord(response['id'])
+        })
+    }
+
+    private saveSelectedSummaryItemsToLocalStorage() {
+        let summaryItems = {
+            "destinations": JSON.stringify(this.selectedDestinations),
+            "customers": JSON.stringify(this.selectedCustomers),
+            "routes": JSON.stringify(this.selectedRoutes),
+            "drivers": JSON.stringify(this.selectedDrivers),
+            "ports": JSON.stringify(this.selectedPorts),
+        }
+        localStorage.setItem('transfers', JSON.stringify(summaryItems))
+    }
+
+    private navigateToEditRoute(id: number) {
+        this.router.navigate(['transfer/', id], { relativeTo: this.activatedRoute })
+    }
+
+    private removeAllSummaryItemsFromLocalStorage() {
+        localStorage.removeItem('transfers')
+    }
+
+    private addActiveClassToItems(array: any[], className: string) {
+        let elements = document.querySelectorAll('.item' + '.' + className)
+        elements.forEach((element: HTMLElement) => {
+            let position = array.indexOf(element.id)
+            if (position != -1) {
+                document.getElementById(element.id).classList.add('activeItem')
+            }
         })
     }
 
