@@ -15,7 +15,7 @@ import { Utils } from '../../shared/classes/utils';
 
 @Component({
     selector: 'form-customer',
-    templateUrl: './form-customer.component.html',
+    templateUrl: './form-customer.html',
     styleUrls: ['../../shared/styles/forms.css']
 })
 

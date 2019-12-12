@@ -3,23 +3,23 @@
     <form id="formFields" [formGroup]="form" autocomplete="off">
         <div id="sectionOne">
             <mat-form-field>
-                <input type="text" matInput placeholder="Destination" formControlName="destinationDescription" tabindex="1" id="destinationDescription" (change)="lookupIndex(destinations, 'Destinations', ['destinationId','destinationDescription'], ['id','description'], ['Id','Description'], ['1px','440px'], ['none',''], ['center','left'], $event)">
+                <input type="text" matInput placeholder="Destination" formControlName="destinationDescription" tabindex="1" id="destinationDescription" (change)="lookupIndex(destinations, 'Destinations', ['destinationId', 'destinationDescription'], ['id', 'description'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
                 <mat-error *ngIf="destinationDescription.invalid"></mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Customer" formControlName="customerDescription" tabindex="2" id="customerDescription" (change)="lookupIndex(customers, 'CustomerId','customerId', 'customerDescription', $event)">
+                <input type="text" matInput placeholder="Customer" formControlName="customerDescription" tabindex="2" id="customerDescription" (change)="lookupIndex(customers, 'Customers', ['customerId', 'customerDescription'], ['id', 'description'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
                 <mat-error *ngIf="destinationDescription.invalid"></mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="PickupPoint" formControlName="pickupPointDescription" tabindex="3" id="pickupPointDescription" (change)="lookupIndex(pickupPoints, 'PickupPointId','pickupPointId', 'pickupPointDescription', $event)">
+                <input type="text" matInput placeholder="PickupPoint" formControlName="pickupPointDescription" tabindex="3" id="pickupPointDescription" (change)="lookupIndex(pickupPoints, 'Pickup points', ['pickupPointId', 'pickupPointDescription'], ['id', 'description'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
                 <mat-error *ngIf="pickupPointDescription.invalid"></mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Driver" formControlName="driverDescription" tabindex="4" id="driverDescription" (change)="lookupIndex(drivers, 'driverId','driverId', 'driverDescription', $event)">
+                <input type="text" matInput placeholder="Driver" formControlName="driverDescription" tabindex="4" id="driverDescription" (change)="lookupIndex(drivers, 'Drivers', ['driverId', 'driverDescription'], ['id', 'description'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
                 <mat-error *ngIf="driverDescription.invalid"></mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Port" formControlName="portDescription" tabindex="5" id="portDescription" (change)="lookupIndex(ports, 'PortId','portId', 'portDescription', $event)">
+                <input type="text" matInput placeholder="Port" formControlName="portDescription" tabindex="5" id="portDescription" (change)="lookupIndex(ports, 'Ports', ['portId', 'portDescription'], ['id', 'description'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
                 <mat-error *ngIf="portDescription.invalid"></mat-error>
             </mat-form-field>
         </div>
@@ -43,6 +43,7 @@
             <mat-form-field>
                 <input type="text" matInput placeholder="Remarks" formControlName="remarks" tabindex="9" id="remarks">
             </mat-form-field>
+            <span class="form-value" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
         </div>
     </form>
 

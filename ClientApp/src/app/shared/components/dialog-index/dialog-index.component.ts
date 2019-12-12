@@ -1,8 +1,8 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { InteractionService } from '../../services/interaction.service';
+import { IndexInteractionService } from '../../services/index-interaction.service';
 
 @Component({
 	selector: 'dialog-index',
@@ -10,7 +10,7 @@ import { InteractionService } from '../../services/interaction.service';
 	styleUrls: ['./dialog-index.component.css']
 })
 
-export class DialogIndexComponent {
+export class DialogIndexComponent implements OnInit, OnDestroy {
 
 	title: string
 
@@ -26,7 +26,7 @@ export class DialogIndexComponent {
 
 	ngUnsubscribe = new Subject<void>();
 
-	constructor(private interactionService: InteractionService, @Inject(MAT_DIALOG_DATA) public data: any) {
+	constructor(private indexInteractionService: IndexInteractionService, @Inject(MAT_DIALOG_DATA) public data: any) {
 		this.title = data.title
 		this.fields = data.fields
 		this.headers = data.headers
@@ -37,7 +37,7 @@ export class DialogIndexComponent {
 	}
 
 	ngOnInit() {
-		this.subscribeToInderactionService()
+		this.subscribeToIndexInderactionService()
 	}
 
 	ngAfterViewInit() {
@@ -46,14 +46,19 @@ export class DialogIndexComponent {
 		}, 100)
 	}
 
+	ngOnDestroy() {
+		this.ngUnsubscribe.next();
+		this.ngUnsubscribe.unsubscribe();
+	}
+
 	private calculateDimensions() {
 		document.getElementById('index-dialog-footer').style.paddingRight =
 			document.getElementById('index-dialog').offsetWidth -
 			document.getElementById('index-table').offsetWidth - 20 + 'px'
 	}
 
-	private subscribeToInderactionService() {
-		this.interactionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+	private subscribeToIndexInderactionService() {
+		this.indexInteractionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
 			this.selectedRecord = response
 		})
 	}

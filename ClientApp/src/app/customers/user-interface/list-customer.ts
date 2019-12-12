@@ -9,7 +9,7 @@ import { ICustomer } from '../classes/model-customer';
 
 @Component({
     selector: 'list-customer',
-    templateUrl: './list-customer.component.html',
+    templateUrl: './list-customer.html',
     styleUrls: ['../../shared/styles/lists.css']
 })
 

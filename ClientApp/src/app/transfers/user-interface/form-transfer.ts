@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subject } from 'rxjs';
+import { takeUntil } from "rxjs/operators";
 import { CustomerService } from "src/app/services/customer.service";
 import { DestinationService } from "src/app/services/destination.service";
 import { DriverService } from 'src/app/services/driver.service';
@@ -10,13 +11,12 @@ import { HelperService } from 'src/app/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from "src/app/services/keyboard-shortcuts.service";
 import { PortService } from 'src/app/services/port.service';
 import { Utils } from 'src/app/shared/classes/utils';
+import { DialogAlertComponent } from "src/app/shared/components/dialog-alert/dialog-alert.component";
+import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component";
 import { TransferService } from '../classes/service-api-transfer';
 import { InteractionTransferService } from "../classes/service-interaction-transfer";
 import { PickupPointService } from './../../services/pickupPoint.service';
 import { ITransfer } from './../classes/model-transfer';
-import { takeUntil } from "rxjs/operators";
-import { DialogAlertComponent } from "src/app/shared/components/dialog-alert/dialog-alert.component";
-import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component";
 
 @Component({
     selector: 'app-transfer-form',
@@ -66,6 +66,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.getTransfer()
                 this.interactionTransferService.sendData('editRecord')
             } else {
+                this.populateFormWithData()
                 this.interactionTransferService.sendData('newRecord')
             }
         })
@@ -176,10 +177,10 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // T
     saveRecord() {
         if (!this.form.valid) return
-        if (!this.id) {
+        if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
-                this.clearFields()
-                this.focus('destinationDescription')
+                this.abortDataEntry()
+                this.goBack()
             }, error => Utils.errorLogger(error))
         }
         else {
@@ -318,9 +319,9 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private patchFields(result: any[], id: any, description: any) {
-        this.form.patchValue({ [id]: result ? result[0] : '' })
-        this.form.patchValue({ [description]: result ? result[1] : '' })
+    private patchFields(result: any, id: any, description: any) {
+        this.form.patchValue({ [id]: result ? result.id : '' })
+        this.form.patchValue({ [description]: result ? result.description : '' })
     }
 
     private populateFields(result: ITransfer) {
@@ -346,7 +347,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.transferService.getTransfer(this.id).subscribe(result => {
                 this.transfer = result
                 this.populateFields(this.transfer)
-                this.disableFields(['index-table'])
                 this.scrollToForm()
             }, error => {
                 console.log('Error getting record')
@@ -365,8 +365,27 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private subscribeToInderactionService() {
         this.interactionTransferService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+            console.log(response)
             if (response == 'saveRecord') this.saveRecord()
             if (response == 'deleteRecord') this.deleteRecord()
+        })
+    }
+
+    private populateFormWithData() {
+        this.form.setValue({
+            id: 0,
+            dateIn: '2019-10-01',
+            destinationId: 3, destinationDescription: 'BLUE LAGOON',
+            customerId: 10, customerDescription: 'ISLAND HOLIDAYS',
+            pickupPointId: 865, pickupPointDescription: 'ISLAND HOLIDAYS',
+            driverId: 9, driverDescription: 'MED BLUE VASILIS',
+            portId: 2, portDescription: 'LEFKIMMI PORT',
+            adults: 3,
+            kids: 2,
+            free: 1,
+            totalPersons: 6,
+            remarks: 'No remarks',
+            userName: 'Sourvinos'
         })
     }
 

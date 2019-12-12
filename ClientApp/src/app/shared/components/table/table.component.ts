@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
 import { InteractionService } from './../../services/interaction.service';
+import { IndexInteractionService } from '../../services/index-interaction.service';
 
 @Component({
     selector: 'app-table',
@@ -25,25 +26,25 @@ export class TableComponent implements AfterViewInit {
 
     // #endregion
 
-    constructor(private interactionService: InteractionService) { }
+    constructor(private indexInteractionService: IndexInteractionService) { }
 
     ngAfterViewInit() {
         setTimeout(() => {
-            if (document.getElementById('index-table')) {
-                this.calculateDimensions()
-            }
+            // this.calculateDimensions()
         }, 500)
     }
 
     // T
     editRecord(rowIndex: any) {
-        this.interactionService.sendObject(this.records[rowIndex])
+        this.indexInteractionService.sendObject(this.records[rowIndex])
     }
 
     // T
-    highlightRow(rowIndex: number) {
-        this.clearAllRowHighlights()
-        this.gotoRow(this.table, rowIndex + 1)
+    selectRow(rowIndex: number) {
+        // this.clearAllRowHighlights()
+        // this.gotoRow(this.table, rowIndex + 1)
+        console.log('Sending:', this.records[rowIndex])
+        this.indexInteractionService.sendObject(this.records[rowIndex])
     }
 
     private calculateDimensions() {
@@ -65,7 +66,7 @@ export class TableComponent implements AfterViewInit {
 
     private gotoRow(table: HTMLTableElement, rowIndex: number) {
         table.rows[rowIndex].classList.toggle('selected')
-        this.interactionService.sendObject(this.records[rowIndex - 1])
+        this.indexInteractionService.sendObject(this.records[rowIndex - 1])
     }
 
 }

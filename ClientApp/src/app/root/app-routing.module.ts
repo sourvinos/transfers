@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router'
 // Routes
 import { HomeComponent } from '../home/home.component'
 import { LoginComponent } from '../login/login.component'
-import { CustomerListComponent } from '../customers/user-interface/list-customer.component'; import { CustomerFormComponent } from '../customers/user-interface/form-customer.component'
+import { CustomerListComponent } from '../customers/user-interface/list-customer'; import { CustomerFormComponent } from '../customers/user-interface/form-customer'
 import { DestinationListComponent } from '../destinations/destination-list.component'; import { DestinationFormComponent } from '../destinations/destination-form.component'
 import { DriverListComponent } from '../drivers/driver-list.component'; import { DriverFormComponent } from '../drivers/driver-form.component'
 import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.component'; import { PickupPointsForRouteListComponent } from '../pickupPoints/pickupPointsForRoute-list.component'; import { PickupPointFormComponent } from '../pickupPoints/pickupPoint-form.component'

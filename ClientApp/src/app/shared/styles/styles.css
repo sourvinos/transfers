@@ -27,8 +27,10 @@ body, h1, h3, h6 {
     margin: 0 !important;
 }
 
-p {
+span {
     color: whitesmoke !important;
+    font-family: "Roboto Condensed";
+    font-size: 13px;
 }
 
 #footer {

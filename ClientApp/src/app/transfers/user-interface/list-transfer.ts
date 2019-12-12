@@ -1,5 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ITransferFlat } from 'src/app/models/transfer-flat';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
@@ -12,7 +14,7 @@ import { TransferService } from '../classes/service-api-transfer';
     styleUrls: ['./list-transfer.css']
 })
 
-export class TransferListComponent implements OnInit, OnDestroy {
+export class TransferListComponent implements OnInit {
 
     // #region Init
 
@@ -35,23 +37,26 @@ export class TransferListComponent implements OnInit, OnDestroy {
     checkedPorts: boolean = true
 
     unlisten: Unlisten
+    value: any
 
     transfersFlat: ITransferFlat[] = []
 
     headers = ['Id', 'Dest', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
     widths = ['100px', '50px', '100px', '200px', '200px', '60px', '40px', '40px', '40px', '40px', '100px', '100px']
-    visibility = ['', '', '', '', '', '', '', '', '', '', '', '']
+    visibility = ['none', '', '', '', '', '', '', '', '', '', '', '']
     justify = ['center', 'center', 'center', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
     fields = ['id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
 
     navigationSubscription: any
 
+    ngUnsubscribe = new Subject<void>();
+
     // #endregion
 
     constructor(private keyboardShortcutsService: KeyboardShortcuts, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private interactionService: InteractionService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
-        this.navigationSubscription = this.router.events.subscribe((e: any) => {
-            if (e instanceof NavigationEnd && this.dateIn != '') {
+        this.navigationSubscription = this.router.events.subscribe((navigation: any) => {
+            if (navigation instanceof NavigationEnd && this.dateIn != '') {
                 this.loadTransfers()
                 this.selectGroupItems()
             }
@@ -63,14 +68,13 @@ export class TransferListComponent implements OnInit, OnDestroy {
         this.subscribeToInderactionService()
     }
 
-    ngOnDestroy() {
-        this.removeAllSummaryItemsFromLocalStorage()
-    }
-
     /**
      * Called from the template on every summary item click
-     * Adds or removes the class 'activeItem' for the selected item (item)
-     * Adds or removes the item to the array of selected items (lookupArray)
+     * Adds / removes the class 'activeItem' to / from the selected item 
+     * Adds / removes the item to / from the lookupArray
+     * Filters the list according to the selected items
+     * Updates the transfersFlat array 
+     * 
      * @param item 
      * @param lookupArray 
      */
@@ -100,6 +104,7 @@ export class TransferListComponent implements OnInit, OnDestroy {
      * Calls 'selectItems' method to either select or deselect all items
      * Calls 'filterByCriteria' 
      * Calls 'flattenResults'
+     * 
      * @param lookupArray 
      */
     toggleItems(className: string, lookupArray: { splice: (arg0: number) => void; }, checkedArray: any) {
@@ -110,34 +115,8 @@ export class TransferListComponent implements OnInit, OnDestroy {
         this.flattenResults()
     }
 
-    private addShortcuts() {
-        this.unlisten = this.keyboardShortcutsService.listen({
-            "Alt.F": (event: KeyboardEvent): void => {
-                event.preventDefault()
-                this.setFocus('searchField')
-            },
-            "Alt.N": (event: KeyboardEvent): void => {
-                event.preventDefault()
-                document.getElementById('new').click()
-            }
-        }, {
-            priority: 1,
-            inputs: true
-        })
-    }
-
-    private disableFields(fields: string[]) {
-        Utils.disableFields(fields)
-    }
-
-    private editRecord(id: number) {
-        this.removeAllSummaryItemsFromLocalStorage()
-        this.saveSelectedSummaryItemsToLocalStorage()
-        this.navigateToEditRoute(id)
-    }
-
     /**
-     * Called from the constructor on every page refresh and if the given date is valid
+     * Called from the constructor on every page refresh
      */
     private loadTransfers() {
         this.transferService.getTransfers(this.dateIn).subscribe((result: any) => {
@@ -165,37 +144,26 @@ export class TransferListComponent implements OnInit, OnDestroy {
      * Called from the constructor on every page refresh
      */
     private selectGroupItems() {
-        let summaryItems = JSON.parse(localStorage.getItem('transfers'))
-        if (summaryItems) {
-            setTimeout(() => {
-                this.selectedDestinations = JSON.parse(summaryItems.destinations)
-                this.addActiveClassToItems(this.selectedDestinations, 'destination')
-                this.filterByCriteria()
-                this.flattenResults()
-            }, 500)
-        }
-        else {
-            setTimeout(() => {
-                this.selectItems('item destination', this.selectedDestinations, true)
-                this.selectItems('item customer', this.selectedCustomers, true)
-                this.selectItems('item route', this.selectedRoutes, true)
-                this.selectItems('item driver', this.selectedDrivers, true)
-                this.selectItems('item port', this.selectedPorts, true)
-            }, 1000)
-        }
+        setTimeout(() => {
+            this.selectItems('item destination', this.selectedDestinations, true)
+            this.selectItems('item customer', this.selectedCustomers, true)
+            this.selectItems('item route', this.selectedRoutes, true)
+            this.selectItems('item driver', this.selectedDrivers, true)
+            this.selectItems('item port', this.selectedPorts, true)
+        }, 1000);
     }
 
     /**
-     * Called from the constructor and on checkbox click
-     * According to the (checked = true / false)
+     * Called from selectGroupItems and on checkbox click
+     * According to the checked = true / false
      * Toggles the class 'activeItem' for every item with the given className
-     * Adds/removes all items to the array of selected items (lookupArray)
+     * Adds / removes all items to / from the lookupArray
      * @param className 
      * @param lookupArray 
      * @param checked 
      */
     private selectItems(className: string, lookupArray: any, checked: boolean) {
-        let elements = document.getElementsByClassName(className)
+        let elements = document.getElementsByClassName('item ' + className)
         for (let index = 0; index < elements.length; index++) {
             const element = elements[index]
             if (checked) {
@@ -208,6 +176,7 @@ export class TransferListComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Called from toggleItems(T), loadTransfers(L), toggleItem(L)
      * Flattens the queryResultClone array and populates the transfersFlat array with its output
      * This is the last step of the filtering process
      * The transfersFlat array will be the input for the table on the template
@@ -238,7 +207,7 @@ export class TransferListComponent implements OnInit, OnDestroy {
     }
 
     private subscribeToInderactionService() {
-        this.interactionService.data.subscribe(response => {
+        this.interactionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
     }
@@ -270,6 +239,30 @@ export class TransferListComponent implements OnInit, OnDestroy {
                 document.getElementById(element.id).classList.add('activeItem')
             }
         })
+    }
+
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            "Alt.F": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                this.setFocus('searchField')
+            },
+            "Alt.N": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                document.getElementById('new').click()
+            }
+        }, {
+            priority: 1,
+            inputs: true
+        })
+    }
+
+    private disableFields(fields: string[]) {
+        Utils.disableFields(fields)
+    }
+
+    private editRecord(id: number) {
+        this.navigateToEditRoute(id)
     }
 
 }
