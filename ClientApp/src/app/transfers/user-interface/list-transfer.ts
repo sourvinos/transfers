@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ITransferFlat } from 'src/app/models/transfer-flat';
-import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
+import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { TransferService } from '../classes/service-api-transfer';
 
 @Component({
-    selector: 'app-transfer-list',
+    selector: 'list-transfer',
     templateUrl: './list-transfer.html',
     styleUrls: ['./list-transfer.css']
 })
 
-export class TransferListComponent implements OnInit {
+export class ListTransferComponent implements OnInit, OnDestroy {
 
     // #region Init
 
@@ -36,9 +36,6 @@ export class TransferListComponent implements OnInit {
     checkedDrivers: boolean = true
     checkedPorts: boolean = true
 
-    unlisten: Unlisten
-    value: any
-
     transfersFlat: ITransferFlat[] = []
 
     headers = ['Id', 'Dest', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
@@ -47,16 +44,16 @@ export class TransferListComponent implements OnInit {
     justify = ['center', 'center', 'center', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
     fields = ['id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
 
+    unlisten: Unlisten
     navigationSubscription: any
-
     ngUnsubscribe = new Subject<void>();
 
     // #endregion
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private interactionService: InteractionService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private interactionService: InteractionService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.navigationSubscription = this.router.events.subscribe((navigation: any) => {
-            if (navigation instanceof NavigationEnd && this.dateIn != '') {
+            if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
                 this.loadTransfers()
                 this.selectGroupItems()
             }
@@ -64,8 +61,13 @@ export class TransferListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.addShortcuts()
         this.subscribeToInderactionService()
+    }
+
+    ngOnDestroy() {
+        console.log('List-onDestroy + unsubscribe')
+        this.navigationSubscription.unsubscribe()
+        this.unlisten && this.unlisten()
     }
 
     /**
@@ -119,6 +121,7 @@ export class TransferListComponent implements OnInit {
      * Called from the constructor on every page refresh
      */
     private loadTransfers() {
+        console.log('loadTransfers')
         this.transferService.getTransfers(this.dateIn).subscribe((result: any) => {
             this.queryResult = result
             this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
@@ -142,19 +145,19 @@ export class TransferListComponent implements OnInit {
 
     /**
      * Called from the constructor on every page refresh
+     * It adds to all items the class 'activeItem'
      */
     private selectGroupItems() {
-        setTimeout(() => {
-            this.selectItems('item destination', this.selectedDestinations, true)
-            this.selectItems('item customer', this.selectedCustomers, true)
-            this.selectItems('item route', this.selectedRoutes, true)
-            this.selectItems('item driver', this.selectedDrivers, true)
-            this.selectItems('item port', this.selectedPorts, true)
-        }, 1000);
+        this.selectItems('item destination', this.selectedDestinations, true)
+        this.selectItems('item customer', this.selectedCustomers, true)
+        this.selectItems('item route', this.selectedRoutes, true)
+        this.selectItems('item driver', this.selectedDrivers, true)
+        this.selectItems('item port', this.selectedPorts, true)
+        // console.log('1. selectGroupItems', this.selectedDestinations)
     }
 
     /**
-     * Called from selectGroupItems and on checkbox click
+     * Called from selectGroupItems(L) and on checkbox click
      * According to the checked = true / false
      * Toggles the class 'activeItem' for every item with the given className
      * Adds / removes all items to / from the lookupArray
@@ -202,17 +205,17 @@ export class TransferListComponent implements OnInit {
         }
     }
 
-    private setFocus(field: string) {
-        Utils.setFocus(field)
-    }
-
+    /**
+     * Gets the selected record from the table
+     * and executes the editRecord method
+     */
     private subscribeToInderactionService() {
         this.interactionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
     }
 
-    private saveSelectedSummaryItemsToLocalStorage() {
+    private saveSelectedItemsToLocalStorage() {
         let summaryItems = {
             "destinations": JSON.stringify(this.selectedDestinations),
             "customers": JSON.stringify(this.selectedCustomers),
@@ -220,6 +223,7 @@ export class TransferListComponent implements OnInit {
             "drivers": JSON.stringify(this.selectedDrivers),
             "ports": JSON.stringify(this.selectedPorts),
         }
+        // console.log('2. saveSelectedItemsToLocalStorage', this.selectedDestinations)
         localStorage.setItem('transfers', JSON.stringify(summaryItems))
     }
 
@@ -238,22 +242,6 @@ export class TransferListComponent implements OnInit {
             if (position != -1) {
                 document.getElementById(element.id).classList.add('activeItem')
             }
-        })
-    }
-
-    private addShortcuts() {
-        this.unlisten = this.keyboardShortcutsService.listen({
-            "Alt.F": (event: KeyboardEvent): void => {
-                event.preventDefault()
-                this.setFocus('searchField')
-            },
-            "Alt.N": (event: KeyboardEvent): void => {
-                event.preventDefault()
-                document.getElementById('new').click()
-            }
-        }, {
-            priority: 1,
-            inputs: true
         })
     }
 

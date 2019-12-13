@@ -2,12 +2,12 @@ import { Component, Input } from '@angular/core';
 import { InteractionService } from 'src/app/shared/services/interaction.service';
 
 @Component({
-    selector: 'app-transfer-table',
-    templateUrl: './table-transfer.component.html',
-    styleUrls: ['./table-transfer.component.css']
+    selector: 'table-transfer',
+    templateUrl: './table-transfer.html',
+    styleUrls: ['./table-transfer.css']
 })
 
-export class TransferTableComponent {
+export class TableTransferComponent {
 
     // #region Init
 
@@ -27,12 +27,18 @@ export class TransferTableComponent {
 
     constructor(private interactionService: InteractionService) { }
 
-    // T
+    /**
+     * Sends the selected record to the list
+     * @param rowIndex 
+     */
     editRecord(rowIndex: any) {
         this.interactionService.sendObject(this.records[rowIndex])
     }
 
-    // T
+    /**
+     * Sends the selected record to the list
+     * @param rowIndex 
+     */
     selectRow(rowIndex: number) {
         this.interactionService.sendObject(this.records[rowIndex])
     }

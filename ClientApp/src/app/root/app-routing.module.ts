@@ -11,7 +11,7 @@ import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.compo
 import { PortListComponent } from '../ports/port-list.component'; import { PortFormComponent } from '../ports/port-form.component'
 import { RouteListComponent } from '../routes/route-list.component'; import { RouteFormComponent } from '../routes/route-form.component'
 import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component'; import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'
-import { TransferWrapperComponent } from '../transfers/user-interface/wrapper-transfer'; import { TransferListComponent } from '../transfers/user-interface/list-transfer'; import { TransferFormComponent } from '../transfers/user-interface/form-transfer'
+import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'
 import { VatStateListComponent } from '../vatStates/vatState-list.component'; import { VatStateFormComponent } from '../vatStates/vatState-form.component'
 import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
 
@@ -41,10 +41,10 @@ const appRoutes: Routes = [
 	{ path: 'routes', component: RouteListComponent, resolve: { routeList: RouteListResolverService } }, { path: 'routes/new', component: RouteFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'routes/:id', component: RouteFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{ path: 'taxOffices', component: TaxOfficeListComponent, resolve: { taxOfficeList: TaxOfficeListResolverService } }, { path: 'taxOffices/new', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'taxOffices/:id', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{
-		path: 'transfers', component: TransferWrapperComponent, children: [{
-			path: 'dateIn/:dateIn', component: TransferListComponent, resolve: { transferList: TransferListResolverService }, children: [
-				{ path: 'transfer/new', component: TransferFormComponent, canDeactivate: [CanDeactivateGuard] },
-				{ path: 'transfer/:transferId', component: TransferFormComponent, canDeactivate: [CanDeactivateGuard], resolve: { transferForm: TransferEditResolverService } }
+		path: 'transfers', component: WrapperTransferComponent, children: [{
+			path: 'dateIn/:dateIn', component: ListTransferComponent, resolve: { transferList: TransferListResolverService }, children: [
+				{ path: 'transfer/new', component: FormTransferComponent, canDeactivate: [CanDeactivateGuard] },
+				{ path: 'transfer/:transferId', component: FormTransferComponent, canDeactivate: [CanDeactivateGuard], resolve: { transferForm: TransferEditResolverService } }
 			]
 		}], runGuardsAndResolvers: 'always'
 	},

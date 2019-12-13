@@ -2,8 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Subject } from 'rxjs';
-import { takeUntil } from "rxjs/operators";
+import { forkJoin } from 'rxjs';
 import { CustomerService } from "src/app/services/customer.service";
 import { DestinationService } from "src/app/services/destination.service";
 import { DriverService } from 'src/app/services/driver.service';
@@ -19,12 +18,12 @@ import { PickupPointService } from './../../services/pickupPoint.service';
 import { ITransfer } from './../classes/model-transfer';
 
 @Component({
-    selector: 'app-transfer-form',
+    selector: 'form-transfer',
     templateUrl: './form-transfer.html',
     styleUrls: ['./form-transfer.css']
 })
 
-export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Variables
 
@@ -39,7 +38,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     ports: any[]
 
     unlisten: Unlisten
-    ngUnsubscribe = new Subject<void>();
 
     form = this.formBuilder.group({
         id: 0,
@@ -70,7 +68,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.interactionTransferService.sendData('newRecord')
             }
         })
-        this.unlisten = null
     }
 
     ngOnInit() {
@@ -85,9 +82,8 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        (this.unlisten) && this.unlisten()
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
+        console.log('Form-onDestroy');
+        this.unlisten && this.unlisten()
     }
 
     // Master
@@ -152,12 +148,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // T
-    goBack() {
-        this.interactionTransferService.sendData('')
-        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
-    }
-
-    // T
     lookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
@@ -198,7 +188,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            "Escape": (event: KeyboardEvent): void => {
+            "Escape": (): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
                     this.goBack()
                 }
@@ -224,33 +214,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             priority: 2,
             inputs: true
         })
-    }
-
-    private focus(field: string) {
-        Utils.setFocus(field)
-    }
-
-    private populateDropDowns() {
-        let sources = []
-        sources.push(this.destinationService.getDestinations())
-        sources.push(this.customerService.getCustomers())
-        sources.push(this.pickupPointService.getAllPickupPoints())
-        sources.push(this.driverService.getDrivers())
-        sources.push(this.portService.getPorts())
-        return forkJoin(sources).subscribe(
-            result => {
-                this.destinations = result[0]
-                this.customers = result[1]
-                this.pickupPoints = result[2]
-                this.drivers = result[3]
-                this.ports = result[4]
-            },
-            error => {
-                if (error.status == 404) {
-                    this.router.navigate(['/error'])
-                }
-            }
-        )
     }
 
     private clearFields() {
@@ -279,6 +242,27 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         Utils.enableFields(fields)
     }
 
+    private focus(field: string) {
+        Utils.setFocus(field)
+    }
+
+    private getTransfer() {
+        if (this.id) {
+            this.transferService.getTransfer(this.id).subscribe(result => {
+                this.transfer = result
+                this.populateFields(this.transfer)
+                this.scrollToForm()
+            }, error => {
+                console.log('Error getting record')
+            })
+        }
+    }
+
+    private goBack() {
+        this.interactionTransferService.sendData('')
+        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
+    }
+
     private openErrorModal() {
         this.dialog.open(DialogAlertComponent, {
             height: '250px',
@@ -290,6 +274,79 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             },
             panelClass: 'dialog'
         })
+    }
+
+    private patchFields(result: any, id: any, description: any) {
+        this.form.patchValue({ [id]: result ? result.id : '' })
+        this.form.patchValue({ [description]: result ? result.description : '' })
+    }
+
+    private populateDropDowns() {
+        let sources = []
+        sources.push(this.destinationService.getDestinations())
+        sources.push(this.customerService.getCustomers())
+        sources.push(this.pickupPointService.getAllPickupPoints())
+        sources.push(this.driverService.getDrivers())
+        sources.push(this.portService.getPorts())
+        return forkJoin(sources).subscribe(
+            result => {
+                this.destinations = result[0]
+                this.customers = result[1]
+                this.pickupPoints = result[2]
+                this.drivers = result[3]
+                this.ports = result[4]
+            },
+            error => {
+                if (error.status == 404) {
+                    this.router.navigate(['/error'])
+                }
+            }
+        )
+    }
+
+    private populateFields(result: ITransfer) {
+        this.form.setValue({
+            id: result.id,
+            dateIn: result.dateIn,
+            destinationId: result.destination.id, destinationDescription: result.destination.description,
+            customerId: result.customer.id, customerDescription: result.customer.description,
+            pickupPointId: result.pickupPoint.id, pickupPointDescription: result.pickupPoint.description,
+            driverId: result.driver.id, driverDescription: result.driver.description,
+            portId: result.port.id, portDescription: result.port.description,
+            adults: result.adults,
+            kids: result.kids,
+            free: result.free,
+            totalPersons: result.totalPersons,
+            remarks: result.remarks,
+            userName: result.userName
+        })
+    }
+
+    private populateFormWithData() {
+        this.form.setValue({
+            id: 0,
+            dateIn: '2019-10-01',
+            destinationId: 3, destinationDescription: 'BLUE LAGOON',
+            customerId: 10, customerDescription: 'ISLAND HOLIDAYS',
+            pickupPointId: 865, pickupPointDescription: 'ISLAND HOLIDAYS',
+            driverId: 9, driverDescription: 'MED BLUE VASILIS',
+            portId: 2, portDescription: 'LEFKIMMI PORT',
+            adults: 3,
+            kids: 2,
+            free: 1,
+            totalPersons: 6,
+            remarks: 'No remarks',
+            userName: 'Sourvinos'
+        })
+    }
+
+    private scrollToForm() {
+        document.getElementById('transfersList').style.height = '0'
+    }
+
+    private scrollToList() {
+        document.getElementById('form').style.height = '0'
+        document.getElementById('transfersList').style.height = '100%'
     }
 
     private showModalIndex(
@@ -319,73 +376,13 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private patchFields(result: any, id: any, description: any) {
-        this.form.patchValue({ [id]: result ? result.id : '' })
-        this.form.patchValue({ [description]: result ? result.description : '' })
-    }
-
-    private populateFields(result: ITransfer) {
-        this.form.setValue({
-            id: result.id,
-            dateIn: result.dateIn,
-            destinationId: result.destination.id, destinationDescription: result.destination.description,
-            customerId: result.customer.id, customerDescription: result.customer.description,
-            pickupPointId: result.pickupPoint.id, pickupPointDescription: result.pickupPoint.description,
-            driverId: result.driver.id, driverDescription: result.driver.description,
-            portId: result.port.id, portDescription: result.port.description,
-            adults: result.adults,
-            kids: result.kids,
-            free: result.free,
-            totalPersons: result.totalPersons,
-            remarks: result.remarks,
-            userName: result.userName
-        })
-    }
-
-    private getTransfer() {
-        if (this.id) {
-            this.transferService.getTransfer(this.id).subscribe(result => {
-                this.transfer = result
-                this.populateFields(this.transfer)
-                this.scrollToForm()
-            }, error => {
-                console.log('Error getting record')
-            })
-        }
-    }
-
-    private scrollToForm() {
-        document.getElementById('transfersList').style.height = '0'
-    }
-
-    private scrollToList() {
-        document.getElementById('form').style.height = '0'
-        document.getElementById('transfersList').style.height = '100%'
-    }
-
+    /**
+     * Accepts data from the wrapper when buttons are clicked
+     */
     private subscribeToInderactionService() {
-        this.interactionTransferService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            console.log(response)
+        this.interactionTransferService.data.subscribe(response => {
             if (response == 'saveRecord') this.saveRecord()
             if (response == 'deleteRecord') this.deleteRecord()
-        })
-    }
-
-    private populateFormWithData() {
-        this.form.setValue({
-            id: 0,
-            dateIn: '2019-10-01',
-            destinationId: 3, destinationDescription: 'BLUE LAGOON',
-            customerId: 10, customerDescription: 'ISLAND HOLIDAYS',
-            pickupPointId: 865, pickupPointDescription: 'ISLAND HOLIDAYS',
-            driverId: 9, driverDescription: 'MED BLUE VASILIS',
-            portId: 2, portDescription: 'LEFKIMMI PORT',
-            adults: 3,
-            kids: 2,
-            free: 1,
-            totalPersons: 6,
-            remarks: 'No remarks',
-            userName: 'Sourvinos'
         })
     }
 

@@ -9,7 +9,7 @@
                 <input class="date" matInput placeholder="Date" [(ngModel)]="dateIn" [inputFormat]="'date'" id="dateIn" autocomplete="off">
                 <mat-hint>Enter anything!</mat-hint>
             </mat-form-field>
-            <button mat-flat-button id="search" class="primary" (click)="loadTransfers()" tabindex="2">Search</button>
+            <button mat-flat-button id="search" class="primary" [disabled]="!isCorrectDate()" (click)="loadTransfers()">Search</button>
         </div>
     </div>
 
@@ -21,7 +21,7 @@
         <mat-divider></mat-divider>
         <div id="buttons">
             <ng-container *ngIf="actionToPerform == ''">
-                <button mat-flat-button class="primary" id="new" (click)="newRecord()">New</button>
+                <button mat-flat-button class="primary" id="new" [disabled]="!isCorrectDate()" (click)="newRecord()">New</button>
             </ng-container>
             <ng-container *ngIf="actionToPerform == 'newRecord'">
                 <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>

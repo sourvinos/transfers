@@ -1,20 +1,19 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
+import { Subject } from 'rxjs';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { InteractionTransferService } from './../classes/service-interaction-transfer';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-transfer-wrapper',
+    selector: 'wrapper-transfer',
     templateUrl: './wrapper-transfer.html',
     styleUrls: ['../../shared/styles/lists.css', './wrapper-transfer.css']
 })
 
-export class TransferWrapperComponent implements OnInit, OnDestroy {
+export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     // #region Variables
 
@@ -24,28 +23,30 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
     actionToPerform: string = ''
 
     unlisten: Unlisten
-
     ngUnsubscribe = new Subject<void>();
 
     // #endregion Variables
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionTransferService: InteractionTransferService) {
-        this.unlisten = null
-    }
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionTransferService: InteractionTransferService) { }
 
     ngOnInit(): void {
         this.addShortcuts()
-        this.focus('dateIn')
         this.subscribeToInderactionService()
+        this.focus('dateIn')
     }
 
     ngOnDestroy() {
+        console.log('Wrapper-onDestroy')
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.unsubscribe();
-        this.removeAllSummaryItemsFromLocalStorage()
+        this.unlisten && this.unlisten()
     }
 
-    // T
+    /**
+     * Called from the deleteRecord(T)
+     * It sends 'deleteRecord' to the form
+     * and the form executes the deleteRecord method
+     */
     deleteRecord() {
         this.interactionTransferService.sendData('deleteRecord')
     }
@@ -63,13 +64,20 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
         this.router.navigate([this.location.path() + '/transfer/new'])
     }
 
-    // T
+    /**
+     * Called from the deleteRecord(T)
+     * It sends 'saveRecord' to the form
+     * and the form executes the saveRecord method
+     */
     saveRecord() {
         this.interactionTransferService.sendData('saveRecord')
     }
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
+            "Escape": (event: KeyboardEvent): void => {
+                this.goBack()
+            },
             "Alt.S": (event: KeyboardEvent): void => {
                 event.preventDefault()
                 document.getElementById('search').click()
@@ -88,7 +96,7 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
         Utils.setFocus(field)
     }
 
-    private isCorrectDate() {
+    isCorrectDate() {
         let date = (<HTMLInputElement>document.getElementById('dateIn')).value
         if (date.length == 10) {
             this.dateInISO = moment(date, 'DD/MM/YYYY').toISOString(true)
@@ -109,10 +117,18 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
         localStorage.setItem('date', this.dateInISO)
     }
 
+    /**
+     * Accepts data from the constructor of the form 
+     * and decides which buttons to display
+     */
     private subscribeToInderactionService() {
-        this.interactionTransferService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+        this.interactionTransferService.data.subscribe(response => {
             this.actionToPerform = response
         })
+    }
+
+    private goBack() {
+        this.router.navigate(['/'])
     }
 
 }

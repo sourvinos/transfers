@@ -37,7 +37,7 @@ import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.compo
 import { PortListComponent } from './../ports/port-list.component'; import { PortFormComponent } from './../ports/port-form.component'
 import { RouteListComponent } from '../routes/route-list.component'; import { RouteFormComponent } from '../routes/route-form.component'
 import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component'; import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'
-import { TransferWrapperComponent } from '../transfers/user-interface/wrapper-transfer'; import { TransferListComponent } from '../transfers/user-interface/list-transfer'; import { TransferFormComponent } from '../transfers/user-interface/form-transfer'; import { TransferTableComponent } from '../transfers/user-interface/table-transfer.component'
+import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'; import { TableTransferComponent } from '../transfers/user-interface/table-transfer'
 import { VatStateListComponent } from '../vatStates/vatState-list.component'; import { VatStateFormComponent } from '../vatStates/vatState-form.component'
 // Directives
 import { InputFormatDirective } from '../directives/input-format.directive'
@@ -66,7 +66,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
         PortListComponent, PortFormComponent,
         RouteListComponent, RouteFormComponent,
         TaxOfficeListComponent, TaxOfficeFormComponent,
-        TransferWrapperComponent, TransferListComponent, TransferFormComponent, TransferTableComponent,
+        WrapperTransferComponent, ListTransferComponent, FormTransferComponent, TableTransferComponent,
         VatStateListComponent, VatStateFormComponent,
         // Directives
         InputFormatDirective,
