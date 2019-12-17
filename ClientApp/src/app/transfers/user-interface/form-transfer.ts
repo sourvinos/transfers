@@ -82,7 +82,6 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        console.log('Form-onDestroy');
         this.unlisten && this.unlisten()
     }
 

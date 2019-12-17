@@ -5,11 +5,11 @@ import { Subject } from 'rxjs';
 
 export class IndexInteractionService {
 
-    private messageSource = new Subject<string>()
+    private messageSource = new Subject<string[]>()
 
     data = this.messageSource.asObservable()
 
-    sendObject(data: any) {
+    sendObject(data: any[]) {
         this.messageSource.next(data)
     }
 

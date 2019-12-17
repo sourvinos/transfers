@@ -1,6 +1,5 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
-import { InteractionService } from './../../services/interaction.service';
-import { IndexInteractionService } from '../../services/index-interaction.service';
+import { Component, HostListener, Input } from '@angular/core'
+import { IndexInteractionService } from '../../services/index-interaction.service'
 
 @Component({
     selector: 'app-table',
@@ -8,9 +7,7 @@ import { IndexInteractionService } from '../../services/index-interaction.servic
     styleUrls: ['./table.component.css']
 })
 
-export class TableComponent implements AfterViewInit {
-
-    // #region Init
+export class TableComponent {
 
     @Input() records: any[]
 
@@ -20,42 +17,27 @@ export class TableComponent implements AfterViewInit {
     @Input() justify: any
     @Input() fields: any
 
-    tableParentNode: any
-    table: any
-    rowHeight: number = 0
+    currentRow: number = 0
+    rowCount: number = 0
 
-    // #endregion
+    indexContent: any
+    table: any
+    rowHeaderHeight: any
+    rowHeight: number = 0
 
     constructor(private indexInteractionService: IndexInteractionService) { }
 
     ngAfterViewInit() {
         setTimeout(() => {
-            // this.calculateDimensions()
-        }, 500)
+            this.calculateDimensions()
+            this.rowCount = this.table.rows.length - 1
+            document.getElementById('table-input').focus()
+            this.gotoRow('1')
+        }, 100)
     }
 
-    // T
-    editRecord(rowIndex: any) {
-        this.indexInteractionService.sendObject(this.records[rowIndex])
-    }
-
-    // T
-    selectRow(rowIndex: number) {
-        // this.clearAllRowHighlights()
-        // this.gotoRow(this.table, rowIndex + 1)
-        console.log('Sending:', this.records[rowIndex])
-        this.indexInteractionService.sendObject(this.records[rowIndex])
-    }
-
-    private calculateDimensions() {
-        this.table = document.getElementById('index-table')
-        this.tableParentNode = document.getElementById('index-table').parentNode.parentNode
-        console.log('Parent node', this.tableParentNode)
-        this.rowHeight = this.table.rows[1].offsetHeight
-        if (this.tableParentNode.scrollHeight <= this.tableParentNode.offsetHeight) {
-            this.tableParentNode.style.overflowY = 'hidden'
-            this.table.style.marginRight = '0px'
-        }
+    @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
+        this.gotoRow(event.key)
     }
 
     private clearAllRowHighlights() {
@@ -64,9 +46,79 @@ export class TableComponent implements AfterViewInit {
         })
     }
 
-    private gotoRow(table: HTMLTableElement, rowIndex: number) {
-        table.rows[rowIndex].classList.toggle('selected')
-        this.indexInteractionService.sendObject(this.records[rowIndex - 1])
+    private gotoRow(key: string) {
+        if (!isNaN(parseInt(key))) {
+            this.clearAllRowHighlights()
+            this.highlightRow(this.table, key)
+            this.sendRowToService()
+        }
+        if (key == 'Enter') {
+            this.sendRowToService(true)
+        }
+        if (key == 'ArrowUp' && this.currentRow > 1) {
+            this.clearAllRowHighlights()
+            this.highlightRow(this.table, 'up')
+            this.sendRowToService()
+            if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
+                document.getElementById(this.currentRow.toString()).scrollIntoView()
+                this.indexContent.scrollTop = (this.currentRow - 1) * this.rowHeight
+            }
+        }
+        if (key == 'ArrowDown' && this.currentRow < this.rowCount) {
+            this.clearAllRowHighlights()
+            this.highlightRow(this.table, 'down')
+            this.sendRowToService()
+            if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
+                document.getElementById(this.currentRow.toString()).scrollIntoView({ block: "end", behavior: "smooth" })
+            }
+        }
+    }
+
+    private highlightRow(table: HTMLTableElement, direction: any) {
+        if (!isNaN(direction)) {
+            this.currentRow = parseInt(direction)
+        } else {
+            if (direction == 'up') this.currentRow--
+            if (direction == 'down')++this.currentRow
+        }
+        table.rows[this.currentRow].classList.toggle('selected')
+    }
+
+
+    private isRowIntoView(row: HTMLTableRowElement, direction: string) {
+        const rowOffsetTop = row.offsetTop
+        const indexContentScrollTop = this.indexContent.scrollTop
+        const rowOffetTopPlusRowOffsetHeight = rowOffsetTop + row.offsetHeight
+        const indexContentScrollTopPuslIndexContentOffsetHeight = indexContentScrollTop + this.indexContent.offsetHeight
+        if (direction == 'ArrowUp') {
+            if (indexContentScrollTopPuslIndexContentOffsetHeight - rowOffsetTop + this.rowHeight < this.indexContent.offsetHeight) {
+                return true
+            } else {
+                return false
+            }
+        }
+        if (direction == 'ArrowDown') {
+            if (rowOffetTopPlusRowOffsetHeight <= indexContentScrollTopPuslIndexContentOffsetHeight) {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+
+    private calculateDimensions() {
+        this.indexContent = document.getElementById('index-table').parentNode.parentNode
+        this.table = document.getElementById('index-table')
+        this.rowHeaderHeight = document.querySelector('thead')
+        this.rowHeight = this.table.rows[1].offsetHeight
+        if (this.indexContent.scrollHeight <= this.indexContent.offsetHeight) {
+            this.indexContent.style.overflowY = 'hidden'
+            this.table.style.marginRight = '0px'
+        }
+    }
+
+    private sendRowToService(dialogMustClose?: boolean) {
+        this.indexInteractionService.sendObject([this.records[this.currentRow - 1], dialogMustClose])
     }
 
 }

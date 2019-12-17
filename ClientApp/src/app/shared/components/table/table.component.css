@@ -1,18 +1,14 @@
 :host {
     display: grid;
-    width: 100%;
 }
 
 * {
     box-sizing: border-box !important;
 }
 
-#index-table {
+table {
     margin-right: 0.2rem;
     table-layout: fixed;
-}
-
-table {
     -webkit-border-horizontal-spacing: 2px;
     -webkit-border-vertical-spacing: 0;
 }
@@ -23,6 +19,7 @@ table thead tr th {
     color: var(--color-table-header);
     font-family: var(--font-family-table);
     font-size: var(--font-size-table-header);
+    font-weight: var(--font-weight-headers);
     padding: 1rem 0;
     position: sticky;
     text-align: center;
@@ -33,7 +30,6 @@ tr {
     transition: background-color;
     transition-duration: 200ms;
 }
-
 
 tbody tr:nth-child(even) {
     background-color: var(--color-table-row-alternative);
@@ -48,7 +44,6 @@ tr:hover {
     cursor: pointer;
 }
 
-
 td {
     color: var(--color-table-row);
     font-family: var(--font-family-table);
@@ -58,4 +53,11 @@ td {
     padding: 1rem 0.5rem;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+#table-input {
+    display: block;
+    height: 0;
+    position: absolute;
+    width: 0;
 }

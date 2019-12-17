@@ -273,7 +273,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         visibility: any[],
         justify: any[]) {
         const dialog = this.dialog.open(DialogIndexComponent, {
-            height: '640px',
+            height: '619px',
             width: '600px',
             data: {
                 records: elements,

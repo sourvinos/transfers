@@ -21,7 +21,7 @@
 }
 
 #index-dialog-header h1 {
-    color: #FFE85C;
+    font-family: var(--font-family-dialog-header) !important;
 }
 
 #index-dialog-content {
@@ -48,7 +48,7 @@
 
 #index-dialog-content::-webkit-scrollbar-track {
     background-color: var(--color-scrollbar-background);
-    margin-top: 53px;
+    margin-top: 59px;
 }
 
 #index-dialog-content::-webkit-scrollbar-thumb {

@@ -27,7 +27,7 @@
     --font-size-menu-list-items: 1.4rem;
     --font-size-user-info: 0.9rem;
     /* Tables */
-    --font-size-table-header: 1.0rem;
+    --font-size-table-header: 1.3rem;
     --font-size-table-rows: 1.0rem;
 }
 
@@ -42,7 +42,7 @@
     /* Custom inputs */
     --font-family-customInput: "Play";
     /* Dialogs */
-    --font-family-dialog-header: "Lato";
+    --font-family-dialog-header: "Roboto Condensed";
     --font-family-dialog-content: "Lato";
     /* Tables */
     --font-family-table: 'Roboto Condensed';
