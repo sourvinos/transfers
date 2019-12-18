@@ -14,7 +14,7 @@ export class SidebarComponent implements OnInit {
 
     countdown: number = 0
     loginStatus: Observable<boolean>
-    userName: Observable<string>
+    displayName: Observable<string>
 
     constructor(private accountService: AccountService, private countdownService: CountdownService) {
         this.countdownService.reset()
@@ -23,7 +23,7 @@ export class SidebarComponent implements OnInit {
 
     ngOnInit() {
         this.loginStatus = this.accountService.isLoggedIn
-        this.userName = this.accountService.currentUserName
+        this.displayName = this.accountService.currentDisplayName
     }
 
     triggerEvent(elem: HTMLElement, event: string) {

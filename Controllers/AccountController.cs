@@ -31,6 +31,7 @@ namespace Transfers.Controllers
             {
                 Email = formdata.Email,
                 UserName = formdata.UserName,
+                DisplayName = formdata.DisplayName,
                 SecurityStamp = Guid.NewGuid().ToString()
             };
 
@@ -38,9 +39,9 @@ namespace Transfers.Controllers
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user,"User");
+                await _userManager.AddToRoleAsync(user, "User");
 
-                return Ok(new { username = user.UserName, email = user.Email, status = 1, message ="Registration Successful" });
+                return Ok(new { userName = user.UserName, displayName = user.DisplayName, email = user.Email, status = 1, message = "Registration Successful" });
             }
             else
             {

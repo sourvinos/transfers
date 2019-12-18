@@ -1,0 +1,26 @@
+<div id="header">
+    <div id="title">
+        <h1>Login</h1>
+    </div>
+    <mat-divider></mat-divider>
+</div>
+
+<div id="content">
+    <form [formGroup]="form" autocomplete="off">
+        <div id="section-one">
+            <mat-form-field>
+                <input type="text" matInput placeholder="Username" formControlName="userName" tabindex="1" id="userName">
+            </mat-form-field>
+            <mat-form-field>
+                <input type="password" matInput placeholder="Password" formControlName="password" tabindex="2" id="password">
+            </mat-form-field>
+        </div>
+    </form>
+</div>
+
+<div id="footer">
+    <mat-divider></mat-divider>
+    <div id="buttons">
+        <button mat-flat-button class="primary" id="login" (click)="login()">Login</button>
+    </div>
+</div>

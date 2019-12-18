@@ -7,9 +7,3 @@ section {
     overflow: hidden;
     transition: margin-left 0.7s;
 }
-
-.spinner {
-    left: 50%;
-    position: absolute;
-    top: 50%;
-}

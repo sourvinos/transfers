@@ -1,0 +1,8 @@
+#content {
+    align-items: center;
+    display: flex;
+}
+
+form {
+    width: 50%;
+}

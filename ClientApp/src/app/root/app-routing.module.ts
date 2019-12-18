@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router'
 
 // Routes
 import { HomeComponent } from '../home/home.component'
-import { LoginComponent } from '../login/login.component'
+import { LoginComponent } from '../login/user-interface/form-login'
 import { CustomerListComponent } from '../customers/user-interface/list-customer'; import { CustomerFormComponent } from '../customers/user-interface/form-customer'
 import { DestinationListComponent } from '../destinations/destination-list.component'; import { DestinationFormComponent } from '../destinations/destination-form.component'
 import { DriverListComponent } from '../drivers/driver-list.component'; import { DriverFormComponent } from '../drivers/driver-form.component'
@@ -16,6 +16,7 @@ import { VatStateListComponent } from '../vatStates/vatState-list.component'; im
 import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
 
 // Guards
+import { AuthGuardService } from '../services/auth-guard.service';
 import { CanDeactivateGuard } from '../services/can-deactivate-guard.service'
 
 // Resolvers
@@ -31,24 +32,17 @@ import { TransferEditResolverService } from '../transfers/classes/resolver-edit-
 import { TransferListResolverService } from '../transfers/classes/resolver-list-transfer';
 
 const appRoutes: Routes = [
-	{ path: '', component: HomeComponent, pathMatch: 'full' },
+	{ path: '', component: HomeComponent, canActivate: [AuthGuardService], pathMatch: 'full' },
 	{ path: 'login', component: LoginComponent },
-	{ path: 'customers', component: CustomerListComponent, resolve: { customerList: CustomerListResolverService } }, { path: 'customers/new', component: CustomerFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'customers/:id', component: CustomerFormComponent, canDeactivate: [CanDeactivateGuard] },
-	{ path: 'destinations', component: DestinationListComponent, resolve: { destinationList: DestinationListResolverService } }, { path: 'destinations/new', component: DestinationFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'destinations/:id', component: DestinationFormComponent, canDeactivate: [CanDeactivateGuard] },
-	{ path: 'drivers', component: DriverListComponent, resolve: { driverList: DriverListResolverService } }, { path: 'drivers/new', component: DriverFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'drivers/:id', component: DriverFormComponent, canDeactivate: [CanDeactivateGuard] },
-	{ path: 'pickupPoints', component: PickupPointListComponent, children: [{ path: 'routeId/:id', component: PickupPointsForRouteListComponent, resolve: { pickupPointList: PickupPointListResolverService } }, { path: 'new', component: PickupPointFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: ':id', component: PickupPointFormComponent, canDeactivate: [CanDeactivateGuard] },] },
-	{ path: 'ports', component: PortListComponent, resolve: { portList: PortListResolverService } }, { path: 'ports/new', component: PortFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'ports/:id', component: PortFormComponent, canDeactivate: [CanDeactivateGuard] },
-	{ path: 'routes', component: RouteListComponent, resolve: { routeList: RouteListResolverService } }, { path: 'routes/new', component: RouteFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'routes/:id', component: RouteFormComponent, canDeactivate: [CanDeactivateGuard] },
+	{ path: 'customers', component: CustomerListComponent, canActivate: [AuthGuardService], resolve: { customerList: CustomerListResolverService } }, { path: 'customers/new', component: CustomerFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'customers/:id', component: CustomerFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
+	{ path: 'destinations', component: DestinationListComponent, canActivate: [AuthGuardService], resolve: { destinationList: DestinationListResolverService } }, { path: 'destinations/new', component: DestinationFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'destinations/:id', component: DestinationFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
+	{ path: 'drivers', component: DriverListComponent, canActivate: [AuthGuardService], resolve: { driverList: DriverListResolverService } }, { path: 'drivers/new', component: DriverFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'drivers/:id', component: DriverFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
+	{ path: 'pickupPoints', component: PickupPointListComponent, children: [{ path: 'routeId/:id', component: PickupPointsForRouteListComponent, canActivate: [AuthGuardService], resolve: { pickupPointList: PickupPointListResolverService } }, { path: 'new', component: PickupPointFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: ':id', component: PickupPointFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },] },
+	{ path: 'ports', component: PortListComponent, canActivate: [AuthGuardService], resolve: { portList: PortListResolverService } }, { path: 'ports/new', component: PortFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'ports/:id', component: PortFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
+	{ path: 'routes', component: RouteListComponent, canActivate: [AuthGuardService], resolve: { routeList: RouteListResolverService } }, { path: 'routes/new', component: RouteFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'routes/:id', component: RouteFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
 	{ path: 'taxOffices', component: TaxOfficeListComponent, resolve: { taxOfficeList: TaxOfficeListResolverService } }, { path: 'taxOffices/new', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'taxOffices/:id', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] },
-	{
-		path: 'transfers', component: WrapperTransferComponent, children: [{
-			path: 'dateIn/:dateIn', component: ListTransferComponent, resolve: { transferList: TransferListResolverService }, children: [
-				{ path: 'transfer/new', component: FormTransferComponent, canDeactivate: [CanDeactivateGuard] },
-				{ path: 'transfer/:transferId', component: FormTransferComponent, canDeactivate: [CanDeactivateGuard], resolve: { transferForm: TransferEditResolverService } }
-			]
-		}], runGuardsAndResolvers: 'always'
-	},
-	{ path: 'vatStates', component: VatStateListComponent, resolve: { vatStateList: VatStateListResolverService } }, { path: 'vatStates/new', component: VatStateFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'vatStates/:id', component: VatStateFormComponent, canDeactivate: [CanDeactivateGuard] },
+	{ path: 'transfers', component: WrapperTransferComponent, canActivate: [AuthGuardService], children: [{ path: 'dateIn/:dateIn', component: ListTransferComponent, canActivate: [AuthGuardService], resolve: { transferList: TransferListResolverService }, children: [{ path: 'transfer/new', component: FormTransferComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'transfer/:transferId', component: FormTransferComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard], resolve: { transferForm: TransferEditResolverService } }] }] },
+	{ path: 'vatStates', component: VatStateListComponent, canActivate: [AuthGuardService], resolve: { vatStateList: VatStateListResolverService } }, { path: 'vatStates/new', component: VatStateFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'vatStates/:id', component: VatStateFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
 	{ path: 'pageNotFound', component: PageNotFoundComponent }
 ]
 

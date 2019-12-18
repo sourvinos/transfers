@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core'
 export class HelperService {
 
     getUsernameFromLocalStorage() {
-        return localStorage.getItem('username') != null || undefined ? localStorage.getItem('username') : 'Sourvinos'
+        return localStorage.getItem('userName') != null || undefined ? localStorage.getItem('userName') : 'Sourvinos'
     }
 
     getDateFromLocalStorage() {

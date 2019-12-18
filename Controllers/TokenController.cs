@@ -64,7 +64,6 @@ namespace Transfers
                     {
                         _db.Tokens.Remove(oldrt);
                     }
-
                 }
 
                 _db.Tokens.Add(newRtoken);
@@ -75,7 +74,8 @@ namespace Transfers
             }
 
             ModelState.AddModelError("", "Username/Password was not Found");
-            return Unauthorized(new { LoginError = "Please Check the Login Credentials - Ivalid Username/Password was entered" });
+
+            return Unauthorized(new { LoginError = "Invalid credentials" });
 
         }
 
@@ -111,7 +111,8 @@ namespace Transfers
                 expiration = newtoken.ValidTo,
                 refresh_token = refreshToken,
                 roles = roles.FirstOrDefault(),
-                username = user.UserName
+                userName = user.UserName,
+                displayName = user.DisplayName
             };
 
         }

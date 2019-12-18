@@ -1,4 +1,4 @@
-import { IRoute } from"./route";
+import { IRoute } from "./route";
 
 export interface IPickupPoint {
     id: number

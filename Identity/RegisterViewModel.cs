@@ -8,6 +8,9 @@ namespace Transfers
         public string UserName { get; set; }
 
         [Required]
+        public string DisplayName { get; set; }
+
+        [Required]
         [EmailAddress]
         public string Email { get; set; }
 

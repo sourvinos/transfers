@@ -29,7 +29,7 @@ import { DialogIndexComponent } from '../shared/components/dialog-index/dialog-i
 import { DialogAlertComponent } from '../shared/components/dialog-alert/dialog-alert.component'
 // Routes
 import { HomeComponent } from './../home/home.component'
-import { LoginComponent } from '../login/login.component'
+import { LoginComponent } from '../login/user-interface/form-login'
 import { CustomerListComponent } from '../customers/user-interface/list-customer'; import { CustomerFormComponent } from '../customers/user-interface/form-customer'
 import { DestinationListComponent } from '../destinations/destination-list.component'; import { DestinationFormComponent } from '../destinations/destination-form.component'
 import { DriverListComponent } from './../drivers/driver-list.component'; import { DriverFormComponent } from './../drivers/driver-form.component'
@@ -99,7 +99,9 @@ import { CustomPipe } from '../pipes/custom.pipe'
         DialogIndexComponent,
         DialogAlertComponent,
     ],
-    providers: [{ provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } }],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } }],
     bootstrap: [RootComponent]
 })
 

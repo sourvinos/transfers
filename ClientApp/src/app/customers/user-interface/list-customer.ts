@@ -87,7 +87,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     private subscribeToInderactionService() {
         this.interactionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            console.log('list-customer', response)
             this.editRecord(response['id'])
         })
     }

@@ -1,34 +1,41 @@
-import { Component } from '@angular/core'
+import { Component, AfterViewInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
-
-import { AccountService } from '../services/account.service'
-import { CountdownService } from '../services/countdown.service'
+import { AccountService } from '../../services/account.service'
+import { CountdownService } from '../../services/countdown.service'
+import { Utils } from 'src/app/shared/classes/utils'
 
 @Component({
-	selector: 'app-login',
-	templateUrl: './login.component.html',
-	styleUrls: ['../shared/styles/forms.css']
+	selector: 'form-login',
+	templateUrl: './form-login.html',
+	styleUrls: ['../../shared/styles/forms.css', './form-login.css']
 })
 
-export class LoginComponent {
+export class LoginComponent implements AfterViewInit {
 
+	// #region Variables
+
+	errorMessage: string
+	countdown: number = 0
 	invalidLogin: boolean
 	returnUrl: string
-	ErrorMessage: string
-	countdown: number = 0
 
 	form = this.formBuilder.group({
-		userName: ['', Validators.required],
-		password: ['', Validators.required]
+		userName: ['aa', Validators.required],
+		password: ['Abc!123456', Validators.required]
 	})
+
+	// #endregion
 
 	constructor(private service: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder) { }
 
+	ngAfterViewInit() {
+		this.focus('userName')
+	}
+
+	// T
 	login() {
-
 		let userlogin = this.form.value
-
 		this.service.login(userlogin.userName, userlogin.password).subscribe(result => {
 			let token = (<any>result).authToken.token
 			this.invalidLogin = false
@@ -38,10 +45,15 @@ export class LoginComponent {
 		},
 			error => {
 				this.invalidLogin = true
-				this.ErrorMessage = error.error.loginError
+				this.errorMessage = error.error.loginError
 			})
-
 	}
+
+	private focus(field: string) {
+		Utils.setFocus(field)
+	}
+
+	// #region Helper properties
 
 	get userName() {
 		return this.form.get('userName')
@@ -51,8 +63,7 @@ export class LoginComponent {
 		return this.form.get('password')
 	}
 
-	getErrorMessage() {
-		return 'This field is required!'
-	}
+	// //#endregion
+
 
 }

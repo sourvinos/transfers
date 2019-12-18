@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ITransferFlat } from 'src/app/models/transfer-flat';
 import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { TransferService } from '../classes/service-api-transfer';
+import { ITransferFlat } from '../classes/model-transfer-flat';
 
 @Component({
     selector: 'list-transfer',
