@@ -3,7 +3,7 @@ import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { ICustomer } from './model-customer';
-import { CustomerService } from '../../services/customer.service';
+import { CustomerService } from './service-api-customer';
 
 @Injectable({ providedIn: 'root' })
 

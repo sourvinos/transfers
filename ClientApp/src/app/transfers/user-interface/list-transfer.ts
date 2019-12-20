@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
-import { Utils } from 'src/app/shared/classes/utils';
-import { InteractionService } from 'src/app/shared/services/interaction.service';
-import { TransferService } from '../classes/service-api-transfer';
 import { ITransferFlat } from '../classes/model-transfer-flat';
+import { TransferService } from '../classes/service-api-transfer';
+import { InteractionTransferService } from '../classes/service-interaction-transfer';
+import { InteractionService } from '../classes/interaction.service';
 
 @Component({
     selector: 'list-transfer',
@@ -45,23 +45,19 @@ export class ListTransferComponent implements OnInit, OnDestroy {
     justify = ['center', 'center', 'center', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
     fields = ['id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
 
+    isFinishedLoading: boolean
     unlisten: Unlisten
     navigationSubscription: any
     ngUnsubscribe = new Subject<void>();
 
     // #endregion
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private interactionService: InteractionService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private transferInteractionService: InteractionTransferService, private interactionService: InteractionService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.navigationSubscription = this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
+                console.clear()
                 this.loadTransfers()
-                this.readFromLocalStorage()
-                this.selectGroupItems()
-                this.saveSelectedItemsToLocalStorage(false)
-                this.addActiveClassToSummaries()
-                this.filterByCriteria()
-                this.flattenResults()
             }
         })
     }
@@ -70,7 +66,56 @@ export class ListTransferComponent implements OnInit, OnDestroy {
         this.subscribeToInderactionService()
     }
 
+    ngAfterViewInit() {
+        // If localStorage has data
+        if (JSON.parse(localStorage.getItem('transfers'))) {
+            // Populate the arrays from the localStorage
+            this.localStorageData = JSON.parse(localStorage.getItem('transfers'))
+            console.log('localStorage has data', this.localStorageData.destinations)
+            this.selectedDestinations = JSON.parse(this.localStorageData.destinations)
+            this.selectedCustomers = JSON.parse(this.localStorageData.customers)
+            this.selectedRoutes = JSON.parse(this.localStorageData.routes)
+            this.selectedDrivers = JSON.parse(this.localStorageData.drivers)
+            this.selectedPorts = JSON.parse(this.localStorageData.ports)
+            console.log('selected destinations', this.selectedDestinations)
+        } else {
+            // Populate the arrays from the results of the queryResult
+            console.log('localStorage is empty')
+            this.queryResult.personsPerDestination.forEach((element: { description: string; }) => { this.selectedDestinations.push(element.description) })
+            this.queryResult.personsPerCustomer.forEach((element: { description: string; }) => { this.selectedCustomers.push(element.description) })
+            this.queryResult.personsPerRoute.forEach((element: { description: string; }) => { this.selectedRoutes.push(element.description) })
+            this.queryResult.personsPerDriver.forEach((element: { description: string; }) => { this.selectedDrivers.push(element.description) })
+            this.queryResult.personsPerPort.forEach((element: { description: string; }) => { this.selectedPorts.push(element.description) })
+            console.log('selected destinations', this.selectedDestinations)
+            // Save
+            let summaryItems = {
+                "destinations": JSON.stringify(this.selectedDestinations),
+                "customers": JSON.stringify(this.selectedCustomers),
+                "routes": JSON.stringify(this.selectedRoutes),
+                "drivers": JSON.stringify(this.selectedDrivers),
+                "ports": JSON.stringify(this.selectedPorts),
+            }
+            localStorage.setItem('transfers', JSON.stringify(summaryItems))
+            console.log('localStorage updated')
+            // Populate the arrays from the localStorage
+            this.selectedDestinations = JSON.parse(this.localStorageData.destinations)
+            this.selectedCustomers = JSON.parse(this.localStorageData.customers)
+            this.selectedRoutes = JSON.parse(this.localStorageData.routes)
+            this.selectedDrivers = JSON.parse(this.localStorageData.drivers)
+            this.selectedPorts = JSON.parse(this.localStorageData.ports)
+        }
+        this.addActiveClassToElements('.item.destination', this.selectedDestinations)
+        this.addActiveClassToElements('.item.customer', this.selectedCustomers)
+        this.addActiveClassToElements('.item.route', this.selectedRoutes)
+        this.addActiveClassToElements('.item.driver', this.selectedDrivers)
+        this.addActiveClassToElements('.item.port', this.selectedPorts)
+        this.filterByCriteria()
+        this.flattenResults()
+    }
+
     ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.unsubscribe();
         this.navigationSubscription.unsubscribe()
         this.unlisten && this.unlisten()
         this.removeAllSummaryItemsFromLocalStorage()
@@ -105,6 +150,15 @@ export class ListTransferComponent implements OnInit, OnDestroy {
         }
         this.filterByCriteria()
         this.flattenResults()
+        let summaryItems = {
+            "destinations": JSON.stringify(this.selectedDestinations),
+            "customers": JSON.stringify(this.selectedCustomers),
+            "routes": JSON.stringify(this.selectedRoutes),
+            "drivers": JSON.stringify(this.selectedDrivers),
+            "ports": JSON.stringify(this.selectedPorts),
+        }
+        localStorage.setItem('transfers', JSON.stringify(summaryItems))
+        console.log('localStorage updated')
     }
 
     /**
@@ -114,8 +168,8 @@ export class ListTransferComponent implements OnInit, OnDestroy {
      *  It stops the panel's default behavior to expand or collapse
      *  Clears all items from the lookupArray
      *  Calls 'selectItems' method to either select or deselect all items
-     *  Calls 'filterByCriteria' 
-     *  Calls 'flattenResults'
+     *  Calls 'filterByCriteria()' 
+     *  Calls 'flattenResults()'
      * 
      * @param lookupArray 
      */
@@ -135,15 +189,14 @@ export class ListTransferComponent implements OnInit, OnDestroy {
      *  Calls 'flattenResults'
      */
     private loadTransfers() {
-        this.transferService.getTransfers(this.dateIn).subscribe((result: any) => {
-            this.queryResult = result
-            this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
-            this.flattenResults()
-        })
+        this.queryResult = this.activatedRoute.snapshot.data['transferList']
+        this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
+        console.log('1. loadTransfers - queryResult', this.queryResult, this.queryResultClone)
     }
 
     /**
      * Caller: 
+     *  Class - constructor()
      *  Class - toggleItem()
      *  Class - toggleItems()
      * Description:
@@ -151,6 +204,7 @@ export class ListTransferComponent implements OnInit, OnDestroy {
      *  Filters the queryResultClone array according to the selected items
      */
     private filterByCriteria() {
+        console.log('6. filterByCriteria')
         this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
         this.queryResultClone.transfers = this.queryResultClone.transfers
             .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) != -1 })
@@ -158,25 +212,8 @@ export class ListTransferComponent implements OnInit, OnDestroy {
             .filter((z: { pickupPoint: { route: { abbreviation: string } } }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.abbreviation) != -1 })
             .filter((o: { driver: { description: string } }) => { return this.selectedDrivers.indexOf(o.driver.description) != -1 })
             .filter((p: { port: { description: string } }) => { return this.selectedPorts.indexOf(p.port.description) != -1 })
-    }
-
-    /**
-     * Caller: 
-     *  Class - constructor()
-     * Description: 
-     *  Adds the class 'activeItem' to all items 
-     */
-    private selectGroupItems() {
-        this.localStorageData = JSON.parse(localStorage.getItem('transfers'))
-        if (this.localStorageData == null) {
-            setTimeout(() => {
-                this.selectItems('item destination', this.selectedDestinations, true)
-                this.selectItems('item customer', this.selectedCustomers, true)
-                this.selectItems('item route', this.selectedRoutes, true)
-                this.selectItems('item driver', this.selectedDrivers, true)
-                this.selectItems('item port', this.selectedPorts, true)
-            }, 500);
-        }
+        console.log('6. filterByCriteria - this.queryResult.length', this.queryResult.length)
+        console.log('6. filterByCriteria', this.queryResultClone.transfers.length)
     }
 
     /**
@@ -193,6 +230,7 @@ export class ListTransferComponent implements OnInit, OnDestroy {
      * @param checked 
      */
     private selectItems(className: string, lookupArray: any, checked: boolean) {
+        // setTimeout(() => {
         let elements = document.getElementsByClassName('item ' + className)
         for (let index = 0; index < elements.length; index++) {
             const element = elements[index]
@@ -203,6 +241,7 @@ export class ListTransferComponent implements OnInit, OnDestroy {
                 element.classList.remove('activeItem')
             }
         }
+        // }, 1000);
     }
 
     /**
@@ -216,6 +255,7 @@ export class ListTransferComponent implements OnInit, OnDestroy {
      *  The transfersFlat array will be the input for the table on the template
      */
     private flattenResults() {
+        console.log('7. flattenResults')
         this.transfersFlat.splice(0)
         for (var {
             id: a,
@@ -234,6 +274,8 @@ export class ListTransferComponent implements OnInit, OnDestroy {
         } of this.queryResultClone.transfers) {
             this.transfersFlat.push({ id: a, destination: b, customer: c, adults: d, kids: e, free: f, totalPersons: g, pickupPoint: h, time: i, route: j, port: k, driver: l, userName: m, dateIn: n, remarks: o })
         }
+        console.log('7. this.queryResultClone', this.queryResultClone.length)
+        console.log('7. this.transfersFlat', this.transfersFlat.length)
     }
 
     /**
@@ -243,36 +285,13 @@ export class ListTransferComponent implements OnInit, OnDestroy {
      *  Gets the selected record from the table and executes the editRecord method
      */
     private subscribeToInderactionService() {
-        this.interactionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            this.editRecord(response['id'])
+        this.transferInteractionService.data.subscribe(response => {
+            this.editRecord(response[0]['id'])
         })
-    }
-
-    /**
-     * Caller:
-     *  Class - constructor()
-     *  Class - editRecord()
-     * Description:
-     *  Saves the selected items to the localStorage only when:
-     *   localStorage is empty, that is on the first read
-     *   - OR -
-     *   editRecord is invoked
-     * 
-     * @param mustSave 
-     */
-    private saveSelectedItemsToLocalStorage(mustSave: boolean) {
-        if (localStorage.getItem('transfers') == null || mustSave == true) {
-            setTimeout(() => {
-                let summaryItems = {
-                    "destinations": JSON.stringify(this.selectedDestinations),
-                    "customers": JSON.stringify(this.selectedCustomers),
-                    "routes": JSON.stringify(this.selectedRoutes),
-                    "drivers": JSON.stringify(this.selectedDrivers),
-                    "ports": JSON.stringify(this.selectedPorts),
-                }
-                localStorage.setItem('transfers', JSON.stringify(summaryItems))
-            }, 500)
-        }
+        // this.transferInteractionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+        //     console.log('received in service')
+        //     this.editRecord(response['id'])
+        // })
     }
 
     /**
@@ -282,19 +301,20 @@ export class ListTransferComponent implements OnInit, OnDestroy {
      *  Deleted the localStorage data on navigation away from this page
      */
     private removeAllSummaryItemsFromLocalStorage() {
-        localStorage.removeItem('transfers')
+        // localStorage.removeItem('transfers')
     }
 
     /**
       * Caller:
       *  Class - subscribeToInderactionService()
       * Description:
+      *  Saves the selected items to the localStorage
       *  Calls the navigateToEditRoute()
       * 
       * @param id 
       */
     private editRecord(id: number) {
-        this.saveSelectedItemsToLocalStorage(true)
+        // this.saveSelectedItemsToLocalStorage(true)
         this.navigateToEditRoute(id)
     }
 
@@ -310,43 +330,16 @@ export class ListTransferComponent implements OnInit, OnDestroy {
         this.router.navigate(['transfer/', id], { relativeTo: this.activatedRoute })
     }
 
-    /**
-     * Caller:
-     *  Class - constructor()
-     * Description:
-     *  Populates the arrays with the localStorage data
-     */
-    private readFromLocalStorage() {
-        setTimeout(() => {
-            this.localStorageData = JSON.parse(localStorage.getItem('transfers'))
-            if (this.localStorageData != null) {
-                this.selectedDestinations = JSON.parse(this.localStorageData.destinations)
-                this.selectedCustomers = JSON.parse(this.localStorageData.customers)
-                this.selectedRoutes = JSON.parse(this.localStorageData.routes)
-                this.selectedDrivers = JSON.parse(this.localStorageData.drivers)
-                this.selectedPorts = JSON.parse(this.localStorageData.ports)
-            }
-        }, 500);
-    }
-
-    private addActiveClassToSummaries() {
-        this.addActiveClassToElements('.item.destination', this.selectedDestinations)
-        this.addActiveClassToElements('.item.customer', this.selectedCustomers)
-        this.addActiveClassToElements('.item.route', this.selectedRoutes)
-        this.addActiveClassToElements('.item.driver', this.selectedDrivers)
-        this.addActiveClassToElements('.item.port', this.selectedPorts)
-    }
-
     private addActiveClassToElements(className: string, lookupArray: string[]) {
-        setTimeout(() => {
-            let elements = document.querySelectorAll(className)
-            elements.forEach((element) => {
-                let position = lookupArray.indexOf(element.id)
-                if (position >= 0) {
-                    element.classList.add('activeItem')
-                }
-            })
-        }, 1000);
+        // setTimeout(() => {
+        let elements = document.querySelectorAll(className)
+        elements.forEach((element) => {
+            let position = lookupArray.indexOf(element.id)
+            if (position >= 0) {
+                element.classList.add('activeItem')
+            }
+        })
+        // }, 1000);
     }
 
 }

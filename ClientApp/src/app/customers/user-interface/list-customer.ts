@@ -41,7 +41,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.addShortcuts()
         this.setFocus('searchField')
-        this.subscribeToInderactionService()
+        // this.subscribeToInderactionService()
     }
 
     ngOnDestroy() {

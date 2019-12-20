@@ -54,3 +54,10 @@ td {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+#table-input {
+    display: block;
+    height: 30px;
+    position: absolute;
+    width: 30px;
+}

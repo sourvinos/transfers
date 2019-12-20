@@ -6,7 +6,7 @@ import { forkJoin, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DialogAlertComponent } from 'src/app/shared/components/dialog-alert/dialog-alert.component';
 import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
-import { CustomerService } from '../../services/customer.service';
+import { CustomerService } from '../classes/service-api-customer';
 import { HelperService } from '../../services/helper.service';
 import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.service';
 import { TaxOfficeService } from '../../services/taxOffice.service';
@@ -62,12 +62,12 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.populateDropDowns()
     }
 
-    ngAfterViewInit(): void {
+    ngAfterViewInit() {
         this.focus('description')
     }
 
-    ngOnDestroy(): void {
-        (this.unlisten) && this.unlisten()
+    ngOnDestroy() {
+        this.unlisten && this.unlisten()
     }
 
     // Master

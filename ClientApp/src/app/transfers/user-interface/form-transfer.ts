@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { CustomerService } from "src/app/services/customer.service";
+import { CustomerService } from "src/app/customers/classes/service-api-customer";
 import { DestinationService } from "src/app/services/destination.service";
 import { DriverService } from 'src/app/services/driver.service';
 import { HelperService } from 'src/app/services/helper.service';
@@ -62,10 +62,10 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             this.id = p['transferId']
             if (this.id) {
                 this.getTransfer()
-                this.interactionTransferService.sendData('editRecord')
+                // this.interactionTransferService.sendData('editRecord')
             } else {
                 this.populateFormWithData()
-                this.interactionTransferService.sendData('newRecord')
+                // this.interactionTransferService.sendData('newRecord')
             }
         })
     }
@@ -74,7 +74,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         this.scrollToForm()
         this.addShortcuts()
         this.populateDropDowns()
-        this.subscribeToInderactionService()
+        // this.subscribeToInderactionService()
     }
 
     ngAfterViewInit(): void {
@@ -258,7 +258,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private goBack() {
-        this.interactionTransferService.sendData('')
+        // this.interactionTransferService.sendData('')
         this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
@@ -380,8 +380,8 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private subscribeToInderactionService() {
         this.interactionTransferService.data.subscribe(response => {
-            if (response == 'saveRecord') this.saveRecord()
-            if (response == 'deleteRecord') this.deleteRecord()
+            // if (response == 'saveRecord') this.saveRecord()
+            // if (response == 'deleteRecord') this.deleteRecord()
         })
     }
 

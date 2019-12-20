@@ -9,6 +9,8 @@ import { IndexInteractionService } from '../../services/index-interaction.servic
 
 export class TableComponent {
 
+    // #region Variables
+
     @Input() records: any[]
 
     @Input() headers: any
@@ -24,6 +26,8 @@ export class TableComponent {
     table: any
     rowHeaderHeight: any
     rowHeight: number = 0
+
+    // //#endregion
 
     constructor(private indexInteractionService: IndexInteractionService) { }
 
@@ -83,7 +87,6 @@ export class TableComponent {
         }
         table.rows[this.currentRow].classList.toggle('selected')
     }
-
 
     private isRowIntoView(row: HTMLTableRowElement, direction: string) {
         const rowOffsetTop = row.offsetTop

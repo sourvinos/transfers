@@ -1,9 +1,10 @@
-import { Component, AfterViewInit } from '@angular/core'
+import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 import { AccountService } from '../../services/account.service'
 import { CountdownService } from '../../services/countdown.service'
 import { Utils } from 'src/app/shared/classes/utils'
+import { Unlisten, KeyboardShortcuts } from 'src/app/services/keyboard-shortcuts.service'
 
 @Component({
 	selector: 'form-login',
@@ -11,7 +12,7 @@ import { Utils } from 'src/app/shared/classes/utils'
 	styleUrls: ['../../shared/styles/forms.css', './form-login.css']
 })
 
-export class LoginComponent implements AfterViewInit {
+export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	// #region Variables
 
@@ -20,6 +21,8 @@ export class LoginComponent implements AfterViewInit {
 	invalidLogin: boolean
 	returnUrl: string
 
+	unlisten: Unlisten
+
 	form = this.formBuilder.group({
 		userName: ['aa', Validators.required],
 		password: ['Abc!123456', Validators.required]
@@ -27,10 +30,20 @@ export class LoginComponent implements AfterViewInit {
 
 	// #endregion
 
-	constructor(private service: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder) { }
+	constructor(private service: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts) {
+		this.unlisten = null
+	}
+
+	ngOnInit() {
+		this.addShortcuts()
+	}
 
 	ngAfterViewInit() {
 		this.focus('userName')
+	}
+
+	ngOnDestroy(): void {
+		this.unlisten && this.unlisten()
 	}
 
 	// T
@@ -49,6 +62,18 @@ export class LoginComponent implements AfterViewInit {
 			})
 	}
 
+	private addShortcuts() {
+		this.unlisten = this.keyboardShortcutsService.listen({
+			"Alt.L": (event: KeyboardEvent): void => {
+				event.preventDefault()
+				this.login()
+			}
+		}, {
+			priority: 2,
+			inputs: true
+		})
+	}
+
 	private focus(field: string) {
 		Utils.setFocus(field)
 	}
@@ -64,6 +89,5 @@ export class LoginComponent implements AfterViewInit {
 	}
 
 	// //#endregion
-
 
 }

@@ -5,12 +5,13 @@ import { Subject } from 'rxjs';
 
 export class InteractionTransferService {
 
-    private messageSource = new Subject<string>()
+    private messageSource = new Subject<string[]>()
 
     data = this.messageSource.asObservable()
 
-    sendData(data: any) {
+    sendObject(data: any[]) {
         this.messageSource.next(data)
+        console.log('inside transfers service', data)
     }
 
 }

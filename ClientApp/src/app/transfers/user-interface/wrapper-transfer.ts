@@ -17,7 +17,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     // #region Variables
 
-    dateIn: string = ''
+    dateIn: string = '01/10/2019'
     dateInISO: string = ''
 
     actionToPerform: string = ''
@@ -31,7 +31,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.addShortcuts()
-        this.subscribeToInderactionService()
+        // this.subscribeToInderactionService()
         this.focus('dateIn')
     }
 
@@ -48,7 +48,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * and the form executes the deleteRecord method
      */
     deleteRecord() {
-        this.interactionTransferService.sendData('deleteRecord')
+        // this.interactionTransferService.sendData('deleteRecord')
     }
 
     // T
@@ -70,7 +70,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * and the form executes the saveRecord method
      */
     saveRecord() {
-        this.interactionTransferService.sendData('saveRecord')
+        // this.interactionTransferService.sendData('saveRecord')
     }
 
     private addShortcuts() {
@@ -122,9 +122,9 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * and decides which buttons to display
      */
     private subscribeToInderactionService() {
-        this.interactionTransferService.data.subscribe(response => {
-            this.actionToPerform = response
-        })
+        //this.interactionTransferService.data.subscribe(response => {
+        // this.actionToPerform = response
+        //})
     }
 
     private goBack() {
