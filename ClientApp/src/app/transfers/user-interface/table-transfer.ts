@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, HostListener, Input, OnInit } from '@angular/core';
-import { InteractionTransferService } from '../classes/service-interaction-transfer';
 import { InteractionService } from '../classes/interaction.service';
-import { BehaviorSubject } from 'rxjs';
+import { InteractionTransferService } from '../classes/service-interaction-transfer';
 
 @Component({
     selector: 'table-transfer',
@@ -11,7 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 
 export class TableTransferComponent implements OnInit, AfterViewInit {
 
-    // #region Variables
+    // #region Init
 
     @Input() records: any[]
 
@@ -52,14 +51,14 @@ export class TableTransferComponent implements OnInit, AfterViewInit {
     private gotoRow(key: string) {
         if (!isNaN(parseInt(key))) {
             this.clearAllRowHighlights()
-            this.highlightRow(this.table, key)
+            // this.highlightRow(this.table, key)
         }
         if (key == 'Enter') {
             this.sendRowToService(false)
         }
         if (key == 'ArrowUp' && this.currentRow > 1) {
             this.clearAllRowHighlights()
-            this.highlightRow(this.table, 'up')
+            // this.highlightRow(this.table, 'up')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
                 document.getElementById(this.currentRow.toString()).scrollIntoView()
                 this.indexContent.scrollTop = (this.currentRow - 1) * this.rowHeight
@@ -67,7 +66,7 @@ export class TableTransferComponent implements OnInit, AfterViewInit {
         }
         if (key == 'ArrowDown' && this.currentRow < this.rowCount) {
             this.clearAllRowHighlights()
-            this.highlightRow(this.table, 'down')
+            // this.highlightRow(this.table, 'down')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
                 document.getElementById(this.currentRow.toString()).scrollIntoView({ block: "end", behavior: "smooth" })
             }
@@ -122,7 +121,7 @@ export class TableTransferComponent implements OnInit, AfterViewInit {
             }
             this.rowCount = this.table.rows.length - 1
             document.getElementById('table-input').focus()
-            // this.gotoRow('1')
+            this.gotoRow('1')
         }, 2000);
     }
 

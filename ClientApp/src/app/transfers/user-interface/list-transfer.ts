@@ -1,12 +1,10 @@
-import { Component, OnDestroy, OnInit, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { ITransferFlat } from '../classes/model-transfer-flat';
-import { TransferService } from '../classes/service-api-transfer';
 import { InteractionTransferService } from '../classes/service-interaction-transfer';
-import { InteractionService } from '../classes/interaction.service';
 
 @Component({
     selector: 'list-transfer',
@@ -45,18 +43,16 @@ export class ListTransferComponent implements OnInit, OnDestroy {
     justify = ['center', 'center', 'center', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
     fields = ['id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
 
-    isFinishedLoading: boolean
     unlisten: Unlisten
     navigationSubscription: any
     ngUnsubscribe = new Subject<void>();
 
     // #endregion
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private transferInteractionService: InteractionTransferService, private interactionService: InteractionService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private transferInteractionService: InteractionTransferService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.navigationSubscription = this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
-                console.clear()
                 this.loadTransfers()
             }
         })
@@ -96,7 +92,7 @@ export class ListTransferComponent implements OnInit, OnDestroy {
                 "ports": JSON.stringify(this.selectedPorts),
             }
             localStorage.setItem('transfers', JSON.stringify(summaryItems))
-            console.log('localStorage updated')
+            this.localStorageData = JSON.parse(localStorage.getItem('transfers'))
             // Populate the arrays from the localStorage
             this.selectedDestinations = JSON.parse(this.localStorageData.destinations)
             this.selectedCustomers = JSON.parse(this.localStorageData.customers)
@@ -118,12 +114,13 @@ export class ListTransferComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.unsubscribe();
         this.navigationSubscription.unsubscribe()
         this.unlisten && this.unlisten()
-        this.removeAllSummaryItemsFromLocalStorage()
+        this.clearLocalStorage()
     }
 
     /**
      * Caller:
      *  Template - toggleItem()
+     * 
      * Description: 
      *  Adds / removes the class 'activeItem' to / from the clicked item 
      *  Adds / removes the item to / from the lookupArray
@@ -185,26 +182,23 @@ export class ListTransferComponent implements OnInit, OnDestroy {
      * Caller:
      *  Class - constructor()
      * Description:
-     *  Gets the records from the service according to the given date and stores them 
-     *  Calls 'flattenResults'
+     *  Gets the records from the api for the given date
      */
     private loadTransfers() {
         this.queryResult = this.activatedRoute.snapshot.data['transferList']
         this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
-        console.log('1. loadTransfers - queryResult', this.queryResult, this.queryResultClone)
+        console.clear()
+        console.log('1. loadTransfers - queryResult', this.queryResult.persons, 'queryResultClone', this.queryResultClone.persons)
     }
 
     /**
      * Caller: 
-     *  Class - constructor()
-     *  Class - toggleItem()
-     *  Class - toggleItems()
+     *  Class - constructor(), toggleItem(), toggleItems()
      * Description:
-     *  Stores the data from the service to the queryResultClone array
+     *  Stores the data from the api to the queryResultClone array
      *  Filters the queryResultClone array according to the selected items
      */
     private filterByCriteria() {
-        console.log('6. filterByCriteria')
         this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
         this.queryResultClone.transfers = this.queryResultClone.transfers
             .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) != -1 })
@@ -212,8 +206,6 @@ export class ListTransferComponent implements OnInit, OnDestroy {
             .filter((z: { pickupPoint: { route: { abbreviation: string } } }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.abbreviation) != -1 })
             .filter((o: { driver: { description: string } }) => { return this.selectedDrivers.indexOf(o.driver.description) != -1 })
             .filter((p: { port: { description: string } }) => { return this.selectedPorts.indexOf(p.port.description) != -1 })
-        console.log('6. filterByCriteria - this.queryResult.length', this.queryResult.length)
-        console.log('6. filterByCriteria', this.queryResultClone.transfers.length)
     }
 
     /**
@@ -230,7 +222,6 @@ export class ListTransferComponent implements OnInit, OnDestroy {
      * @param checked 
      */
     private selectItems(className: string, lookupArray: any, checked: boolean) {
-        // setTimeout(() => {
         let elements = document.getElementsByClassName('item ' + className)
         for (let index = 0; index < elements.length; index++) {
             const element = elements[index]
@@ -241,7 +232,6 @@ export class ListTransferComponent implements OnInit, OnDestroy {
                 element.classList.remove('activeItem')
             }
         }
-        // }, 1000);
     }
 
     /**
@@ -282,26 +272,22 @@ export class ListTransferComponent implements OnInit, OnDestroy {
      * Caller: 
      *  Class - ngOnInit()
      * Description:
-     *  Gets the selected record from the table and executes the editRecord method
+     *  Gets the selected record from the table through the interaction service and executes the editRecord method
      */
     private subscribeToInderactionService() {
-        this.transferInteractionService.data.subscribe(response => {
+        this.transferInteractionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response[0]['id'])
         })
-        // this.transferInteractionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-        //     console.log('received in service')
-        //     this.editRecord(response['id'])
-        // })
     }
 
     /**
      * Caller: 
      *  Class - onDestroy()
      * Description:
-     *  Deleted the localStorage data on navigation away from this page
+     *  Deletes the localStorage data on navigation away from this page
      */
-    private removeAllSummaryItemsFromLocalStorage() {
-        // localStorage.removeItem('transfers')
+    private clearLocalStorage() {
+        localStorage.removeItem('transfers')
     }
 
     /**
@@ -331,7 +317,6 @@ export class ListTransferComponent implements OnInit, OnDestroy {
     }
 
     private addActiveClassToElements(className: string, lookupArray: string[]) {
-        // setTimeout(() => {
         let elements = document.querySelectorAll(className)
         elements.forEach((element) => {
             let position = lookupArray.indexOf(element.id)
@@ -339,7 +324,6 @@ export class ListTransferComponent implements OnInit, OnDestroy {
                 element.classList.add('activeItem')
             }
         })
-        // }, 1000);
     }
 
 }

@@ -1,4 +1,3 @@
-import { MatTableModule } from '@angular/material/table';
 // Base
 import { AppRoutingModule } from './app-routing.module'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
@@ -14,8 +13,9 @@ import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS, MatExpansionM
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
-import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select'
+import { MatSnackBarModule } from '@angular/material/snack-bar'
+import { MatTableModule } from '@angular/material/table'
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
 // Common components
@@ -40,8 +40,8 @@ import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component';
 import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'; import { TableTransferComponent } from '../transfers/user-interface/table-transfer'
 import { VatStateListComponent } from '../vatStates/vatState-list.component'; import { VatStateFormComponent } from '../vatStates/vatState-form.component'
 // Directives
+import { InputTabStopDirective } from '../directives/input-tabstop.directive'
 import { InputFormatDirective } from '../directives/input-format.directive'
-import { MatRowKeyboardSelectionModule } from "mat-row-keyboard-selection";
 // Pipes
 import { CustomPipe } from '../pipes/custom.pipe'
 
@@ -69,6 +69,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
         WrapperTransferComponent, ListTransferComponent, FormTransferComponent, TableTransferComponent,
         VatStateListComponent, VatStateFormComponent,
         // Directives
+        InputTabStopDirective,
         InputFormatDirective,
         // Pipes
         CustomPipe,
@@ -90,10 +91,9 @@ import { CustomPipe } from '../pipes/custom.pipe'
         MatIconModule,
         MatInputModule,
         MatListModule,
-        MatRowKeyboardSelectionModule,
         MatSelectModule,
         MatSnackBarModule,
-        MatTableModule
+        MatTableModule,
     ],
     entryComponents: [
         DialogIndexComponent,

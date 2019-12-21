@@ -2,7 +2,7 @@ import { Directive, HostListener, ElementRef, Input } from '@angular/core';
 
 @Directive({ selector: '[inputTabStop]' })
 
-export class InputDirective {
+export class InputTabStopDirective {
 
     @Input('inputTabStop') format: string;
 

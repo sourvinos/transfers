@@ -62,10 +62,10 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             this.id = p['transferId']
             if (this.id) {
                 this.getTransfer()
-                // this.interactionTransferService.sendData('editRecord')
+                this.interactionTransferService.setRecordStatus('editRecord')
             } else {
                 this.populateFormWithData()
-                // this.interactionTransferService.sendData('newRecord')
+                this.interactionTransferService.setRecordStatus('newRecord')
             }
         })
     }
@@ -74,7 +74,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         this.scrollToForm()
         this.addShortcuts()
         this.populateDropDowns()
-        // this.subscribeToInderactionService()
+        this.subscribeToInderactionService()
     }
 
     ngAfterViewInit(): void {
@@ -85,7 +85,12 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten && this.unlisten()
     }
 
-    // Master
+    /**
+     * Caller:
+     *  Service - CanDeactivateGuard()
+     * Description:
+     *  Desides which action to perform when a route change is requested
+     */
     canDeactivate() {
         if (this.form.dirty) {
             const dialogRef = this.dialog.open(DialogAlertComponent, {
@@ -113,13 +118,23 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    // T
+    /**
+     * Caller:
+     *  Template - calculateTotalPersons()
+     * Description:
+     *  Calculates the total persons for the transfer
+     */
     calculateTotalPersons() {
         let totalPersons = parseInt(this.form.value.adults) + parseInt(this.form.value.kids) + parseInt(this.form.value.free)
         this.form.patchValue({ totalPersons: !!Number(totalPersons) ? totalPersons : 0 })
     }
 
-    // T
+    /**
+     * Caller:
+     *  Class - subscribeToInderactionService()
+     * Description:
+     *  Deletes the current record
+     */
     deleteRecord() {
         if (this.form.value.id == 0 != undefined) {
             const dialogRef = this.dialog.open(DialogAlertComponent, {
@@ -146,7 +161,22 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    // T
+    /**
+     * Caller:
+     *  Template - lookupIndex()
+     * Description:
+     *  Filters the given array according to the user input and displays a table to select a record
+     * 
+     * @param lookupArray 
+     * @param title 
+     * @param formFields 
+     * @param fields 
+     * @param headers 
+     * @param widths 
+     * @param visibility 
+     * @param justify 
+     * @param value 
+     */
     lookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
@@ -163,7 +193,12 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    // T
+    /**
+     * Caller:
+     *  Class - subscribeToInderactionService()
+     * Description:
+     *  Adds a new record or updates the current
+     */
     saveRecord() {
         if (!this.form.valid) return
         if (this.form.value.id == 0) {
@@ -180,11 +215,23 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * Caller:
+     *  Class - saveRecord(), deleteRecord()
+     * Description:
+     *  Housekeeping actions
+     */
     private abortDataEntry() {
         this.clearFields()
         this.disableFields(['destinationDescription', 'customerDescription', 'pickupPointDescription', 'adults', 'kids', 'free', 'totalPersons', 'driverDescription', 'portDescription', 'remarks'])
     }
 
+    /**
+     * Caller:
+     *  Class - ngOnInit()
+     * Description:
+     *  Adds keyboard shortcuts
+     */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             "Escape": (): void => {
@@ -215,6 +262,12 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
+    /**
+     * Caller:
+     *  Class - abortDataEntry()
+     * Description:
+     *  Resets the form with default values
+     */
     private clearFields() {
         this.form.reset({
             id: 0,
@@ -233,35 +286,77 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
+    /**
+     * Caller:
+     *  Class - abortDataEntry()
+     * Description:
+     *  Calls the public method
+     * @param fields 
+     */
     private disableFields(fields: string[]) {
         Utils.disableFields(fields)
     }
 
+    /**
+     * Caller:
+     *  Class - canDeactivate()
+     * Description:
+     *  Calls the public enableFields()
+     * 
+     * @param fields 
+     */
     private enableFields(fields: string[]) {
         Utils.enableFields(fields)
     }
 
+    /**
+     * Caller:
+     *  Class - ngAfterViewInit()
+     * Description
+     *  Calls the public focus()
+     * 
+     * @param field 
+     */
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
+    /**
+     * Caller:
+     *  Class - constructor()
+     * Description:
+     *  Gets the selected record from the api
+     */
     private getTransfer() {
         if (this.id) {
             this.transferService.getTransfer(this.id).subscribe(result => {
                 this.transfer = result
                 this.populateFields(this.transfer)
-                this.scrollToForm()
+                // this.scrollToForm()
             }, error => {
                 console.log('Error getting record')
             })
         }
     }
 
+    /**
+     * Caller: 
+     *  Class - canDeactive(), deleteRecord(), saveRecord()
+     * Description:
+     *  Send 'empty' to the setRecordStatus, so that the wrapper will display the 'new' button
+     *  On escape navigates to the list
+     */
     private goBack() {
-        // this.interactionTransferService.sendData('')
+        this.interactionTransferService.setRecordStatus('empty')
         this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
+    /**
+     * Caller:
+     *  Class - deleteRecord()
+     * Description:
+     *  Displays a modal window with an alert if the delete action fails
+     */
     private openErrorModal() {
         this.dialog.open(DialogAlertComponent, {
             height: '250px',
@@ -275,11 +370,27 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
+    /**
+     * Caller:
+     *  Class - lookupIndex(), showModalIndex()
+     * Description:
+     *  Populates the fields with empty values from the lookupIndex() or response values from the showModalIndex()
+     *  
+     * @param result 
+     * @param id 
+     * @param description 
+     */
     private patchFields(result: any, id: any, description: any) {
         this.form.patchValue({ [id]: result ? result.id : '' })
         this.form.patchValue({ [description]: result ? result.description : '' })
     }
 
+    /**
+     * Caller:
+     *  Class - ngOnInit()
+     * Description:
+     *  Populates the dropdowns
+     */
     private populateDropDowns() {
         let sources = []
         sources.push(this.destinationService.getDestinations())
@@ -303,6 +414,14 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         )
     }
 
+    /**
+     * Caller:
+     *  Class - getTransfer()
+     * Description:
+     *  Populates the form with record values
+     * 
+     * @param result 
+     */
     private populateFields(result: ITransfer) {
         this.form.setValue({
             id: result.id,
@@ -321,6 +440,12 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
+    /**
+     * Caller:
+     *  Class - constructor()
+     * Description:
+     *  Populates the form with initial values
+     */
     private populateFormWithData() {
         this.form.setValue({
             id: 0,
@@ -339,24 +464,43 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
+    /**
+     * Caller:
+     *  Class - ngOnInit()
+     * Description:
+     *  Hides the list and shows the form
+     */
     private scrollToForm() {
         document.getElementById('transfersList').style.height = '0'
     }
 
+    /**
+     * Caller:
+     *  Class - canDeactivate()
+     * Description:
+     *  Hides the form and shows the list
+     */
     private scrollToList() {
         document.getElementById('form').style.height = '0'
         document.getElementById('transfersList').style.height = '100%'
     }
 
-    private showModalIndex(
-        elements: any,
-        title: string,
-        formFields: any[],
-        fields: any[],
-        headers: any[],
-        widths: any[],
-        visibility: any[],
-        justify: any[]) {
+    /**
+     * Caller:
+     *  Class - lookupIndex()
+     * Description:
+     *  Displays a modal window with a table so a record can be selected
+     * 
+     * @param elements 
+     * @param title 
+     * @param formFields 
+     * @param fields 
+     * @param headers 
+     * @param widths    
+     * @param visibility 
+     * @param justify 
+     */
+    private showModalIndex(elements: any, title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {
         const dialog = this.dialog.open(DialogIndexComponent, {
             height: '640px',
             width: '600px',
@@ -376,12 +520,15 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Accepts data from the wrapper when buttons are clicked
+     * Caller:
+     *  Class - ngOnInit()
+     * Description:
+     *  Accepts data from the wrapper through the interaction service and decides which action to perform
      */
     private subscribeToInderactionService() {
-        this.interactionTransferService.data.subscribe(response => {
-            // if (response == 'saveRecord') this.saveRecord()
-            // if (response == 'deleteRecord') this.deleteRecord()
+        this.interactionTransferService.recordStatus.subscribe(response => {
+            if (response == 'save') this.saveRecord()
+            if (response == 'delete') this.deleteRecord()
         })
     }
 

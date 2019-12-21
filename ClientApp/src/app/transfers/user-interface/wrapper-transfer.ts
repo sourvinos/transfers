@@ -20,7 +20,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     dateIn: string = '01/10/2019'
     dateInISO: string = ''
 
-    actionToPerform: string = ''
+    recordStatus: string = 'empty'
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
@@ -31,7 +31,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.addShortcuts()
-        // this.subscribeToInderactionService()
+        this.subscribeToInderactionService()
         this.focus('dateIn')
     }
 
@@ -43,15 +43,21 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Called from the deleteRecord(T)
-     * It sends 'deleteRecord' to the form
-     * and the form executes the deleteRecord method
+     * Caller:
+     *  Template - deleteRecord()
+     * Description:
+     *  Executes the delete method on the form through the interaction service
      */
     deleteRecord() {
-        // this.interactionTransferService.sendData('deleteRecord')
+        // this.interactionTransferService.status('delete')
     }
 
-    // T
+    /**
+     * Caller:
+     *  Template - loadTransfers()
+     * Description:
+     *  Loads from the api the records for the given date
+     */
     loadTransfers() {
         if (this.isCorrectDate()) {
             this.updateLocalStorage()
@@ -59,20 +65,32 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
         }
     }
 
-    // T
+    /**
+     * Caller:
+     *  Template - newRecord()
+     * Description:
+     *  Navigates to the form so that new records can be appended
+     */
     newRecord() {
         this.router.navigate([this.location.path() + '/transfer/new'])
     }
 
     /**
-     * Called from the deleteRecord(T)
-     * It sends 'saveRecord' to the form
-     * and the form executes the saveRecord method
+     * Caller:
+     *  Template - saveRecord()
+     * Description:
+     *  Executes the save method on the form through the interaction service
      */
     saveRecord() {
         // this.interactionTransferService.sendData('saveRecord')
     }
 
+    /**
+     * Caller:
+     *  Class - ngOnInit()
+     * Description:
+     *  Adds keyboard functionality
+     */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             "Escape": (event: KeyboardEvent): void => {
@@ -92,10 +110,23 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
         })
     }
 
+    /**
+     * Caller:
+     *  Class - ngOnInit()
+     * Description:
+     *  Calls the public method
+     * @param field 
+     */
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
+    /**
+     * Caller:
+     *  Class - loadTransfers()
+     * Description:
+     *  Checks for valid date
+     */
     isCorrectDate() {
         let date = (<HTMLInputElement>document.getElementById('dateIn')).value
         if (date.length == 10) {
@@ -113,20 +144,35 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
         localStorage.removeItem('transfers')
     }
 
+    /**
+     * Caller: 
+     *  Class - loadTransfers()
+     * Description:
+     *  Stores the given date to the localStorage for reading in later visits
+     */
     private updateLocalStorage() {
         localStorage.setItem('date', this.dateInISO)
     }
 
     /**
-     * Accepts data from the constructor of the form 
-     * and decides which buttons to display
+     * Caller:
+     *  Class - ngOnInit()
+     * Description:
+     *  Gets the record status from the form through the interaction service
+     *  The local variable 'recordStatus' will be checked by the template so that it decides which buttons to display
      */
     private subscribeToInderactionService() {
-        //this.interactionTransferService.data.subscribe(response => {
-        // this.actionToPerform = response
-        //})
+        this.interactionTransferService.recordStatus.subscribe(response => {
+            this.recordStatus = response
+        })
     }
 
+    /**
+     * Caller:
+     *  Class - addShortcuts()
+     * Description:
+     *  On escape navigates home
+     */
     private goBack() {
         this.router.navigate(['/'])
     }
