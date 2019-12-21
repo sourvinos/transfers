@@ -150,6 +150,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             dialogRef.afterClosed().subscribe(result => {
                 if (result == 'true') {
                     this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
+                        console.log('Deleting')
                         this.abortDataEntry()
                         this.goBack()
                     }, error => {
@@ -196,6 +197,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller:
      *  Class - subscribeToInderactionService()
+     * 
      * Description:
      *  Adds a new record or updates the current
      */
@@ -203,12 +205,14 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.form.valid) return
         if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
+                console.log('Saving')
                 this.abortDataEntry()
                 this.goBack()
             }, error => Utils.errorLogger(error))
         }
         else {
             this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
+                console.log('Updating')
                 this.abortDataEntry()
                 this.goBack()
             }, error => Utils.errorLogger(error))
@@ -526,9 +530,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Accepts data from the wrapper through the interaction service and decides which action to perform
      */
     private subscribeToInderactionService() {
-        this.interactionTransferService.recordStatus.subscribe(response => {
-            if (response == 'save') this.saveRecord()
-            if (response == 'delete') this.deleteRecord()
+        this.interactionTransferService.action.subscribe(response => {
+            if (response == 'saveRecord') this.saveRecord()
+            if (response == 'deleteRecord') this.deleteRecord()
         })
     }
 

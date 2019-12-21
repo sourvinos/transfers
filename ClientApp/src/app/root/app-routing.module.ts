@@ -41,7 +41,15 @@ const appRoutes: Routes = [
 	{ path: 'ports', component: PortListComponent, canActivate: [AuthGuardService], resolve: { portList: PortListResolverService } }, { path: 'ports/new', component: PortFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'ports/:id', component: PortFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
 	{ path: 'routes', component: RouteListComponent, canActivate: [AuthGuardService], resolve: { routeList: RouteListResolverService } }, { path: 'routes/new', component: RouteFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'routes/:id', component: RouteFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
 	{ path: 'taxOffices', component: TaxOfficeListComponent, resolve: { taxOfficeList: TaxOfficeListResolverService } }, { path: 'taxOffices/new', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'taxOffices/:id', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] },
-	{ path: 'transfers', component: WrapperTransferComponent, canActivate: [AuthGuardService], children: [{ path: 'dateIn/:dateIn', component: ListTransferComponent, canActivate: [AuthGuardService], resolve: { transferList: TransferListResolverService }, children: [{ path: 'transfer/new', component: FormTransferComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'transfer/:transferId', component: FormTransferComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard], resolve: { transferForm: TransferEditResolverService } }] }] },
+	{
+		path: 'transfers', component: WrapperTransferComponent, canActivate: [AuthGuardService], children: [
+			{
+				path: 'dateIn/:dateIn', component: ListTransferComponent, canActivate: [AuthGuardService], resolve: { transferList: TransferListResolverService }, children: [
+					{ path: 'transfer/new', component: FormTransferComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
+					{ path: 'transfer/:transferId', component: FormTransferComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard], resolve: { transferForm: TransferEditResolverService } }
+				], runGuardsAndResolvers: 'always'
+			}]
+	},
 	{ path: 'vatStates', component: VatStateListComponent, canActivate: [AuthGuardService], resolve: { vatStateList: VatStateListResolverService } }, { path: 'vatStates/new', component: VatStateFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'vatStates/:id', component: VatStateFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
 	{ path: 'pageNotFound', component: PageNotFoundComponent }
 ]

@@ -7,13 +7,19 @@ export class InteractionTransferService {
 
     private messageSource = new Subject<string[]>()
     private _recordStatus = new Subject<string>()
+    private _action = new Subject<string>()
 
     data = this.messageSource.asObservable()
     recordStatus = this._recordStatus.asObservable()
+    action = this._action.asObservable()
 
     sendObject(data: any[]) {
         this.messageSource.next(data)
         console.log('inside transfers service', data)
+    }
+
+    performAction(action: string) {
+        this._action.next(action)
     }
 
     /**
@@ -24,15 +30,15 @@ export class InteractionTransferService {
      *  wrapper-transfer.ts
      * 
      * Description:
-     *  The caller sets the local variable to 'empty', 'newRecord' or 'editRecord'
-     *  The wrapper subscribes to the _recordStatus, checks the value and displays the buttons:
-     *   _recordStatus = 'empty' displays 'New'
-     *   _recordStatus = 'newRecord' displays 'Save'
-     *   _recordStatus = 'editRecord' displays 'Delete' and 'Save' 
+     *  The caller sends 'empty', 'newRecord' or 'editRecord' to the 'recordStatus'
+     *  The wrapper subscribes to the 'recordStatus', checks the value and displays the buttons:
+     *   recordStatus = 'empty' displays 'New'
+     *   recordStatus = 'newRecord' displays 'Save'
+     *   recordStatus = 'editRecord' displays 'Delete' and 'Save' 
      * 
      * @param status 
      */
-    setRecordStatus(status: any) {
+    setRecordStatus(status: string) {
         this._recordStatus.next(status)
     }
 

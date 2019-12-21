@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -12,13 +12,11 @@ import { InteractionTransferService } from '../classes/service-interaction-trans
     styleUrls: ['./list-transfer.css']
 })
 
-export class ListTransferComponent implements OnInit, OnDestroy {
+export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Init
 
     dateIn: string
-    currentDate: string
-    localStorageData: any = ''
 
     queryResult: any = {}
     queryResultClone: any = {}
@@ -46,6 +44,7 @@ export class ListTransferComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     navigationSubscription: any
     ngUnsubscribe = new Subject<void>();
+    mustRefresh: boolean = true
 
     // #endregion
 
@@ -53,6 +52,8 @@ export class ListTransferComponent implements OnInit, OnDestroy {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.navigationSubscription = this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
+                console.clear()
+                this.mustRefresh = true
                 this.loadTransfers()
             }
         })
@@ -63,50 +64,22 @@ export class ListTransferComponent implements OnInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        // If localStorage has data
-        if (JSON.parse(localStorage.getItem('transfers'))) {
-            // Populate the arrays from the localStorage
-            this.localStorageData = JSON.parse(localStorage.getItem('transfers'))
-            console.log('localStorage has data', this.localStorageData.destinations)
-            this.selectedDestinations = JSON.parse(this.localStorageData.destinations)
-            this.selectedCustomers = JSON.parse(this.localStorageData.customers)
-            this.selectedRoutes = JSON.parse(this.localStorageData.routes)
-            this.selectedDrivers = JSON.parse(this.localStorageData.drivers)
-            this.selectedPorts = JSON.parse(this.localStorageData.ports)
-            console.log('selected destinations', this.selectedDestinations)
+        if (this.isDataInLocalStorage()) {
+            this.updateSelectedArraysFromLocalStorage()
         } else {
-            // Populate the arrays from the results of the queryResult
-            console.log('localStorage is empty')
-            this.queryResult.personsPerDestination.forEach((element: { description: string; }) => { this.selectedDestinations.push(element.description) })
-            this.queryResult.personsPerCustomer.forEach((element: { description: string; }) => { this.selectedCustomers.push(element.description) })
-            this.queryResult.personsPerRoute.forEach((element: { description: string; }) => { this.selectedRoutes.push(element.description) })
-            this.queryResult.personsPerDriver.forEach((element: { description: string; }) => { this.selectedDrivers.push(element.description) })
-            this.queryResult.personsPerPort.forEach((element: { description: string; }) => { this.selectedPorts.push(element.description) })
-            console.log('selected destinations', this.selectedDestinations)
-            // Save
-            let summaryItems = {
-                "destinations": JSON.stringify(this.selectedDestinations),
-                "customers": JSON.stringify(this.selectedCustomers),
-                "routes": JSON.stringify(this.selectedRoutes),
-                "drivers": JSON.stringify(this.selectedDrivers),
-                "ports": JSON.stringify(this.selectedPorts),
-            }
-            localStorage.setItem('transfers', JSON.stringify(summaryItems))
-            this.localStorageData = JSON.parse(localStorage.getItem('transfers'))
-            // Populate the arrays from the localStorage
-            this.selectedDestinations = JSON.parse(this.localStorageData.destinations)
-            this.selectedCustomers = JSON.parse(this.localStorageData.customers)
-            this.selectedRoutes = JSON.parse(this.localStorageData.routes)
-            this.selectedDrivers = JSON.parse(this.localStorageData.drivers)
-            this.selectedPorts = JSON.parse(this.localStorageData.ports)
+            this.updateSelectedArraysFromInitialResults()
+            this.saveToLocalStorage()
         }
-        this.addActiveClassToElements('.item.destination', this.selectedDestinations)
-        this.addActiveClassToElements('.item.customer', this.selectedCustomers)
-        this.addActiveClassToElements('.item.route', this.selectedRoutes)
-        this.addActiveClassToElements('.item.driver', this.selectedDrivers)
-        this.addActiveClassToElements('.item.port', this.selectedPorts)
+        this.addActiveClassToSelectedArrays()
         this.filterByCriteria()
         this.flattenResults()
+    }
+
+    ngDoCheck() {
+        if (this.mustRefresh) {
+            this.mustRefresh = false
+            this.ngAfterViewInit()
+        }
     }
 
     ngOnDestroy() {
@@ -118,7 +91,7 @@ export class ListTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Template - toggleItem()
      * 
      * Description: 
@@ -147,20 +120,13 @@ export class ListTransferComponent implements OnInit, OnDestroy {
         }
         this.filterByCriteria()
         this.flattenResults()
-        let summaryItems = {
-            "destinations": JSON.stringify(this.selectedDestinations),
-            "customers": JSON.stringify(this.selectedCustomers),
-            "routes": JSON.stringify(this.selectedRoutes),
-            "drivers": JSON.stringify(this.selectedDrivers),
-            "ports": JSON.stringify(this.selectedPorts),
-        }
-        localStorage.setItem('transfers', JSON.stringify(summaryItems))
-        console.log('localStorage updated')
+        this.saveToLocalStorage()
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Template - toggleItems()
+     * 
      * Description:
      *  It stops the panel's default behavior to expand or collapse
      *  Clears all items from the lookupArray
@@ -179,28 +145,78 @@ export class ListTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller:
-     *  Class - constructor()
+     * Caller(s):
+     *  Class - addActiveClassToSelectedArrays()
+     * 
      * Description:
-     *  Gets the records from the api for the given date
+     *  Adds the class 'activeItem' to the element if it's part of the lookupArray
+     * 
+     * @param className // The items with this class
+     * @param lookupArray // The array with the selected items
      */
-    private loadTransfers() {
-        this.queryResult = this.activatedRoute.snapshot.data['transferList']
-        this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
-        console.clear()
-        console.log('1. loadTransfers - queryResult', this.queryResult.persons, 'queryResultClone', this.queryResultClone.persons)
+    private addActiveClassToElements(className: string, lookupArray: string[]) {
+        let elements = document.querySelectorAll(className)
+        elements.forEach((element) => {
+            let position = lookupArray.indexOf(element.id)
+            if (position >= 0) {
+                element.classList.add('activeItem')
+            }
+        })
     }
 
     /**
-     * Caller: 
-     *  Class - constructor(), toggleItem(), toggleItems()
+     * Caller(s):
+     *  Class - ngAfterViewInit()
+     * 
      * Description:
-     *  Stores the data from the api to the queryResultClone array
+     *  Calls the 'addActiveClassToElements()' for every summary group
+     */
+    private addActiveClassToSelectedArrays() {
+        setTimeout(() => {
+            this.addActiveClassToElements('.item.destination', this.selectedDestinations)
+            this.addActiveClassToElements('.item.customer', this.selectedCustomers)
+            this.addActiveClassToElements('.item.route', this.selectedRoutes)
+            this.addActiveClassToElements('.item.driver', this.selectedDrivers)
+            this.addActiveClassToElements('.item.port', this.selectedPorts)
+        }, 1000);
+    }
+
+    /**
+     * Caller(s): 
+     *  Class - onDestroy()
+     * 
+     * Description:
+     *  Deletes the localStorage data on navigation away from this page
+     */
+    private clearLocalStorage() {
+        localStorage.removeItem('transfers')
+    }
+
+    /**
+     * Caller(s):
+     *  Class - subscribeToInderactionService()
+     * 
+     * Description:
+     *  Saves the selected items to the localStorage
+     *  Calls the navigateToEditRoute()
+     * 
+     * @param id 
+     */
+    private editRecord(id: number) {
+        // this.saveSelectedItemsToLocalStorage(true)
+        this.navigateToEditRoute(id)
+    }
+
+    /**
+     * Caller(s): 
+     *  Class - ngAfterViewInit(), toggleItem(), toggleItems()
+     * 
+     * Description:
+     *  Stores the data from the initial read to the queryResultClone array
      *  Filters the queryResultClone array according to the selected items
      */
     private filterByCriteria() {
-        this.queryResultClone = JSON.parse(JSON.stringify(this.queryResult))
-        this.queryResultClone.transfers = this.queryResultClone.transfers
+        this.queryResultClone.transfers = this.queryResult.transfers
             .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) != -1 })
             .filter((y: { customer: { description: string } }) => { return this.selectedCustomers.indexOf(y.customer.description) != -1 })
             .filter((z: { pickupPoint: { route: { abbreviation: string } } }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.abbreviation) != -1 })
@@ -209,9 +225,94 @@ export class ListTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller: 
-     *  Class - selectGroupItems()
+     * Caller(s):
+     *  Class - loadTransfers()
+     *  Class - toggleItem()
+     *  Class - toggleItems()
+     * 
+     * Description: 
+     *  Flattens the queryResultClone array and populates the transfersFlat array with its output
+     *  The transfersFlat array will be the input for the table on the template
+     */
+    private flattenResults() {
+        this.transfersFlat.splice(0)
+        for (var {
+            id: a,
+            destination: { abbreviation: b },
+            customer: { description: c },
+            adults: d,
+            kids: e,
+            free: f,
+            totalPersons: g,
+            pickupPoint: { description: h, time: i, route: { abbreviation: j } },
+            port: { description: k },
+            driver: { description: l },
+            userName: m,
+            dateIn: n,
+            remarks: o
+        } of this.queryResultClone.transfers) {
+            this.transfersFlat.push({ id: a, destination: b, customer: c, adults: d, kids: e, free: f, totalPersons: g, pickupPoint: h, time: i, route: j, port: k, driver: l, userName: m, dateIn: n, remarks: o })
+        }
+    }
+
+    /**
+     * Caller(s):
+     *  Class - ngAfterViewInit()
+     * 
+     * Description:
+     *  Checks if localStorage has any data
+     */
+    private isDataInLocalStorage() {
+        return localStorage.getItem('transfers')
+    }
+
+    /**
+     * Caller(s):
+     *  Class - constructor()
+     * 
+     * Description:
+     *  Stores the records from the api for the given date
+     */
+    private loadTransfers() {
+        this.queryResult = this.activatedRoute.snapshot.data['transferList']
+    }
+
+    /**
+     * Caller(s):
+     *  Class - editRecord()
+     * 
+     * Description:
+     *  Navigates to the edit route
+     * 
+     * @param id 
+     */
+    private navigateToEditRoute(id: number) {
+        this.router.navigate(['transfer/', id], { relativeTo: this.activatedRoute })
+    }
+
+    /**
+     * Caller(s):
+     *  Class - ngAfterViewInit(), toggleItems()
+     * 
+     * Description:
+     *  Saves the selected items in the localStorage
+     */
+    private saveToLocalStorage() {
+        let summaryItems = {
+            "destinations": JSON.stringify(this.selectedDestinations),
+            "customers": JSON.stringify(this.selectedCustomers),
+            "routes": JSON.stringify(this.selectedRoutes),
+            "drivers": JSON.stringify(this.selectedDrivers),
+            "ports": JSON.stringify(this.selectedPorts),
+        }
+        localStorage.setItem('transfers', JSON.stringify(summaryItems))
+    }
+
+    /**
+     * Caller(s): 
+     *  Class - toggleItems()
      *  Template - toggleItems()
+     * 
      * Description:
      *  According to the checked = true / false
      *  Toggles the class 'activeItem' for every item in the given className
@@ -235,42 +336,9 @@ export class ListTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller:
-     *  Class - loadTransfers()
-     *  Class - toggleItem()
-     *  Class - toggleItems()
-     * Description: 
-     *  Flattens the queryResultClone array and populates the transfersFlat array with its output
-     *  This is the last step of the filtering process
-     *  The transfersFlat array will be the input for the table on the template
-     */
-    private flattenResults() {
-        console.log('7. flattenResults')
-        this.transfersFlat.splice(0)
-        for (var {
-            id: a,
-            destination: { abbreviation: b },
-            customer: { description: c },
-            adults: d,
-            kids: e,
-            free: f,
-            totalPersons: g,
-            pickupPoint: { description: h, time: i, route: { abbreviation: j } },
-            port: { description: k },
-            driver: { description: l },
-            userName: m,
-            dateIn: n,
-            remarks: o
-        } of this.queryResultClone.transfers) {
-            this.transfersFlat.push({ id: a, destination: b, customer: c, adults: d, kids: e, free: f, totalPersons: g, pickupPoint: h, time: i, route: j, port: k, driver: l, userName: m, dateIn: n, remarks: o })
-        }
-        console.log('7. this.queryResultClone', this.queryResultClone.length)
-        console.log('7. this.transfersFlat', this.transfersFlat.length)
-    }
-
-    /**
-     * Caller: 
+     * Caller(s): 
      *  Class - ngOnInit()
+     * 
      * Description:
      *  Gets the selected record from the table through the interaction service and executes the editRecord method
      */
@@ -281,49 +349,35 @@ export class ListTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller: 
-     *  Class - onDestroy()
-     * Description:
-     *  Deletes the localStorage data on navigation away from this page
-     */
-    private clearLocalStorage() {
-        localStorage.removeItem('transfers')
-    }
-
-    /**
-      * Caller:
-      *  Class - subscribeToInderactionService()
-      * Description:
-      *  Saves the selected items to the localStorage
-      *  Calls the navigateToEditRoute()
-      * 
-      * @param id 
-      */
-    private editRecord(id: number) {
-        // this.saveSelectedItemsToLocalStorage(true)
-        this.navigateToEditRoute(id)
-    }
-
-    /**
-     * Caller:
-     *  Class - editRecord()
-     * Description:
-     *  Navigates to the edit route
+     * Caller(s):
+     *  Class - ngAfterViewInit()
      * 
-     * @param id 
+     * Description:
+     *  Stores the data from the initial result to the arrays
      */
-    private navigateToEditRoute(id: number) {
-        this.router.navigate(['transfer/', id], { relativeTo: this.activatedRoute })
+    private updateSelectedArraysFromInitialResults() {
+        this.queryResult.personsPerDestination.forEach((element: { description: string; }) => { this.selectedDestinations.push(element.description) })
+        this.queryResult.personsPerCustomer.forEach((element: { description: string; }) => { this.selectedCustomers.push(element.description) })
+        this.queryResult.personsPerRoute.forEach((element: { description: string; }) => { this.selectedRoutes.push(element.description) })
+        this.queryResult.personsPerDriver.forEach((element: { description: string; }) => { this.selectedDrivers.push(element.description) })
+        this.queryResult.personsPerPort.forEach((element: { description: string; }) => { this.selectedPorts.push(element.description) })
+
     }
 
-    private addActiveClassToElements(className: string, lookupArray: string[]) {
-        let elements = document.querySelectorAll(className)
-        elements.forEach((element) => {
-            let position = lookupArray.indexOf(element.id)
-            if (position >= 0) {
-                element.classList.add('activeItem')
-            }
-        })
+    /**
+     * Caller(s):
+     *  Class - ngAfterViewInit()
+     * 
+     * Description:
+     *  Stores the data from the localStorage to the arrays
+     */
+    private updateSelectedArraysFromLocalStorage() {
+        let localStorageData = JSON.parse(localStorage.getItem('transfers'))
+        this.selectedDestinations = JSON.parse(localStorageData.destinations)
+        this.selectedCustomers = JSON.parse(localStorageData.customers)
+        this.selectedRoutes = JSON.parse(localStorageData.routes)
+        this.selectedDrivers = JSON.parse(localStorageData.drivers)
+        this.selectedPorts = JSON.parse(localStorageData.ports)
     }
 
 }

@@ -49,7 +49,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      *  Executes the delete method on the form through the interaction service
      */
     deleteRecord() {
-        // this.interactionTransferService.status('delete')
+        this.interactionTransferService.performAction('deleteRecord')
     }
 
     /**
@@ -78,11 +78,12 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller:
      *  Template - saveRecord()
+     * 
      * Description:
      *  Executes the save method on the form through the interaction service
      */
     saveRecord() {
-        // this.interactionTransferService.sendData('saveRecord')
+        this.interactionTransferService.performAction('saveRecord')
     }
 
     /**
@@ -157,6 +158,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller:
      *  Class - ngOnInit()
+     * 
      * Description:
      *  Gets the record status from the form through the interaction service
      *  The local variable 'recordStatus' will be checked by the template so that it decides which buttons to display
