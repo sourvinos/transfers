@@ -100,8 +100,8 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Filters the list according to the selected items
      *  Updates the transfersFlat array 
      * 
-     * @param item 
-     * @param lookupArray 
+     * @param item // The element that was clicked
+     * @param lookupArray // The array that the element belongs to
      */
     toggleItem(item: any, lookupArray: string) {
         var element = document.getElementById(item.description)
@@ -134,7 +134,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Calls 'filterByCriteria()' 
      *  Calls 'flattenResults()'
      * 
-     * @param lookupArray 
+     * @param lookupArray // The array that must fill or empty
      */
     toggleItems(className: string, lookupArray: { splice: (arg0: number) => void; }, checkedArray: any) {
         event.stopPropagation()
@@ -203,7 +203,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param id 
      */
     private editRecord(id: number) {
-        // this.saveSelectedItemsToLocalStorage(true)
+        // this.saveToLocalStorage()
         this.navigateToEditRoute(id)
     }
 
@@ -344,7 +344,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private subscribeToInderactionService() {
         this.transferInteractionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            this.editRecord(response[0]['id'])
+            this.editRecord(response['id'])
         })
     }
 

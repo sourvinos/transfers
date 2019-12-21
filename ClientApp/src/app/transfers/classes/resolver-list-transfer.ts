@@ -13,7 +13,6 @@ export class TransferListResolverService implements Resolve<IQueryResult[]>{
     constructor(private transferService: TransferService) { }
 
     resolve(route: ActivatedRouteSnapshot): Observable<IQueryResult[]> {
-        console.log('Resolver')
         return this.transferService.getTransfers(route.params.dateIn)
     }
 

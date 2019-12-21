@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, HostListener, Input, OnInit } from '@angular/core';
-import { InteractionService } from '../classes/interaction.service';
+import { AfterViewInit, Component, HostListener, Input, OnInit, OnChanges, DoCheck } from '@angular/core';
 import { InteractionTransferService } from '../classes/service-interaction-transfer';
 
 @Component({
@@ -23,14 +22,13 @@ export class TableTransferComponent implements OnInit, AfterViewInit {
     currentRow: number = 0
     indexContent: any
     tableParentNode: any
-    rowHeaderHeight: any
     table: any
     rowHeight: number = 0
     rowCount: number = 0
 
     // #endregion
 
-    constructor(private transferInteractionService: InteractionTransferService, private interactionService: InteractionService) { }
+    constructor(private transferInteractionService: InteractionTransferService) { }
 
     ngOnInit() { }
 
@@ -48,29 +46,33 @@ export class TableTransferComponent implements OnInit, AfterViewInit {
         })
     }
 
-    private gotoRow(key: string) {
-        if (!isNaN(parseInt(key))) {
+    private gotoRow(key: any) {
+        if (!isNaN(key)) {
             this.clearAllRowHighlights()
-            // this.highlightRow(this.table, key)
+            this.highlightRow(this.table, key)
         }
         if (key == 'Enter') {
-            this.sendRowToService(false)
+            this.sendRowToService()
         }
         if (key == 'ArrowUp' && this.currentRow > 1) {
-            this.clearAllRowHighlights()
-            // this.highlightRow(this.table, 'up')
+            this.deselectCurrentRow()
+            this.highlightRow(this.table, 'up')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
                 document.getElementById(this.currentRow.toString()).scrollIntoView()
                 this.indexContent.scrollTop = (this.currentRow - 1) * this.rowHeight
             }
         }
         if (key == 'ArrowDown' && this.currentRow < this.rowCount) {
-            this.clearAllRowHighlights()
-            // this.highlightRow(this.table, 'down')
+            this.deselectCurrentRow()
+            this.highlightRow(this.table, 'down')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
                 document.getElementById(this.currentRow.toString()).scrollIntoView({ block: "end", behavior: "smooth" })
             }
         }
+    }
+
+    private deselectCurrentRow() {
+        this.table.rows[this.currentRow].classList.remove('selected')
     }
 
     private highlightRow(table: HTMLTableElement, direction: any) {
@@ -104,16 +106,15 @@ export class TableTransferComponent implements OnInit, AfterViewInit {
         }
     }
 
-    private sendRowToService(dialogMustClose?: boolean) {
-        this.transferInteractionService.sendObject([this.records[this.currentRow - 1], dialogMustClose])
+    private sendRowToService() {
+        console.log('sending', this.records[this.currentRow - 1])
+        this.transferInteractionService.sendObject(this.records[this.currentRow - 1])
     }
 
     private calculateDimensions() {
         setTimeout(() => {
-            this.indexContent = document.getElementById('table-transfer').parentNode.parentNode
             this.table = document.getElementById('table-transfer')
-            this.rowHeaderHeight = document.querySelector('thead')
-            // this.rowHeight = this.table.rows[1].offsetHeight
+            this.indexContent = document.getElementById('table-transfer').parentNode.parentNode
             this.rowHeight = 50
             if (this.indexContent.scrollHeight <= this.indexContent.offsetHeight) {
                 this.indexContent.style.overflowY = 'hidden'
@@ -121,8 +122,8 @@ export class TableTransferComponent implements OnInit, AfterViewInit {
             }
             this.rowCount = this.table.rows.length - 1
             document.getElementById('table-input').focus()
-            this.gotoRow('1')
-        }, 2000);
+            this.gotoRow(1)
+        }, 1000);
     }
 
 }
