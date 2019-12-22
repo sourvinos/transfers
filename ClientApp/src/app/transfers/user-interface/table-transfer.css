@@ -56,8 +56,6 @@ td {
 }
 
 #table-input {
-    display: block;
-    height: 30px;
     position: absolute;
-    width: 30px;
+    z-index: -1;
 }

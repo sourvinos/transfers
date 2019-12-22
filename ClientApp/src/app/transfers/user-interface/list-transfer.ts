@@ -340,7 +340,8 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Class - ngOnInit()
      * 
      * Description:
-     *  Gets the selected record from the table through the interaction service and executes the editRecord method
+     *  Gets the selected record from the table through the service and executes the editRecord method
+     * 
      */
     private subscribeToInderactionService() {
         this.transferInteractionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
@@ -354,6 +355,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * 
      * Description:
      *  Stores the data from the initial result to the arrays
+     * 
      */
     private updateSelectedArraysFromInitialResults() {
         this.queryResult.personsPerDestination.forEach((element: { description: string; }) => { this.selectedDestinations.push(element.description) })

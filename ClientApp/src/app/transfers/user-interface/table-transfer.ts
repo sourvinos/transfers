@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, HostListener, Input, OnInit, OnChanges, DoCheck } from '@angular/core';
-import { InteractionTransferService } from '../classes/service-interaction-transfer';
+import { AfterViewInit, Component, HostListener, Input } from '@angular/core'
+import { InteractionTransferService } from '../classes/service-interaction-transfer'
 
 @Component({
     selector: 'table-transfer',
@@ -7,7 +7,7 @@ import { InteractionTransferService } from '../classes/service-interaction-trans
     styleUrls: ['./table-transfer.css']
 })
 
-export class TableTransferComponent implements OnInit, AfterViewInit {
+export class TableTransferComponent implements AfterViewInit {
 
     // #region Init
 
@@ -20,8 +20,7 @@ export class TableTransferComponent implements OnInit, AfterViewInit {
     @Input() fields: any
 
     currentRow: number = 0
-    indexContent: any
-    tableParentNode: any
+    tableContainer: any
     table: any
     rowHeight: number = 0
     rowCount: number = 0
@@ -30,68 +29,92 @@ export class TableTransferComponent implements OnInit, AfterViewInit {
 
     constructor(private transferInteractionService: InteractionTransferService) { }
 
-    ngOnInit() { }
+    @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
+        if (event.key == 'Enter') this.sendRowToService()
+        if (event.key == 'ArrowUp' || event.key == 'ArrowDown') this.gotoRow(event.key)
+    }
 
     ngAfterViewInit() {
-        this.calculateDimensions()
+        this.initVariables()
     }
 
-    @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
-        this.gotoRow(event.key)
+    /**
+     * Caller(s):
+     *  Template - table
+     * 
+     * Description:
+     *  Uses the DomChangeDirective to listen for DOM changes
+     * 
+     * @param $event 
+     */
+    onDomChange($event: Event) {
+        document.getElementById('table-input').focus()
+        this.gotoRow(1)
     }
 
-    private clearAllRowHighlights() {
-        this.table.querySelectorAll('tr').forEach((element: { classList: { remove: (arg0: string) => void; }; }) => {
-            element.classList.remove('selected')
-        })
-    }
-
+    /**
+     * Caller(s):
+     *  Class - HostListener()
+     *  Class - onDomChange()
+     *  Template - gotoRow()
+     * 
+     * Description:
+     *  Highlights the next / previous row according to the arrow keys of highlights the clicked row
+     * 
+     * @param key // The pressed key code or the number of the line to goto directly after a mouse click or when set from code
+     */
     private gotoRow(key: any) {
         if (!isNaN(key)) {
-            this.clearAllRowHighlights()
-            this.highlightRow(this.table, key)
-        }
-        if (key == 'Enter') {
-            this.sendRowToService()
+            this.unselectAllRows()
+            this.selectRow(this.table, key)
         }
         if (key == 'ArrowUp' && this.currentRow > 1) {
-            this.deselectCurrentRow()
-            this.highlightRow(this.table, 'up')
+            this.unselectRow()
+            this.selectRow(this.table, 'up')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
-                document.getElementById(this.currentRow.toString()).scrollIntoView()
-                this.indexContent.scrollTop = (this.currentRow - 1) * this.rowHeight
+                this.tableContainer.scrollTop = (this.currentRow - 1) * this.rowHeight
             }
         }
         if (key == 'ArrowDown' && this.currentRow < this.rowCount) {
-            this.deselectCurrentRow()
-            this.highlightRow(this.table, 'down')
+            this.unselectRow()
+            this.selectRow(this.table, 'down')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
                 document.getElementById(this.currentRow.toString()).scrollIntoView({ block: "end", behavior: "smooth" })
             }
         }
     }
 
-    private deselectCurrentRow() {
-        this.table.rows[this.currentRow].classList.remove('selected')
+    /**
+     * Caller(s):
+     *  Class - ngAfterViewInit()
+     * 
+     * Description:
+     *  Initializes local variables
+     */
+    private initVariables() {
+        this.table = document.getElementById('table-transfer')
+        this.tableContainer = this.table.parentNode.parentNode
+        this.rowHeight = 51
+        this.rowCount = this.table.rows.length - 1
     }
 
-    private highlightRow(table: HTMLTableElement, direction: any) {
-        if (!isNaN(direction)) {
-            this.currentRow = parseInt(direction)
-        } else {
-            if (direction == 'up') this.currentRow--
-            if (direction == 'down')++this.currentRow
-        }
-        table.rows[this.currentRow].classList.toggle('selected')
-    }
-
+    /**
+     * Caller(s):
+     *  Class - gotoRow()
+     * 
+     * Description:
+     *  Checks if the selected row is fully visible
+     * 
+     * @param row 
+     * @param direction 
+     */
     private isRowIntoView(row: HTMLTableRowElement, direction: string) {
         const rowOffsetTop = row.offsetTop
-        const indexContentScrollTop = this.indexContent.scrollTop
+        const indexContentScrollTop = this.tableContainer.scrollTop
         const rowOffetTopPlusRowOffsetHeight = rowOffsetTop + row.offsetHeight
-        const indexContentScrollTopPuslIndexContentOffsetHeight = indexContentScrollTop + this.indexContent.offsetHeight
+        const indexContentScrollTopPuslIndexContentOffsetHeight = indexContentScrollTop + this.tableContainer.offsetHeight
         if (direction == 'ArrowUp') {
-            if (indexContentScrollTopPuslIndexContentOffsetHeight - rowOffsetTop + this.rowHeight < this.indexContent.offsetHeight) {
+            if (indexContentScrollTopPuslIndexContentOffsetHeight - rowOffsetTop + this.rowHeight < this.tableContainer.offsetHeight) {
                 return true
             } else {
                 return false
@@ -106,24 +129,60 @@ export class TableTransferComponent implements OnInit, AfterViewInit {
         }
     }
 
+    /**
+     * Caller(s):
+     *  Class - gotoRow()
+     * 
+     * Description:
+     *  Updates the currentRow variable and highlights it
+     * 
+     * @param table 
+     * @param direction 
+     */
+    private selectRow(table: HTMLTableElement, direction: any) {
+        if (!isNaN(direction)) {
+            this.currentRow = parseInt(direction)
+            document.getElementById('table-input').focus()
+        } else {
+            if (direction == 'up') this.currentRow--
+            if (direction == 'down')++this.currentRow
+        }
+        table.rows[this.currentRow].classList.add('selected')
+    }
+
+    /**
+     * Caller(s):
+     *  Class - HostListener()
+     * 
+     * Description:
+     *  Sends the selected row to the service so that the parent (list-transfer) can call the editRecord method
+     */
     private sendRowToService() {
-        console.log('sending', this.records[this.currentRow - 1])
         this.transferInteractionService.sendObject(this.records[this.currentRow - 1])
     }
 
-    private calculateDimensions() {
-        setTimeout(() => {
-            this.table = document.getElementById('table-transfer')
-            this.indexContent = document.getElementById('table-transfer').parentNode.parentNode
-            this.rowHeight = 50
-            if (this.indexContent.scrollHeight <= this.indexContent.offsetHeight) {
-                this.indexContent.style.overflowY = 'hidden'
-                this.table.style.marginRight = '0px'
-            }
-            this.rowCount = this.table.rows.length - 1
-            document.getElementById('table-input').focus()
-            this.gotoRow(1)
-        }, 1000);
+    /**
+     * Caller(s):
+     *  Class - gotoRow()
+     * 
+     * Description:
+     *  Removes the 'selected' class from all the rows
+     */
+    private unselectAllRows() {
+        this.table.querySelectorAll('tr').forEach((element: { classList: { remove: (arg0: string) => void } }) => {
+            element.classList.remove('selected')
+        })
+    }
+
+    /**
+     * Caller(s):
+     *  Class - gotoRow()
+     * 
+     * Description
+     *  Removes the 'selected' class from the current row
+     */
+    private unselectRow() {
+        this.table.rows[this.currentRow].classList.remove('selected')
     }
 
 }

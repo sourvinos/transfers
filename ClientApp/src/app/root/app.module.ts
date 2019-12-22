@@ -42,6 +42,7 @@ import { VatStateListComponent } from '../vatStates/vatState-list.component'; im
 // Directives
 import { InputTabStopDirective } from '../directives/input-tabstop.directive'
 import { InputFormatDirective } from '../directives/input-format.directive'
+import { DomChangeDirective } from '../directives/dom-change.directive'
 // Pipes
 import { CustomPipe } from '../pipes/custom.pipe'
 
@@ -71,6 +72,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
         // Directives
         InputTabStopDirective,
         InputFormatDirective,
+        DomChangeDirective,
         // Pipes
         CustomPipe,
     ],

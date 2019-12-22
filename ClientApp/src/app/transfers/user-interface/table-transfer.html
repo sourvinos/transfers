@@ -1,4 +1,4 @@
-<table id="table-transfer">
+<table id="table-transfer" (domChange)="onDomChange($event)">
     <thead>
         <tr>
             <th *ngFor="let header of headers, index as i" [style.width]="widths[i]" [style.display]="visibility[i]">{{ header }}</th>
