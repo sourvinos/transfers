@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, AfterViewInit } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { AccountService } from './../services/account.service';
 
@@ -8,7 +8,7 @@ import { AccountService } from './../services/account.service';
     styleUrls: ['./root.component.css']
 })
 
-export class RootComponent {
+export class RootComponent implements AfterViewInit {
 
     showLoadingIndication: boolean = true
 
@@ -29,30 +29,9 @@ export class RootComponent {
         this.accountService.logout()
     }
 
-    // @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
-    //     const elements = Array.prototype.slice.apply(document.querySelectorAll("input[tabindex]"));
-    //     if (event.key == 'Enter' || event.key == 'ArrowDown') {
-    //         var nextTab = +(event.target.getAttribute('tabindex')) + 1
-    //         for (var i = elements.length; i--;) {
-    //             if (nextTab > elements.length) nextTab = 1
-    //             if (+(elements[i].getAttribute('tabindex')) == nextTab && !elements[i].getAttribute('disabled')) {
-    //                 elements[i].focus()
-    //                 elements[i].select()
-    //                 break
-    //             }
-    //         }
-    //     }
-    //     if (event.key == 'ArrowUp') {
-    //         var previousTab = +(event.target.getAttribute('tabindex')) - 1
-    //         for (var i = elements.length; i--;) {
-    //             if (previousTab == 0) previousTab = elements.length
-    //             if (+(elements[i].getAttribute('tabindex')) == previousTab) {
-    //                 elements[i].focus()
-    //                 elements[i].select()
-    //                 break
-    //             }
-    //         }
-    //     }
-    // }
+    ngAfterViewInit() {
+        document.getElementById('spinner').style.left = document.getElementById('sidebar').clientWidth + 'px'
+        document.getElementById('spinner').style.top = document.getElementById('sidebar').clientHeight - 24 - document.getElementById('spinner').clientHeight + 'px'
+    }
 
 }

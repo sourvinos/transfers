@@ -28,18 +28,12 @@ body, h1, h3, h6 {
     padding: 0 !important;
 }
 
-
 #loader {
     align-items: center;
-    background-color: var(--color-background);
     display: flex;
     height: 100%;
     justify-content: center;
-}
-
-#loader p {
-    color: bisque;
-    font-family: 'Roboto Condensed';
+    background: url(../../../assets/pulse.gif) center center no-repeat var(--color-background);
 }
 
 #footer {

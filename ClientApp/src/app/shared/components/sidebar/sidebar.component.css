@@ -20,6 +20,7 @@
     font-family: var(--font-family-user-info);
     font-size: var(--font-size-user-info);
     margin: 1.5rem auto 0;
+    min-height: 1rem;
     text-align: center;
 }
 
@@ -48,15 +49,24 @@
 }
 
 #image {
+    align-items: center;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
     margin: 0.625rem auto;
     outline: 0;
-    text-align: center;
-    width: 10rem;
 }
 
 #image img {
-    margin: 0 auto;
+    z-index: 1;
+}
+
+#double-ring {
+    display: flex;
+    background: url(../../../../assets/logo-double-ring.gif) right bottom no-repeat var(--color-background);
+    width: 150px;
+    height: 150px;
+    position: absolute;
 }
 
 #menu {

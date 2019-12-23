@@ -1,5 +1,6 @@
 <section>
     <sidebar></sidebar>
     <main></main>
-    <div *ngIf="showLoadingIndication" class="spinner"></div>
+    <!-- <div *ngIf="showLoadingIndication" class="spinner"></div> -->
+    <div [class.hidden]="!showLoadingIndication" id="spinner"></div>
 </section>

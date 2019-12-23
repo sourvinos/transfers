@@ -9,7 +9,8 @@
         <p>movers</p>
     </div>
     <div id="image" [routerLink]="['/']">
-        <img src="1.png">
+        <div *ngIf="(loginStatus | async)" id="double-ring"></div>
+        <img src="../../../../assets/logo-bus-brown.png">
     </div>
     <div id="menu">
         <ul id="menuItems" (click)="closeSidebar()">
