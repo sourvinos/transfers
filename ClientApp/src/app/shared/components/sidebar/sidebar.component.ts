@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { AfterViewInit, Component, OnInit } from '@angular/core'
 import { Observable } from 'rxjs'
 import { AccountService } from '../../../services/account.service'
 import { CountdownService } from '../../../services/countdown.service'
@@ -9,9 +9,10 @@ import { CountdownService } from '../../../services/countdown.service'
     styleUrls: ['./sidebar.component.css']
 })
 
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, AfterViewInit {
 
     countdown: number = 0
+    isNotLoaded: boolean = true
     loginStatus: Observable<boolean>
     displayName: Observable<string>
 
@@ -23,6 +24,12 @@ export class SidebarComponent implements OnInit {
     ngOnInit() {
         this.loginStatus = this.accountService.isLoggedIn
         this.displayName = this.accountService.currentDisplayName
+    }
+
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.isNotLoaded = false
+        }, 1000);
     }
 
     triggerEvent(elem: HTMLElement, event: string) {

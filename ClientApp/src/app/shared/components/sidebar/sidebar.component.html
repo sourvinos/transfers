@@ -9,7 +9,7 @@
         <p>movers</p>
     </div>
     <div id="image" [routerLink]="['/']">
-        <div *ngIf="(loginStatus | async)" id="double-ring"></div>
+        <div [class.hidden]="isNotLoaded" id="double-ring"></div>
         <img src="../../../../assets/logo-bus-brown.png">
     </div>
     <div id="menu">
