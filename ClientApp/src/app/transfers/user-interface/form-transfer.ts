@@ -86,8 +86,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Service - CanDeactivateGuard()
+     * 
      * Description:
      *  Desides which action to perform when a route change is requested
      */
@@ -106,21 +107,21 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             return dialogRef.afterClosed().subscribe(result => {
                 if (result == "true") {
                     this.form.reset()
-                    this.enableFields(['dateIn'])
-                    this.scrollToList()
+                    this.scrollToList('aborted from dirty form')
                     this.goBack()
+                    return true
                 }
             })
         } else {
-            this.enableFields(['dateIn'])
-            this.scrollToList()
+            this.scrollToList('aborted from clean form')
             return true
         }
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Template - calculateTotalPersons()
+     * 
      * Description:
      *  Calculates the total persons for the transfer
      */
@@ -130,8 +131,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - subscribeToInderactionService()
+     * 
      * Description:
      *  Deletes the current record
      */
@@ -150,7 +152,6 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             dialogRef.afterClosed().subscribe(result => {
                 if (result == 'true') {
                     this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
-                        console.log('Deleting')
                         this.abortDataEntry()
                         this.goBack()
                     }, error => {
@@ -205,14 +206,12 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.form.valid) return
         if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
-                console.log('Saving')
                 this.abortDataEntry()
                 this.goBack()
             }, error => Utils.errorLogger(error))
         }
         else {
             this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
-                console.log('Updating')
                 this.abortDataEntry()
                 this.goBack()
             }, error => Utils.errorLogger(error))
@@ -326,8 +325,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - constructor()
+     * 
      * Description:
      *  Gets the selected record from the api
      */
@@ -336,7 +336,6 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             this.transferService.getTransfer(this.id).subscribe(result => {
                 this.transfer = result
                 this.populateFields(this.transfer)
-                // this.scrollToForm()
             }, error => {
                 console.log('Error getting record')
             })
@@ -344,8 +343,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller: 
+     * Caller(s): 
      *  Class - canDeactive(), deleteRecord(), saveRecord()
+     * 
      * Description:
      *  Send 'empty' to the setRecordStatus, so that the wrapper will display the 'new' button
      *  On escape navigates to the list
@@ -479,19 +479,23 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - canDeactivate()
+     * 
      * Description:
-     *  Hides the form and shows the list
+     *  Hides the form, shows the list and focuses on the table
      */
-    private scrollToList() {
+    private scrollToList(state: string) {
         document.getElementById('form').style.height = '0'
         document.getElementById('transfersList').style.height = '100%'
+        document.getElementById('table-transfer-input').focus()
+        console.log(state)
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - lookupIndex()
+     * 
      * Description:
      *  Displays a modal window with a table so a record can be selected
      * 
@@ -524,8 +528,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - ngOnInit()
+     * 
      * Description:
      *  Accepts data from the wrapper through the interaction service and decides which action to perform
      */

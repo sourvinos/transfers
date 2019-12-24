@@ -52,7 +52,6 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.navigationSubscription = this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
-                console.clear()
                 this.mustRefresh = true
                 this.loadTransfers()
             }
@@ -271,7 +270,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Class - constructor()
      * 
      * Description:
-     *  Stores the records from the api for the given date
+     *  Loads the records from the api for the given date
      */
     private loadTransfers() {
         this.queryResult = this.activatedRoute.snapshot.data['transferList']
@@ -344,7 +343,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * 
      */
     private subscribeToInderactionService() {
-        this.transferInteractionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+        this.transferInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
     }

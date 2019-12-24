@@ -1,14 +1,14 @@
-<table id="index-table">
+<table id="table-index">
     <thead>
         <tr>
             <th *ngFor="let header of headers, index as i" [style.width]="widths[i]" [style.display]="visibility[i]">{{ header }}</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let record of records, index as index" (click)="gotoRow(index+1)" [id]="index+1" [class]="record.id">
+        <tr *ngFor="let record of records, index as index" (click)="gotoRow(index+1)" id="index-{{ index+1 }}" [class]="record.id">
             <td *ngFor="let field of fields, index as i" [style.text-align]="justify[i]" [style.display]="visibility[i]">{{ record[field] }}</td>
         </tr>
     </tbody>
 </table>
 
-<input type="text" id="table-input">
+<input type="text" id="table-index-input">

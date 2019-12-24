@@ -9,10 +9,19 @@ export class InteractionTransferService {
     private _recordStatus = new Subject<string>()
     private _action = new Subject<string>()
 
-    data = this._record.asObservable()
+    record = this._record.asObservable()
     recordStatus = this._recordStatus.asObservable()
     action = this._action.asObservable()
 
+    /**
+     * Caller(s):
+     *  Class - table-transfer
+     * 
+     * Description
+     *  Gets the record from the class and sends it to the parent (list-transfer - subscriber) so it can call the editRecord method
+     * 
+     * @param record 
+     */
     sendObject(record: any) {
         this._record.next(record)
     }

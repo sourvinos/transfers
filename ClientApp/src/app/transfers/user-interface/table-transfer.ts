@@ -9,7 +9,7 @@ import { InteractionTransferService } from '../classes/service-interaction-trans
 
 export class TableTransferComponent implements AfterViewInit {
 
-    // #region Init
+    // #region Variables
 
     @Input() records: any[]
 
@@ -48,7 +48,7 @@ export class TableTransferComponent implements AfterViewInit {
      * @param $event 
      */
     onDomChange($event: Event) {
-        document.getElementById('table-input').focus()
+        document.getElementById('table-transfer-input').focus()
         this.gotoRow(1)
     }
 
@@ -79,7 +79,7 @@ export class TableTransferComponent implements AfterViewInit {
             this.unselectRow()
             this.selectRow(this.table, 'down')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
-                document.getElementById(this.currentRow.toString()).scrollIntoView({ block: "end", behavior: "smooth" })
+                document.getElementById("transfer-" + this.currentRow.toString()).scrollIntoView({ block: "end", behavior: "smooth" })
             }
         }
     }
@@ -142,7 +142,7 @@ export class TableTransferComponent implements AfterViewInit {
     private selectRow(table: HTMLTableElement, direction: any) {
         if (!isNaN(direction)) {
             this.currentRow = parseInt(direction)
-            document.getElementById('table-input').focus()
+            document.getElementById('table-transfer-input').focus()
         } else {
             if (direction == 'up') this.currentRow--
             if (direction == 'down')++this.currentRow

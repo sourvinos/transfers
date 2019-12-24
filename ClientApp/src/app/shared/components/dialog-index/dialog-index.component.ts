@@ -53,7 +53,7 @@ export class DialogIndexComponent implements OnInit, AfterViewInit, OnDestroy {
 	private calculateDimensions() {
 		document.getElementById('index-dialog-footer').style.paddingRight =
 			document.getElementById('index-dialog').offsetWidth -
-			document.getElementById('index-table').offsetWidth - 20 + 'px'
+			document.getElementById('table-index').offsetWidth - 20 + 'px'
 	}
 
 	private subscribeToIndexInderactionService() {

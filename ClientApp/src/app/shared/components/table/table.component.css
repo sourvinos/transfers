@@ -55,9 +55,7 @@ td {
     white-space: nowrap;
 }
 
-#table-input {
-    display: block;
-    height: 0;
+#table-index-input {
     position: absolute;
-    width: 0;
+    z-index: -1;
 }
