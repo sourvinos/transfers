@@ -1,10 +1,10 @@
 <div id="index-dialog">
 
     <div id="index-dialog-header">
-        <h1>{{ title }}</h1>
+        <h1 mat-dialog-title>{{ title }}</h1>
     </div>
 
-    <div id="index-dialog-content">
+    <div id="index-dialog-content" class="scrollable">
         <app-table [records]="data.records" [headers]="data.headers" [widths]="data.widths" [visibility]="data.visibility" [justify]="data.justify" [fields]="data.fields"></app-table>
     </div>
 

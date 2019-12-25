@@ -86,8 +86,8 @@
     /* Navigation icon */
     --color-navigation-button: #373F46;
     /* Scrollbars */
-    --color-scrollbar: #FE9F36;
-    --color-scrollbar-background: #373F46;
+    --color-scrollbar: rgb(254, 159, 54);
+    --color-scrollbar-background: rgba(254, 159, 54, 0.5);
     /* Sidebar */
     --color-sidebar-background: #1D2733;
     --color-company-logo-first-child: #FE9F36;

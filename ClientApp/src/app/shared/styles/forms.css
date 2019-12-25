@@ -63,7 +63,7 @@
 }
 
 /* ! Narrow screen */
-@media only screen and (max-width: 80rem) {
+@media only screen and (max-width: 1366px) {
     h1 {
         margin-left: 0 !important;
     }

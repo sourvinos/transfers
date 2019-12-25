@@ -510,8 +510,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private showModalIndex(elements: any, title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {
         const dialog = this.dialog.open(DialogIndexComponent, {
-            height: '640px',
-            width: '600px',
+            height: '685px',
             data: {
                 records: elements,
                 title: title,

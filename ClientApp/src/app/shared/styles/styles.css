@@ -102,7 +102,7 @@ body, h1, h3, h6 {
 }
 
 /* ! Narrow screen */
-@media only screen and (max-width: 80rem) {
+@media only screen and (max-width: 1366px) {
     .icon {
         margin-left: 2rem !important;
     }

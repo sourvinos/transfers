@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 @Component({
     selector: 'dialog-alert',
     templateUrl: './dialog-alert.component.html',
-    styleUrls: ['./dialog-alert.component.css']
+    styleUrls: ['../../styles/dialogs.css', './dialog-alert.component.css']
 })
 
 export class DialogAlertComponent {

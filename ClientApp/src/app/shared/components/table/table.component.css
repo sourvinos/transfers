@@ -1,5 +1,6 @@
 :host {
     display: grid;
+
 }
 
 * {
@@ -7,7 +8,6 @@
 }
 
 table {
-    margin-right: 0.2rem;
     table-layout: fixed;
     -webkit-border-horizontal-spacing: 2px;
     -webkit-border-vertical-spacing: 0;
@@ -15,11 +15,11 @@ table {
 
 table thead tr th {
     background-color: var(--color-table-background);
-    border: 1px dotted var(--color-table-header-border);
+    border-bottom: 1px dotted var(--color-table-header-border);
+    border-top: 1px dotted var(--color-table-header-border);
     color: var(--color-table-header);
     font-family: var(--font-family-table);
     font-size: var(--font-size-table-header);
-    font-weight: var(--font-weight-headers);
     padding: 1rem 0;
     position: sticky;
     text-align: center;

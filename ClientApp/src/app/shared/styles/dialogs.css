@@ -1,26 +1,42 @@
+* {
+    box-sizing: border-box !important;
+}
+
 .mat-dialog-container {
     background-color: var(--color-table-background) !important;
-    border-radius: 5px !important;
-    display: flex !important;
-    width: auto;
 }
 
-.mat-dialog-title {
-    color: var(--color-dialog-title) !important;
+#index-dialog {
+    padding: 1rem !important;
+    display: grid;
+    grid-template-areas:
+        "header"
+        "content"
+        "footer";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    height: 100%;
+}
+
+#index-dialog-header {
+    grid-area: header;
+    padding: 0 0 2rem 0;
+}
+
+#index-dialog-header h1 {
     font-family: var(--font-family-dialog-header) !important;
-    font-size: var(--font-size-mat-dialog-title) !important;
-    margin-bottom: 25px !important;
 }
 
-.mat-dialog-container>.ng-star-inserted {
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100% !important;
-    width: 100% !important;
+#index-dialog-content {
+    grid-area: content;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
 }
 
-.mat-dialog-content {
-    color: var(--color-dialog-content) !important;
-    font-family: var(--font-family-dialog-content) !important;
-    font-size: var(--font-size-mat-dialog-content) !important;
+#index-dialog-footer {
+    grid-area: footer;
+    text-align: end;
+    width: 100%;
+    padding: 2.5rem 0 0 0;
 }
