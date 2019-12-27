@@ -30,7 +30,7 @@ export class TableTransferComponent implements AfterViewInit {
     constructor(private transferInteractionService: InteractionTransferService) { }
 
     @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
-        if (event.key == 'Enter') this.sendRowToService(true)
+        if (event.key == 'Enter') this.sendRowToService()
         if (event.key == 'ArrowUp' || event.key == 'ArrowDown') this.gotoRow(event.key)
     }
 
@@ -96,6 +96,7 @@ export class TableTransferComponent implements AfterViewInit {
         this.tableContainer = this.table.parentNode.parentNode
         this.rowHeight = 51
         this.rowCount = this.table.rows.length - 1
+        console.log(this.rowCount)
     }
 
     /**
@@ -157,7 +158,7 @@ export class TableTransferComponent implements AfterViewInit {
      * Description:
      *  Sends the selected row to the service so that the parent (list-transfer) can call the editRecord method
      */
-    private sendRowToService(closeModal: boolean) {
+    private sendRowToService() {
         this.transferInteractionService.sendObject(this.records[this.currentRow - 1])
     }
 
