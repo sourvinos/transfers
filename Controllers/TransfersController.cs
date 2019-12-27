@@ -117,15 +117,17 @@ namespace Transfers.Controllers
             return Ok();
         }
 
-        // PUT: api/transfers/updateDrivers/5
-        [HttpGet("updateDrivers")]
-        public ActionResult<IEnumerable<int>> UpdateDrivers([FromQuery(Name = "my")] int[] ids)
+        // PUT: api/transfers/assignDrivers ? id=7 & id=77905 & id=77910
+        [HttpPut("assignDrivers")]
+        public async Task<IActionResult> UpdateDrivers(int id, [FromQuery(Name = "id")] int[] ids)
         {
-            var friends = context.Drivers.Where(f => ids.Contains(f.Id)).ToList();
-            friends.ForEach(a => a.Phone = "B");
-            context.SaveChanges();
+            var transfers = await context.Transfers.Where(x => ids.Contains(x.Id)).ToListAsync();
 
-            return Ok(friends);
+            transfers.ForEach(a => a.DriverId = id);
+
+            await context.SaveChangesAsync();
+
+            return Ok(transfers);
         }
 
         // DELETE: api/transfers/5
