@@ -22,6 +22,7 @@
         <div id="buttons">
             <ng-container *ngIf="recordStatus == 'empty'">
                 <button mat-flat-button class="primary" id="new" [disabled]="!isCorrectDate()" (click)="newRecord()">New</button>
+                <button mat-flat-button class="primary" id="new" (click)="assignDriver()">Assign driver</button>
             </ng-container>
             <ng-container *ngIf="recordStatus == 'newRecord'">
                 <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>

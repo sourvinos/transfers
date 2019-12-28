@@ -117,18 +117,19 @@ namespace Transfers.Controllers
             return Ok();
         }
 
-        // PUT: api/transfers/assignDrivers ? id=7 & id=77905 & id=77910
-        [HttpPut("assignDrivers")]
-        public async Task<IActionResult> UpdateDrivers(int id, [FromQuery(Name = "id")] int[] ids)
+        // PATCH: api/transfers/assignDriver?id=7&id=77905&id=77910
+        [HttpPatch("assignDriver")]
+        public async Task<IActionResult> AssignDriver(int driverId, [FromQuery(Name = "id")] int[] ids)
         {
             var transfers = await context.Transfers.Where(x => ids.Contains(x.Id)).ToListAsync();
 
-            transfers.ForEach(a => a.DriverId = id);
+            transfers.ForEach(a => a.DriverId = driverId);
 
             await context.SaveChangesAsync();
 
             return Ok(transfers);
         }
+
 
         // DELETE: api/transfers/5
         [HttpDelete("{id}")]

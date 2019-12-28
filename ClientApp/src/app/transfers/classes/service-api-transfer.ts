@@ -1,23 +1,23 @@
-import { HttpClient } from "@angular/common/http"
-import { Injectable } from "@angular/core"
-import { Observable } from "rxjs"
-import { IQueryResult } from "src/app/models/queryResult"
-import { ITransfer } from "./model-transfer"
+import { HttpClient, HttpParams } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Observable } from 'rxjs'
+import { IQueryResult } from 'src/app/models/queryResult'
+import { ITransfer } from './model-transfer'
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 
 export class TransferService {
 
-    private url: string = "/api/transfers"
+    private url: string = '/api/transfers'
 
     constructor(private http: HttpClient) { }
 
     getTransfers(date: string): Observable<IQueryResult[]> {
-        return this.http.get<IQueryResult[]>(this.url + "/date/" + date)
+        return this.http.get<IQueryResult[]>(this.url + '/date/' + date)
     }
 
     getTransfer(id: number): Observable<ITransfer> {
-        return this.http.get<ITransfer>(this.url + "/" + id.toString())
+        return this.http.get<ITransfer>(this.url + '/' + id.toString())
     }
 
     addTransfer(formData: ITransfer): Observable<ITransfer> {
@@ -25,11 +25,16 @@ export class TransferService {
     }
 
     updateTransfer(id: number, formData: ITransfer): Observable<ITransfer> {
-        return this.http.put<ITransfer>(this.url + "/" + id, formData)
+        return this.http.put<ITransfer>(this.url + '/' + id, formData)
     }
 
     deleteTransfer(id: number): Observable<ITransfer> {
-        return this.http.delete<ITransfer>(this.url + "/" + id)
+        return this.http.delete<ITransfer>(this.url + '/' + id)
+    }
+
+    assignDriver() {
+        let params = new HttpParams().set('driverId', '8').set('id', '77905').append('id', '77910')
+        return this.http.patch(this.url + '/assignDriver?', null, { params: params })
     }
 
 }

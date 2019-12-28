@@ -1,3 +1,4 @@
+import { TransferService } from './../classes/service-api-transfer';
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from '@angular/router';
@@ -27,7 +28,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     // #endregion Variables
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionTransferService: InteractionTransferService) { }
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionTransferService: InteractionTransferService, private transferService: TransferService) { }
 
     ngOnInit(): void {
         this.addShortcuts()
@@ -177,6 +178,12 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      */
     private goBack() {
         this.router.navigate(['/'])
+    }
+
+    assignDriver() {
+        this.transferService.assignDriver().subscribe(result => {
+            console.log(result)
+        })
     }
 
 }
