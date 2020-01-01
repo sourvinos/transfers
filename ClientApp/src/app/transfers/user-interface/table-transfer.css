@@ -38,6 +38,10 @@ tr.selected {
     background-color: var(--color-table-row-selected) !important
 }
 
+tr.checked {
+    font-weight: 900;
+}
+
 tr:hover {
     background-color: var(--color-table-rows-hover) !important;
     cursor: pointer;

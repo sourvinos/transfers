@@ -6,8 +6,9 @@
         "companyLogo"
         "image"
         "menu"
+        "countdown"
         "copyright";
-    grid-template-rows: min-content min-content min-content auto min-content;
+    grid-template-rows: min-content min-content min-content auto min-content min-content;
     height: 100vh;
     overflow: hidden;
     position: sticky;
@@ -110,6 +111,13 @@
     font-family: var(--font-family-copyright);
     font-size: var(--font-size-copyright);
     margin: 0 auto 1.5rem;
+    text-align: center;
+}
+
+#countdown {
+    color: var(--color-headers);
+    font-family: var(--font-family-headers);
+    font-size: 10px;
     text-align: center;
 }
 

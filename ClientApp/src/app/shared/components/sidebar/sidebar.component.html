@@ -2,6 +2,9 @@
     <div id="userInfo">
         <div *ngIf="(loginStatus | async)">
             <div>Hello, {{ displayName | async }}</div>
+            <div id="countdown">
+                <span>Logout in: {{ countdown }} seconds</span>
+            </div>
         </div>
     </div>
     <div id="companyLogo" [routerLink]="['/']">

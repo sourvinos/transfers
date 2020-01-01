@@ -48,7 +48,6 @@ namespace Transfers
             }
         }
 
-        // Private
         private async Task<IActionResult> GenerateNewToken(TokenRequestModel model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
@@ -79,7 +78,6 @@ namespace Transfers
 
         }
 
-        // Private
         private async Task<TokenResponseModel> CreateAccessToken(ApplicationUser user, string refreshToken)
         {
             double tokenExpiryTime = Convert.ToDouble(_appSettings.ExpireTime);
@@ -117,7 +115,6 @@ namespace Transfers
 
         }
 
-        // Private
         private TokenModel CreateRefreshToken(string clientId, string userId)
         {
             return new TokenModel()
@@ -126,11 +123,10 @@ namespace Transfers
                 UserId = userId,
                 Value = Guid.NewGuid().ToString("N"),
                 CreatedDate = DateTime.UtcNow,
-                ExpiryTime = DateTime.UtcNow.AddMinutes(30)
+                ExpiryTime = DateTime.UtcNow.AddMinutes(90)
             };
         }
 
-        // Private
         private async Task<IActionResult> RefreshToken(TokenRequestModel model)
         {
             try

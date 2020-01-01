@@ -34,8 +34,8 @@ export class TableComponent {
         // this.gotoRow(1)
     }
 
-    @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
-        if (event.key == 'Enter') this.indexInteractionService.action(true)
+    @HostListener('keyup', ['$event']) onkeyup(event: { key: string; altKey: any }) {
+        if (event.key == 'Enter' || (event.altKey && event.key.toUpperCase() == 'S')) this.indexInteractionService.action(true)
         if (event.key == 'ArrowUp' || event.key == 'ArrowDown') this.gotoRow(event.key)
     }
 

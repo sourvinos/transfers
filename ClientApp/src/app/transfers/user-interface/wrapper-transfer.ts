@@ -7,6 +7,8 @@ import { Subject } from 'rxjs';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { InteractionTransferService } from './../classes/service-interaction-transfer';
+import { MatDialog } from '@angular/material';
+import { DialogAlertComponent } from 'src/app/shared/components/dialog-alert/dialog-alert.component';
 
 @Component({
     selector: 'wrapper-transfer',
@@ -20,6 +22,9 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     dateIn: string = '01/10/2019'
     dateInISO: string = ''
+    driver: string = '9'
+    firstRecord: string = ''
+    records: string[] = []
 
     recordStatus: string = 'empty'
 
@@ -28,7 +33,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     // #endregion Variables
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionTransferService: InteractionTransferService, private transferService: TransferService) { }
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionTransferService: InteractionTransferService, private transferService: TransferService, public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.addShortcuts()
@@ -37,15 +42,16 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        console.log('Wrapper-onDestroy')
+        // console.log('Wrapper-onDestroy')
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.unsubscribe();
         this.unlisten && this.unlisten()
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Template - deleteRecord()
+     * 
      * Description:
      *  Executes the delete method on the form through the interaction service
      */
@@ -54,8 +60,9 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Template - loadTransfers()
+     * 
      * Description:
      *  Loads from the api the records for the given date
      */
@@ -157,12 +164,12 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - ngOnInit()
      * 
      * Description:
      *  Gets the record status from the form through the interaction service
-     *  The local variable 'recordStatus' will be checked by the template so that it decides which buttons to display
+     *  The variable 'recordStatus' will be checked by the template which decides which buttons to display
      */
     private subscribeToInderactionService() {
         this.interactionTransferService.recordStatus.subscribe(response => {
@@ -171,18 +178,35 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - addShortcuts()
+     * 
      * Description:
-     *  On escape navigates home
+     *  On escape navigates to the home route
      */
     private goBack() {
         this.router.navigate(['/'])
     }
 
     assignDriver() {
-        this.transferService.assignDriver().subscribe(result => {
-            console.log(result)
+        this.records = JSON.parse(localStorage.getItem('selectedIds'))
+        console.log('From localStorage', this.records)
+        const dialogRef = this.dialog.open(DialogAlertComponent, {
+            height: '250px',
+            width: '550px',
+            data: {
+                title: 'Select a driver',
+                message: 'Combo goes here',
+                actions: ['cancel', 'ok']
+            },
+            panelClass: 'dialog'
+        })
+        return dialogRef.afterClosed().subscribe(result => {
+            if (result == "true") {
+                this.transferService.assignDriver(this.driver, this.records).subscribe(result => {
+                    console.log(result)
+                })
+            }
         })
     }
 

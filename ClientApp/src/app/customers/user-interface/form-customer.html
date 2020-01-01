@@ -46,7 +46,7 @@
                 <mat-error *ngIf="accountCode.invalid"></mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Tax office" formControlName="taxOfficeDescription" tabindex="9" id="taxOfficeDescription" (change)="lookupIndex(taxOffices, 'Οικονομικές υπηρεσίες', ['taxOfficeId','taxOfficeDescription'], ['id','description'], ['Id','Description'], ['1px','440px'], ['none',''], ['center','left'], $event)">
+                <input type="text" matInput placeholder="Tax office" formControlName="taxOfficeDescription" tabindex="9" id="taxOfficeDescription" (change)="lookupIndex(taxOffices, 'Tax offices', ['taxOfficeId','taxOfficeDescription'], ['id','description'], ['Id','Description'], ['1px','440px'], ['none',''], ['center','left'], $event)">
                 <mat-error *ngIf="taxOfficeDescription.invalid"></mat-error>
             </mat-form-field>
             <mat-form-field>

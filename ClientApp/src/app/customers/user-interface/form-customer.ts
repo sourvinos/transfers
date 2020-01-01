@@ -77,8 +77,9 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 height: '250px',
                 width: '550px',
                 data: {
-                    title: 'Please confirm',
-                    message: 'If you continue, changes in this record will be lost.',
+                    title: 'Επιβεβαίωση',
+                    message: 'Αν συνεχίσετε, οι αλλαγές στην εγγραφή θα χαθούν.',
+                    messagea: 'If you continue, changes in this record will be lost.',
                     actions: ['cancel', 'ok']
                 },
                 panelClass: 'dialog'

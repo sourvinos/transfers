@@ -4,39 +4,42 @@
 
 .mat-dialog-container {
     background-color: var(--color-table-background) !important;
+    padding: 2rem !important;
 }
 
-#index-dialog {
-    padding: 1rem !important;
-    display: grid;
-    grid-template-areas:
-        "header"
-        "content"
-        "footer";
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
+#dialog {
+    background-color: var(--color-dialog-background);
+    display: flex;
+    flex-direction: column;
     height: 100%;
+    padding: 0;
 }
 
-#index-dialog-header {
-    grid-area: header;
-    padding: 0 0 2rem 0;
+#dialog-header {
+    padding-bottom: 2rem;
 }
 
-#index-dialog-header h1 {
+#dialog-header h1 {
+    color: var(--color-dialog-title);
     font-family: var(--font-family-dialog-header) !important;
+    margin: 0 !important;
 }
 
-#index-dialog-content {
-    grid-area: content;
-    overflow-x: hidden;
-    overflow-y: scroll;
+#dialog-content {
+    color: var(--color-dialog-content);
+    flex: 1;
+    font-family: var(--font-family-dialog-content) !important;
     scroll-behavior: smooth;
 }
 
-#index-dialog-footer {
-    grid-area: footer;
+#dialog-footer {
+    padding-top: 2rem;
     text-align: end;
-    width: 100%;
-    padding: 2.5rem 0 0 0;
+}
+
+.mat-dialog-actions {
+    justify-content: flex-end;
+    margin: 0;
+    min-height: 0;
+    padding: 0;
 }

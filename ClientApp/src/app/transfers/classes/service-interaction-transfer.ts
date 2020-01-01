@@ -15,10 +15,14 @@ export class InteractionTransferService {
 
     /**
      * Caller(s):
-     *  Class - table-transfer
+     *  table-transfer.ts
+     * 
+     * Subscriber(s):
+     *  list-transfer.ts
      * 
      * Description
-     *  Gets the record from the class and sends it to the parent (list-transfer - subscriber) so it can call the editRecord method
+     *  The caller sends the selected record to the 'record' variable
+     *  The subscriber executes the editRecord function
      * 
      * @param record 
      */
@@ -26,6 +30,19 @@ export class InteractionTransferService {
         this._record.next(record)
     }
 
+    /**
+     * Callers(s):
+     *  wrapper-transfer.ts
+     * 
+     * Subscriber(s):
+     *  form-transfer.ts
+     * 
+     * Description:
+     *  The caller sends 'saveRecord' or 'deleteRecord' to the action variable
+     *  The subscriber checks the value and deletes or saves the record
+     * 
+     * @param action 
+     */
     performAction(action: string) {
         this._action.next(action)
     }
@@ -38,8 +55,8 @@ export class InteractionTransferService {
      *  wrapper-transfer.ts
      * 
      * Description:
-     *  The caller sends 'empty', 'newRecord' or 'editRecord' to the 'recordStatus'
-     *  The wrapper subscribes to the 'recordStatus', checks the value and displays the buttons:
+     *  The caller sends 'empty', 'newRecord' or 'editRecord' to the recordStatus variable
+     *  The subscriber checks the value and displays the buttons:
      *   recordStatus = 'empty' displays 'New'
      *   recordStatus = 'newRecord' displays 'Save'
      *   recordStatus = 'editRecord' displays 'Delete' and 'Save' 

@@ -43,7 +43,7 @@
     --font-family-customInput: "Play";
     /* Dialogs */
     --font-family-dialog-header: "Roboto Condensed";
-    --font-family-dialog-content: "Lato";
+    --font-family-dialog-content: "Roboto Condensed";
     /* Tables */
     --font-family-table: 'Roboto Condensed';
     /* Transfer summary boxes */
@@ -64,8 +64,8 @@
     --color-button-secondary: #5A75BC;
     --color-button-text: #FFFDDD;
     /* Dialogs */
-    --color-dialog-background: #424242;
-    --color-dialog-content: #FFFDDD;
+    --color-dialog-background: #373F46;
+    --color-dialog-content: #939393;
     --color-dialog-title: #939393;
     /* Divider lines */
     --color-divider: #5c5c5c;

@@ -9,10 +9,6 @@
     padding: 0 !important;
 }
 
-/* .mat-header-cell:not(:first-child), .mat-cell:not(:first-child) { */
-/* flex: 100%; */
-/* } */
-
 .mat-header-cell:not(:first-child) {
     color: var(--color-table-header) !important;
     font-size: 1.1rem !important;

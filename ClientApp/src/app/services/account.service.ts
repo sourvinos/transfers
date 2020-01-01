@@ -50,6 +50,7 @@ export class AccountService {
     }
 
     getNewRefreshToken(): Observable<any> {
+        console.log('getNewRefreshToken')
         let userName = localStorage.getItem('userName')
         let refreshToken = localStorage.getItem('refreshToken')
         const grantType = "refresh_token"

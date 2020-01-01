@@ -24,6 +24,7 @@ export class TableTransferComponent implements AfterViewInit {
     table: any
     rowHeight: number = 0
     rowCount: number = 0
+    checkedIds: string[]
 
     // #endregion
 
@@ -59,9 +60,9 @@ export class TableTransferComponent implements AfterViewInit {
      *  Template - gotoRow()
      * 
      * Description:
-     *  Highlights the next / previous row according to the arrow keys of highlights the clicked row
+     *  Highlights the next / previous row according to the arrow keys or highlights the clicked row
      * 
-     * @param key // The pressed key code or the number of the line to goto directly after a mouse click or when set from code
+     * @param key // The pressed key code or the number of the line to goto directly after a mouse click / set from code
      */
     private gotoRow(key: any) {
         if (!isNaN(key)) {
@@ -96,7 +97,6 @@ export class TableTransferComponent implements AfterViewInit {
         this.tableContainer = this.table.parentNode.parentNode
         this.rowHeight = 51
         this.rowCount = this.table.rows.length - 1
-        console.log(this.rowCount)
     }
 
     /**
@@ -111,18 +111,18 @@ export class TableTransferComponent implements AfterViewInit {
      */
     private isRowIntoView(row: HTMLTableRowElement, direction: string) {
         const rowOffsetTop = row.offsetTop
-        const indexContentScrollTop = this.tableContainer.scrollTop
-        const rowOffetTopPlusRowOffsetHeight = rowOffsetTop + row.offsetHeight
-        const indexContentScrollTopPuslIndexContentOffsetHeight = indexContentScrollTop + this.tableContainer.offsetHeight
+        const scrollTop = this.tableContainer.scrollTop
+        const rowTopPlusHeight = rowOffsetTop + row.offsetHeight
+        const indexTopPlusHeight = scrollTop + this.tableContainer.offsetHeight
         if (direction == 'ArrowUp') {
-            if (indexContentScrollTopPuslIndexContentOffsetHeight - rowOffsetTop + this.rowHeight < this.tableContainer.offsetHeight) {
+            if (indexTopPlusHeight - rowOffsetTop + this.rowHeight < this.tableContainer.offsetHeight) {
                 return true
             } else {
                 return false
             }
         }
         if (direction == 'ArrowDown') {
-            if (rowOffetTopPlusRowOffsetHeight <= indexContentScrollTopPuslIndexContentOffsetHeight) {
+            if (rowTopPlusHeight <= indexTopPlusHeight) {
                 return true
             } else {
                 return false
@@ -135,7 +135,7 @@ export class TableTransferComponent implements AfterViewInit {
      *  Class - gotoRow()
      * 
      * Description:
-     *  Updates the currentRow variable and highlights it
+     *  Updates the currentRow variable and highlights
      * 
      * @param table 
      * @param direction 
@@ -179,11 +179,30 @@ export class TableTransferComponent implements AfterViewInit {
      * Caller(s):
      *  Class - gotoRow()
      * 
-     * Description
+     * Description:
      *  Removes the 'selected' class from the current row
      */
     private unselectRow() {
         this.table.rows[this.currentRow].classList.remove('selected')
+    }
+
+    /**
+     * Caller(s):
+     *  Template - toggleChecked()
+     * 
+     * Description:
+     *  Toggles the class 'checked' for the first column - will be used to assign a driver for the 'checked' rows
+     */
+    toggleChecked() {
+        this.checkedIds = []
+        this.table.querySelectorAll('tr').forEach((element: { classList: { toggle: (arg0: string) => void } }) => {
+            element.classList.toggle('checked')
+        })
+        this.table.querySelectorAll('tr.checked td:nth-child(2)').forEach((element: { textContent: string }) => {
+            this.checkedIds.push(element.textContent)
+        })
+        console.log(this.checkedIds)
+        localStorage.setItem('selectedIds', JSON.stringify(this.checkedIds))
     }
 
 }
