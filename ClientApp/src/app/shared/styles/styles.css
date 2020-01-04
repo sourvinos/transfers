@@ -76,6 +76,11 @@ body, h1, h3, h6 {
     margin: 2rem 0 !important;
 }
 
+.mat-checkbox-inner-container-no-side-margin {
+    width: 20px !important;
+    height: 20px !important;
+}
+
 .mat-expansion-indicator::after {
     color: var(--color-summary-block-expansion-indicator) !important;
 }

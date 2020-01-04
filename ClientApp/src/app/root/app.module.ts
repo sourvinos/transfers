@@ -96,6 +96,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
         MatSelectModule,
         MatSnackBarModule,
         MatTableModule,
+        MatCheckboxModule
     ],
     entryComponents: [
         DialogIndexComponent,

@@ -12,6 +12,7 @@
 #listFormCombo {
     grid-area: listFormCombo;
     overflow-y: hidden;
+    padding-left: 21rem;
 }
 
 #transfersList {
@@ -28,6 +29,7 @@
     margin-right: 1.5rem;
     overflow-x: hidden;
     overflow-y: scroll;
+    position: absolute;
     row-gap: 0.5rem;
     width: 20rem;
 }

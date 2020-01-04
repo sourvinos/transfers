@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { InteractionTransferService } from '../classes/service-interaction-trans
     styleUrls: ['./list-transfer.css']
 })
 
-export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
 
     // #region Init
 
@@ -36,8 +36,8 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     transfersFlat: ITransferFlat[] = []
 
     headers = ['S', 'Id', 'Dest', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
-    widths = ['20px', '100px', '50px', '100px', '200px', '200px', '60px', '40px', '40px', '40px', '40px', '100px', '100px']
-    visibility = ['', '', '', '', '', '', '', '', '', '', '', '', '']
+    widths = ['40px', '100px', '50px', '100px', '200px', '200px', '60px', '40px', '40px', '40px', '40px', '100px', '100px']
+    visibility = ['', 'none', '', '', '', '', '', '', '', '', '', '', '']
     justify = ['center', 'center', 'center', 'center', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
     fields = ['', 'id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
 
@@ -72,6 +72,10 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         this.addActiveClassToSelectedArrays()
         this.filterByCriteria()
         this.flattenResults()
+    }
+
+    ngAfterViewChecked() {
+        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight + 'px'
     }
 
     ngDoCheck() {
@@ -177,7 +181,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             this.addActiveClassToElements('.item.route', this.selectedRoutes)
             this.addActiveClassToElements('.item.driver', this.selectedDrivers)
             this.addActiveClassToElements('.item.port', this.selectedPorts)
-        }, 1000);
+        }, 500);
     }
 
     /**
@@ -305,6 +309,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             "ports": JSON.stringify(this.selectedPorts),
         }
         localStorage.setItem('transfers', JSON.stringify(summaryItems))
+        localStorage.removeItem('selectedIds')
     }
 
     /**
@@ -362,7 +367,6 @@ export class ListTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         this.queryResult.personsPerRoute.forEach((element: { description: string; }) => { this.selectedRoutes.push(element.description) })
         this.queryResult.personsPerDriver.forEach((element: { description: string; }) => { this.selectedDrivers.push(element.description) })
         this.queryResult.personsPerPort.forEach((element: { description: string; }) => { this.selectedPorts.push(element.description) })
-
     }
 
     /**

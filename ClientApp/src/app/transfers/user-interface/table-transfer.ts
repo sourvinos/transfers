@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, Input } from '@angular/core'
+import { Component, HostListener, Input, IterableChanges, IterableDiffer, IterableDiffers } from '@angular/core'
 import { InteractionTransferService } from '../classes/service-interaction-transfer'
 
 @Component({
@@ -7,7 +7,7 @@ import { InteractionTransferService } from '../classes/service-interaction-trans
     styleUrls: ['./table-transfer.css']
 })
 
-export class TableTransferComponent implements AfterViewInit {
+export class TableTransferComponent {
 
     // #region Variables
 
@@ -24,19 +24,32 @@ export class TableTransferComponent implements AfterViewInit {
     table: any
     rowHeight: number = 0
     rowCount: number = 0
-    checkedIds: string[]
+    checked: boolean = false
+    checkedIds: string[] = []
+
+    differences: IterableDiffer<any>;
 
     // #endregion
 
-    constructor(private transferInteractionService: InteractionTransferService) { }
+    constructor(private transferInteractionService: InteractionTransferService, private iterableDiffers: IterableDiffers) { }
 
     @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
         if (event.key == 'Enter') this.sendRowToService()
         if (event.key == 'ArrowUp' || event.key == 'ArrowDown') this.gotoRow(event.key)
     }
 
+    ngOnInit() {
+        this.differences = this.iterableDiffers.find(this.records).create();
+    }
+
     ngAfterViewInit() {
         this.initVariables()
+    }
+
+    public ngDoCheck() {
+        const changes: IterableChanges<any> = this.differences.diff(this.records);
+        if (changes)
+            this.checked = false
     }
 
     /**
@@ -186,23 +199,30 @@ export class TableTransferComponent implements AfterViewInit {
         this.table.rows[this.currentRow].classList.remove('selected')
     }
 
-    /**
-     * Caller(s):
-     *  Template - toggleChecked()
-     * 
-     * Description:
-     *  Toggles the class 'checked' for the first column - will be used to assign a driver for the 'checked' rows
-     */
-    toggleChecked() {
+    toggleCheckBox(row: number) {
         this.checkedIds = []
-        this.table.querySelectorAll('tr').forEach((element: { classList: { toggle: (arg0: string) => void } }) => {
-            element.classList.toggle('checked')
+        this.table.rows[row].classList.toggle('checked')
+        this.table.querySelectorAll('tr.checked').forEach((element: { childNodes: { innerText: string }[] }) => {
+            this.checkedIds.push(element.childNodes[2].innerText)
         })
-        this.table.querySelectorAll('tr.checked td:nth-child(2)').forEach((element: { textContent: string }) => {
-            this.checkedIds.push(element.textContent)
-        })
-        console.log(this.checkedIds)
         localStorage.setItem('selectedIds', JSON.stringify(this.checkedIds))
+    }
+
+    onHeaderClick(column: any) {
+        if (column.toElement.cellIndex == 0) {
+            this.checked = !this.checked
+            this.checkedIds = []
+            this.table.querySelectorAll('tr').forEach((element: { classList: { add: (arg0: string) => void; remove: (arg0: string) => void }; childNodes: { innerText: string }[] }) => {
+                if (this.checked) {
+                    element.classList.add('checked')
+                    this.checkedIds.push(element.childNodes[2].innerText)
+                }
+                else {
+                    element.classList.remove('checked')
+                }
+            })
+            localStorage.setItem('selectedIds', JSON.stringify(this.checkedIds))
+        }
     }
 
 }
