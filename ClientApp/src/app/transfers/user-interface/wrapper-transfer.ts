@@ -1,14 +1,15 @@
-import { TransferService } from './../classes/service-api-transfer';
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from "@angular/core";
+import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
+import { DriverService } from 'src/app/services/driver.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
+import { TransferService } from './../classes/service-api-transfer';
 import { InteractionTransferService } from './../classes/service-interaction-transfer';
-import { MatDialog } from '@angular/material';
-import { DialogAlertComponent } from 'src/app/shared/components/dialog-alert/dialog-alert.component';
+import { DialogAssignDriverComponent } from './dialog-assign-driver';
 
 @Component({
     selector: 'wrapper-transfer',
@@ -22,7 +23,6 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     dateIn: string = '01/10/2019'
     dateInISO: string = ''
-    driver: string = '9'
     firstRecord: string = ''
     records: string[] = []
 
@@ -33,7 +33,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     // #endregion Variables
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionTransferService: InteractionTransferService, private transferService: TransferService, public dialog: MatDialog) { }
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionTransferService: InteractionTransferService, private transferService: TransferService, public dialog: MatDialog, private driverService: DriverService) { }
 
     ngOnInit(): void {
         this.addShortcuts()
@@ -42,7 +42,6 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        // console.log('Wrapper-onDestroy')
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.unsubscribe();
         this.unlisten && this.unlisten()
@@ -74,8 +73,9 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Template - newRecord()
+     * 
      * Description:
      *  Navigates to the form so that new records can be appended
      */
@@ -84,7 +84,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Template - saveRecord()
      * 
      * Description:
@@ -95,15 +95,46 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller:
+ * Caller(s):
+ *  Template - assignDriver()
+ * 
+ * Description:
+ *  Assign a driver to the checked records
+ */
+    assignDriver() {
+        this.records = JSON.parse(localStorage.getItem('selectedIds'))
+        const dialogRef = this.dialog.open(DialogAssignDriverComponent, {
+            height: '250px',
+            width: '550px',
+            data: {
+                title: 'Select a driver',
+                drivers: this.driverService.getDrivers(),
+                actions: ['cancel', 'ok']
+            },
+            panelClass: 'dialog'
+        })
+        return dialogRef.afterClosed().subscribe(result => {
+            if (result != undefined) {
+                this.transferService.assignDriver(result, this.records).subscribe(() => {
+                    this.router.navigate(['dateIn/', this.dateInISO], { relativeTo: this.activatedRoute })
+                })
+            }
+        })
+    }
+
+    /**
+     * Caller(s):
      *  Class - ngOnInit()
+     * 
      * Description:
      *  Adds keyboard functionality
      */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             "Escape": (event: KeyboardEvent): void => {
-                this.goBack()
+                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+                    this.goBack()
+                }
             },
             "Alt.S": (event: KeyboardEvent): void => {
                 event.preventDefault()
@@ -120,23 +151,27 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - ngOnInit()
+     * 
      * Description:
      *  Calls the public method
+     * 
      * @param field 
+     * 
      */
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - loadTransfers()
+     * 
      * Description:
      *  Checks for valid date
      */
-    isCorrectDate() {
+    private isCorrectDate() {
         let date = (<HTMLInputElement>document.getElementById('dateIn')).value
         if (date.length == 10) {
             this.dateInISO = moment(date, 'DD/MM/YYYY').toISOString(true)
@@ -154,8 +189,9 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller: 
+     * Caller(s): 
      *  Class - loadTransfers()
+     * 
      * Description:
      *  Stores the given date to the localStorage for reading in later visits
      */
@@ -186,28 +222,6 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      */
     private goBack() {
         this.router.navigate(['/'])
-    }
-
-    assignDriver() {
-        this.records = JSON.parse(localStorage.getItem('selectedIds'))
-        console.log('From localStorage', this.records)
-        const dialogRef = this.dialog.open(DialogAlertComponent, {
-            height: '250px',
-            width: '550px',
-            data: {
-                title: 'Select a driver',
-                message: 'Combo goes here',
-                actions: ['cancel', 'ok']
-            },
-            panelClass: 'dialog'
-        })
-        return dialogRef.afterClosed().subscribe(result => {
-            if (result == "true") {
-                this.transferService.assignDriver(this.driver, this.records).subscribe(result => {
-                    console.log(result)
-                })
-            }
-        })
     }
 
 }

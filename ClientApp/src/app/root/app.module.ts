@@ -27,6 +27,7 @@ import { PageNotFoundComponent } from '../shared/components/page-not-found/page-
 import { LoaderComponent } from '../shared/components/loader/loader.component'
 import { DialogIndexComponent } from '../shared/components/dialog-index/dialog-index.component'
 import { DialogAlertComponent } from '../shared/components/dialog-alert/dialog-alert.component'
+import { DialogAssignDriverComponent } from '../transfers/user-interface/dialog-assign-driver'
 // Routes
 import { HomeComponent } from './../home/home.component'
 import { LoginComponent } from '../login/user-interface/form-login'
@@ -56,6 +57,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
         PageNotFoundComponent,
         DialogIndexComponent,
         DialogAlertComponent,
+        DialogAssignDriverComponent,
         TableComponent,
         // Routes
         HomeComponent,
@@ -101,6 +103,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
     entryComponents: [
         DialogIndexComponent,
         DialogAlertComponent,
+        DialogAssignDriverComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

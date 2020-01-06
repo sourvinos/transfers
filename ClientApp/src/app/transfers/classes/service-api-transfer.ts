@@ -33,15 +33,12 @@ export class TransferService {
     }
 
     assignDriver(driverId: string, ids: string[]) {
-        console.log('ids', ids)
         let params = new HttpParams().set('driverId', driverId).set('id', ids[0])
         ids.forEach((element, index) => {
             if (index > 0) {
-                console.log('index', index, element)
                 params = params.append('id', element)
             }
         })
-        console.log('params', params)
         return this.http.patch(this.url + '/assignDriver?', null, { params: params })
     }
 

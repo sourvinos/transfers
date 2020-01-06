@@ -1,0 +1,20 @@
+<div id="dialog">
+
+    <div id="dialog-header">
+        <h1 mat-dialog-title>{{ data.title }}</h1>
+    </div>
+
+    <div id="dialog-content">
+        <select (change)="selectChangeHandler($event)">
+            <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.description }}</option>
+        </select>
+    </div>
+
+    <div id="dialog-footer">
+        <mat-dialog-actions>
+            <button mat-flat-button class="primary" id="cancel" tabindex="-1" (click)="close()">Cancel</button>
+            <button mat-flat-button class="delete" id="ok" tabindex="-1" [mat-dialog-close]="driverId">OK</button>
+        </mat-dialog-actions>
+    </div>
+
+</div>

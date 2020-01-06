@@ -164,8 +164,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Template - lookupIndex()
+     * 
      * Description:
      *  Filters the given array according to the user input and displays a table to select a record
      * 
@@ -196,7 +197,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - subscribeToInderactionService()
      * 
      * Description:
@@ -219,8 +220,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - saveRecord(), deleteRecord()
+     * 
      * Description:
      *  Housekeeping actions
      */
@@ -230,8 +232,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - ngOnInit()
+     * 
      * Description:
      *  Adds keyboard shortcuts
      */
@@ -347,7 +350,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Class - canDeactive(), deleteRecord(), saveRecord()
      * 
      * Description:
-     *  Send 'empty' to the setRecordStatus, so that the wrapper will display the 'new' button
+     *  Send 'empty' to the 'setRecordStatus', so that the wrapper will display the 'new' button
      *  On escape navigates to the list
      */
     private goBack() {
@@ -356,8 +359,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - deleteRecord()
+     * 
      * Description:
      *  Displays a modal window with an alert if the delete action fails
      */
@@ -375,10 +379,11 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - lookupIndex(), showModalIndex()
+     * 
      * Description:
-     *  Populates the fields with empty values from the lookupIndex() or response values from the showModalIndex()
+     *  Populates the form fields with empty values from the lookupIndex() or response values from the showModalIndex()
      *  
      * @param result 
      * @param id 
@@ -390,8 +395,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - ngOnInit()
+     * 
      * Description:
      *  Populates the dropdowns
      */
@@ -419,12 +425,14 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - getTransfer()
+     * 
      * Description:
      *  Populates the form with record values
      * 
      * @param result 
+     * 
      */
     private populateFields(result: ITransfer) {
         this.form.setValue({
@@ -445,8 +453,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - constructor()
+     * 
      * Description:
      *  Populates the form with initial values
      */
@@ -469,8 +478,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - ngOnInit()
+     * 
      * Description:
      *  Hides the list and shows the form
      */
