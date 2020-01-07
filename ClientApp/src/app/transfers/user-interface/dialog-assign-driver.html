@@ -5,15 +5,19 @@
     </div>
 
     <div id="dialog-content">
-        <select (change)="selectChangeHandler($event)">
-            <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.description }}</option>
-        </select>
+        <mat-form-field [hideRequiredMarker]="true">
+            <mat-label>Driver</mat-label>
+            <mat-select [(value)]="driverId" required>
+                <mat-option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.description }}</mat-option>
+            </mat-select>
+            <mat-hint>Select from the list!</mat-hint>
+        </mat-form-field>
     </div>
 
     <div id="dialog-footer">
         <mat-dialog-actions>
-            <button mat-flat-button class="primary" id="cancel" tabindex="-1" (click)="close()">Cancel</button>
-            <button mat-flat-button class="delete" id="ok" tabindex="-1" [mat-dialog-close]="driverId">OK</button>
+            <button mat-flat-button class="secondary" id="cancel" tabindex="-1" (click)="close()">Cancel</button>
+            <button mat-flat-button class="primary" id="ok" tabindex="-1" [disabled]="!driverId" [mat-dialog-close]="driverId">OK</button>
         </mat-dialog-actions>
     </div>
 

@@ -8,10 +8,12 @@ export class InteractionTransferService {
     private _record = new Subject<string[]>()
     private _recordStatus = new Subject<string>()
     private _action = new Subject<string>()
+    private _hasTableData = new Subject<boolean>()
 
     record = this._record.asObservable()
     recordStatus = this._recordStatus.asObservable()
     action = this._action.asObservable()
+    hasTableData = this._hasTableData.asObservable()
 
     /**
      * Caller(s):
@@ -65,6 +67,10 @@ export class InteractionTransferService {
      */
     setRecordStatus(status: string) {
         this._recordStatus.next(status)
+    }
+
+    setTableStatus(records: boolean) {
+        this._hasTableData.next(records)
     }
 
 }

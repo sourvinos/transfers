@@ -78,6 +78,7 @@
     --color-input-text-error: #FC3B3B;
     --color-input-text-focus: #FE9F36;
     --color-input-text-label: #999999;
+    --color-select-arrow: #999999;
     --color-input-text-underline: #5F5E5E;
     --color-input-text-underline-focus: #BA680B;
     --color-input-text-not-focus: #FFFFFF;
@@ -115,4 +116,8 @@
     --color-summary-block-item: #B3B2B2;
     /* Checkbox */
     --color-checkbox-checked: #FE9F36;
+    /* Snackbars */
+    --color-snackbar-text: #ffffff;
+    --color-snackbar-background-danger: #a52a2a;
+    --color-snackbar-background--info: #0e8d97;
 }

@@ -5,7 +5,7 @@ import { IDriver } from './../../models/driver';
 @Component({
     selector: 'dialog-assign-driver',
     templateUrl: './dialog-assign-driver.html',
-    styleUrls: ['../../shared/styles/dialogs.css']
+    styleUrls: ['../../shared/styles/dialogs.css', './dialog-assign-driver.css']
 })
 
 export class DialogAssignDriverComponent {
@@ -19,10 +19,6 @@ export class DialogAssignDriverComponent {
         this.data.drivers.subscribe((result: any) => {
             this.drivers = result
         })
-    }
-
-    selectChangeHandler(event: any) {
-        this.driverId = event.target.value;
     }
 
     close() {

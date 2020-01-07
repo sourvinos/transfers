@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
@@ -23,17 +23,17 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     dateIn: string = '01/10/2019'
     dateInISO: string = ''
-    firstRecord: string = ''
     records: string[] = []
 
     recordStatus: string = 'empty'
+    hasTableData: boolean = false
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
     // #endregion Variables
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionTransferService: InteractionTransferService, private transferService: TransferService, public dialog: MatDialog, private driverService: DriverService) { }
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionTransferService: InteractionTransferService, private transferService: TransferService, public dialog: MatDialog, private driverService: DriverService, private snackBar: MatSnackBar) { }
 
     ngOnInit(): void {
         this.addShortcuts()
@@ -41,7 +41,8 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
         this.focus('dateIn')
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
+        this.removeSelectedIdsFromLocalStorage()
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.unsubscribe();
         this.unlisten && this.unlisten()
@@ -54,7 +55,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * Description:
      *  Executes the delete method on the form through the interaction service
      */
-    deleteRecord() {
+    deleteRecord(): void {
         this.interactionTransferService.performAction('deleteRecord')
     }
 
@@ -65,10 +66,10 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * Description:
      *  Loads from the api the records for the given date
      */
-    loadTransfers() {
-        if (this.isCorrectDate()) {
-            this.updateLocalStorage()
-            this.router.navigate(['dateIn/', this.dateInISO], { relativeTo: this.activatedRoute })
+    loadTransfers(): void {
+        if (this.isValidDate()) {
+            this.updateLocalStorageWithDate()
+            this.navigateToList()
         }
     }
 
@@ -79,7 +80,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * Description:
      *  Navigates to the form so that new records can be appended
      */
-    newRecord() {
+    newRecord(): void {
         this.router.navigate([this.location.path() + '/transfer/new'])
     }
 
@@ -90,36 +91,50 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * Description:
      *  Executes the save method on the form through the interaction service
      */
-    saveRecord() {
+    saveRecord(): void {
         this.interactionTransferService.performAction('saveRecord')
     }
 
     /**
- * Caller(s):
- *  Template - assignDriver()
- * 
- * Description:
- *  Assign a driver to the checked records
- */
-    assignDriver() {
-        this.records = JSON.parse(localStorage.getItem('selectedIds'))
-        const dialogRef = this.dialog.open(DialogAssignDriverComponent, {
-            height: '250px',
-            width: '550px',
-            data: {
-                title: 'Select a driver',
-                drivers: this.driverService.getDrivers(),
-                actions: ['cancel', 'ok']
-            },
-            panelClass: 'dialog'
-        })
-        return dialogRef.afterClosed().subscribe(result => {
-            if (result != undefined) {
-                this.transferService.assignDriver(result, this.records).subscribe(() => {
-                    this.router.navigate(['dateIn/', this.dateInISO], { relativeTo: this.activatedRoute })
-                })
-            }
-        })
+     * Caller(s):
+     *  Template - assignDriver()
+     * 
+     * Description:
+     *  Assign a driver to the checked records
+     */
+    assignDriver(): void {
+        if (this.isRecordSelected()) {
+            const dialogRef = this.dialog.open(DialogAssignDriverComponent, {
+                height: '350px',
+                width: '550px',
+                data: {
+                    title: 'Assign driver',
+                    drivers: this.driverService.getDrivers(),
+                    actions: ['cancel', 'ok']
+                },
+                panelClass: 'dialog'
+            })
+            dialogRef.afterClosed().subscribe(result => {
+                if (result != undefined) {
+                    this.transferService.assignDriver(result, this.records).subscribe(() => {
+                        this.removeSelectedIdsFromLocalStorage()
+                        this.navigateToList()
+                        this.showInfoSnackbar()
+                    })
+                }
+            })
+        }
+    }
+
+    /**
+     * Caller(s):
+     *  Template - tableHasData()
+     * 
+     * Description:
+     *  The variable 'hasTableData' will be checked by the template to display or not the 'Assign driver' button
+     */
+    tableHasData(): boolean {
+        return this.hasTableData
     }
 
     /**
@@ -129,7 +144,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * Description:
      *  Adds keyboard functionality
      */
-    private addShortcuts() {
+    private addShortcuts(): void {
         this.unlisten = this.keyboardShortcutsService.listen({
             "Escape": (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
@@ -160,7 +175,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * @param field 
      * 
      */
-    private focus(field: string) {
+    private focus(field: string): void {
         Utils.setFocus(field)
     }
 
@@ -171,7 +186,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * Description:
      *  Checks for valid date
      */
-    private isCorrectDate() {
+    private isValidDate(): boolean {
         let date = (<HTMLInputElement>document.getElementById('dateIn')).value
         if (date.length == 10) {
             this.dateInISO = moment(date, 'DD/MM/YYYY').toISOString(true)
@@ -184,8 +199,16 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
         }
     }
 
-    private removeAllSummaryItemsFromLocalStorage() {
-        localStorage.removeItem('transfers')
+    /**
+     * Caller(s):
+     *  Class - ngOnDestroy()
+     *  Class - assignDriver()
+     * 
+     * Description:
+     *  Self-explanatory
+     */
+    private removeSelectedIdsFromLocalStorage(): void {
+        localStorage.removeItem('selectedIds')
     }
 
     /**
@@ -195,7 +218,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * Description:
      *  Stores the given date to the localStorage for reading in later visits
      */
-    private updateLocalStorage() {
+    private updateLocalStorageWithDate(): void {
         localStorage.setItem('date', this.dateInISO)
     }
 
@@ -207,10 +230,9 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      *  Gets the record status from the form through the interaction service
      *  The variable 'recordStatus' will be checked by the template which decides which buttons to display
      */
-    private subscribeToInderactionService() {
-        this.interactionTransferService.recordStatus.subscribe(response => {
-            this.recordStatus = response
-        })
+    private subscribeToInderactionService(): void {
+        this.updateRecordStatus()
+        this.updateTableStatus()
     }
 
     /**
@@ -220,8 +242,81 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * Description:
      *  On escape navigates to the home route
      */
-    private goBack() {
+    private goBack(): void {
         this.router.navigate(['/'])
+    }
+
+    /**
+     * Caller(s):
+     *  Class - subscribeToInderactionService()
+     * 
+     * Description:
+     *  Gets the record status from the form through the interaction service
+     *  The variable 'recordStatus' will be checked by the template which decides which buttons to display
+     */
+    private updateRecordStatus(): void {
+        this.interactionTransferService.recordStatus.subscribe(response => {
+            this.recordStatus = response
+        })
+    }
+
+    /**
+     * Caller(s):
+     *  Class - subscribeToInderactionService()
+     * 
+     * Description:
+     *  Gets the table status from the table through the interaction service
+     *  The variable 'hasTableData' will be checked by the template to display or not the 'Assign driver' button
+     */
+    private updateTableStatus(): void {
+        this.interactionTransferService.hasTableData.subscribe(response => {
+            this.hasTableData = response
+        })
+    }
+
+    /**
+     * Caller(s):
+     *  Class - assignDriver()
+     * 
+     * Description
+     *  Checks user input
+     */
+    private isRecordSelected(): boolean {
+        this.records = JSON.parse(localStorage.getItem('selectedIds'))
+        if (this.records == null || this.records.length == 0) {
+            this.snackBar.open('No records have been selected!', 'Close', {
+                duration: 2000,
+                panelClass: ['danger']
+            })
+            return false
+        }
+        return true
+    }
+
+    /**
+     * Caller(s):
+     *  Class - loadTransfers()
+     *  Class - assignDriver()
+     * 
+     * Description:
+     *  Self-explanatory
+     */
+    private navigateToList(): void {
+        this.router.navigate(['dateIn/', this.dateInISO], { relativeTo: this.activatedRoute })
+    }
+
+    /**
+     * Caller(s):
+     *  Class - assignDriver()
+     * 
+     * Description:
+     *  Self-explanatory
+     */
+    private showInfoSnackbar(): void {
+        this.snackBar.open('All records have been processed!', 'Close', {
+            duration: 2000,
+            panelClass: ['info']
+        })
     }
 
 }

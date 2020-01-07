@@ -48,7 +48,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
 
     // #endregion
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private transferInteractionService: InteractionTransferService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionTransferService: InteractionTransferService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.navigationSubscription = this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
@@ -72,6 +72,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
         this.addActiveClassToSelectedArrays()
         this.filterByCriteria()
         this.flattenResults()
+        this.setTableStatus()
     }
 
     ngAfterViewChecked() {
@@ -348,7 +349,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      * 
      */
     private subscribeToInderactionService() {
-        this.transferInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+        this.interactionTransferService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
     }
@@ -383,6 +384,10 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
         this.selectedRoutes = JSON.parse(localStorageData.routes)
         this.selectedDrivers = JSON.parse(localStorageData.drivers)
         this.selectedPorts = JSON.parse(localStorageData.ports)
+    }
+
+    private setTableStatus() {
+        this.interactionTransferService.setTableStatus(!!this.queryResult.persons)
     }
 
 }

@@ -85,6 +85,17 @@ body, h1, h3, h6 {
     color: var(--color-summary-block-expansion-indicator) !important;
 }
 
+.mat-select-arrow {
+    color: var(--color-select-arrow) !important;
+}
+
+.mat-simple-snackbar>span {
+    font-family: var(--font-family-buttons);
+    color: var(--color-snackbar-text);
+    padding-left: 0.4rem;
+    padding-top: 0.0625rem;
+}
+
 .scrollable::-webkit-scrollbar {
     width: 0.4rem;
 }
@@ -97,6 +108,14 @@ body, h1, h3, h6 {
     background-color: var(--color-scrollbar);
     border-radius: 0;
     min-height: 6.25rem;
+}
+
+.danger {
+    background-color: var(--color-snackbar-background-danger) !important;
+}
+
+.info {
+    background-color: var(--color-snackbar-background--info) !important;
 }
 
 /* ! Wide screen */
