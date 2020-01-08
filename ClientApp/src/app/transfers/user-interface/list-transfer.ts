@@ -21,6 +21,8 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     queryResult: any = {}
     queryResultClone: any = {}
 
+    totals: any[] = []
+
     selectedDestinations: string[] = []
     selectedCustomers: string[] = []
     selectedRoutes: string[] = []
@@ -59,6 +61,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     ngOnInit() {
+        this.initPersonSumsArray()
         this.subscribeToInderactionService()
     }
 
@@ -71,12 +74,14 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
         }
         this.addActiveClassToSelectedArrays()
         this.filterByCriteria()
+        this.initCheckedPersons()
+        this.updateTotals()
         this.flattenResults()
         this.setTableStatus()
     }
 
     ngAfterViewChecked() {
-        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight + 'px'
+        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - document.getElementById("totals").offsetHeight - 16 + 'px'
     }
 
     ngDoCheck() {
@@ -122,7 +127,9 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
             element.classList.add('activeItem')
             eval(lookupArray).push(item.description)
         }
+        this.initCheckedPersons()
         this.filterByCriteria()
+        this.updateTotals()
         this.flattenResults()
         this.saveToLocalStorage()
     }
@@ -145,6 +152,8 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
         lookupArray.splice(0)
         this.selectItems(className, lookupArray, !checkedArray)
         this.filterByCriteria()
+        this.initCheckedPersons()
+        this.updateTotals()
         this.flattenResults()
     }
 
@@ -386,8 +395,58 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
         this.selectedPorts = JSON.parse(localStorageData.ports)
     }
 
+    /**
+     * Caller(s):
+     *  Class - ngAfterViewInit()
+     * 
+     * Description:
+     *  Sends true or false to the service so that the wrapper can decide whether to display the 'Assing driver' button or not
+     */
     private setTableStatus() {
         this.interactionTransferService.setTableStatus(!!this.queryResult.persons)
+    }
+
+    /**
+     * Caller(s):
+     *  Class - ngAfterViewInit()
+     *  Class - toggleItem()
+     *  Class - toggleItems()
+     * 
+     * Description:
+     *  Populates the array with the total persons, displayed in the template
+     */
+    private updateTotals() {
+        this.totals[0].sum = this.queryResult.persons
+        this.totals[1].sum = this.queryResultClone.transfers.reduce((sum: any, array: { totalPersons: any; }) => sum + array.totalPersons, 0);
+        this.interactionTransferService.checked.subscribe(result => { this.totals[2].sum = result })
+    }
+
+    /**
+     * Caller(s):
+     *  Class - ngAfterViewInit()
+     *  Class - toggleItem()
+     *  Class - toggleItems()
+     * 
+     * Description:
+     *  Sets checked persons to zero
+     */
+    private initCheckedPersons() {
+        this.interactionTransferService.setCheckedTotalPersons(0)
+    }
+
+    /**
+     * Caller(s):
+     *  Class - ngOnInit()
+     * 
+     * Description:
+     *  Prepare the array of totals
+     */
+    private initPersonSumsArray() {
+        this.totals.push(
+            { description: 'ALL', sum: 0 },
+            { description: 'DISPLAYED', sum: 0 },
+            { description: 'CHECKED', sum: 0 }
+        )
     }
 
 }

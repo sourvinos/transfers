@@ -89,6 +89,18 @@ body, h1, h3, h6 {
     color: var(--color-select-arrow) !important;
 }
 
+.mat-expansion-panel {
+    border: 1px dotted var(--color-summary-block-border) !important;
+}
+
+.mat-expansion-panel-body {
+    padding-bottom: 1.25rem !important;
+}
+
+.mat-expansion-panel-body p {
+    margin: 0;
+}
+
 .mat-simple-snackbar>span {
     font-family: var(--font-family-buttons);
     color: var(--color-snackbar-text);

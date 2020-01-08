@@ -2,22 +2,11 @@
     display: grid;
     grid-template-areas:
         "summaries listFormCombo"
-        "footer footer";
+        "totals listFormCombo";
     grid-template-columns: auto 1fr;
     grid-template-rows: 1fr;
     height: 100%;
     overflow-y: hidden;
-}
-
-#listFormCombo {
-    grid-area: listFormCombo;
-    overflow-y: hidden;
-    padding-left: 21rem;
-}
-
-#transfersList {
-    scroll-behavior: smooth;
-    overflow-y: scroll;
 }
 
 #summaries {
@@ -32,6 +21,22 @@
     position: absolute;
     row-gap: 0.5rem;
     width: 20rem;
+}
+
+#listFormCombo {
+    grid-area: listFormCombo;
+    overflow-y: hidden;
+    padding-left: 1rem;
+}
+
+#totals {
+    grid-area: totals;
+    width: 20rem;
+}
+
+#transfersList {
+    scroll-behavior: smooth;
+    overflow-y: scroll;
 }
 
 .summaryBlock {
@@ -52,6 +57,10 @@
     color: var(--color-headers);
     font-family: var(--font-family-summary-block);
     font-size: var(--font-size-summary-block-header);
+}
+
+.summaryBlock header#header-totals {
+    padding-left: 0.9rem !important;
 }
 
 .summaryBlock .item {

@@ -26,6 +26,7 @@ export class TableTransferComponent {
     rowCount: number = 0
     checked: boolean = false
     checkedIds: string[] = []
+    totalPersons: number = 0
 
     differences: IterableDiffer<any>;
 
@@ -48,8 +49,7 @@ export class TableTransferComponent {
 
     public ngDoCheck() {
         const changes: IterableChanges<any> = this.differences.diff(this.records);
-        if (changes)
-            this.checked = false
+        if (changes) this.checked = false
     }
 
     /**
@@ -201,27 +201,33 @@ export class TableTransferComponent {
 
     toggleCheckBox(row: number) {
         this.checkedIds = []
+        this.totalPersons = 0
         this.table.rows[row].classList.toggle('checked')
         this.table.querySelectorAll('tr.checked').forEach((element: { childNodes: { innerText: string }[] }) => {
             this.checkedIds.push(element.childNodes[2].innerText)
+            this.totalPersons += parseInt(element.childNodes[11].innerText)
         })
         localStorage.setItem('selectedIds', JSON.stringify(this.checkedIds))
+        this.transferInteractionService.setCheckedTotalPersons(this.totalPersons)
     }
 
     onHeaderClick(column: any) {
         if (column.toElement.cellIndex == 0) {
             this.checked = !this.checked
             this.checkedIds = []
-            this.table.querySelectorAll('tr').forEach((element: { classList: { add: (arg0: string) => void; remove: (arg0: string) => void }; childNodes: { innerText: string }[] }) => {
+            this.totalPersons = 0
+            this.table.querySelectorAll('tbody tr').forEach((element: { classList: { add: (arg0: string) => void; remove: (arg0: string) => void }; childNodes: { innerText: string }[] }) => {
                 if (this.checked) {
                     element.classList.add('checked')
                     this.checkedIds.push(element.childNodes[2].innerText)
+                    this.totalPersons += parseInt(element.childNodes[11].innerText)
                 }
                 else {
                     element.classList.remove('checked')
                 }
             })
             localStorage.setItem('selectedIds', JSON.stringify(this.checkedIds))
+            this.transferInteractionService.setCheckedTotalPersons(this.totalPersons)
         }
     }
 

@@ -107,14 +107,14 @@
     --color-table-rows-hover: #394D59;
     /* Transfer summary boxes */
     --color-summary-block-background: #373F46;
-    --color-summary-block-border: #4B4B4B;
+    --color-summary-block-border: #57617B;
     --color-summary-block-expansion-indicator: #939393;
     --color-summary-block-item-border-active: #FE9F36;
     --color-summary-block-item-border-inactive: #939393;
     --color-summary-block-item-hover-background: #373F46;
     --color-summary-block-item-hover-color: #FFFFFF;
     --color-summary-block-item: #B3B2B2;
-    /* Checkbox */
+    /* Checkboxes */
     --color-checkbox-checked: #FE9F36;
     /* Snackbars */
     --color-snackbar-text: #ffffff;

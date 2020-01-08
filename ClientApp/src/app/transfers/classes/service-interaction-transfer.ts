@@ -9,11 +9,13 @@ export class InteractionTransferService {
     private _recordStatus = new Subject<string>()
     private _action = new Subject<string>()
     private _hasTableData = new Subject<boolean>()
+    private _checked = new Subject<number>()
 
     record = this._record.asObservable()
     recordStatus = this._recordStatus.asObservable()
     action = this._action.asObservable()
     hasTableData = this._hasTableData.asObservable()
+    checked = this._checked.asObservable()
 
     /**
      * Caller(s):
@@ -69,8 +71,37 @@ export class InteractionTransferService {
         this._recordStatus.next(status)
     }
 
+    /**
+     * Caller(s):
+     *  list-transfer.ts
+     * 
+     * Subscriber(s):
+     *  wrapper-transfer.ts
+     * 
+     * Description:
+     *  The caller sends true or false according to the persons count so that the subscriber can display the 'Assign driver' button
+     * 
+     * @param records 
+     */
     setTableStatus(records: boolean) {
         this._hasTableData.next(records)
+    }
+
+    /**
+     * Caller(s):
+     *  list-transfer.ts
+     *  table-transfer.ts
+     * 
+     * Subscriber(s):
+     *  list-transfer.ts
+     * 
+     * Description:
+     *  The callers send the sum of checked persons so that the subscriber can display it
+     * 
+     * @param total 
+     */
+    setCheckedTotalPersons(total: number) {
+        this._checked.next(total)
     }
 
 }
