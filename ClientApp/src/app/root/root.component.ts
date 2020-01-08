@@ -23,15 +23,26 @@ export class RootComponent implements AfterViewInit {
         })
     }
 
-    @HostListener('window:resize', ['$event']) onResize(event: { target: { innerWidth: any; }; }) { }
+    @HostListener('window:resize', ['$event']) onResize(event: { target: { innerWidth: void; }; }) {
+        this.adjustWidth(event)
+        this.positionLoader()
+    }
 
     @HostListener('window:beforeunload', ['$event']) beforeUnloadHander() {
         this.accountService.logout()
     }
 
     ngAfterViewInit() {
-        document.getElementById('spinner').style.left = document.getElementById('sidebar').clientWidth + 'px'
-        document.getElementById('spinner').style.top = document.getElementById('sidebar').clientHeight - 24 - document.getElementById('spinner').clientHeight + 'px'
+        this.positionLoader()
+    }
+
+    private adjustWidth(event: { target: any; }) {
+        event.target.innerWidth
+    }
+
+    private positionLoader() {
+        document.getElementById('spinner').style.left = (document.getElementById('main').clientWidth / 2) - (document.getElementById('spinner').clientWidth / 2) + document.getElementById('sidebar').clientWidth + 'px'
+        document.getElementById('spinner').style.top = (document.getElementById('main').clientHeight / 2) - document.getElementById('spinner').clientHeight / 2 + 'px'
     }
 
 }

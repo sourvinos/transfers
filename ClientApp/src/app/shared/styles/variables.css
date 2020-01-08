@@ -120,4 +120,7 @@
     --color-snackbar-text: #ffffff;
     --color-snackbar-background-danger: #a52a2a;
     --color-snackbar-background--info: #0e8d97;
+    /* Spinner */
+    --color-spinner: #d67474;
+    --color-spinner-background: #FFE85C;
 }

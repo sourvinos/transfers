@@ -9,10 +9,21 @@ section {
 }
 
 #spinner {
-    background: url(../../assets/ripple.gif) center center no-repeat var(--color-background);
-    height: 50px;
-    margin-left: 2.6rem;
+    border: 3px solid var(--color-spinner-background);
+    border-top: 3px solid var(--color-spinner);
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
     position: absolute;
-    width: 50px;
-    z-index: 2;
+    animation: spin 1700ms linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
