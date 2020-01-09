@@ -21,6 +21,5 @@ namespace Transfers.Resources
         public DestinationResource Destination { get; set; }
         public PickupPointResource PickupPoint { get; set; }
         public DriverResource Driver { get; set; }
-        public PortResource Port { get; set; }
     }
 }

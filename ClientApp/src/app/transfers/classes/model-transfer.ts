@@ -10,7 +10,11 @@ export interface ITransfer {
         description: string
         route: {
             id: number
-            description: string
+            description: string,
+            port: {
+                id: number,
+                description: string
+            }
         }
     }
     destination: {

@@ -27,9 +27,8 @@ namespace Transfers
         public int PortId { get; set; }
 
         public Customer Customer { get; set; }
-        public PickupPoint PickupPoint { get; set; }
         public Destination Destination { get; set; }
+        public PickupPoint PickupPoint { get; set; }
         public Driver Driver { get; set; }
-        public Port Port { get; set; }
     }
 }

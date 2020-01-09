@@ -61,7 +61,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     ngOnInit() {
-        this.initPersonSumsArray()
+        this.initPersonsSumArray()
         this.subscribeToInderactionService()
     }
 
@@ -113,20 +113,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      * @param lookupArray // The array that the element belongs to
      */
     toggleItem(item: any, lookupArray: string) {
-        var element = document.getElementById(item.description)
-        if (element.classList.contains('activeItem')) {
-            for (var i = 0; i < eval(lookupArray).length; i++) {
-                if (eval(lookupArray)[i] == item.description) {
-                    eval(lookupArray).splice(i, 1)
-                    i--
-                    element.classList.remove('activeItem')
-                    break
-                }
-            }
-        } else {
-            element.classList.add('activeItem')
-            eval(lookupArray).push(item.description)
-        }
+        this.toggleActiveItem(item, lookupArray)
         this.initCheckedPersons()
         this.filterByCriteria()
         this.updateTotals()
@@ -191,7 +178,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
             this.addActiveClassToElements('.item.route', this.selectedRoutes)
             this.addActiveClassToElements('.item.driver', this.selectedDrivers)
             this.addActiveClassToElements('.item.port', this.selectedPorts)
-        }, 500);
+        }, 100);
     }
 
     /**
@@ -216,7 +203,6 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      * @param id 
      */
     private editRecord(id: number) {
-        // this.saveToLocalStorage()
         this.navigateToEditRoute(id)
     }
 
@@ -230,11 +216,11 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      */
     private filterByCriteria() {
         this.queryResultClone.transfers = this.queryResult.transfers
-            .filter((x: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(x.destination.description) != -1 })
-            .filter((y: { customer: { description: string } }) => { return this.selectedCustomers.indexOf(y.customer.description) != -1 })
-            .filter((z: { pickupPoint: { route: { abbreviation: string } } }) => { return this.selectedRoutes.indexOf(z.pickupPoint.route.abbreviation) != -1 })
-            .filter((o: { driver: { description: string } }) => { return this.selectedDrivers.indexOf(o.driver.description) != -1 })
-            .filter((p: { port: { description: string } }) => { return this.selectedPorts.indexOf(p.port.description) != -1 })
+            .filter((destination: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(destination.destination.description) != -1 })
+            .filter((customer: { customer: { description: string } }) => { return this.selectedCustomers.indexOf(customer.customer.description) != -1 })
+            .filter((route: { pickupPoint: { route: { abbreviation: string } } }) => { return this.selectedRoutes.indexOf(route.pickupPoint.route.abbreviation) != -1 })
+            .filter((driver: { driver: { description: string } }) => { return this.selectedDrivers.indexOf(driver.driver.description) != -1 })
+            .filter((port: { pickupPoint: { route: { port: { description: string } } } }) => { return this.selectedPorts.indexOf(port.pickupPoint.route.port.description) != -1 })
     }
 
     /**
@@ -257,8 +243,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
             kids: e,
             free: f,
             totalPersons: g,
-            pickupPoint: { description: h, time: i, route: { abbreviation: j } },
-            port: { description: k },
+            pickupPoint: { description: h, time: i, route: { abbreviation: j, port: { description: k } } },
             driver: { description: l },
             userName: m,
             dateIn: n,
@@ -441,12 +426,39 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      * Description:
      *  Prepare the array of totals
      */
-    private initPersonSumsArray() {
+    private initPersonsSumArray() {
         this.totals.push(
             { description: 'ALL', sum: 0 },
             { description: 'DISPLAYED', sum: 0 },
             { description: 'CHECKED', sum: 0 }
         )
+    }
+
+    /**
+     * Caller(s):
+     *  Class - toggleItem()
+     * 
+     * Description:
+     *  Toggles activeItem class to the clicked item and updates the array with all the selected
+     * 
+     * @param item 
+     * @param lookupArray 
+     */
+    private toggleActiveItem(item: { description: string; }, lookupArray: string) {
+        var element = document.getElementById(item.description)
+        if (element.classList.contains('activeItem')) {
+            for (var i = 0; i < eval(lookupArray).length; i++) {
+                if (eval(lookupArray)[i] == item.description) {
+                    eval(lookupArray).splice(i, 1)
+                    i--
+                    element.classList.remove('activeItem')
+                    break
+                }
+            }
+        } else {
+            element.classList.add('activeItem')
+            eval(lookupArray).push(item.description)
+        }
     }
 
 }
