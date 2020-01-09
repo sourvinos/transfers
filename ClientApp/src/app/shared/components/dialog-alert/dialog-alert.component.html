@@ -10,11 +10,11 @@
 
     <div id="dialog-footer">
         <mat-dialog-actions *ngIf="data.actions.length == 1">
-            <button mat-flat-button class="primary" id="ok" tabindex="-1" mat-dialog-close mat-dialog-close="true">OK</button>
+            <button mat-flat-button class="primary" id="ok" tabindex="-1" mat-dialog-close="true">OK</button>
         </mat-dialog-actions>
 
         <mat-dialog-actions *ngIf="data.actions.length == 2">
-            <button mat-flat-button class="primary" id="cancel" tabindex="-1" mat-dialog-close mat-dialog-close="false">Cancel</button>
+            <button mat-flat-button class="primary" id="cancel" tabindex="-1" mat-dialog-close="false">Cancel</button>
             <button mat-flat-button class="delete" id="ok" tabindex="-1" mat-dialog-close="true">OK</button>
         </mat-dialog-actions>
     </div>

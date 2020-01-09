@@ -197,8 +197,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      *  Class - subscribeToInderactionService()
      * 
      * Description:
-     *  Saves the selected items to the localStorage
-     *  Calls the navigateToEditRoute()
+     *  Self-explanatory
      * 
      * @param id 
      */

@@ -441,8 +441,8 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             destinationId: result.destination.id, destinationDescription: result.destination.description,
             customerId: result.customer.id, customerDescription: result.customer.description,
             pickupPointId: result.pickupPoint.id, pickupPointDescription: result.pickupPoint.description,
+            portId: result.pickupPoint.route.port.id, portDescription: result.pickupPoint.route.port.description,
             driverId: result.driver.id, driverDescription: result.driver.description,
-            portId: result.port.id, portDescription: result.port.description,
             adults: result.adults,
             kids: result.kids,
             free: result.free,
@@ -499,7 +499,6 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         document.getElementById('form').style.height = '0'
         document.getElementById('transfersList').style.height = '100%'
         document.getElementById('table-transfer-input').focus()
-        console.log(state)
     }
 
     /**
