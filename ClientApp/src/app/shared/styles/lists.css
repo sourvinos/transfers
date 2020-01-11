@@ -16,8 +16,7 @@
         "divider divider";
     grid-template-columns: 1fr auto;
     grid-template-rows: auto auto;
-    margin: 0;
-    padding: 2rem;
+    margin: 2rem;
 }
 
 #header #title {

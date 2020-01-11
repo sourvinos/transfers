@@ -5,6 +5,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { ITransferFlat } from '../classes/model-transfer-flat';
 import { InteractionTransferService } from '../classes/service-interaction-transfer';
+import { TransferService } from '../classes/service-api-transfer';
+import { copyFileSync } from 'fs';
 
 @Component({
     selector: 'list-transfer',
@@ -48,9 +50,11 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     ngUnsubscribe = new Subject<void>();
     mustRefresh: boolean = true
 
+    me: string = ''
+
     // #endregion
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionTransferService: InteractionTransferService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionTransferService: InteractionTransferService, private service: TransferService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.navigationSubscription = this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
@@ -81,7 +85,8 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     ngAfterViewChecked() {
-        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - document.getElementById("totals").offsetHeight - 16 + 'px'
+        if (this.queryResult.persons != 0)
+            document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - document.getElementById("totals").offsetHeight - 16 + 'px'
     }
 
     ngDoCheck() {
@@ -96,7 +101,6 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
         this.ngUnsubscribe.unsubscribe();
         this.navigationSubscription.unsubscribe()
         this.unlisten && this.unlisten()
-        this.clearLocalStorage()
     }
 
     /**
@@ -179,17 +183,6 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
             this.addActiveClassToElements('.item.driver', this.selectedDrivers)
             this.addActiveClassToElements('.item.port', this.selectedPorts)
         }, 100);
-    }
-
-    /**
-     * Caller(s): 
-     *  Class - onDestroy()
-     * 
-     * Description:
-     *  Deletes the localStorage data on navigation away from this page
-     */
-    private clearLocalStorage() {
-        localStorage.removeItem('transfers')
     }
 
     /**
@@ -339,11 +332,17 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      * 
      * Description:
      *  Gets the selected record from the table through the service and executes the editRecord method
-     * 
+     *  Refreshes the list after a new record has been added
      */
     private subscribeToInderactionService() {
         this.interactionTransferService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
+        })
+        this.interactionTransferService.refreshList.subscribe(() => {
+            this.service.getTransfers(this.dateIn).subscribe(result => {
+                this.queryResult = result
+                this.ngAfterViewInit()
+            })
         })
     }
 
@@ -397,7 +396,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      *  Class - toggleItems()
      * 
      * Description:
-     *  Populates the array with the total persons, displayed in the template
+     *  Populates the array with the total persons displayed in the template
      */
     private updateTotals() {
         this.totals[0].sum = this.queryResult.persons

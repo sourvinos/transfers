@@ -10,12 +10,14 @@ export class InteractionTransferService {
     private _action = new Subject<string>()
     private _hasTableData = new Subject<boolean>()
     private _checked = new Subject<number>()
+    private _refreshList = new Subject<any>()
 
     record = this._record.asObservable()
     recordStatus = this._recordStatus.asObservable()
     action = this._action.asObservable()
     hasTableData = this._hasTableData.asObservable()
     checked = this._checked.asObservable()
+    refreshList = this._refreshList.asObservable()
 
     /**
      * Caller(s):
@@ -102,6 +104,10 @@ export class InteractionTransferService {
      */
     setCheckedTotalPersons(total: number) {
         this._checked.next(total)
+    }
+
+    mustRefreshList() {
+        this._refreshList.next()
     }
 
 }

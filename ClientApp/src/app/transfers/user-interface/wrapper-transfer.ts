@@ -67,6 +67,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      *  Loads from the api the records for the given date
      */
     loadTransfers(): void {
+        this.clearSelectedArraysFromLocalStorage()
         if (this.isValidDate()) {
             this.updateLocalStorageWithDate()
             this.navigateToList()
@@ -317,6 +318,17 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
             duration: 2000,
             panelClass: ['info']
         })
+    }
+
+    /**
+     * Caller(s): 
+     *  Class - loadTransfers()
+     * 
+     * Description:
+     *  Self-explanatory
+     */
+    private clearSelectedArraysFromLocalStorage(): void {
+        localStorage.removeItem('transfers')
     }
 
 }

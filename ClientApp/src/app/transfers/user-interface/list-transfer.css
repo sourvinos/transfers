@@ -26,7 +26,7 @@
 #listFormCombo {
     grid-area: listFormCombo;
     overflow-y: hidden;
-    padding-left: 1rem;
+    padding-left: 2rem;
 }
 
 #totals {

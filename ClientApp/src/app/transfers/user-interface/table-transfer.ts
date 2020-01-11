@@ -63,7 +63,7 @@ export class TableTransferComponent {
      */
     onDomChange($event: Event) {
         document.getElementById('table-transfer-input').focus()
-        // this.gotoRow(1)
+        this.gotoRow(1)
     }
 
     /**

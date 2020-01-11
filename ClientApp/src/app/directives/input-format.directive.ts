@@ -33,12 +33,10 @@ export class InputFormatDirective {
         let newDate: moment.Moment
         let seperatorCount = 0
         let position = value.indexOf('/')
-        // Count the seperators
         while (position != -1) {
             seperatorCount++
             position = value.indexOf('/', position + 1)
         }
-        // If something is given
         if (value) {
             switch (seperatorCount) {
                 case 0:

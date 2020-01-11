@@ -24,7 +24,6 @@ export class RootComponent implements AfterViewInit {
     }
 
     @HostListener('window:resize', ['$event']) onResize(event: { target: { innerWidth: void; }; }) {
-        this.adjustWidth(event)
         this.positionLoader()
     }
 
@@ -32,12 +31,12 @@ export class RootComponent implements AfterViewInit {
         this.accountService.logout()
     }
 
-    ngAfterViewInit() {
-        this.positionLoader()
+    ngOnInit() {
+        console.clear()
     }
 
-    private adjustWidth(event: { target: any; }) {
-        event.target.innerWidth
+    ngAfterViewInit() {
+        this.positionLoader()
     }
 
     private positionLoader() {
