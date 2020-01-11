@@ -1,8 +1,7 @@
+import { IDriver } from './../models/driver';
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
-
-import { IDriver } from '../models/driver'
 
 @Injectable({ providedIn: 'root' })
 
@@ -18,6 +17,10 @@ export class DriverService {
 
     getDriver(id: number): Observable<IDriver> {
         return this.http.get<IDriver>(this.url + '/' + id)
+    }
+
+    getDefaultDriver(): Observable<IDriver> {
+        return this.http.get<IDriver>(this.url + '/' + 'getDefault')
     }
 
     addDriver(formData: IDriver): Observable<IDriver> {

@@ -6,7 +6,8 @@ import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { ITransferFlat } from '../classes/model-transfer-flat';
 import { InteractionTransferService } from '../classes/service-interaction-transfer';
 import { TransferService } from '../classes/service-api-transfer';
-import { copyFileSync } from 'fs';
+import { MatSnackBar } from '@angular/material';
+import { Utils } from 'src/app/shared/classes/utils';
 
 @Component({
     selector: 'list-transfer',
@@ -54,12 +55,15 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
 
     // #endregion
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionTransferService: InteractionTransferService, private service: TransferService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionTransferService: InteractionTransferService, private service: TransferService, private snackBar: MatSnackBar) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.navigationSubscription = this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
                 this.mustRefresh = true
                 this.loadTransfers()
+                if (this.queryResult.persons == 0) {
+                    this.showNoDataSnackbar()
+                }
             }
         })
     }
@@ -457,6 +461,34 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
             element.classList.add('activeItem')
             eval(lookupArray).push(item.description)
         }
+    }
+
+    /**
+     * Caller(s):
+     *  Class - constructor
+     * 
+     * Description:
+     *  Self-explanatory
+     */
+    private showNoDataSnackbar(): void {
+        this.snackBar.open('We found nothing for this date', 'Close', {
+            duration: 3000,
+            panelClass: ['danger']
+        })
+        this.focus('dateIn')
+    }
+
+    /**
+     * Caller(s):
+     *  Class - showNoDataSnackbar()
+
+     * Description:
+     *  Calls the public method()
+     * 
+     * @param field 
+     */
+    private focus(field: string): void {
+        Utils.setFocus(field)
     }
 
 }

@@ -1,3 +1,4 @@
+import { IDriver } from './../../models/driver';
 import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { MatDialog, MatSnackBar } from '@angular/material';
@@ -38,22 +39,24 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     drivers: any[]
     ports: any[]
 
+    defaultDriver: IDriver
+
     unlisten: Unlisten
 
     form = this.formBuilder.group({
         id: 0,
-        dateIn: [this.helperService.getDateFromLocalStorage()],
+        dateIn: '',
         destinationId: [0, Validators.required], destinationDescription: ['', Validators.required],
         customerId: [0, Validators.required], customerDescription: ['', Validators.required],
         pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
-        driverId: ['', Validators.required], driverDescription: ['', Validators.required],
-        portId: ['', Validators.required], portDescription: ['', Validators.required],
+        driverId: [0, Validators.required], driverDescription: [{ value: '', disabled: true }, Validators.required],
+        portId: [0, Validators.required], portDescription: [{ value: '', disabled: true }, Validators.required],
         adults: [0, Validators.required],
         kids: [0, Validators.required],
         free: [0, Validators.required],
-        totalPersons: 0,
+        totalPersons: [{ value: 0, disabled: true }],
         remarks: ['', Validators.maxLength(100)],
-        userName: [this.helperService.getUsernameFromLocalStorage()]
+        userName: ''
     })
 
     // #endregion Variables
@@ -65,7 +68,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.getTransfer()
                 this.interactionTransferService.setRecordStatus('editRecord')
             } else {
-                this.populateFormWithData()
+                this.populateFormWithDefaultData()
                 this.interactionTransferService.setRecordStatus('newRecord')
             }
         })
@@ -274,8 +277,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - saveRecord()
+     * 
      * Description:
      *  Resets the form with default values
      */
@@ -283,6 +287,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         this.form.reset({
             id: 0,
             dateIn: this.helperService.getDateFromLocalStorage(),
+            destinationId: this.form.value.destinationId, destinationDescription: this.form.value.destinationDescription,
             customerId: 0, customerDescription: '',
             pickupPointId: 0, pickupPointDescription: '',
             driverId: 0, driverDescription: '',
@@ -320,10 +325,11 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - ngAfterViewInit()
-     * Description
-     *  Calls the public focus()
+
+     * Description:
+     *  Calls the public method()
      * 
      * @param field 
      */
@@ -474,21 +480,11 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * Description:
      *  Populates the form with initial values
      */
-    private populateFormWithData() {
-        this.form.setValue({
-            id: 0,
-            dateIn: '2019-10-01',
-            destinationId: 3, destinationDescription: 'BLUE LAGOON',
-            customerId: 10, customerDescription: 'ISLAND HOLIDAYS',
-            driverId: 9, driverDescription: 'MED BLUE VASILIS',
-            pickupPointId: 0, pickupPointDescription: '',
-            portId: 0, portDescription: '',
-            adults: 3,
-            kids: 2,
-            free: 1,
-            totalPersons: 6,
-            remarks: 'No remarks',
-            userName: 'Sourvinos'
+    private populateFormWithDefaultData() {
+        console.log('Id', this.defaultDriver)
+        this.form.patchValue({
+            dateIn: this.helperService.getDateFromLocalStorage(),
+            userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
 
@@ -578,6 +574,13 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
+    /**
+     * Caller(s):
+     *  Class - populateDropDowns()
+     * 
+     * Description:
+     *  Creates a new object used in the template
+     */
     private flattenPickupPoints(): any[] {
         this.pickupPointsFlat = []
         for (var {
@@ -592,13 +595,13 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.pickupPointsFlat
     }
 
-    private renameKey(obj: Object, oldKey: string, newKey: string) {
-        if (oldKey !== newKey) {
-            Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey))
-            delete obj[oldKey]
-        }
-    }
-
+    /**
+     * Caller(s):
+     *  Class - populateDropDowns()
+     * 
+     * Description:
+     *  Renames the objects in memory for use in the template
+     */
     private renameObjects() {
         this.destinations.forEach(obj => {
             this.renameKey(obj, 'id', 'destinationId'); this.renameKey(obj, 'description', 'destinationDescription')
@@ -612,6 +615,24 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         this.ports.forEach(obj => {
             this.renameKey(obj, 'id', 'portId'); this.renameKey(obj, 'description', 'portDescription')
         })
+    }
+
+    /**
+     * Caller(s):
+     *  Class - renameObjects()
+     * 
+     * Description:
+     *  Renames the selected in memory object
+     * 
+     * @param obj 
+     * @param oldKey 
+     * @param newKey 
+     */
+    private renameKey(obj: Object, oldKey: string, newKey: string) {
+        if (oldKey !== newKey) {
+            Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey))
+            delete obj[oldKey]
+        }
     }
 
     // #region Get field values - called from the template

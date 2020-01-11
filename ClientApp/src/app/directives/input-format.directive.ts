@@ -9,6 +9,10 @@ export class InputFormatDirective {
 
     constructor(private el: ElementRef) { }
 
+    @HostListener('click', ['$event.target']) onClick() {
+        this.el.nativeElement.select()
+    }
+
     @HostListener('blur') onBlur() {
         if (this.format == 'date') {
             this.el.nativeElement.value = this.formatDate(this.el.nativeElement.value)

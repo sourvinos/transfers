@@ -20,8 +20,7 @@ export class MainComponent implements AfterViewInit {
 		document.getElementById('hamburger').classList.toggle('open')
 		var sidebar = document.getElementById('sidebar')
 		var main = document.getElementById('main')
-		sidebar.style.width = sidebar.style.width == '20rem' ? '0' : '20rem'
-		// main.style.paddingLeft = '20rem'
+		sidebar.style.width = sidebar.style.width == '17rem' ? '0' : '17rem'
 	}
 
 	private positionHamburger() {

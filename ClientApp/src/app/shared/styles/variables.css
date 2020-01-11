@@ -123,4 +123,6 @@
     /* Spinner */
     --color-spinner: #d67474;
     --color-spinner-background: #FFE85C;
+    /* Icons */
+    --color-icon-error: #a52a2a;
 }

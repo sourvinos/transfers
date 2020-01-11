@@ -23,7 +23,7 @@ html, body {
     height: 100vh;
 }
 
-body, h1, h3, h6 {
+body, h1, h2 {
     margin: 0 !important;
     padding: 0 !important;
 }
