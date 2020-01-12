@@ -1,5 +1,5 @@
 section {
-    background-color: var(--color-background);
+    background-color: var(--color-sidebar-background);
     display: grid;
     grid-template-areas: "sidebar""main";
     grid-template-columns: auto 1fr;

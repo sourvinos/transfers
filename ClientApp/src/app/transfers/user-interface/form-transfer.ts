@@ -49,7 +49,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         destinationId: [0, Validators.required], destinationDescription: ['', Validators.required],
         customerId: [0, Validators.required], customerDescription: ['', Validators.required],
         pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
-        driverId: [0, Validators.required], driverDescription: [{ value: '', disabled: true }, Validators.required],
+        driverId: [0, Validators.required], driverDescription: [{ value: '', disabled: false }, Validators.required],
         portId: [0, Validators.required], portDescription: [{ value: '', disabled: true }, Validators.required],
         adults: [0, Validators.required],
         kids: [0, Validators.required],
@@ -481,10 +481,13 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Populates the form with initial values
      */
     private populateFormWithDefaultData() {
-        console.log('Id', this.defaultDriver)
-        this.form.patchValue({
-            dateIn: this.helperService.getDateFromLocalStorage(),
-            userName: this.helperService.getUsernameFromLocalStorage()
+        this.getDefaultDriver().then(() => {
+            this.form.patchValue({
+                dateIn: this.helperService.getDateFromLocalStorage(),
+                driverId: this.defaultDriver.id,
+                driverDescription: this.defaultDriver.description,
+                userName: this.helperService.getUsernameFromLocalStorage()
+            })
         })
     }
 
@@ -633,6 +636,12 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey))
             delete obj[oldKey]
         }
+    }
+
+    private async getDefaultDriver(): Promise<void> {
+        await this.driverService.getDefaultDriver().then(response => {
+            this.defaultDriver = response
+        })
     }
 
     // #region Get field values - called from the template

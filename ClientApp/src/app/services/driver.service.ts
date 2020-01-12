@@ -19,8 +19,8 @@ export class DriverService {
         return this.http.get<IDriver>(this.url + '/' + id)
     }
 
-    getDefaultDriver(): Observable<IDriver> {
-        return this.http.get<IDriver>(this.url + '/' + 'getDefault')
+    async getDefaultDriver() {
+        return await this.http.get<IDriver>(this.url + '/' + 'getDefault').toPromise()
     }
 
     addDriver(formData: IDriver): Observable<IDriver> {

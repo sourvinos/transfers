@@ -42,6 +42,17 @@ namespace Transfers.Controllers
             return Ok(driver);
         }
 
+        // GET: api/drivers/getDefault
+        [HttpGet("getDefault")]
+        public async Task<IActionResult> GetDefaultDriver()
+        {
+            Driver driver = await context.Drivers.SingleOrDefaultAsync(m => m.IsDefault);
+
+            if (driver == null) return NotFound();
+
+            return Ok(driver);
+        }
+
         // POST: api/drivers
         [HttpPost]
         public async Task<IActionResult> PostDriver([FromBody] Driver driver)
