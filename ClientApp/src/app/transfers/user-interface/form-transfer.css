@@ -15,12 +15,13 @@
         "sectionOne"
         "sectionTwo";
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: max-content;
 }
 
 #sectionOne, #sectionTwo {
     display: flex;
     flex-direction: column;
+    height: fit-content;
 }
 
 #formFooter {

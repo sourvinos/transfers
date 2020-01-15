@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { ITransferFlat } from '../classes/model-transfer-flat';
@@ -46,18 +46,16 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     justify = ['center', 'center', 'center', 'center', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
     fields = ['', 'id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
 
-    unlisten: Unlisten
-    navigationSubscription: any
-    ngUnsubscribe = new Subject<void>();
     mustRefresh: boolean = true
 
-    me: string = ''
+    unlisten: Unlisten
+    ngUnsubscribe = new Subject<void>();
 
     // #endregion
 
     constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionTransferService: InteractionTransferService, private service: TransferService, private snackBar: MatSnackBar) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
-        this.navigationSubscription = this.router.events.subscribe((navigation: any) => {
+        this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
                 this.mustRefresh = true
                 this.loadTransfers()
@@ -103,7 +101,6 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.unsubscribe();
-        this.navigationSubscription.unsubscribe()
         this.unlisten && this.unlisten()
     }
 
@@ -342,7 +339,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
         this.interactionTransferService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
-        this.interactionTransferService.refreshList.subscribe(() => {
+        this.interactionTransferService.refreshList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
             this.service.getTransfers(this.dateIn).subscribe(result => {
                 this.queryResult = result
                 this.ngAfterViewInit()
@@ -405,7 +402,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     private updateTotals() {
         this.totals[0].sum = this.queryResult.persons
         this.totals[1].sum = this.queryResultClone.transfers.reduce((sum: any, array: { totalPersons: any; }) => sum + array.totalPersons, 0);
-        this.interactionTransferService.checked.subscribe(result => { this.totals[2].sum = result })
+        this.interactionTransferService.checked.pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => { this.totals[2].sum = result })
     }
 
     /**

@@ -1,22 +1,24 @@
-import { IDriver } from './../../models/driver';
-import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
-import { MatDialog, MatSnackBar } from '@angular/material';
-import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
-import { CustomerService } from "src/app/customers/classes/service-api-customer";
-import { DestinationService } from "src/app/services/destination.service";
-import { DriverService } from 'src/app/services/driver.service';
-import { HelperService } from 'src/app/services/helper.service';
-import { KeyboardShortcuts, Unlisten } from "src/app/services/keyboard-shortcuts.service";
-import { PortService } from 'src/app/services/port.service';
-import { Utils } from 'src/app/shared/classes/utils';
-import { DialogAlertComponent } from "src/app/shared/components/dialog-alert/dialog-alert.component";
-import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component";
-import { TransferService } from '../classes/service-api-transfer';
-import { InteractionTransferService } from "../classes/service-interaction-transfer";
-import { PickupPointService } from './../../services/pickupPoint.service';
-import { ITransfer } from './../classes/model-transfer';
+import { IDriver } from './../../models/driver'
+import { HttpClient } from '@angular/common/http'
+import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core"
+import { FormBuilder, Validators } from "@angular/forms"
+import { MatDialog, MatSnackBar } from '@angular/material'
+import { ActivatedRoute, Router } from '@angular/router'
+import { forkJoin, Subject, Subscription } from 'rxjs'
+import { CustomerService } from "src/app/customers/classes/service-api-customer"
+import { DestinationService } from "src/app/services/destination.service"
+import { DriverService } from 'src/app/services/driver.service'
+import { HelperService } from 'src/app/services/helper.service'
+import { KeyboardShortcuts, Unlisten } from "src/app/services/keyboard-shortcuts.service"
+import { PortService } from 'src/app/services/port.service'
+import { Utils } from 'src/app/shared/classes/utils'
+import { DialogAlertComponent } from "src/app/shared/components/dialog-alert/dialog-alert.component"
+import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component"
+import { TransferService } from '../classes/service-api-transfer'
+import { InteractionTransferService } from "../classes/service-interaction-transfer"
+import { PickupPointService } from './../../services/pickupPoint.service'
+import { ITransfer } from './../classes/model-transfer'
+import { take, takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'form-transfer',
@@ -42,6 +44,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     defaultDriver: IDriver
 
     unlisten: Unlisten
+    ngUnsubscribe = new Subject<void>();
 
     form = this.formBuilder.group({
         id: 0,
@@ -50,7 +53,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         customerId: [0, Validators.required], customerDescription: ['', Validators.required],
         pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
         driverId: [0, Validators.required], driverDescription: [{ value: '', disabled: false }, Validators.required],
-        portId: [0, Validators.required], portDescription: [{ value: '', disabled: true }, Validators.required],
+        portId: [0, Validators.required], portDescription: [{ value: '', disabled: false }, Validators.required],
         adults: [0, Validators.required],
         kids: [0, Validators.required],
         free: [0, Validators.required],
@@ -61,7 +64,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #endregion Variables
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionTransferService: InteractionTransferService, private snackBar: MatSnackBar) {
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionTransferService: InteractionTransferService, private snackBar: MatSnackBar, private http: HttpClient) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['transferId']
             if (this.id) {
@@ -86,6 +89,8 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.ngUnsubscribe.next()
+        this.ngUnsubscribe.unsubscribe()
         this.unlisten && this.unlisten()
     }
 
@@ -142,7 +147,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Deletes the current record
      */
     deleteRecord() {
-        if (this.form.value.id == 0 != undefined) {
+        if (this.form.value.id != 0) {
             const dialogRef = this.dialog.open(DialogAlertComponent, {
                 height: '250px',
                 width: '550px',
@@ -153,7 +158,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
                 panelClass: 'dialog'
             })
-            dialogRef.afterClosed().subscribe(result => {
+            dialogRef.afterClosed().subscribe((result) => {
                 if (result == 'true') {
                     this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
                         this.abortDataEntry()
@@ -253,12 +258,12 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.goBack()
                 }
             },
+            "Alt.S": (event: KeyboardEvent): void => {
+                this.saveRecord()
+            },
             "Alt.D": (event: KeyboardEvent): void => {
                 event.preventDefault()
                 this.deleteRecord()
-            },
-            "Alt.S": (event: KeyboardEvent): void => {
-                this.saveRecord()
             },
             "Alt.C": (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
@@ -488,6 +493,8 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
                 driverDescription: this.defaultDriver.description,
                 userName: this.helperService.getUsernameFromLocalStorage()
             })
+        }, error => {
+            console.log('Error!')
         })
     }
 
@@ -513,6 +520,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         document.getElementById('form').style.height = '0'
         document.getElementById('transfersList').style.height = '100%'
         document.getElementById('table-transfer-input').focus()
+        this.interactionTransferService.performAction('')
     }
 
     /**
@@ -557,7 +565,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Accepts data from the wrapper through the interaction service and decides which action to perform
      */
     private subscribeToInderactionService() {
-        this.interactionTransferService.action.subscribe(response => {
+        this.interactionTransferService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             if (response == 'saveRecord') this.saveRecord()
             if (response == 'deleteRecord') this.deleteRecord()
         })
@@ -638,7 +646,14 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    private async getDefaultDriver(): Promise<void> {
+    /**
+     * Caller(s):
+     *  Class - populateFormWithDefaultData()
+     * 
+     * Description:
+     *  Loads the default driver from the api for usage in the form
+     */
+    private async getDefaultDriver() {
         await this.driverService.getDefaultDriver().then(response => {
             this.defaultDriver = response
         })

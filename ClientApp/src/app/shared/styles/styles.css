@@ -74,6 +74,7 @@ body, h1, h2 {
 .mat-divider {
     background-color: var(--color-divider) !important;
     margin: 2rem 0 !important;
+    border-top-width: 2px !important;
 }
 
 .mat-checkbox-inner-container-no-side-margin {

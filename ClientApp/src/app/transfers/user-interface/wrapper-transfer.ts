@@ -4,6 +4,7 @@ import { MatDialog, MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { DriverService } from 'src/app/services/driver.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
@@ -42,10 +43,10 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.removeSelectedIdsFromLocalStorage()
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.unsubscribe();
         this.unlisten && this.unlisten()
+        this.removeSelectedIdsFromLocalStorage()
     }
 
     /**
@@ -256,7 +257,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      *  The variable 'recordStatus' will be checked by the template which decides which buttons to display
      */
     private updateRecordStatus(): void {
-        this.interactionTransferService.recordStatus.subscribe(response => {
+        this.interactionTransferService.recordStatus.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.recordStatus = response
         })
     }
@@ -270,7 +271,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      *  The variable 'hasTableData' will be checked by the template to display or not the 'Assign driver' button
      */
     private updateTableStatus(): void {
-        this.interactionTransferService.hasTableData.subscribe(response => {
+        this.interactionTransferService.hasTableData.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.hasTableData = response
         })
     }
