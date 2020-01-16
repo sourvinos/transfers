@@ -46,6 +46,7 @@ import { InputFormatDirective } from '../directives/input-format.directive'
 import { DomChangeDirective } from '../directives/dom-change.directive'
 // Pipes
 import { CustomPipe } from '../pipes/custom.pipe'
+import { SafeStylePipe } from './../pipes/safeStyle'
 
 @NgModule({
     declarations: [
@@ -77,6 +78,7 @@ import { CustomPipe } from '../pipes/custom.pipe'
         DomChangeDirective,
         // Pipes
         CustomPipe,
+        SafeStylePipe
     ],
     imports: [
         AppRoutingModule,

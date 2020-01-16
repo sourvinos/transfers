@@ -49,8 +49,6 @@ namespace Transfers.Controllers
         {
             Driver driver = await context.Drivers.SingleOrDefaultAsync(m => m.IsDefault);
 
-            if (driver == null) return NotFound();
-
             return Ok(driver);
         }
 

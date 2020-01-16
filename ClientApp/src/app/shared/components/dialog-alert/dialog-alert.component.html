@@ -1,7 +1,7 @@
 <div id="dialog">
 
     <div id="dialog-header">
-        <h1 mat-dialog-title>{{ data.title }}</h1>
+        <h1 mat-dialog-title [attr.style]="('color:' + titleColor + ' !important') | safeStyle">{{ data.title }}</h1>
     </div>
 
     <div id="dialog-content">

@@ -9,7 +9,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 export class DialogAlertComponent {
 
-    constructor(private dialogRef: MatDialogRef<DialogAlertComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    public titleColor = ''
+
+    constructor(private dialogRef: MatDialogRef<DialogAlertComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.titleColor = data.colorTitle
+    }
 
     close() {
         this.dialogRef.close()

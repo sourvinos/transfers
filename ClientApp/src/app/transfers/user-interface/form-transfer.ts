@@ -1,10 +1,10 @@
-import { IDriver } from './../../models/driver'
 import { HttpClient } from '@angular/common/http'
 import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core"
 import { FormBuilder, Validators } from "@angular/forms"
 import { MatDialog, MatSnackBar } from '@angular/material'
 import { ActivatedRoute, Router } from '@angular/router'
-import { forkJoin, Subject, Subscription } from 'rxjs'
+import { forkJoin, Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators'
 import { CustomerService } from "src/app/customers/classes/service-api-customer"
 import { DestinationService } from "src/app/services/destination.service"
 import { DriverService } from 'src/app/services/driver.service'
@@ -18,7 +18,6 @@ import { TransferService } from '../classes/service-api-transfer'
 import { InteractionTransferService } from "../classes/service-interaction-transfer"
 import { PickupPointService } from './../../services/pickupPoint.service'
 import { ITransfer } from './../classes/model-transfer'
-import { take, takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'form-transfer',
@@ -40,8 +39,6 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     pickupPointsFlat: any[]
     drivers: any[]
     ports: any[]
-
-    defaultDriver: IDriver
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
@@ -71,8 +68,12 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.getTransfer()
                 this.interactionTransferService.setRecordStatus('editRecord')
             } else {
-                this.populateFormWithDefaultData()
-                this.interactionTransferService.setRecordStatus('newRecord')
+                this.driverService.getDefaultDriver()
+                    .then(response => {
+                        this.interactionTransferService.setRecordStatus('newRecord')
+                        this.form.patchValue({ driverId: response.id, driverDescription: response.description })
+                        this.populateFormWithDefaultData()
+                    })
             }
         })
     }
@@ -307,26 +308,16 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller:
+     * Caller(s):
      *  Class - abortDataEntry()
+     * 
      * Description:
-     *  Calls the public method
+     *  Self-explanatory
+     * 
      * @param fields 
      */
     private disableFields(fields: string[]) {
         Utils.disableFields(fields)
-    }
-
-    /**
-     * Caller:
-     *  Class - canDeactivate()
-     * Description:
-     *  Calls the public enableFields()
-     * 
-     * @param fields 
-     */
-    private enableFields(fields: string[]) {
-        Utils.enableFields(fields)
     }
 
     /**
@@ -409,11 +400,17 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         this.form.patchValue({ [description]: result ? result.description : '' })
     }
 
+    /**
+     * Caller(s):
+     *  Class - showModalIndex()
+     * 
+     * Description:
+     *  Assigns the key-value pair from the selected item in the modal to the form fields
+     *  
+     * @param result 
+     */
     private newPatchFields(result: any) {
         Object.entries(result).forEach(([key, value]) => {
-            if (key == 'description') {
-                key = 'destinationDescription'
-            }
             this.form.patchValue({ [key]: value })
         })
     }
@@ -486,15 +483,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Populates the form with initial values
      */
     private populateFormWithDefaultData() {
-        this.getDefaultDriver().then(() => {
-            this.form.patchValue({
-                dateIn: this.helperService.getDateFromLocalStorage(),
-                driverId: this.defaultDriver.id,
-                driverDescription: this.defaultDriver.description,
-                userName: this.helperService.getUsernameFromLocalStorage()
-            })
-        }, error => {
-            console.log('Error!')
+        this.form.patchValue({
+            dateIn: this.helperService.getDateFromLocalStorage(),
+            userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
 
@@ -644,19 +635,6 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey))
             delete obj[oldKey]
         }
-    }
-
-    /**
-     * Caller(s):
-     *  Class - populateFormWithDefaultData()
-     * 
-     * Description:
-     *  Loads the default driver from the api for usage in the form
-     */
-    private async getDefaultDriver() {
-        await this.driverService.getDefaultDriver().then(response => {
-            this.defaultDriver = response
-        })
     }
 
     // #region Get field values - called from the template

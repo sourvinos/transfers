@@ -11,6 +11,7 @@ import { Utils } from 'src/app/shared/classes/utils';
 import { TransferService } from './../classes/service-api-transfer';
 import { InteractionTransferService } from './../classes/service-interaction-transfer';
 import { DialogAssignDriverComponent } from './dialog-assign-driver';
+import { DialogAlertComponent } from 'src/app/shared/components/dialog-alert/dialog-alert.component';
 
 @Component({
     selector: 'wrapper-transfer',
@@ -80,10 +81,15 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      *  Template - newRecord()
      * 
      * Description:
-     *  Navigates to the form so that new records can be appended
+     *  Check for the default driver and if found, avigates to the form so that new records can be appended
      */
     newRecord(): void {
-        this.router.navigate([this.location.path() + '/transfer/new'])
+        this.driverService.getDefaultDriver().then(response => {
+            if (response)
+                this.router.navigate([this.location.path() + '/transfer/new'])
+            else
+                this.displayNoDefaultDriverMessage()
+        })
     }
 
     /**
@@ -330,6 +336,27 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      */
     private clearSelectedArraysFromLocalStorage(): void {
         localStorage.removeItem('transfers')
+    }
+
+    /**
+     * Caller(s):
+     *  Class - newRecord()
+     * 
+     * Description:
+     *  Self-explanatory
+     */
+    private displayNoDefaultDriverMessage() {
+        this.dialog.open(DialogAlertComponent, {
+            height: '250px',
+            width: '550px',
+            data: {
+                title: 'Error',
+                colorTitle: 'orange',
+                message: 'No default driver found.',
+                actions: ['ok']
+            },
+            panelClass: 'dialog'
+        })
     }
 
 }
