@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, AfterViewChecked } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
-import { ITransferFlat } from '../classes/model-transfer-flat';
-import { InteractionTransferService } from '../classes/service-interaction-transfer';
-import { TransferService } from '../classes/service-api-transfer';
-import { MatSnackBar } from '@angular/material';
 import { Utils } from 'src/app/shared/classes/utils';
+import { ITransferFlat } from '../classes/model-transfer-flat';
+import { TransferService } from '../classes/service-api-transfer';
+import { InteractionTransferService } from '../classes/service-interaction-transfer';
 
 @Component({
     selector: 'list-transfer',

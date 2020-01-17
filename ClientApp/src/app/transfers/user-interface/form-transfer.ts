@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http'
 import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core"
 import { FormBuilder, Validators } from "@angular/forms"
 import { MatDialog, MatSnackBar } from '@angular/material'
@@ -6,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { forkJoin, Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { CustomerService } from "src/app/customers/classes/service-api-customer"
+import { IDriver } from 'src/app/models/driver'
 import { DestinationService } from "src/app/services/destination.service"
 import { DriverService } from 'src/app/services/driver.service'
 import { HelperService } from 'src/app/services/helper.service'
@@ -61,18 +61,17 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #endregion Variables
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionTransferService: InteractionTransferService, private snackBar: MatSnackBar, private http: HttpClient) {
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionTransferService: InteractionTransferService, private snackBar: MatSnackBar) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['transferId']
             if (this.id) {
                 this.getTransfer()
-                this.interactionTransferService.setRecordStatus('editRecord')
+                this.setStatus('editRecord')
             } else {
                 this.driverService.getDefaultDriver()
                     .then(response => {
-                        this.interactionTransferService.setRecordStatus('newRecord')
-                        this.form.patchValue({ driverId: response.id, driverDescription: response.description })
-                        this.populateFormWithDefaultData()
+                        this.populateFormWithDefaultData(response)
+                        this.setStatus('newRecord')
                     })
             }
         })
@@ -115,8 +114,8 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
                 panelClass: 'dialog'
             })
             return dialogRef.afterClosed().subscribe(result => {
-                if (result == "true") {
-                    this.form.reset()
+                if (result) {
+                    this.resetForm()
                     this.scrollToList()
                     this.goBack()
                     return true
@@ -162,7 +161,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             dialogRef.afterClosed().subscribe((result) => {
                 if (result == 'true') {
                     this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
-                        this.abortDataEntry()
+                        // this.abortDataEntry()
                         this.goBack()
                     }, error => {
                         Utils.errorLogger(error)
@@ -199,10 +198,10 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         })
         if (filteredArray.length > 0) {
-            this.showModalIndex(filteredArray, title, formFields, fields, headers, widths, visibility, justify)
+            this.showModalIndex(filteredArray, title, fields, headers, widths, visibility, justify)
         }
         if (filteredArray.length == 0) {
-            this.patchFields(null, formFields[0], formFields[1])
+            this.clearFields(null, formFields[0], formFields[1])
             this.focus(formFields[1])
         }
     }
@@ -218,31 +217,19 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.form.valid) return
         if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
-                this.clearFields()
+                this.resetForm()
                 this.showInfoSnackbar('new')
                 this.focus('destinationDescription')
-                this.interactionTransferService.mustRefreshList()
+                this.refreshSummaries()
             }, error => Utils.errorLogger(error))
         }
         else {
             this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
                 this.showInfoSnackbar('update')
-                this.abortDataEntry()
+                // this.abortDataEntry()
                 this.goBack()
             }, error => Utils.errorLogger(error))
         }
-    }
-
-    /**
-     * Caller(s):
-     *  Class - saveRecord(), deleteRecord()
-     * 
-     * Description:
-     *  Housekeeping actions
-     */
-    private abortDataEntry() {
-        this.clearFields()
-        this.disableFields(['destinationDescription', 'customerDescription', 'pickupPointDescription', 'adults', 'kids', 'free', 'totalPersons', 'driverDescription', 'portDescription', 'remarks'])
     }
 
     /**
@@ -289,7 +276,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * Description:
      *  Resets the form with default values
      */
-    private clearFields() {
+    private resetForm() {
         this.form.reset({
             id: 0,
             dateIn: this.helperService.getDateFromLocalStorage(),
@@ -305,19 +292,6 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             remarks: '',
             userName: this.helperService.getUsernameFromLocalStorage()
         })
-    }
-
-    /**
-     * Caller(s):
-     *  Class - abortDataEntry()
-     * 
-     * Description:
-     *  Self-explanatory
-     * 
-     * @param fields 
-     */
-    private disableFields(fields: string[]) {
-        Utils.disableFields(fields)
     }
 
     /**
@@ -360,7 +334,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  On escape navigates to the list
      */
     private goBack() {
-        this.interactionTransferService.setRecordStatus('empty')
+        this.setStatus('empty')
         this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
@@ -395,7 +369,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param id 
      * @param description 
      */
-    private patchFields(result: any, id: any, description: any) {
+    private clearFields(result: any, id: any, description: any) {
         this.form.patchValue({ [id]: result ? result.id : '' })
         this.form.patchValue({ [description]: result ? result.description : '' })
     }
@@ -409,10 +383,15 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  
      * @param result 
      */
-    private newPatchFields(result: any) {
-        Object.entries(result).forEach(([key, value]) => {
-            this.form.patchValue({ [key]: value })
-        })
+    private patchFields(result: any, fields: any[]) {
+        if (result)
+            Object.entries(result).forEach(([key, value]) => {
+                this.form.patchValue({ [key]: value })
+            })
+        else
+            fields.forEach(field => {
+                this.form.patchValue({ [field]: '' })
+            })
     }
 
     /**
@@ -482,9 +461,11 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * Description:
      *  Populates the form with initial values
      */
-    private populateFormWithDefaultData() {
+    private populateFormWithDefaultData(driver: IDriver) {
         this.form.patchValue({
             dateIn: this.helperService.getDateFromLocalStorage(),
+            driverId: driver.id,
+            driverDescription: driver.description,
             userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
@@ -530,7 +511,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param visibility 
      * @param justify 
      */
-    private showModalIndex(elements: any, title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {
+    private showModalIndex(elements: any, title: string, fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {
         const dialog = this.dialog.open(DialogIndexComponent, {
             height: '685px',
             data: {
@@ -544,7 +525,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         })
         dialog.afterClosed().subscribe((result) => {
-            this.newPatchFields(result)
+            this.patchFields(result, fields)
         })
     }
 
@@ -635,6 +616,31 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey))
             delete obj[oldKey]
         }
+    }
+
+    /**
+     * Caller(s):
+     *  Class - saveRecord()
+     * 
+     * Description:
+     *  Tells the list to refresh the summaries
+     */
+    private refreshSummaries() {
+        this.interactionTransferService.mustRefreshList()
+    }
+
+    /**
+     * Caller(s):
+     *  Class - constructor()
+     *  Class - goBack()
+     * 
+     * Desciption:
+     *  Tells the wrapper which buttons to display
+     * 
+     * @param status 
+     */
+    private setStatus(status: string) {
+        this.interactionTransferService.setRecordStatus(status)
     }
 
     // #region Get field values - called from the template
