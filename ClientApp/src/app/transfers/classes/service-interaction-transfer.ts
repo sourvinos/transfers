@@ -106,6 +106,16 @@ export class InteractionTransferService {
         this._checked.next(total)
     }
 
+    /**
+     * Caller(s):
+     *  form-transfer.ts
+     * 
+     * Subscribers(s):
+     *  list-transfer.ts
+     * 
+     * Description:
+     *  The caller tells the list to refresh when a record is saved
+     */
     mustRefreshList() {
         this._refreshList.next()
     }

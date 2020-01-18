@@ -49,7 +49,9 @@ export class TableTransferComponent {
 
     public ngDoCheck() {
         const changes: IterableChanges<any> = this.differences.diff(this.records);
-        if (changes) this.checked = false
+        if (changes) {
+            this.checked = false
+        }
     }
 
     /**
@@ -75,7 +77,7 @@ export class TableTransferComponent {
      * Description:
      *  Highlights the next / previous row according to the arrow keys or highlights the clicked row
      * 
-     * @param key // The pressed key code or the number of the line to goto directly after a mouse click / set from code
+     * @param key // The pressed key code or the line number to goto directly
      */
     private gotoRow(key: any) {
         if (!isNaN(key)) {
@@ -180,7 +182,7 @@ export class TableTransferComponent {
      *  Class - gotoRow()
      * 
      * Description:
-     *  Removes the 'selected' class from all the rows
+     *  Removes the 'selected' class from all rows
      */
     private unselectAllRows() {
         this.table.querySelectorAll('tr').forEach((element: { classList: { remove: (arg0: string) => void } }) => {

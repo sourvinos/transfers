@@ -40,6 +40,8 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     drivers: any[]
     ports: any[]
 
+    defaultDriver: IDriver
+
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
@@ -70,7 +72,8 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             } else {
                 this.driverService.getDefaultDriver()
                     .then(response => {
-                        this.populateFormWithDefaultData(response)
+                        this.defaultDriver = response
+                        this.populateFormWithDefaultData(this.defaultDriver)
                         this.setStatus('newRecord')
                     })
             }
@@ -161,7 +164,6 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             dialogRef.afterClosed().subscribe((result) => {
                 if (result == 'true') {
                     this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
-                        // this.abortDataEntry()
                         this.goBack()
                     }, error => {
                         Utils.errorLogger(error)
@@ -217,16 +219,17 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.form.valid) return
         if (this.form.value.id == 0) {
             this.transferService.addTransfer(this.form.value).subscribe(() => {
+                this.showSnackbar('Record saved', 'info')
                 this.resetForm()
-                this.showInfoSnackbar('new')
+                this.populateFormWithDefaultData(this.defaultDriver)
                 this.focus('destinationDescription')
                 this.refreshSummaries()
             }, error => Utils.errorLogger(error))
         }
         else {
             this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
-                this.showInfoSnackbar('update')
-                // this.abortDataEntry()
+                this.showSnackbar('Record updated', 'info')
+                this.resetForm()
                 this.goBack()
             }, error => Utils.errorLogger(error))
         }
@@ -279,7 +282,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     private resetForm() {
         this.form.reset({
             id: 0,
-            dateIn: this.helperService.getDateFromLocalStorage(),
+            dateIn: '',
             destinationId: this.form.value.destinationId, destinationDescription: this.form.value.destinationDescription,
             customerId: 0, customerDescription: '',
             pickupPointId: 0, pickupPointDescription: '',
@@ -290,7 +293,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             free: '0',
             totalPersons: '0',
             remarks: '',
-            userName: this.helperService.getUsernameFromLocalStorage()
+            userName: ''
         })
     }
 
@@ -550,10 +553,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     * Description:
     *  Self-explanatory
     */
-    private showInfoSnackbar(action: string): void {
-        this.snackBar.open(action == 'new' ? 'Record saved' : 'Record updated', 'Close', {
-            duration: 2000,
-            panelClass: ['info']
+    private showSnackbar(message: string, type: string): void {
+        this.snackBar.open(message, 'Close', {
+            panelClass: [type]
         })
     }
 

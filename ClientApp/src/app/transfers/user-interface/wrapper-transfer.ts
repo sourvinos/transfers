@@ -11,7 +11,6 @@ import { Utils } from 'src/app/shared/classes/utils';
 import { TransferService } from './../classes/service-api-transfer';
 import { InteractionTransferService } from './../classes/service-interaction-transfer';
 import { DialogAssignDriverComponent } from './dialog-assign-driver';
-import { DialogAlertComponent } from 'src/app/shared/components/dialog-alert/dialog-alert.component';
 
 @Component({
     selector: 'wrapper-transfer',
@@ -88,7 +87,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
             if (response)
                 this.router.navigate([this.location.path() + '/transfer/new'])
             else
-                this.displayNoDefaultDriverMessage()
+                this.showSnackbar('No default driver found', 'error')
         })
     }
 
@@ -127,7 +126,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
                     this.transferService.assignDriver(result, this.records).subscribe(() => {
                         this.removeSelectedIdsFromLocalStorage()
                         this.navigateToList()
-                        this.showInfoSnackbar()
+                        this.showSnackbar('All records have been processed', 'info')
                     })
                 }
             })
@@ -143,6 +142,17 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      */
     tableHasData(): boolean {
         return this.hasTableData
+    }
+
+    /**
+     * Caller(s):
+     *  Template - inList()
+     * 
+     * Description:
+     *  Returns true if we are list-transfer route in order to enable the 'new' button
+     */
+    inList(): boolean {
+        return this.router.url.split('/').length == 4
     }
 
     /**
@@ -292,10 +302,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     private isRecordSelected(): boolean {
         this.records = JSON.parse(localStorage.getItem('selectedIds'))
         if (this.records == null || this.records.length == 0) {
-            this.snackBar.open('No records have been selected!', 'Close', {
-                duration: 2000,
-                panelClass: ['danger']
-            })
+            this.showSnackbar('No records have been selected!', 'error')
             return false
         }
         return true
@@ -320,10 +327,9 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * Description:
      *  Self-explanatory
      */
-    private showInfoSnackbar(): void {
-        this.snackBar.open('All records have been processed!', 'Close', {
-            duration: 2000,
-            panelClass: ['info']
+    private showSnackbar(message: string, type: string): void {
+        this.snackBar.open(message, 'Close', {
+            panelClass: [type]
         })
     }
 
@@ -336,27 +342,6 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      */
     private clearSelectedArraysFromLocalStorage(): void {
         localStorage.removeItem('transfers')
-    }
-
-    /**
-     * Caller(s):
-     *  Class - newRecord()
-     * 
-     * Description:
-     *  Self-explanatory
-     */
-    private displayNoDefaultDriverMessage() {
-        this.dialog.open(DialogAlertComponent, {
-            height: '250px',
-            width: '550px',
-            data: {
-                title: 'Error',
-                colorTitle: 'orange',
-                message: 'No default driver found.',
-                actions: ['ok']
-            },
-            panelClass: 'dialog'
-        })
     }
 
 }

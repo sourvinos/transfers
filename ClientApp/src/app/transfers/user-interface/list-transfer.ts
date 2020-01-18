@@ -59,16 +59,13 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
             if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
                 this.mustRefresh = true
                 this.loadTransfers()
-                if (this.queryResult.persons == 0) {
-                    this.showNoDataSnackbar()
-                }
             }
         })
     }
 
     ngOnInit() {
         this.initPersonsSumArray()
-        this.subscribeToInderactionService()
+        this.subscribeToInteractionService()
     }
 
     ngAfterViewInit() {
@@ -87,8 +84,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     ngAfterViewChecked() {
-        if (this.queryResult.persons != 0)
-            document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - document.getElementById("totals").offsetHeight - 16 + 'px'
+        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - document.getElementById("totals").offsetHeight - 16 + 'px'
     }
 
     ngDoCheck() {
@@ -335,7 +331,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      *  Gets the selected record from the table through the service and executes the editRecord method
      *  Refreshes the list after a new record has been added
      */
-    private subscribeToInderactionService() {
+    private subscribeToInteractionService() {
         this.interactionTransferService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
@@ -458,21 +454,6 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
             element.classList.add('activeItem')
             eval(lookupArray).push(item.description)
         }
-    }
-
-    /**
-     * Caller(s):
-     *  Class - constructor
-     * 
-     * Description:
-     *  Self-explanatory
-     */
-    private showNoDataSnackbar(): void {
-        this.snackBar.open('We found nothing for this date', 'Close', {
-            duration: 3000,
-            panelClass: ['danger']
-        })
-        this.focus('dateIn')
     }
 
     /**

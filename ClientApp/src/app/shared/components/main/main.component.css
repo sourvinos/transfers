@@ -8,6 +8,7 @@
 }
 
 #hamburger {
+    display: none;
     position: absolute;
     margin-left: 2.6875rem;
 }
@@ -34,16 +35,13 @@
     transform: translateY(-10px) rotate(-45deg);
 }
 
-/* ! Wide screen */
-@media only screen and (min-width: 1367px) {
-    #hamburger {
-        display: none;
-    }
-}
-
-/* ! Narrow screen */
+/* Narrow screen */
 @media only screen and (max-width: 1366px) {
     #hamburger {
         display: block;
+    }
+
+    #main {
+        border-radius: 0;
     }
 }

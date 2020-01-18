@@ -14,7 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
-import { MatSnackBarModule } from '@angular/material/snack-bar'
+import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar'
 import { MatTableModule } from '@angular/material/table'
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
@@ -109,7 +109,9 @@ import { SafeStylePipe } from './../pipes/safeStyle'
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } }],
+        { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } },
+        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 1000 } }
+    ],
     bootstrap: [RootComponent]
 })
 

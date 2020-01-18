@@ -72,14 +72,14 @@ body, h1, h2 {
 }
 
 .mat-divider {
-    background-color: var(--color-divider) !important;
+    border-top: 1px dotted !important;
+    color: var(--color-divider) !important;
     margin: 2rem 0 !important;
-    border-top-width: 2px !important;
 }
 
 .mat-checkbox-inner-container-no-side-margin {
-    width: 20px !important;
     height: 20px !important;
+    width: 20px !important;
 }
 
 .mat-expansion-indicator::after {
@@ -123,7 +123,7 @@ body, h1, h2 {
     min-height: 6.25rem;
 }
 
-.danger {
+.error {
     background-color: var(--color-snackbar-background-danger) !important;
 }
 
@@ -132,7 +132,7 @@ body, h1, h2 {
 }
 
 /* ! Wide screen */
-@media only screen and (min-width: 80.0625rem) {
+@media only screen and (min-width: 1367px) {
     .icon {
         margin-left: 0 !important;
     }
