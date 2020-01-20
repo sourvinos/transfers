@@ -25,6 +25,7 @@ export class TransferService {
     }
 
     updateTransfer(id: number, formData: ITransfer): Observable<ITransfer> {
+        console.log('updating', formData)
         return this.http.put<ITransfer>(this.url + '/' + id, formData)
     }
 

@@ -1,0 +1,19 @@
+<div id="content">
+    <form [formGroup]='form' autocomplete='off'>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Route" formControlName="routeDescription" tabindex="1" id="routeDescription" [inputTabStop]="input" (change)="lookupIndex(
+                routesFlat, 'Routes', ['routeId', 'routeDescription'], ['routeId', 'routeDescription'], ['Id', 'Description'], ['100px', '440px'], ['', ''], ['center', 'left'], $event)">
+            <mat-error *ngIf="routeDescription.invalid"></mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Description" formControlName="description" tabindex="2" id="description">
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="ExactPoint" formControlName="exactPoint" tabindex="3" id="exactPoint">
+        </mat-form-field>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Time" formControlName="time" tabindex="4" id="time">
+        </mat-form-field>
+        <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
+    </form>
+</div>

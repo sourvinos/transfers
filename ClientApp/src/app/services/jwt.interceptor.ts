@@ -1,25 +1,19 @@
-// Base
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { BehaviorSubject, Observable, throwError } from 'rxjs'
 import { catchError, filter, finalize, switchMap, take, tap } from 'rxjs/operators'
-// Custom
 import { AccountService } from './account.service'
 
 @Injectable({ providedIn: 'root' })
 
 export class JwtInterceptor implements HttpInterceptor {
 
-    // Variables
     private isTokenRefreshing: boolean = false
     private tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null)
 
-    // Constructor
     constructor(private acct: AccountService) { }
 
-    // Method
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
         return next.handle(this.attachTokenToRequest(request)).pipe(tap((event: HttpEvent<any>) => {
             if (event instanceof HttpResponse) { }
         }),
@@ -37,34 +31,24 @@ export class JwtInterceptor implements HttpInterceptor {
                 }
             })
         )
-
     }
 
-    // Private method
     private attachTokenToRequest(request: HttpRequest<any>) {
-
         var token = localStorage.getItem('jwt')
         return request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-
     }
 
-    // Private method
     private handleError(errorResponse: HttpErrorResponse) {
-
         let errorMsg: string
-
         if (errorResponse.error instanceof Error) {
             errorMsg = "An error occured :" + errorResponse.error.message
         } else {
             errorMsg = `Backend returned code ${errorResponse.status}, body was: ${errorResponse.error}`
         }
-
         return throwError(errorMsg)
     }
 
-    // Private method
     private handleHttpResponseError(request: HttpRequest<any>, next: HttpHandler) {
-
         if (!this.isTokenRefreshing) {
             this.isTokenRefreshing = true
             this.tokenSubject.next(null)
@@ -92,13 +76,11 @@ export class JwtInterceptor implements HttpInterceptor {
                     this.isTokenRefreshing = false
                 })
             )
-
         }
         else {
             this.isTokenRefreshing = false
             return this.tokenSubject.pipe(filter(token => token != null), take(1), switchMap(token => { return next.handle(this.attachTokenToRequest(request)) }))
         }
-
     }
 
 }

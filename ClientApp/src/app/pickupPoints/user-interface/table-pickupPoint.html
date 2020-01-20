@@ -1,0 +1,14 @@
+<table id="table-transfer" (domChange)="onDomChange($event)">
+    <thead>
+        <tr>
+            <th *ngFor="let header of headers, index as i" [style.width]="widths[i]" [style.display]="visibility[i]" (click)="onHeaderClick($event)">{{ header }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let record of records, index as index" (click)="gotoRow(index+1)" id="transfer-{{ index+1 }}">
+            <td *ngFor="let field of fields, index as i" [style.text-align]="justify[i]" [style.display]="visibility[i]">{{ record[field] }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<input type="text" id="table-transfer-input">

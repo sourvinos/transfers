@@ -18,6 +18,8 @@ import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/mater
 import { MatTableModule } from '@angular/material/table'
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
+import { ErrorInterceptor } from '../services/error.interceptor'
+import { ErrorHandler } from '@angular/core'
 // Common components
 import { RootComponent } from './root.component'
 import { MainComponent } from './../shared/components/main/main.component'
@@ -34,12 +36,12 @@ import { LoginComponent } from '../login/user-interface/form-login'
 import { CustomerListComponent } from '../customers/user-interface/list-customer'; import { CustomerFormComponent } from '../customers/user-interface/form-customer'
 import { DestinationListComponent } from '../destinations/destination-list.component'; import { DestinationFormComponent } from '../destinations/destination-form.component'
 import { DriverListComponent } from './../drivers/driver-list.component'; import { DriverFormComponent } from './../drivers/driver-form.component'
-import { PickupPointListComponent } from '../pickupPoints/pickupPoint-list.component'; import { PickupPointsForRouteListComponent } from '../pickupPoints/pickupPointsForRoute-list.component'; import { PickupPointFormComponent } from '../pickupPoints/pickupPoint-form.component'
 import { PortListComponent } from './../ports/port-list.component'; import { PortFormComponent } from './../ports/port-form.component'
 import { RouteListComponent } from '../routes/route-list.component'; import { RouteFormComponent } from '../routes/route-form.component'
 import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component'; import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'
 import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'; import { TableTransferComponent } from '../transfers/user-interface/table-transfer'
 import { VatStateListComponent } from '../vatStates/vatState-list.component'; import { VatStateFormComponent } from '../vatStates/vatState-form.component'
+import { WrapperPickupPointComponent } from '../pickupPoints/user-interface/wrapper-pickupPoint'; import { ListPickupPointComponent } from '../pickupPoints/user-interface/list-pickupPoint'; import { FormPickupPointComponent } from '../pickupPoints/user-interface/form-pickupPoint'; import { TablePickupPointComponent } from '../pickupPoints/user-interface/table-pickupPoint'
 // Directives
 import { InputTabStopDirective } from '../directives/input-tabstop.directive'
 import { InputFormatDirective } from '../directives/input-format.directive'
@@ -47,6 +49,7 @@ import { DomChangeDirective } from '../directives/dom-change.directive'
 // Pipes
 import { CustomPipe } from '../pipes/custom.pipe'
 import { SafeStylePipe } from './../pipes/safeStyle'
+import { ErrorService } from '../shared/services/error-handler.service';
 
 @NgModule({
     declarations: [
@@ -66,11 +69,11 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         CustomerListComponent, CustomerFormComponent,
         DestinationListComponent, DestinationFormComponent,
         DriverListComponent, DriverFormComponent,
-        PickupPointListComponent, PickupPointsForRouteListComponent, PickupPointFormComponent,
         PortListComponent, PortFormComponent,
         RouteListComponent, RouteFormComponent,
         TaxOfficeListComponent, TaxOfficeFormComponent,
         WrapperTransferComponent, ListTransferComponent, FormTransferComponent, TableTransferComponent,
+        WrapperPickupPointComponent, ListPickupPointComponent, FormPickupPointComponent, TablePickupPointComponent,
         VatStateListComponent, VatStateFormComponent,
         // Directives
         InputTabStopDirective,
@@ -109,8 +112,10 @@ import { SafeStylePipe } from './../pipes/safeStyle'
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } },
         { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 1000 } }
+        // { provide: ErrorHandler, useClass: ErrorService }
     ],
     bootstrap: [RootComponent]
 })

@@ -95,8 +95,8 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     ngOnDestroy() {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.unsubscribe();
+        this.ngUnsubscribe.next()
+        this.ngUnsubscribe.unsubscribe()
         this.unlisten && this.unlisten()
     }
 

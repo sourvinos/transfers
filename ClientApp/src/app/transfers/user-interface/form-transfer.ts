@@ -16,8 +16,8 @@ import { DialogAlertComponent } from "src/app/shared/components/dialog-alert/dia
 import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component"
 import { TransferService } from '../classes/service-api-transfer'
 import { InteractionTransferService } from "../classes/service-interaction-transfer"
-import { PickupPointService } from './../../services/pickupPoint.service'
 import { ITransfer } from './../classes/model-transfer'
+import { PickupPointService } from "src/app/pickupPoints/classes/service-api-pickupPoint"
 
 @Component({
     selector: 'form-transfer',
@@ -43,7 +43,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     defaultDriver: IDriver
 
     unlisten: Unlisten
-    ngUnsubscribe = new Subject<void>();
+    ngUnsubscribe = new Subject<void>()
 
     form = this.formBuilder.group({
         id: 0,

@@ -31,8 +31,8 @@ namespace Transfers.Controllers
             return await context.PickupPoints.Include(x => x.Route).ThenInclude(x => x.Port).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
         }
 
-        // GET: api/pickupPoints/pickupPointsForRoute/5
-        [HttpGet("pickupPointsForRoute/{routeId}")]
+        // GET: api/pickupPoints/routeId/5
+        [HttpGet("routeId/{routeId}")]
         public async Task<IEnumerable<PickupPoint>> Get(int routeId)
         {
             return await context.PickupPoints.Include(x => x.Route).Where(m => m.RouteId == routeId).OrderBy(o => o.Time).ThenBy(o => o.Description).AsNoTracking().ToListAsync();
@@ -101,5 +101,7 @@ namespace Transfers.Controllers
 
             return NoContent();
         }
+
     }
+
 }
