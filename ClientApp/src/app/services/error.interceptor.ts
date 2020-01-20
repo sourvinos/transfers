@@ -1,29 +1,27 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http'
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable, throwError } from 'rxjs'
 import { catchError } from 'rxjs/operators'
-import { MatDialog, MatSnackBar } from '@angular/material'
-import { DialogAlertComponent } from '../shared/components/dialog-alert/dialog-alert.component'
+import { SnackbarService } from './snackbar.service'
 
 @Injectable({ providedIn: 'root' })
 
-export class ErrorInterceptor implements HttpInterceptor {
+export class HttpErrorInterceptor implements HttpInterceptor {
 
-    constructor(public dialog: MatDialog, private snackBar: MatSnackBar) { }
+    constructor(private snackbarService: SnackbarService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        return next.handle(request).pipe(catchError(this.handleError))
-    }
-
-    private handleError(errorResponse: HttpErrorResponse) {
-        console.log('ERROR', errorResponse.status)
-        if (errorResponse.status == 500) {
-            alert('The record is in use')
-        }
-        if (errorResponse.status == 404) {
-            alert('The record was not found')
-        }
-        return throwError('OOPS')
+        const req = request.clone();
+        return next.handle(req).pipe(
+            catchError(response => {
+                switch (response.status) {
+                    case 404: this.snackbarService.open('This record was not found', 'error'); break
+                    case 500: this.snackbarService.open('This record is in use and can not be deleted', 'error'); break
+                    default: this.snackbarService.open('An unknown error occured', 'error')
+                }
+                return throwError(response)
+            })
+        )
     }
 
 }

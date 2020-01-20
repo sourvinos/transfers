@@ -18,8 +18,7 @@ import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/mater
 import { MatTableModule } from '@angular/material/table'
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
-import { ErrorInterceptor } from '../services/error.interceptor'
-import { ErrorHandler } from '@angular/core'
+import { HttpErrorInterceptor } from '../services/error.interceptor'
 // Common components
 import { RootComponent } from './root.component'
 import { MainComponent } from './../shared/components/main/main.component'
@@ -49,7 +48,6 @@ import { DomChangeDirective } from '../directives/dom-change.directive'
 // Pipes
 import { CustomPipe } from '../pipes/custom.pipe'
 import { SafeStylePipe } from './../pipes/safeStyle'
-import { ErrorService } from '../shared/services/error-handler.service';
 
 @NgModule({
     declarations: [
@@ -112,10 +110,9 @@ import { ErrorService } from '../shared/services/error-handler.service';
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
         { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } },
         { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 1000 } }
-        // { provide: ErrorHandler, useClass: ErrorService }
     ],
     bootstrap: [RootComponent]
 })

@@ -1,18 +1,19 @@
-import { IPickupPoint } from './../classes/model-pickupPoint';
-import { Utils } from './../../shared/classes/utils';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
-import { MatDialog, MatSnackBar } from '@angular/material'
-import { ActivatedRoute, Router } from '@angular/router'
-import { forkJoin, Subject } from 'rxjs'
-import { map, takeUntil } from 'rxjs/operators'
-import { Unlisten, KeyboardShortcuts } from 'src/app/services/keyboard-shortcuts.service'
-import { RouteService } from 'src/app/services/route.service'
-import { PickupPointService } from '../classes/service-api-pickupPoint'
-import { HelperService } from 'src/app/services/helper.service'
-import { DialogAlertComponent } from 'src/app/shared/components/dialog-alert/dialog-alert.component'
-import { InteractionPickupPointService } from '../classes/service-interaction-pickupPoint';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { HelperService } from 'src/app/services/helper.service';
+import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
+import { RouteService } from 'src/app/services/route.service';
+import { SnackbarService } from 'src/app/services/snackbar.service';
+import { DialogAlertComponent } from 'src/app/shared/components/dialog-alert/dialog-alert.component';
 import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
+import { PickupPointService } from '../classes/service-api-pickupPoint';
+import { InteractionPickupPointService } from '../classes/service-interaction-pickupPoint';
+import { Utils } from './../../shared/classes/utils';
+import { IPickupPoint } from './../classes/model-pickupPoint';
 
 @Component({
     selector: 'form-pickupPoint',
@@ -45,7 +46,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
 
     // #endregion  
 
-    constructor(private routeService: RouteService, private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, public dialog: MatDialog, private interactionPickupPointService: InteractionPickupPointService, private snackBar: MatSnackBar) {
+    constructor(private routeService: RouteService, private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, public dialog: MatDialog, private interactionPickupPointService: InteractionPickupPointService, private snackbarService: SnackbarService) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['pickupPointId']
             if (this.id) {
@@ -115,7 +116,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
             })
             dialogRef.afterClosed().subscribe((result) => {
                 if (result == 'true') {
-                    this.pickupPointService.deletePickupPoint(957).subscribe()
+                    this.pickupPointService.deletePickupPoint(this.form.value.id).subscribe()
                 }
             })
         }
@@ -386,9 +387,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
     *  Self-explanatory
     */
     private showSnackbar(message: string, type: string): void {
-        this.snackBar.open(message, 'Close', {
-            panelClass: [type]
-        })
+        this.snackbarService.open(message, type)
     }
 
     /**
@@ -439,7 +438,6 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     private flattenRoutes(): any[] {
-        // console.log('Flat', this.routes)
         this.routesFlat = []
         for (var {
             id: a,
@@ -447,7 +445,6 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
         } of this.routes) {
             this.routesFlat.push({ routeId: a, routeDescription: b })
         }
-        // console.log('Flat', this.routesFlat)
         return this.routesFlat
     }
 
