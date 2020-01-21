@@ -1,21 +1,20 @@
-import { IPickupPoint } from './../classes/model-pickupPoint';
-import { PickupPointService } from 'src/app/pickupPoints/classes/service-api-pickupPoint';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Router, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IRoute } from 'src/app/models/route';
+import { PickupPointService } from 'src/app/pickupPoints/classes/service-api-pickupPoint';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { RouteService } from 'src/app/services/route.service';
-import { Utils } from './../../shared/classes/utils';
-import { Subject } from 'rxjs';
-import { InteractionPickupPointService } from '../classes/service-interaction-pickupPoint';
-import { takeUntil } from 'rxjs/operators';
+import { IPickupPoint } from './../classes/model-pickupPoint';
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 
 @Component({
     selector: 'list-pickupPoint',
     templateUrl: './list-pickupPoint.html',
-    styleUrls: ['../../shared/styles/lists.css']
+    styleUrls: ['./list-pickupPoint.css']
 })
 
 export class ListPickupPointComponent implements OnInit, OnDestroy {
@@ -29,8 +28,8 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
     selectedValue: string
 
     headers = ['Id', 'Description', 'Exact point', 'Time']
-    widths = ['40px', '100px', '100px', '100px']
-    visibility = ['', '', '', '']
+    widths = ['0', '45%', '45%', '10%']
+    visibility = ['none', '', '', '']
     justify = ['center', 'left', 'left', 'center']
     fields = ['id', 'description', 'exactPoint', 'time']
 
@@ -39,7 +38,7 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, public dialog: MatDialog, private formBuilder: FormBuilder, private routeService: RouteService, private interactionPickupPointService: InteractionPickupPointService, private pickupPointService: PickupPointService) {
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, public dialog: MatDialog, private formBuilder: FormBuilder, private routeService: RouteService, private interactionPickupPointService: BaseInteractionService, private pickupPointService: PickupPointService) {
         this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.routeId != '' && this.router.url.split('/').length == 4) {
@@ -53,14 +52,9 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
         this.subscribeToInteractionService()
     }
 
-    ngAfterViewInit() {
-        this.setTableStatus()
-    }
-
     ngDoCheck() {
         if (this.mustRefresh) {
             this.mustRefresh = false
-            this.ngAfterViewInit()
         }
     }
 
@@ -68,31 +62,6 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
         this.unlisten && this.unlisten()
-    }
-
-    private addShortcuts() {
-        this.unlisten = this.keyboardShortcutsService.listen({
-            "Enter": (event: KeyboardEvent): void => {
-                this.loadPickupPoints()
-            },
-            "Alt.N": (event: KeyboardEvent): void => {
-                event.preventDefault()
-                document.getElementById('new').click()
-            }
-        }, {
-            priority: 1,
-            inputs: true
-        })
-    }
-
-    private focus(field: string) {
-        Utils.setFocus(field)
-    }
-
-    private populateDropDowns() {
-        this.routeService.getRoutes().subscribe((result: any) => {
-            this.routes = result
-        })
     }
 
     private loadPickupPoints() {
@@ -118,7 +87,6 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
         this.interactionPickupPointService.refreshList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
             this.pickupPointService.getPickupPoints(this.routeId).subscribe(result => {
                 this.pickupPoints = result
-                this.ngAfterViewInit()
             })
         })
     }
@@ -138,24 +106,13 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Class - ngAfterViewInit()
+     *  Class - editRecord()
      * 
      * Description:
-     *  Sends true or false to the service so that the wrapper can decide whether to display the 'Assing driver' button or not
-    */
-    private setTableStatus() {
-        this.interactionPickupPointService.setTableStatus(!!this.pickupPoints)
-    }
-
-    /**
- * Caller(s):
- *  Class - editRecord()
- * 
- * Description:
- *  Navigates to the edit route
- * 
- * @param id 
- */
+     *  Navigates to the edit route
+     * 
+     * @param id 
+     */
     private navigateToEditRoute(id: number) {
         this.router.navigate(['pickupPoint/', id], { relativeTo: this.activatedRoute })
     }

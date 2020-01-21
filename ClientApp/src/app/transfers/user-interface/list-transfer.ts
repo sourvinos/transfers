@@ -7,7 +7,7 @@ import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { ITransferFlat } from '../classes/model-transfer-flat';
 import { TransferService } from '../classes/service-api-transfer';
-import { InteractionTransferService } from '../classes/service-interaction-transfer';
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 
 @Component({
     selector: 'list-transfer',
@@ -53,7 +53,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
 
     // #endregion
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionTransferService: InteractionTransferService, private service: TransferService, private snackBar: MatSnackBar) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private snackBar: MatSnackBar) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
@@ -332,10 +332,10 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      *  Refreshes the list after a new record has been added
      */
     private subscribeToInteractionService() {
-        this.interactionTransferService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+        this.interactionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
-        this.interactionTransferService.refreshList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
+        this.interactionService.refreshList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
             this.service.getTransfers(this.dateIn).subscribe(result => {
                 this.queryResult = result
                 this.ngAfterViewInit()
@@ -383,7 +383,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      *  Sends true or false to the service so that the wrapper can decide whether to display the 'Assing driver' button or not
      */
     private setTableStatus() {
-        this.interactionTransferService.setTableStatus(!!this.queryResult.persons)
+        this.interactionService.setTableStatus(!!this.queryResult.persons)
     }
 
     /**
@@ -398,7 +398,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     private updateTotals() {
         this.totals[0].sum = this.queryResult.persons
         this.totals[1].sum = this.queryResultClone.transfers.reduce((sum: any, array: { totalPersons: any; }) => sum + array.totalPersons, 0);
-        this.interactionTransferService.checked.pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => { this.totals[2].sum = result })
+        this.interactionService.checked.pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => { this.totals[2].sum = result })
     }
 
     /**
@@ -411,7 +411,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      *  Sets checked persons to zero
      */
     private initCheckedPersons() {
-        this.interactionTransferService.setCheckedTotalPersons(0)
+        this.interactionService.setCheckedTotalPersons(0)
     }
 
     /**

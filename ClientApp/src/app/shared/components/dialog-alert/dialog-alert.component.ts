@@ -12,7 +12,7 @@ export class DialogAlertComponent {
     public titleColor = ''
 
     constructor(private dialogRef: MatDialogRef<DialogAlertComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.titleColor = data.colorTitle
+        this.titleColor = data.titleColor
     }
 
     close() {

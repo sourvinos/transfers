@@ -16,8 +16,8 @@ export class RouteService {
         return this.http.get<IRoute[]>(this.url)
     }
 
-    getRoute(id: number): Observable<IRoute> {
-        return this.http.get<IRoute>(this.url + '/' + id)
+    async getRoute(id: number) {
+        return await this.http.get<IRoute>(this.url + '/' + id).toPromise()
     }
 
     addRoute(formData: IRoute): Observable<IRoute> {

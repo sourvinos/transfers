@@ -112,7 +112,7 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
         { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } },
-        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 1000 } }
+        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 5000 } }
     ],
     bootstrap: [RootComponent]
 })

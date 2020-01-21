@@ -1,0 +1,19 @@
+#results {
+    display: grid;
+    grid-template-areas:
+        "listFormCombo";
+    grid-template-columns: auto;
+    grid-template-rows: 1fr;
+    height: 100%;
+    overflow-y: hidden;
+}
+
+#listFormCombo {
+    grid-area: listFormCombo;
+    overflow-y: hidden;
+}
+
+#pickupPointsList {
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+}

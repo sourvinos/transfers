@@ -7,9 +7,9 @@
         <div id="search-box">
             <mat-form-field [hideRequiredMarker]="true">
                 <mat-label>Route</mat-label>
-                <mat-select [(ngModel)]="selectedRouteId" required>
-                    <mat-option *ngFor="let route of routes" [value]="route.id">{{ route.description }}</mat-option>
-                </mat-select>
+                <select matNativeControl [(ngModel)]="selectedRouteId" required>
+                    <option *ngFor="let route of routes" [value]="route.id">{{ route.abbreviation }}</option>
+                </select>
                 <mat-hint>Select from the list!</mat-hint>
             </mat-form-field>
             <button mat-flat-button id="search" class="primary" (click)="loadPickupPoints()">Search</button>

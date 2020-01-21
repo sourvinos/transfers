@@ -3,14 +3,14 @@ import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 
-export class InteractionTransferService {
+export class BaseInteractionService {
 
-    private _record = new Subject<string[]>()
-    private _recordStatus = new Subject<string>()
-    private _action = new Subject<string>()
-    private _hasTableData = new Subject<boolean>()
-    private _checked = new Subject<number>()
-    private _refreshList = new Subject<any>()
+    _record = new Subject<string[]>()
+    _recordStatus = new Subject<string>()
+    _action = new Subject<string>()
+    _hasTableData = new Subject<boolean>()
+    _checked = new Subject<number>()
+    _refreshList = new Subject<any>()
 
     record = this._record.asObservable()
     recordStatus = this._recordStatus.asObservable()
@@ -75,18 +75,16 @@ export class InteractionTransferService {
 
     /**
      * Caller(s):
+     *  form-transfer.ts
+     * 
+     * Subscribers(s):
      *  list-transfer.ts
      * 
-     * Subscriber(s):
-     *  wrapper-transfer.ts
-     * 
      * Description:
-     *  The caller sends true or false according to the persons count so that the subscriber can display the 'Assign driver' button
-     * 
-     * @param records 
+     *  The caller tells the list to refresh when a record is saved
      */
-    setTableStatus(records: boolean) {
-        this._hasTableData.next(records)
+    mustRefreshList() {
+        this._refreshList.next()
     }
 
     /**
@@ -108,16 +106,18 @@ export class InteractionTransferService {
 
     /**
      * Caller(s):
-     *  form-transfer.ts
-     * 
-     * Subscribers(s):
      *  list-transfer.ts
      * 
+     * Subscriber(s):
+     *  wrapper-transfer.ts
+     * 
      * Description:
-     *  The caller tells the list to refresh when a record is saved
+     *  The caller sends true or false according to the persons count so that the subscriber can display the 'Assign driver' button
+     * 
+     * @param records 
      */
-    mustRefreshList() {
-        this._refreshList.next()
+    setTableStatus(records: boolean) {
+        this._hasTableData.next(records)
     }
 
 }

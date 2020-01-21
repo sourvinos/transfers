@@ -1,4 +1,4 @@
-<table id="table-transfer" (domChange)="onDomChange($event)">
+<table id="table-pickupPoint" (domChange)="onDomChange($event)">
     <thead>
         <tr>
             <th *ngFor="let header of headers, index as i" [style.width]="widths[i]" [style.display]="visibility[i]" (click)="onHeaderClick($event)">{{ header }}</th>

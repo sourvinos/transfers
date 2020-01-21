@@ -1,11 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.service';
 import { Utils } from '../../shared/classes/utils';
 import { ICustomer } from '../classes/model-customer';
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 
 @Component({
     selector: 'list-customer',
@@ -32,7 +31,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     // #endregion
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute, private interactionService: InteractionService) {
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute, private interactionService: BaseInteractionService) {
         this.customers = this.route.snapshot.data['customerList']
         this.filteredCustomers = this.customers
         this.unlisten = null
@@ -83,12 +82,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     private setFocus(element: string) {
         Utils.setFocus(element)
-    }
-
-    private subscribeToInderactionService() {
-        this.interactionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            this.editRecord(response['id'])
-        })
     }
 
 }

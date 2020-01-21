@@ -6,18 +6,18 @@ import { forkJoin, Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { CustomerService } from "src/app/customers/classes/service-api-customer"
 import { IDriver } from 'src/app/models/driver'
+import { PickupPointService } from "src/app/pickupPoints/classes/service-api-pickupPoint"
 import { DestinationService } from "src/app/services/destination.service"
+import { DialogService } from "src/app/services/dialog.service"
 import { DriverService } from 'src/app/services/driver.service'
 import { HelperService } from 'src/app/services/helper.service'
 import { KeyboardShortcuts, Unlisten } from "src/app/services/keyboard-shortcuts.service"
 import { PortService } from 'src/app/services/port.service'
 import { Utils } from 'src/app/shared/classes/utils'
-import { DialogAlertComponent } from "src/app/shared/components/dialog-alert/dialog-alert.component"
 import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component"
 import { TransferService } from '../classes/service-api-transfer'
-import { InteractionTransferService } from "../classes/service-interaction-transfer"
 import { ITransfer } from './../classes/model-transfer'
-import { PickupPointService } from "src/app/pickupPoints/classes/service-api-pickupPoint"
+import { BaseInteractionService } from "src/app/shared/services/base-interaction.service"
 
 @Component({
     selector: 'form-transfer',
@@ -27,7 +27,7 @@ import { PickupPointService } from "src/app/pickupPoints/classes/service-api-pic
 
 export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
+    // #region Init
 
     id: number
     transfer: ITransfer
@@ -51,8 +51,8 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         destinationId: [0, Validators.required], destinationDescription: ['', Validators.required],
         customerId: [0, Validators.required], customerDescription: ['', Validators.required],
         pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
-        driverId: [0, Validators.required], driverDescription: [{ value: '', disabled: false }, Validators.required],
-        portId: [0, Validators.required], portDescription: [{ value: '', disabled: false }, Validators.required],
+        driverId: [0, Validators.required], driverDescription: [{ value: '', disabled: true }, Validators.required],
+        portId: [0, Validators.required], portDescription: [{ value: '', disabled: true }, Validators.required],
         adults: [0, Validators.required],
         kids: [0, Validators.required],
         free: [0, Validators.required],
@@ -61,9 +61,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: ''
     })
 
-    // #endregion Variables
+    // #endregion Init
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionTransferService: InteractionTransferService, private snackBar: MatSnackBar) {
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['transferId']
             if (this.id) {
@@ -87,11 +87,11 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscribeToInderactionService()
     }
 
-    ngAfterViewInit(): void {
+    ngAfterViewInit() {
         this.focus('destinationDescription')
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
         this.unlisten && this.unlisten()
@@ -106,25 +106,16 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     canDeactivate() {
         if (this.form.dirty) {
-            const dialogRef = this.dialog.open(DialogAlertComponent, {
-                height: '250px',
-                width: '550px',
-                data: {
-                    title: 'Please confirm',
-                    message: 'If you continue, changes in this record will be lost!',
-                    actions: ['cancel', 'ok']
-                },
-                panelClass: 'dialog'
-            })
-            return dialogRef.afterClosed().subscribe(result => {
-                if (result) {
+            this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.').subscribe(response => {
+                if (response) {
                     this.resetForm()
                     this.scrollToList()
                     this.goBack()
                     return true
                 }
             })
-        } else {
+        }
+        else {
             this.scrollToList()
             return true
         }
@@ -150,28 +141,14 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Deletes the current record
      */
     deleteRecord() {
-        if (this.form.value.id != 0) {
-            const dialogRef = this.dialog.open(DialogAlertComponent, {
-                height: '250px',
-                width: '550px',
-                data: {
-                    title: 'Please confirm',
-                    message: 'If you continue, this record will be permanently deleted.',
-                    actions: ['cancel', 'ok']
-                },
-                panelClass: 'dialog'
-            })
-            dialogRef.afterClosed().subscribe((result) => {
-                if (result == 'true') {
-                    this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
-                        this.goBack()
-                    }, error => {
-                        Utils.errorLogger(error)
-                        this.openErrorModal()
-                    })
-                }
-            })
-        }
+        this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.').subscribe(response => {
+            if (response) {
+                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
+                    this.showSnackbar('Record deleted', 'info')
+                    this.goBack()
+                })
+            }
+        })
     }
 
     /**
@@ -224,14 +201,14 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.populateFormWithDefaultData(this.defaultDriver)
                 this.focus('destinationDescription')
                 this.refreshSummaries()
-            }, error => Utils.errorLogger(error))
+            })
         }
         else {
             this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
                 this.showSnackbar('Record updated', 'info')
                 this.resetForm()
                 this.goBack()
-            }, error => Utils.errorLogger(error))
+            })
         }
     }
 
@@ -249,12 +226,12 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.goBack()
                 }
             },
-            "Alt.S": (event: KeyboardEvent): void => {
-                this.saveRecord()
-            },
             "Alt.D": (event: KeyboardEvent): void => {
                 event.preventDefault()
                 this.deleteRecord()
+            },
+            "Alt.S": (event: KeyboardEvent): void => {
+                this.saveRecord()
             },
             "Alt.C": (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
@@ -274,27 +251,39 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Class - saveRecord()
+     *  Class - lookupIndex(), showModalIndex()
      * 
      * Description:
-     *  Resets the form with default values
+     *  Populates the form fields with empty values from the lookupIndex() or response values from the showModalIndex()
+     *  
+     * @param result 
+     * @param id 
+     * @param description 
      */
-    private resetForm() {
-        this.form.reset({
-            id: 0,
-            dateIn: '',
-            destinationId: this.form.value.destinationId, destinationDescription: this.form.value.destinationDescription,
-            customerId: 0, customerDescription: '',
-            pickupPointId: 0, pickupPointDescription: '',
-            driverId: 0, driverDescription: '',
-            portId: 0, portDescription: '',
-            adults: '0',
-            kids: '0',
-            free: '0',
-            totalPersons: '0',
-            remarks: '',
-            userName: ''
-        })
+    private clearFields(result: any, id: any, description: any) {
+        this.form.patchValue({ [id]: result ? result.id : '' })
+        this.form.patchValue({ [description]: result ? result.description : '' })
+    }
+
+    /**
+     * Caller(s):
+     *  Class - populateDropDowns()
+     * 
+     * Description:
+     *  Creates a new object used in the template
+     */
+    private flattenPickupPoints(): any[] {
+        this.pickupPointsFlat = []
+        for (var {
+            id: a,
+            description: b,
+            exactPoint: c,
+            time: d,
+            route: { port: { id: e, description: f } }
+        } of this.pickupPoints) {
+            this.pickupPointsFlat.push({ pickupPointId: a, pickupPointDescription: b, exactPoint: c, time: d, portId: e, portDescription: f })
+        }
+        return this.pickupPointsFlat
     }
 
     /**
@@ -343,42 +332,6 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Class - deleteRecord()
-     * 
-     * Description:
-     *  Displays a modal window with an alert if the delete action fails
-     */
-    private openErrorModal() {
-        this.dialog.open(DialogAlertComponent, {
-            height: '250px',
-            width: '550px',
-            data: {
-                title: 'Error',
-                message: 'This record is in use and can not be deleted.',
-                actions: ['ok']
-            },
-            panelClass: 'dialog'
-        })
-    }
-
-    /**
-     * Caller(s):
-     *  Class - lookupIndex(), showModalIndex()
-     * 
-     * Description:
-     *  Populates the form fields with empty values from the lookupIndex() or response values from the showModalIndex()
-     *  
-     * @param result 
-     * @param id 
-     * @param description 
-     */
-    private clearFields(result: any, id: any, description: any) {
-        this.form.patchValue({ [id]: result ? result.id : '' })
-        this.form.patchValue({ [description]: result ? result.description : '' })
-    }
-
-    /**
-     * Caller(s):
      *  Class - showModalIndex()
      * 
      * Description:
@@ -387,10 +340,13 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param result 
      */
     private patchFields(result: any, fields: any[]) {
-        if (result)
+        if (result) {
+            console.log('patch', result)
+            console.log('fields', fields)
             Object.entries(result).forEach(([key, value]) => {
                 this.form.patchValue({ [key]: value })
             })
+        }
         else
             fields.forEach(field => {
                 this.form.patchValue({ [field]: '' })
@@ -437,7 +393,6 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Populates the form with record values
      * 
      * @param result 
-     * 
      */
     private populateFields(result: ITransfer) {
         this.form.setValue({
@@ -475,6 +430,82 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Caller(s):
+     *  Class - saveRecord()
+     * 
+     * Description:
+     *  Tells the list to refresh the summaries
+     */
+    private refreshSummaries() {
+        this.interactionService.mustRefreshList()
+    }
+
+    /**
+     * Caller(s):
+     *  Class - renameObjects()
+     * 
+     * Description:
+     *  Renames the selected in memory object
+     * 
+     * @param obj 
+     * @param oldKey 
+     * @param newKey 
+     */
+    private renameKey(obj: Object, oldKey: string, newKey: string) {
+        if (oldKey !== newKey) {
+            Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey))
+            delete obj[oldKey]
+        }
+    }
+
+    /**
+ * Caller(s):
+ *  Class - populateDropDowns()
+ * 
+ * Description:
+ *  Renames the objects in memory for use in the template
+ */
+    private renameObjects() {
+        this.destinations.forEach(obj => {
+            this.renameKey(obj, 'id', 'destinationId'); this.renameKey(obj, 'description', 'destinationDescription')
+        })
+        this.customers.forEach(obj => {
+            this.renameKey(obj, 'id', 'customerId'); this.renameKey(obj, 'description', 'customerDescription')
+        })
+        this.drivers.forEach(obj => {
+            this.renameKey(obj, 'id', 'driverId'); this.renameKey(obj, 'description', 'driverDescription')
+        })
+        this.ports.forEach(obj => {
+            this.renameKey(obj, 'id', 'portId'); this.renameKey(obj, 'description', 'portDescription')
+        })
+    }
+
+    /**
+     * Caller(s):
+     *  Class - saveRecord()
+     * 
+     * Description:
+     *  Resets the form with default values
+     */
+    private resetForm() {
+        this.form.reset({
+            id: 0,
+            dateIn: '',
+            destinationId: this.form.value.destinationId, destinationDescription: this.form.value.destinationDescription,
+            customerId: 0, customerDescription: '',
+            pickupPointId: 0, pickupPointDescription: '',
+            driverId: 0, driverDescription: '',
+            portId: 0, portDescription: '',
+            adults: '0',
+            kids: '0',
+            free: '0',
+            totalPersons: '0',
+            remarks: '',
+            userName: ''
+        })
+    }
+
+    /**
+     * Caller(s):
      *  Class - ngOnInit()
      * 
      * Description:
@@ -495,7 +526,34 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         document.getElementById('form').style.height = '0'
         document.getElementById('transfersList').style.height = '100%'
         document.getElementById('table-transfer-input').focus()
-        this.interactionTransferService.performAction('')
+        this.interactionService.performAction('')
+    }
+
+    /**
+     * Caller(s):
+     *  Class - constructor()
+     *  Class - goBack()
+     * 
+     * Desciption:
+     *  Tells the wrapper which buttons to display
+     * 
+     * @param status 
+     */
+    private setStatus(status: string) {
+        this.interactionService.setRecordStatus(status)
+    }
+
+    /**
+     * Caller(s):
+    *  Class - saveRecord()
+    * 
+    * Description:
+    *  Self-explanatory
+    */
+    private showSnackbar(message: string, type: string): void {
+        this.snackBar.open(message, 'Close', {
+            panelClass: [type]
+        })
     }
 
     /**
@@ -533,116 +591,17 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     * 
-     * Description:
-     *  Accepts data from the wrapper through the interaction service and decides which action to perform
-     */
+ * Caller(s):
+ *  Class - ngOnInit()
+ * 
+ * Description:
+ *  Accepts data from the wrapper through the interaction service and decides which action to perform
+ */
     private subscribeToInderactionService() {
-        this.interactionTransferService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+        this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             if (response == 'saveRecord') this.saveRecord()
             if (response == 'deleteRecord') this.deleteRecord()
         })
-    }
-
-    /**
-     * Caller(s):
-    *  Class - saveRecord()
-    * 
-    * Description:
-    *  Self-explanatory
-    */
-    private showSnackbar(message: string, type: string): void {
-        this.snackBar.open(message, 'Close', {
-            panelClass: [type]
-        })
-    }
-
-    /**
-     * Caller(s):
-     *  Class - populateDropDowns()
-     * 
-     * Description:
-     *  Creates a new object used in the template
-     */
-    private flattenPickupPoints(): any[] {
-        this.pickupPointsFlat = []
-        for (var {
-            id: a,
-            description: b,
-            exactPoint: c,
-            time: d,
-            route: { port: { id: e, description: f } }
-        } of this.pickupPoints) {
-            this.pickupPointsFlat.push({ pickupPointId: a, pickupPointDescription: b, exactPoint: c, time: d, portId: e, portDescription: f })
-        }
-        return this.pickupPointsFlat
-    }
-
-    /**
-     * Caller(s):
-     *  Class - populateDropDowns()
-     * 
-     * Description:
-     *  Renames the objects in memory for use in the template
-     */
-    private renameObjects() {
-        this.destinations.forEach(obj => {
-            this.renameKey(obj, 'id', 'destinationId'); this.renameKey(obj, 'description', 'destinationDescription')
-        })
-        this.customers.forEach(obj => {
-            this.renameKey(obj, 'id', 'customerId'); this.renameKey(obj, 'description', 'customerDescription')
-        })
-        this.drivers.forEach(obj => {
-            this.renameKey(obj, 'id', 'driverId'); this.renameKey(obj, 'description', 'driverDescription')
-        })
-        this.ports.forEach(obj => {
-            this.renameKey(obj, 'id', 'portId'); this.renameKey(obj, 'description', 'portDescription')
-        })
-    }
-
-    /**
-     * Caller(s):
-     *  Class - renameObjects()
-     * 
-     * Description:
-     *  Renames the selected in memory object
-     * 
-     * @param obj 
-     * @param oldKey 
-     * @param newKey 
-     */
-    private renameKey(obj: Object, oldKey: string, newKey: string) {
-        if (oldKey !== newKey) {
-            Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey))
-            delete obj[oldKey]
-        }
-    }
-
-    /**
-     * Caller(s):
-     *  Class - saveRecord()
-     * 
-     * Description:
-     *  Tells the list to refresh the summaries
-     */
-    private refreshSummaries() {
-        this.interactionTransferService.mustRefreshList()
-    }
-
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     *  Class - goBack()
-     * 
-     * Desciption:
-     *  Tells the wrapper which buttons to display
-     * 
-     * @param status 
-     */
-    private setStatus(status: string) {
-        this.interactionTransferService.setRecordStatus(status)
     }
 
     // #region Get field values - called from the template

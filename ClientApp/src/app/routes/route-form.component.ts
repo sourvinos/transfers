@@ -219,20 +219,16 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private populateFields() {
         if (this.id) {
-            this.routeService.getRoute(this.id).subscribe(
-                result => {
-                    this.form.setValue({
-                        id: result.id,
-                        abbreviation: result.abbreviation,
-                        description: result.description,
-                        portId: result.port.id,
-                        portDescription: result.port.description,
-                        userName: result.userName
-                    })
-                },
-                error => {
-                    Utils.errorLogger(error)
+            this.routeService.getRoute(this.id).then((result) => {
+                this.form.setValue({
+                    id: result.id,
+                    abbreviation: result.abbreviation,
+                    description: result.description,
+                    portId: result.port.id,
+                    portDescription: result.port.description,
+                    userName: result.userName
                 })
+            })
         }
     }
 

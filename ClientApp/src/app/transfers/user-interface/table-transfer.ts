@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, IterableChanges, IterableDiffer, IterableDiffers } from '@angular/core'
-import { InteractionTransferService } from '../classes/service-interaction-transfer'
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 
 @Component({
     selector: 'table-transfer',
@@ -32,7 +32,7 @@ export class TableTransferComponent {
 
     // #endregion
 
-    constructor(private transferInteractionService: InteractionTransferService, private iterableDiffers: IterableDiffers) { }
+    constructor(private interactionService: BaseInteractionService, private iterableDiffers: IterableDiffers) { }
 
     @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
         if (event.key == 'Enter') this.sendRowToService()
@@ -47,10 +47,60 @@ export class TableTransferComponent {
         this.initVariables()
     }
 
-    public ngDoCheck() {
+    ngDoCheck() {
         const changes: IterableChanges<any> = this.differences.diff(this.records);
         if (changes) {
             this.checked = false
+        }
+    }
+
+    /**
+     * Caller(s):
+     *  Template - table
+     * 
+     * Description:
+     *  Toggles the checkbox and counts the persons for the selected checkboxes
+     * 
+     * @param row 
+     */
+    toggleCheckBox(row: number) {
+        this.checkedIds = []
+        this.totalPersons = 0
+        this.table.rows[row].classList.toggle('checked')
+        this.table.querySelectorAll('tr.checked').forEach((element: { childNodes: { innerText: string }[] }) => {
+            this.checkedIds.push(element.childNodes[2].innerText)
+            this.totalPersons += parseInt(element.childNodes[11].innerText)
+        })
+        localStorage.setItem('selectedIds', JSON.stringify(this.checkedIds))
+        this.interactionService.setCheckedTotalPersons(this.totalPersons)
+    }
+
+    /**
+     * Caller(s):
+     *  Template - table
+     * 
+     * Description:
+     *  If the first column is clicked, toggle the checkboxes and counts the persons for the selected checkboxes
+     * 
+     * @param column 
+     */
+    onHeaderClick(column: any) {
+        if (column.toElement.cellIndex == 0) {
+            this.checked = !this.checked
+            this.checkedIds = []
+            this.totalPersons = 0
+            this.table.querySelectorAll('tbody tr').forEach((element: { classList: { add: (arg0: string) => void; remove: (arg0: string) => void }; childNodes: { innerText: string }[] }) => {
+                if (this.checked) {
+                    element.classList.add('checked')
+                    this.checkedIds.push(element.childNodes[2].innerText)
+                    this.totalPersons += parseInt(element.childNodes[11].innerText)
+                }
+                else {
+                    element.classList.remove('checked')
+                }
+            })
+            localStorage.setItem('selectedIds', JSON.stringify(this.checkedIds))
+            this.interactionService.setCheckedTotalPersons(this.totalPersons)
         }
     }
 
@@ -174,7 +224,7 @@ export class TableTransferComponent {
      *  Sends the selected row to the service so that the parent (list-transfer) can call the editRecord method
      */
     private sendRowToService() {
-        this.transferInteractionService.sendObject(this.records[this.currentRow - 1])
+        this.interactionService.sendObject(this.records[this.currentRow - 1])
     }
 
     /**
@@ -199,38 +249,6 @@ export class TableTransferComponent {
      */
     private unselectRow() {
         this.table.rows[this.currentRow].classList.remove('selected')
-    }
-
-    toggleCheckBox(row: number) {
-        this.checkedIds = []
-        this.totalPersons = 0
-        this.table.rows[row].classList.toggle('checked')
-        this.table.querySelectorAll('tr.checked').forEach((element: { childNodes: { innerText: string }[] }) => {
-            this.checkedIds.push(element.childNodes[2].innerText)
-            this.totalPersons += parseInt(element.childNodes[11].innerText)
-        })
-        localStorage.setItem('selectedIds', JSON.stringify(this.checkedIds))
-        this.transferInteractionService.setCheckedTotalPersons(this.totalPersons)
-    }
-
-    onHeaderClick(column: any) {
-        if (column.toElement.cellIndex == 0) {
-            this.checked = !this.checked
-            this.checkedIds = []
-            this.totalPersons = 0
-            this.table.querySelectorAll('tbody tr').forEach((element: { classList: { add: (arg0: string) => void; remove: (arg0: string) => void }; childNodes: { innerText: string }[] }) => {
-                if (this.checked) {
-                    element.classList.add('checked')
-                    this.checkedIds.push(element.childNodes[2].innerText)
-                    this.totalPersons += parseInt(element.childNodes[11].innerText)
-                }
-                else {
-                    element.classList.remove('checked')
-                }
-            })
-            localStorage.setItem('selectedIds', JSON.stringify(this.checkedIds))
-            this.transferInteractionService.setCheckedTotalPersons(this.totalPersons)
-        }
     }
 
 }

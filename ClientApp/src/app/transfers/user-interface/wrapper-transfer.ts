@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
@@ -9,8 +9,9 @@ import { DriverService } from 'src/app/services/driver.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { TransferService } from './../classes/service-api-transfer';
-import { InteractionTransferService } from './../classes/service-interaction-transfer';
 import { DialogAssignDriverComponent } from './dialog-assign-driver';
+import { SnackbarService } from 'src/app/services/snackbar.service';
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 
 @Component({
     selector: 'wrapper-transfer',
@@ -20,7 +21,7 @@ import { DialogAssignDriverComponent } from './dialog-assign-driver';
 
 export class WrapperTransferComponent implements OnInit, OnDestroy {
 
-    // #region Variables
+    // #region Init
 
     dateIn: string = '01/10/2019'
     dateInISO: string = ''
@@ -32,9 +33,9 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    // #endregion Variables
+    // #endregion Init
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionTransferService: InteractionTransferService, private transferService: TransferService, public dialog: MatDialog, private driverService: DriverService, private snackBar: MatSnackBar) { }
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionService: BaseInteractionService, private transferService: TransferService, public dialog: MatDialog, private driverService: DriverService, private snackbarService: SnackbarService) { }
 
     ngOnInit(): void {
         this.addShortcuts()
@@ -57,7 +58,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      *  Executes the delete method on the form through the interaction service
      */
     deleteRecord(): void {
-        this.interactionTransferService.performAction('deleteRecord')
+        this.interactionService.performAction('deleteRecord')
     }
 
     /**
@@ -99,7 +100,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      *  Executes the save method on the form through the interaction service
      */
     saveRecord(): void {
-        this.interactionTransferService.performAction('saveRecord')
+        this.interactionService.performAction('saveRecord')
     }
 
     /**
@@ -169,6 +170,10 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
                     this.goBack()
                 }
             },
+            "Alt.A": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                document.getElementById('assignDriver').click()
+            },
             "Alt.S": (event: KeyboardEvent): void => {
                 event.preventDefault()
                 document.getElementById('search').click()
@@ -184,6 +189,17 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Caller(s): 
+     *  Class - loadTransfers()
+     * 
+     * Description:
+     *  Self-explanatory
+     */
+    private clearSelectedArraysFromLocalStorage(): void {
+        localStorage.removeItem('transfers')
+    }
+
+    /**
      * Caller(s):
      *  Class - ngOnInit()
      * 
@@ -195,6 +211,33 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      */
     private focus(field: string): void {
         Utils.setFocus(field)
+    }
+
+    /**
+     * Caller(s):
+     *  Class - addShortcuts()
+     * 
+     * Description:
+     *  On escape navigates to the home route
+     */
+    private goBack(): void {
+        this.router.navigate(['/'])
+    }
+
+    /**
+     * Caller(s):
+     *  Class - assignDriver()
+     * 
+     * Description
+     *  Checks user input
+     */
+    private isRecordSelected(): boolean {
+        this.records = JSON.parse(localStorage.getItem('selectedIds'))
+        if (this.records == null || this.records.length == 0) {
+            this.showSnackbar('No records have been selected!', 'error')
+            return false
+        }
+        return true
     }
 
     /**
@@ -219,6 +262,18 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     /**
      * Caller(s):
+     *  Class - loadTransfers()
+     *  Class - assignDriver()
+     * 
+     * Description:
+     *  Self-explanatory
+     */
+    private navigateToList(): void {
+        this.router.navigate(['dateIn/', this.dateInISO], { relativeTo: this.activatedRoute })
+    }
+
+    /**
+     * Caller(s):
      *  Class - ngOnDestroy()
      *  Class - assignDriver()
      * 
@@ -230,14 +285,14 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller(s): 
-     *  Class - loadTransfers()
+     * Caller(s):
+     *  Class - assignDriver()
      * 
      * Description:
-     *  Stores the given date to the localStorage for reading in later visits
+     *  Self-explanatory
      */
-    private updateLocalStorageWithDate(): void {
-        localStorage.setItem('date', this.dateInISO)
+    private showSnackbar(message: string, type: string): void {
+        this.snackbarService.open(message, type)
     }
 
     /**
@@ -254,14 +309,14 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller(s):
-     *  Class - addShortcuts()
+     * Caller(s): 
+     *  Class - loadTransfers()
      * 
      * Description:
-     *  On escape navigates to the home route
+     *  Stores the given date to the localStorage for reading in later visits
      */
-    private goBack(): void {
-        this.router.navigate(['/'])
+    private updateLocalStorageWithDate(): void {
+        localStorage.setItem('date', this.dateInISO)
     }
 
     /**
@@ -273,7 +328,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      *  The variable 'recordStatus' will be checked by the template which decides which buttons to display
      */
     private updateRecordStatus(): void {
-        this.interactionTransferService.recordStatus.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+        this.interactionService.recordStatus.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.recordStatus = response
         })
     }
@@ -287,61 +342,9 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      *  The variable 'hasTableData' will be checked by the template to display or not the 'Assign driver' button
      */
     private updateTableStatus(): void {
-        this.interactionTransferService.hasTableData.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+        this.interactionService.hasTableData.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.hasTableData = response
         })
-    }
-
-    /**
-     * Caller(s):
-     *  Class - assignDriver()
-     * 
-     * Description
-     *  Checks user input
-     */
-    private isRecordSelected(): boolean {
-        this.records = JSON.parse(localStorage.getItem('selectedIds'))
-        if (this.records == null || this.records.length == 0) {
-            this.showSnackbar('No records have been selected!', 'error')
-            return false
-        }
-        return true
-    }
-
-    /**
-     * Caller(s):
-     *  Class - loadTransfers()
-     *  Class - assignDriver()
-     * 
-     * Description:
-     *  Self-explanatory
-     */
-    private navigateToList(): void {
-        this.router.navigate(['dateIn/', this.dateInISO], { relativeTo: this.activatedRoute })
-    }
-
-    /**
-     * Caller(s):
-     *  Class - assignDriver()
-     * 
-     * Description:
-     *  Self-explanatory
-     */
-    private showSnackbar(message: string, type: string): void {
-        this.snackBar.open(message, 'Close', {
-            panelClass: [type]
-        })
-    }
-
-    /**
-     * Caller(s): 
-     *  Class - loadTransfers()
-     * 
-     * Description:
-     *  Self-explanatory
-     */
-    private clearSelectedArraysFromLocalStorage(): void {
-        localStorage.removeItem('transfers')
     }
 
 }

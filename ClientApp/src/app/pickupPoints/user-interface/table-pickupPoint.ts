@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, IterableChanges, IterableDiffer, IterableDiffers } from '@angular/core'
-import { InteractionPickupPointService } from '../classes/service-interaction-pickupPoint'
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 
 @Component({
     selector: 'table-pickupPoint',
@@ -29,7 +29,7 @@ export class TablePickupPointComponent {
 
     // #endregion
 
-    constructor(private transferPickupPointService: InteractionPickupPointService, private iterableDiffers: IterableDiffers) { }
+    constructor(private transferPickupPointService: BaseInteractionService, private iterableDiffers: IterableDiffers) { }
 
     @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
         if (event.key == 'Enter') this.sendRowToService()
@@ -98,7 +98,7 @@ export class TablePickupPointComponent {
      *  Initializes local variables
      */
     private initVariables() {
-        this.table = document.getElementById('table-transfer')
+        this.table = document.getElementById('table-pickupPoint')
         this.tableContainer = this.table.parentNode.parentNode
         this.rowHeight = 51
         this.rowCount = this.table.rows.length - 1
