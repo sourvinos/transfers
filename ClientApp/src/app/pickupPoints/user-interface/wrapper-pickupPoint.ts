@@ -2,12 +2,14 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
+import { takeUntil, startWith, map } from 'rxjs/operators';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { IRoute } from './../../models/route';
 import { RouteService } from './../../services/route.service';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { FormControl } from '@angular/forms';
+import { Utils } from 'src/app/shared/classes/utils';
 
 @Component({
     selector: 'wrapper-pickupPoint',
@@ -19,18 +21,17 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
 
     // #region Init
 
+    id: string = ''
+    routeDescription = new FormControl()
     routes: IRoute[] = []
-    records: string[] = []
-
-    selectedRouteId: string = ''
+    filteredRoutes: Observable<IRoute[]>
 
     recordStatus: string = 'empty'
-    hasTableData: boolean = false
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    // #endregion Variables
+    // #endregion Init
 
     constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionPickupPointService: BaseInteractionService, public dialog: MatDialog, private routeService: RouteService) { }
 
@@ -38,6 +39,8 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
         this.addShortcuts()
         this.subscribeToInderactionService()
         this.populateDropDowns()
+        this.trackChangesInAutoComplete()
+        this.focus('routeDescription')
     }
 
     ngOnDestroy(): void {
@@ -59,10 +62,10 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Template - loadTransfers()
+     *  Template - loadPickupPoints()
      * 
      * Description:
-     *  Loads from the api the records for the given date
+     *  Loads from the api the records for the given route
      */
     loadPickupPoints(): void {
         this.navigateToList()
@@ -77,6 +80,19 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
      */
     newRecord(): void {
         this.router.navigate([this.location.path() + '/pickupPoint/new'])
+    }
+
+    /**
+     * Caller(s):
+     *  Template - Autocomplete
+     * 
+     * Description:
+     *  Updates the id which is used to find the relative pickup points
+     * 
+     * @param event 
+     */
+    onSelectionChanged(event: { option: { id: string; }; }) {
+        this.id = event.option.id
     }
 
     /**
@@ -131,6 +147,34 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
 
     /**
      * Caller(s):
+     *  Class - trackChangesInAutoComplete
+     * 
+     * Description:
+     *  Filters the array according to the given characters
+     * 
+     * @param abbreviation 
+     */
+    private filter(abbreviation: string): IRoute[] {
+        const filterValue = abbreviation.toLowerCase()
+        return this.routes.filter(option => option.abbreviation.toLowerCase().indexOf(filterValue) === 0)
+    }
+
+    /**
+     * Caller(s):
+     *  Class - ngOnInit()
+     * 
+     * Description:
+     *  Calls the public method
+     * 
+     * @param field 
+     * 
+     */
+    private focus(field: string): void {
+        Utils.setFocus(field)
+    }
+
+    /**
+     * Caller(s):
      *  Class - addShortcuts()
      * 
      * Description:
@@ -148,7 +192,7 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
      *  Self-explanatory
      */
     private navigateToList(): void {
-        this.router.navigate(['routeId/', this.selectedRouteId], { relativeTo: this.activatedRoute })
+        this.router.navigate(['routeId/', this.id], { relativeTo: this.activatedRoute })
     }
 
     /**
@@ -170,11 +214,25 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
      * 
      * Description:
      *  Gets the record status from the form through the interaction service
-     *  The variable 'recordStatus' will be checked by the template which decides which buttons to display
-     */
+         */
     private subscribeToInderactionService(): void {
         this.updateRecordStatus()
-        this.updateTableStatus()
+    }
+
+    /**
+     * Caller(s):
+     *  Class - ngOnInit()
+     * 
+     * Description:
+     *  Keeps track of what is given in the dropdown and filters the array
+     */
+    private trackChangesInAutoComplete() {
+        this.filteredRoutes = this.routeDescription.valueChanges
+            .pipe(
+                startWith(''),
+                map(value => typeof value === 'string' ? value : value.abbreviation),
+                map(input => input ? this.filter(input) : this.routes.slice())
+            )
     }
 
     /**
@@ -188,20 +246,6 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
     private updateRecordStatus(): void {
         this.interactionPickupPointService.recordStatus.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.recordStatus = response
-        })
-    }
-
-    /**
-     * Caller(s):
-     *  Class - subscribeToInderactionService()
-     * 
-     * Description:
-     *  Gets the table status from the table through the interaction service
-     *  The variable 'hasTableData' will be checked by the template to display or not the 'Assign driver' button
-     */
-    private updateTableStatus(): void {
-        this.interactionPickupPointService.hasTableData.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            this.hasTableData = response
         })
     }
 

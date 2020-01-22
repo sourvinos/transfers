@@ -9,7 +9,7 @@ import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 // Material
 import { MatButtonModule } from '@angular/material/button'
-import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS, MatExpansionModule, MatCheckboxModule } from '@angular/material'
+import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule } from '@angular/material'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input'
@@ -90,6 +90,7 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         ReactiveFormsModule,
         NgIdleKeepaliveModule.forRoot(),
         // Material
+        MatAutocompleteModule,
         MatButtonModule,
         MatCheckboxModule,
         MatCheckboxModule,
@@ -101,7 +102,7 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         MatListModule,
         MatSelectModule,
         MatSnackBarModule,
-        MatTableModule,
+        MatTableModule
     ],
     entryComponents: [
         DialogIndexComponent,

@@ -109,18 +109,35 @@ body, h1, h2 {
     padding-top: 0.0625rem;
 }
 
-.scrollable::-webkit-scrollbar {
+.mat-autocomplete-panel {
+    background-color: var(--color-autocomplete-background) !important;
+    max-height: 500px;
+}
+
+.mat-option {
+    color: var(--color-autocomplete-color) !important;
+}
+
+.mat-option.mat-active {
+    background-color: var(--color-autocomplete-ripple) !important;
+}
+
+.mat-option.mat-selected {
+    background-color: var(--color-autocomplete-selected) !important;
+}
+
+.scrollable::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar {
     width: 0.4rem;
 }
 
-.scrollable::-webkit-scrollbar-track {
+.scrollable::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track {
     background-color: var(--color-scrollbar-background);
 }
 
-.scrollable::-webkit-scrollbar-thumb {
-    background-color: var(--color-scrollbar);
-    border-radius: 0;
-    min-height: 6.25rem;
+.scrollable::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb {
+    background-color: var(--color-scrollbar) !important;
+    border-radius: 0 !important;
+    min-height: 6.25rem !important;
 }
 
 .error {

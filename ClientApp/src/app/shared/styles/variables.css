@@ -123,6 +123,9 @@
     /* Spinner */
     --color-spinner: #d67474;
     --color-spinner-background: #FFE85C;
-    /* Icons */
-    --color-icon-error: #a52a2a;
+    /* Autocomplete */
+    --color-autocomplete-background: #373F46;
+    --color-autocomplete-color: #B3B2B2;
+    --color-autocomplete-ripple: #648e9f4a;
+    --color-autocomplete-selected: #b3b2b245;
 }
