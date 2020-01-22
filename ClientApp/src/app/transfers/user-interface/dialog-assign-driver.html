@@ -5,19 +5,21 @@
     </div>
 
     <div id="dialog-content">
-        <mat-form-field [hideRequiredMarker]="true">
-            <mat-label>Driver</mat-label>
-            <mat-select [(value)]="driverId" required>
-                <mat-option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.description }}</mat-option>
-            </mat-select>
-            <mat-hint>Select from the list!</mat-hint>
+        <mat-form-field>
+            <input type="text" placeholder="Driver" matInput [formControl]="driverDescription" [inputFormat]="'text'" id="driverDescription" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectionChanged($event)">
+                <mat-option *ngFor="let driver of filteredDrivers | async" [value]="driver.description" [id]="driver.id">
+                    {{ driver.description }}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Enter anything!</mat-hint>
         </mat-form-field>
     </div>
 
     <div id="dialog-footer">
         <mat-dialog-actions>
             <button mat-flat-button class="secondary" id="cancel" tabindex="-1" (click)="close()">Cancel</button>
-            <button mat-flat-button class="primary" id="ok" tabindex="-1" [disabled]="!driverId" [mat-dialog-close]="driverId">OK</button>
+            <button mat-flat-button class="primary" id="ok" tabindex="-1" [disabled]="!id" [mat-dialog-close]="id">OK</button>
         </mat-dialog-actions>
     </div>
 
