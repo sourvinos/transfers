@@ -23,6 +23,10 @@ input[type=text]:disabled {
     color: var(--color-input-text-label) !important;
 }
 
+#search-box .mat-form-field {
+    width: 15rem !important;
+}
+
 /* Not focused - Not error*/
 .mat-form-field .mat-form-field-label {
     color: var(--color-input-text-label) !important;

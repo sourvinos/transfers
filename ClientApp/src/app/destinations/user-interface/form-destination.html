@@ -14,11 +14,12 @@
     <form [formGroup]="form" autocomplete="off">
         <div id="section-one">
             <mat-form-field>
-                <input type="text" matInput placeholder="Abbreviation" formControlName="abbreviation" tabindex="1" id="abbreviation">
+                <input type="text" matInput placeholder="Abbreviation" formControlName="abbreviation" tabindex="1" id="abbreviation" [inputTabStop]="input">
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Description" formControlName="description" tabindex="2" id="description">
+                <input type="text" matInput placeholder="Description" formControlName="description" tabindex="2" id="description" [inputTabStop]="input">
             </mat-form-field>
+            <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
         </div>
     </form>
 </div>
@@ -26,7 +27,6 @@
 <div id="footer">
     <mat-divider></mat-divider>
     <div id="buttons">
-        <p class="form-value" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
         <button mat-flat-button class="delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
         <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>
     </div>

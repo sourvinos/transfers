@@ -1,6 +1,6 @@
 :host {
     display: grid;
-
+    width: 100%;
 }
 
 * {
@@ -15,8 +15,8 @@ table {
 
 table thead tr th {
     background-color: var(--color-table-background);
-    border-bottom: 1px dotted var(--color-table-header-border);
-    border-top: 1px dotted var(--color-table-header-border);
+    border-radius: 4px;
+    border: 1px dotted var(--color-table-header-border);
     color: var(--color-table-header);
     font-family: var(--font-family-table);
     font-size: var(--font-size-table-header);
@@ -24,6 +24,7 @@ table thead tr th {
     position: sticky;
     text-align: center;
     top: 0;
+    z-index: 1;
 }
 
 tr {
@@ -55,7 +56,11 @@ td {
     white-space: nowrap;
 }
 
-#table-index-input {
+#table-input {
     position: absolute;
     z-index: -1;
+}
+
+.mat-checkbox {
+    padding: 0;
 }

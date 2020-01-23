@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
-import { IDestination } from '../models/destination'
+import { IDestination } from './model-destination'
 
 @Injectable({ providedIn: 'root' })
 
@@ -11,23 +11,23 @@ export class DestinationService {
 
 	constructor(private http: HttpClient) { }
 
-	getDestinations(): Observable<IDestination[]> {
+	getAll(): Observable<IDestination[]> {
 		return this.http.get<IDestination[]>(this.url)
 	}
 
-	getDestination(id: number): Observable<IDestination> {
+	getSingle(id: number): Observable<IDestination> {
 		return this.http.get<IDestination>(this.url + '/' + id)
 	}
 
-	addDestination(formData: IDestination): Observable<IDestination> {
+	add(formData: IDestination): Observable<IDestination> {
 		return this.http.post<IDestination>(this.url, formData)
 	}
 
-	updateDestination(id: number, formData: IDestination): Observable<IDestination> {
+	update(id: number, formData: IDestination): Observable<IDestination> {
 		return this.http.put<IDestination>(this.url + '/' + id, formData)
 	}
 
-	deleteDestination(id: number): Observable<IDestination> {
+	delete(id: number): Observable<IDestination> {
 		return this.http.delete<IDestination>(this.url + '/' + id)
 	}
 

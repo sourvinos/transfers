@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router'
 import { HomeComponent } from '../home/home.component'
 import { LoginComponent } from '../login/user-interface/form-login'
 import { CustomerListComponent } from '../customers/user-interface/list-customer'; import { CustomerFormComponent } from '../customers/user-interface/form-customer'
-import { DestinationListComponent } from '../destinations/destination-list.component'; import { DestinationFormComponent } from '../destinations/destination-form.component'
+import { DestinationListComponent } from './../destinations/user-interface/list-destination'; import { DestinationFormComponent } from '../destinations/user-interface/form-destination';
 import { DriverListComponent } from '../drivers/driver-list.component'; import { DriverFormComponent } from '../drivers/driver-form.component'
 import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
 import { PortListComponent } from '../ports/port-list.component'; import { PortFormComponent } from '../ports/port-form.component'
@@ -13,22 +13,20 @@ import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component';
 import { VatStateListComponent } from '../vatStates/vatState-list.component'; import { VatStateFormComponent } from '../vatStates/vatState-form.component'
 import { WrapperPickupPointComponent } from '../pickupPoints/user-interface/wrapper-pickupPoint'; import { ListPickupPointComponent } from '../pickupPoints/user-interface/list-pickupPoint'; import { FormPickupPointComponent } from '../pickupPoints/user-interface/form-pickupPoint'
 import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'
-
 // Guards
 import { AuthGuardService } from '../services/auth-guard.service';
 import { CanDeactivateGuard } from '../services/can-deactivate-guard.service'
-
 // Resolvers
-import { CustomerListResolverService } from '../customers/classes/resolver-list-customer';
-import { DestinationListResolverService } from '../destinations/destination-list-resolver.service';
-import { DriverListResolverService } from './../drivers/driver-list-resolver.service';
-import { PickupPointListResolverService } from '../pickupPoints/classes/resolver-list-pickupPoint';
-import { PortListResolverService } from '../ports/port-list-resolver.service';
-import { RouteListResolverService } from '../routes/route-list-resolver.service';
-import { TaxOfficeListResolverService } from '../taxOffices/port-list-resolver.service';
-import { TransferEditResolverService } from '../transfers/classes/resolver-edit-transfer';
-import { TransferListResolverService } from '../transfers/classes/resolver-list-transfer';
-import { VatStateListResolverService } from '../vatStates/vatState-list-resolver.service';
+import { CustomerListResolverService } from '../customers/classes/resolver-list-customer'
+import { DestinationListResolverService } from '../destinations/classes/resolver-list-destination'
+import { DriverListResolverService } from './../drivers/driver-list-resolver.service'
+import { PickupPointListResolverService } from '../pickupPoints/classes/resolver-list-pickupPoint'
+import { PortListResolverService } from '../ports/port-list-resolver.service'
+import { RouteListResolverService } from '../routes/route-list-resolver.service'
+import { TaxOfficeListResolverService } from '../taxOffices/port-list-resolver.service'
+import { TransferEditResolverService } from '../transfers/classes/resolver-edit-transfer'
+import { TransferListResolverService } from '../transfers/classes/resolver-list-transfer'
+import { VatStateListResolverService } from '../vatStates/vatState-list-resolver.service'
 
 const appRoutes: Routes = [
 	{ path: '', component: HomeComponent, canActivate: [AuthGuardService], pathMatch: 'full' },

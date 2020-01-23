@@ -1,7 +1,7 @@
 <div id="results">
     <div id="listFormCombo">
         <div class="scrollable" id="pickupPointsList">
-            <table-pickupPoint [records]="pickupPoints" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></table-pickupPoint>
+            <custom-table [records]="pickupPoints" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></custom-table>
         </div>
         <router-outlet></router-outlet>
     </div>

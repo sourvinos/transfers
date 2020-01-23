@@ -3,66 +3,57 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { DialogService } from 'src/app/services/dialog.service';
 import { HelperService } from 'src/app/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
-import { PickupPointService } from '../classes/service-api-pickupPoint';
-import { DialogService } from './../../services/dialog.service';
-import { Utils } from './../../shared/classes/utils';
-import { IPickupPoint } from './../classes/model-pickupPoint';
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { Utils } from 'src/app/shared/classes/utils';
+import { DestinationService } from '../classes/service-api-destination';
+import { IDestination } from './../classes/model-destination';
 
 @Component({
-    selector: 'form-pickupPoint',
-    templateUrl: './form-pickupPoint.html',
-    styleUrls: ['./form-pickupPoint.css']
+    selector: 'form-destination',
+    templateUrl: './form-destination.html',
+    styleUrls: ['../../shared/styles/forms.css']
 })
 
-export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Init
 
     id: number
-    pickupPoint: IPickupPoint
-    url: string = '/pickupPoints'
+    destination: IDestination
+    url: string = '/destinations'
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
     form = this.formBuilder.group({
         id: 0,
-        routeId: [0, Validators.required],
+        abbreviation: ['', [Validators.maxLength(5)]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
-        exactPoint: ['', [Validators.maxLength(100)]],
-        time: ['', [Validators.required, Validators.pattern("[0-9][0-9]:[0-9][0-9]")]],
-        userName: ''
+        userName: [this.helperService.getUsernameFromLocalStorage()]
     })
 
-    // #endregion Init
+    // #endregion Init   
 
-    constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, public dialog: MatDialog, private interactionService: BaseInteractionService, private snackbarService: SnackbarService, private dialogService: DialogService) {
+    constructor(private destinationService: DestinationService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) {
         this.activatedRoute.params.subscribe(p => {
-            this.id = p['pickupPointId']
+            this.id = p['id']
             if (this.id) {
-                this.getPickupPoint()
-                this.setStatus('editRecord')
+                this.getDestination()
             } else {
-                this.form.patchValue({ routeId: this.router.url.split("/")[3] })
                 this.populateFormWithDefaultData()
-                this.setStatus('newRecord')
             }
         })
     }
 
     ngOnInit() {
-        this.scrollToForm()
         this.addShortcuts()
-        this.subscribeToInderactionService()
     }
 
     ngAfterViewInit() {
-        this.focus('description')
+        this.focus('abbreviation')
     }
 
     ngOnDestroy() {
@@ -83,21 +74,19 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
             this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.').subscribe(response => {
                 if (response) {
                     this.resetForm()
-                    this.scrollToList()
                     this.goBack()
                     return true
                 }
             })
         }
         else {
-            this.scrollToList()
             return true
         }
     }
 
     /**
      * Caller(s):
-     *  Class - subscribeToInderactionService()
+     *  Template - deleteRecord()
      * 
      * Description:
      *  Deletes the current record
@@ -105,7 +94,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
     deleteRecord() {
         this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.').subscribe(response => {
             if (response) {
-                this.pickupPointService.delete(this.form.value.id).subscribe(() => {
+                this.destinationService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar('Record deleted', 'info')
                     this.resetForm()
                     this.goBack()
@@ -116,7 +105,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
 
     /**
      * Caller(s):
-     *  Class - subscribeToInderactionService()
+     *  Template - saveRecord()
      * 
      * Description:
      *  Adds or updates an existing record
@@ -124,15 +113,14 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
     saveRecord() {
         if (!this.form.valid) return
         if (this.form.value.id == 0) {
-            this.pickupPointService.add(this.form.value).subscribe(() => {
+            this.destinationService.add(this.form.value).subscribe(() => {
                 this.showSnackbar('Record saved', 'info')
                 this.resetForm()
-                this.populateFormWithDefaultData()
-                this.focus('description')
+                this.goBack()
             })
         }
         else {
-            this.pickupPointService.update(this.form.value.id, this.form.value).subscribe(() => {
+            this.destinationService.update(this.form.value.id, this.form.value).subscribe(() => {
                 this.showSnackbar('Record updated', 'info')
                 this.resetForm()
                 this.goBack()
@@ -145,28 +133,28 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
      *  Class - ngOnInit()
      * 
      * Description:
-     *  Adds keyboard shortcuts
+     *  Self-explanatory
      */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            "Escape": (): void => {
+            "Escape": () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
                     this.goBack()
                 }
             },
-            "Alt.D": (event: KeyboardEvent): void => {
+            "Alt.D": (event: KeyboardEvent) => {
                 event.preventDefault()
                 this.deleteRecord()
             },
-            "Alt.S": (event: KeyboardEvent): void => {
+            "Alt.S": (event: KeyboardEvent) => {
                 this.saveRecord()
             },
-            "Alt.C": (event: KeyboardEvent): void => {
+            "Alt.C": (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
                     document.getElementById('cancel').click()
                 }
             },
-            "Alt.O": (event: KeyboardEvent): void => {
+            "Alt.O": (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
                     document.getElementById('ok').click()
                 }
@@ -180,7 +168,6 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
-
      * Description:
      *  Calls the public method()
      * 
@@ -197,11 +184,11 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
      * Description:
      *  Gets the selected record from the api
      */
-    private getPickupPoint() {
+    private getDestination() {
         if (this.id) {
-            this.pickupPointService.getSingle(this.id).subscribe(result => {
-                this.pickupPoint = result
-                this.populateFields(this.pickupPoint)
+            this.destinationService.getSingle(this.id).subscribe(result => {
+                this.destination = result
+                this.populateFields()
             })
         }
     }
@@ -211,31 +198,27 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
      *  Class - canDeactive(), deleteRecord(), saveRecord()
      * 
      * Description:
-     *  Send 'empty' to the 'setRecordStatus', so that the wrapper will display the 'new' button
      *  On escape navigates to the list
      */
     private goBack() {
-        this.setStatus('empty')
-        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
+        this.router.navigate([this.url])
     }
 
     /**
      * Caller(s):
-     *  Class - getPickupPoint()
+     *  Class - getDestination()
      * 
      * Description:
      *  Populates the form with record values
      * 
      * @param result 
      */
-    private populateFields(result: IPickupPoint) {
+    private populateFields() {
         this.form.setValue({
-            id: result.id,
-            routeId: result.route.id,
-            description: result.description,
-            exactPoint: result.exactPoint,
-            time: result.time,
-            userName: result.userName
+            id: this.destination.id,
+            abbreviation: this.destination.abbreviation,
+            description: this.destination.description,
+            userName: this.destination.userName
         })
     }
 
@@ -262,91 +245,33 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
     private resetForm() {
         this.form.reset({
             id: 0,
-            routeId: 0,
+            abbreviation: '',
             description: '',
-            exactPoint: '',
             userName: ''
         })
     }
 
     /**
      * Caller(s):
-     *  Class - ngOnInit()
+     *  Class - saveRecord() - deleteRecord()
      * 
      * Description:
-     *  Hides the list and shows the form
+     *  Self-explanatory
      */
-    private scrollToForm() {
-        document.getElementById('pickupPointsList').style.height = '0'
-    }
-
-    /**
-     * Caller(s):
-     *  Class - canDeactivate()
-     * 
-     * Description:
-     *  Hides the form, shows the list and focuses on the table
-     */
-    private scrollToList() {
-        document.getElementById('form').style.height = '0'
-        document.getElementById('pickupPointsList').style.height = '100%'
-        document.getElementById('table-input').focus()
-        this.interactionService.performAction('')
-    }
-
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     *  Class - goBack()
-     * 
-     * Desciption:
-     *  Tells the wrapper which buttons to display
-     * 
-     * @param status 
-     */
-    private setStatus(status: string) {
-        this.interactionService.setRecordStatus(status)
-    }
-
-    /**
-     * Caller(s):
-    *  Class - saveRecord()
-    * 
-    * Description:
-    *  Self-explanatory
-    */
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     * 
-     * Description:
-     *  Accepts data from the wrapper through the interaction service and decides which action to perform
-     */
-    private subscribeToInderactionService() {
-        this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            if (response == 'saveRecord') this.saveRecord()
-            if (response == 'deleteRecord') this.deleteRecord()
-        })
-    }
-
     // #region Helper properties
+
+    get abbreviation() {
+        return this.form.get('abbreviation')
+    }
 
     get description() {
         return this.form.get('description')
     }
 
-    get exactPoint() {
-        return this.form.get('exactPoint')
-    }
-
-    get time() {
-        return this.form.get('time')
-    }
-
-    // #endregion 
+    // #endregion Helper properties
 
 }

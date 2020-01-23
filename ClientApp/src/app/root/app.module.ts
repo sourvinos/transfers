@@ -23,7 +23,7 @@ import { HttpErrorInterceptor } from '../services/error.interceptor'
 import { RootComponent } from './root.component'
 import { MainComponent } from './../shared/components/main/main.component'
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component'
-import { TableComponent } from '../shared/components/table/table.component'
+import { CustomTableComponent } from '../shared/components/table/custom-table'
 import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
 import { LoaderComponent } from '../shared/components/loader/loader.component'
 import { DialogIndexComponent } from '../shared/components/dialog-index/dialog-index.component'
@@ -33,7 +33,7 @@ import { DialogAssignDriverComponent } from '../transfers/user-interface/dialog-
 import { HomeComponent } from './../home/home.component'
 import { LoginComponent } from '../login/user-interface/form-login'
 import { CustomerListComponent } from '../customers/user-interface/list-customer'; import { CustomerFormComponent } from '../customers/user-interface/form-customer'
-import { DestinationListComponent } from '../destinations/destination-list.component'; import { DestinationFormComponent } from '../destinations/destination-form.component'
+import { DestinationListComponent } from '../destinations/user-interface/list-destination'; import { DestinationFormComponent } from '../destinations/user-interface/form-destination'
 import { DriverListComponent } from './../drivers/driver-list.component'; import { DriverFormComponent } from './../drivers/driver-form.component'
 import { PortListComponent } from './../ports/port-list.component'; import { PortFormComponent } from './../ports/port-form.component'
 import { RouteListComponent } from '../routes/route-list.component'; import { RouteFormComponent } from '../routes/route-form.component'
@@ -60,7 +60,7 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         DialogIndexComponent,
         DialogAlertComponent,
         DialogAssignDriverComponent,
-        TableComponent,
+        CustomTableComponent,
         // Routes
         HomeComponent,
         LoginComponent,
@@ -113,7 +113,7 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
         { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } },
-        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 5000 } }
+        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 4000 } }
     ],
     bootstrap: [RootComponent]
 })

@@ -1,0 +1,22 @@
+<div id="header">
+    <div id="title">
+        <h1>Destinations</h1>
+    </div>
+    <div id="search-box">
+        <mat-form-field>
+            <input type="text" matInput placeholder="Search" id="searchField" #query (keyup)="filter(query.value)" autocomplete="off">
+            <mat-hint>Enter anything!</mat-hint>
+        </mat-form-field>
+    </div>
+</div>
+
+<div id="content" class="scrollable">
+    <custom-table [records]="filteredDestinations" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></custom-table>
+</div>
+
+<div id="footer">
+    <mat-divider></mat-divider>
+    <div id="buttons">
+        <button mat-flat-button class="primary" id="new" (click)="newRecord()">New</button>
+    </div>
+</div>

@@ -25,7 +25,6 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
 
     routes: IRoute[] = []
     pickupPoints: IPickupPoint[] = []
-    selectedValue: string
 
     headers = ['Id', 'Description', 'Exact point', 'Time']
     widths = ['0', '45%', '45%', '10%']
@@ -38,7 +37,9 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, public dialog: MatDialog, private formBuilder: FormBuilder, private routeService: RouteService, private interactionPickupPointService: BaseInteractionService, private pickupPointService: PickupPointService) {
+    // #endregion Init
+
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, public dialog: MatDialog, private formBuilder: FormBuilder, private routeService: RouteService, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService) {
         this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.routeId != '' && this.router.url.split('/').length == 4) {
@@ -68,10 +69,6 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
         this.pickupPoints = this.activatedRoute.snapshot.data['pickupPointList']
     }
 
-    onChange() {
-        console.log(this.selectedValue)
-    }
-
     /**
      * Caller(s): 
      *  Class - ngOnInit()
@@ -81,10 +78,10 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
      *  Refreshes the list after a new record has been added
      */
     private subscribeToInteractionService() {
-        this.interactionPickupPointService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+        this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
-        this.interactionPickupPointService.refreshList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
+        this.baseInteractionService.refreshList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
             this.pickupPointService.getAllForRoute(this.routeId).subscribe(result => {
                 this.pickupPoints = result
             })

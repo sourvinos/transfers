@@ -5,9 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { forkJoin, Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { CustomerService } from "src/app/customers/classes/service-api-customer"
+import { DestinationService } from "src/app/destinations/classes/service-api-destination"
 import { IDriver } from 'src/app/models/driver'
 import { PickupPointService } from "src/app/pickupPoints/classes/service-api-pickupPoint"
-import { DestinationService } from "src/app/services/destination.service"
 import { DialogService } from "src/app/services/dialog.service"
 import { DriverService } from 'src/app/services/driver.service'
 import { HelperService } from 'src/app/services/helper.service'
@@ -15,9 +15,9 @@ import { KeyboardShortcuts, Unlisten } from "src/app/services/keyboard-shortcuts
 import { PortService } from 'src/app/services/port.service'
 import { Utils } from 'src/app/shared/classes/utils'
 import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component"
+import { BaseInteractionService } from "src/app/shared/services/base-interaction.service"
 import { TransferService } from '../classes/service-api-transfer'
 import { ITransfer } from './../classes/model-transfer'
-import { BaseInteractionService } from "src/app/shared/services/base-interaction.service"
 
 @Component({
     selector: 'form-transfer',
@@ -360,7 +360,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private populateDropDowns() {
         let sources = []
-        sources.push(this.destinationService.getDestinations())
+        sources.push(this.destinationService.getAll())
         sources.push(this.customerService.getCustomers())
         sources.push(this.pickupPointService.getAll())
         sources.push(this.driverService.getDrivers())
@@ -517,7 +517,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     private scrollToList() {
         document.getElementById('form').style.height = '0'
         document.getElementById('transfersList').style.height = '100%'
-        document.getElementById('table-transfer-input').focus()
+        document.getElementById('table-input').focus()
         this.interactionService.performAction('')
     }
 

@@ -39,7 +39,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.addShortcuts()
-        this.subscribeToInderactionService()
+        this.subscribeToInteractionService()
         this.focus('dateIn')
     }
 
@@ -303,7 +303,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      *  Gets the record status from the form through the interaction service
      *  The variable 'recordStatus' will be checked by the template which decides which buttons to display
      */
-    private subscribeToInderactionService(): void {
+    private subscribeToInteractionService(): void {
         this.updateRecordStatus()
         this.updateTableStatus()
     }

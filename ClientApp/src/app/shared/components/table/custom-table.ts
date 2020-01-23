@@ -2,12 +2,12 @@ import { Component, HostListener, Input, IterableChanges, IterableDiffer, Iterab
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 
 @Component({
-    selector: 'table-pickupPoint',
-    templateUrl: './table-pickupPoint.html',
-    styleUrls: ['./table-pickupPoint.css']
+    selector: 'custom-table',
+    templateUrl: './custom-table.html',
+    styleUrls: ['./custom-table.css']
 })
 
-export class TablePickupPointComponent {
+export class CustomTableComponent {
 
     // #region Variables
 
@@ -29,7 +29,7 @@ export class TablePickupPointComponent {
 
     // #endregion
 
-    constructor(private transferPickupPointService: BaseInteractionService, private iterableDiffers: IterableDiffers) { }
+    constructor(private baseInteractionService: BaseInteractionService, private iterableDiffers: IterableDiffers) { }
 
     @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
         if (event.key == 'Enter') this.sendRowToService()
@@ -85,7 +85,7 @@ export class TablePickupPointComponent {
             this.unselectRow()
             this.selectRow(this.table, 'down')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
-                document.getElementById("transfer-" + this.currentRow.toString()).scrollIntoView({ block: "end" })
+                document.getElementById("line-" + this.currentRow.toString()).scrollIntoView({ block: "end" })
             }
         }
     }
@@ -98,7 +98,7 @@ export class TablePickupPointComponent {
      *  Initializes local variables
      */
     private initVariables() {
-        this.table = document.getElementById('table-pickupPoint')
+        this.table = document.getElementById('table')
         this.tableContainer = this.table.parentNode.parentNode
         this.rowHeight = 51
         this.rowCount = this.table.rows.length - 1
@@ -161,10 +161,10 @@ export class TablePickupPointComponent {
      *  Class - HostListener()
      * 
      * Description:
-     *  Sends the selected row to the service so that the parent (list-transfer) can call the editRecord method
+     *  Sends the selected row to the service so that the parent (list) can call the editRecord method
      */
     private sendRowToService() {
-        this.transferPickupPointService.sendObject(this.records[this.currentRow - 1])
+        this.baseInteractionService.sendObject(this.records[this.currentRow - 1])
     }
 
     /**

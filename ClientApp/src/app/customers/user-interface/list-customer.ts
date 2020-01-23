@@ -5,6 +5,7 @@ import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.s
 import { Utils } from '../../shared/classes/utils';
 import { ICustomer } from '../classes/model-customer';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'list-customer',
@@ -26,32 +27,35 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     fields = ['id', 'description', 'phones', 'email']
 
     unlisten: Unlisten
-
     ngUnsubscribe = new Subject<void>();
 
-    // #endregion
+    // #endregion Init
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute, private interactionService: BaseInteractionService) {
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute, private baseInteractionService: BaseInteractionService) {
         this.customers = this.route.snapshot.data['customerList']
         this.filteredCustomers = this.customers
-        this.unlisten = null
     }
 
     ngOnInit() {
         this.addShortcuts()
         this.setFocus('searchField')
-        // this.subscribeToInderactionService()
+        this.subscribeToInteractionService()
     }
 
     ngOnDestroy() {
-        this.unlisten && this.unlisten();
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
+        this.ngUnsubscribe.next()
+        this.ngUnsubscribe.unsubscribe()
+        this.unlisten && this.unlisten()
+    }
+
+    private loadCustomers() {
+        this.customers = this.activatedRoute.snapshot.data['customers']
+        console.log(this.customers)
     }
 
     // T
     editRecord(id: number) {
-        this.router.navigate(['/customers/', id])
+        this.navigateToEditRoute(id)
     }
 
     // T
@@ -82,6 +86,24 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     private setFocus(element: string) {
         Utils.setFocus(element)
+    }
+
+    /**
+     * Caller(s): 
+     *  Class - ngOnInit()
+     * 
+     * Description:
+     *  Gets the selected record from the table through the service and executes the editRecord method
+     *  Refreshes the list after a new record has been added
+     */
+    private subscribeToInteractionService() {
+        this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+            this.editRecord(response['id'])
+        })
+    }
+
+    private navigateToEditRoute(id: number) {
+        this.router.navigate(['/destinations', id])
     }
 
 }

@@ -62,6 +62,11 @@
     width: 100%;
 }
 
+span#form-values {
+    color: olivedrab;
+    font-family: "Ubuntu Condensed";
+}
+
 /* ! Narrow screen */
 @media only screen and (max-width: 1366px) {
     h1 {
