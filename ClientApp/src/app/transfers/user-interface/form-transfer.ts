@@ -311,8 +311,6 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             this.transferService.getTransfer(this.id).subscribe(result => {
                 this.transfer = result
                 this.populateFields(this.transfer)
-            }, error => {
-                console.log('Error getting record')
             })
         }
     }
@@ -364,7 +362,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         let sources = []
         sources.push(this.destinationService.getDestinations())
         sources.push(this.customerService.getCustomers())
-        sources.push(this.pickupPointService.getAllPickupPoints())
+        sources.push(this.pickupPointService.getAll())
         sources.push(this.driverService.getDrivers())
         sources.push(this.portService.getPorts())
         return forkJoin(sources).subscribe(
@@ -376,13 +374,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.drivers = result[3]
                 this.ports = result[4]
                 this.renameObjects()
-            },
-            error => {
-                if (error.status == 404) {
-                    this.router.navigate(['/error'])
-                }
-            }
-        )
+            })
     }
 
     /**

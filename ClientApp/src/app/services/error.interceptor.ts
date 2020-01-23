@@ -17,7 +17,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                 switch (response.status) {
                     case 404: this.snackbarService.open('This record was not found', 'error'); break
                     case 500: this.snackbarService.open('This record is in use and can not be deleted', 'error'); break
-                    default: this.snackbarService.open('An unknown error occured', 'error')
+                    default: this.snackbarService.open('There is no connection with the server', 'error')
                 }
                 return throwError(response)
             })

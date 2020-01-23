@@ -11,27 +11,27 @@ export class PickupPointService {
 
     constructor(private http: HttpClient) { }
 
-    getAllPickupPoints(): Observable<IPickupPoint[]> {
+    getAll(): Observable<IPickupPoint[]> {
         return this.http.get<IPickupPoint[]>(this.url)
     }
 
-    getPickupPoints(routeId: string): Observable<IPickupPoint[]> {
+    getAllForRoute(routeId: string): Observable<IPickupPoint[]> {
         return this.http.get<IPickupPoint[]>(this.url + '/routeId/' + routeId)
     }
 
-    getPickupPoint(id: number): Observable<IPickupPoint> {
+    getSingle(id: number): Observable<IPickupPoint> {
         return this.http.get<IPickupPoint>(this.url + '/' + id.toString())
     }
 
-    addPickupPoint(formData: IPickupPoint): Observable<IPickupPoint> {
+    add(formData: IPickupPoint): Observable<IPickupPoint> {
         return this.http.post<IPickupPoint>(this.url, formData)
     }
 
-    updatePickupPoint(id: number, formData: IPickupPoint): Observable<IPickupPoint> {
+    update(id: number, formData: IPickupPoint): Observable<IPickupPoint> {
         return this.http.put<IPickupPoint>(this.url + '/' + id, formData)
     }
 
-    deletePickupPoint(id: number): Observable<IPickupPoint> {
+    delete(id: number): Observable<IPickupPoint> {
         return this.http.delete<IPickupPoint>(this.url + '/' + id)
     }
 

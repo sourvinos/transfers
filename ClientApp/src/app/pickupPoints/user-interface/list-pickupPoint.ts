@@ -85,7 +85,7 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
             this.editRecord(response['id'])
         })
         this.interactionPickupPointService.refreshList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
-            this.pickupPointService.getPickupPoints(this.routeId).subscribe(result => {
+            this.pickupPointService.getAllForRoute(this.routeId).subscribe(result => {
                 this.pickupPoints = result
             })
         })

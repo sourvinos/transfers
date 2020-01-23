@@ -106,7 +106,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
     deleteRecord() {
         this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.').subscribe(response => {
             if (response) {
-                this.pickupPointService.deletePickupPoint(this.form.value.id).subscribe(() => {
+                this.pickupPointService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar('Record deleted', 'info')
                     this.goBack()
                 })
@@ -124,7 +124,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
     saveRecord() {
         if (!this.form.valid) return
         if (this.form.value.id == 0) {
-            this.pickupPointService.addPickupPoint(this.form.value).subscribe(() => {
+            this.pickupPointService.add(this.form.value).subscribe(() => {
                 this.showSnackbar('Record saved', 'info')
                 this.resetForm()
                 this.populateFormWithDefaultData()
@@ -132,7 +132,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
             })
         }
         else {
-            this.pickupPointService.updatePickupPoint(this.form.value.id, this.form.value).subscribe(() => {
+            this.pickupPointService.update(this.form.value.id, this.form.value).subscribe(() => {
                 this.showSnackbar('Record updated', 'info')
                 this.resetForm()
                 this.goBack()
@@ -199,7 +199,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
      */
     private getPickupPoint() {
         if (this.id) {
-            this.pickupPointService.getPickupPoint(this.id).subscribe(result => {
+            this.pickupPointService.getSingle(this.id).subscribe(result => {
                 this.pickupPoint = result
                 this.populateFields(this.pickupPoint)
             })

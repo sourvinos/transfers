@@ -398,7 +398,9 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     private updateTotals() {
         this.totals[0].sum = this.queryResult.persons
         this.totals[1].sum = this.queryResultClone.transfers.reduce((sum: any, array: { totalPersons: any; }) => sum + array.totalPersons, 0);
-        this.interactionService.checked.pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => { this.totals[2].sum = result })
+        this.interactionService.checked.pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
+            this.totals[2].sum = result
+        })
     }
 
     /**
