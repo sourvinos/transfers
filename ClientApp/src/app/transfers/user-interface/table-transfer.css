@@ -56,7 +56,7 @@ td {
     white-space: nowrap;
 }
 
-#table-input {
+#table-transfer-input {
     position: absolute;
     z-index: -1;
 }

@@ -515,7 +515,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     private scrollToList() {
         document.getElementById('form').style.height = '0'
         document.getElementById('transfersList').style.height = '100%'
-        document.getElementById('table-input').focus()
+        document.getElementById('table-transfer-input').focus()
         this.interactionService.performAction('')
     }
 

@@ -114,7 +114,7 @@ export class TableTransferComponent {
      * @param $event 
      */
     onDomChange($event: Event) {
-        document.getElementById('table-input').focus()
+        document.getElementById('table-transfer-input').focus()
         this.gotoRow(1)
     }
 
@@ -208,7 +208,7 @@ export class TableTransferComponent {
     private selectRow(table: HTMLTableElement, direction: any) {
         if (!isNaN(direction)) {
             this.currentRow = parseInt(direction)
-            document.getElementById('table-input').focus()
+            document.getElementById('table-transfer-input').focus()
         } else {
             if (direction == 'up') this.currentRow--
             if (direction == 'down')++this.currentRow
