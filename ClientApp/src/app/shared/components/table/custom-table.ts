@@ -23,7 +23,7 @@ export class CustomTableComponent {
 
     currentRow: number = 0
     tableContainer: any
-    table: any
+    customTable: any
     rowHeight: number = 0
     rowCount: number = 0
 
@@ -42,6 +42,7 @@ export class CustomTableComponent {
     ngAfterViewInit() {
         this.addShortcuts()
         this.initVariables()
+        this.gotoRow(1)
     }
 
     ngOnDestroy() {
@@ -58,7 +59,6 @@ export class CustomTableComponent {
      * @param $event 
      */
     onDomChange($event: Event) {
-        document.getElementById('table-input').focus()
         this.gotoRow(1)
     }
 
@@ -91,9 +91,9 @@ export class CustomTableComponent {
 
     /**
      * Caller(s):
-     *  Class - HostListener()
+     *  Class - ngAfterViewInit()
      *  Class - onDomChange()
-     *  Template - gotoRow()
+     *  Class - addShortcuts()
      * 
      * Description:
      *  Highlights the next / previous row according to the arrow keys or highlights the clicked row
@@ -102,23 +102,24 @@ export class CustomTableComponent {
      */
     private gotoRow(key: any) {
         if (!isNaN(key)) {
-            this.unselectAllRows()
-            this.selectRow(this.table, key)
-            this.sendRowToIndexService()
+            this.unselectAllRows().then(() => {
+                this.selectRow(this.customTable, key)
+                this.sendRowToIndexService()
+            })
         }
         if (key == 'Up' && this.currentRow > 1) {
             this.unselectRow()
-            this.selectRow(this.table, 'up')
+            this.selectRow(this.customTable, 'up')
             this.sendRowToIndexService()
-            if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
+            if (!this.isRowIntoView(this.customTable.rows[this.currentRow], key)) {
                 this.tableContainer.scrollTop = (this.currentRow - 1) * this.rowHeight
             }
         }
         if (key == 'Down' && this.currentRow < this.rowCount) {
             this.unselectRow()
-            this.selectRow(this.table, 'down')
+            this.selectRow(this.customTable, 'down')
             this.sendRowToIndexService()
-            if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
+            if (!this.isRowIntoView(this.customTable.rows[this.currentRow], key)) {
                 document.getElementById("line-" + this.currentRow.toString()).scrollIntoView({ block: "end" })
             }
         }
@@ -132,10 +133,10 @@ export class CustomTableComponent {
      *  Initializes local variables
      */
     private initVariables() {
-        this.table = document.getElementById('table')
-        this.tableContainer = this.table.parentNode.parentNode
+        this.customTable = document.getElementById('custom-table')
+        this.tableContainer = this.customTable.parentNode.parentNode
         this.rowHeight = 51
-        this.rowCount = this.table.rows.length - 1
+        this.rowCount = this.customTable.rows.length - 1
     }
 
     /**
@@ -153,14 +154,14 @@ export class CustomTableComponent {
         const scrollTop = this.tableContainer.scrollTop
         const rowTopPlusHeight = rowOffsetTop + row.offsetHeight
         const indexTopPlusHeight = scrollTop + this.tableContainer.offsetHeight
-        if (direction == 'ArrowUp') {
+        if (direction == 'Up') {
             if (indexTopPlusHeight - rowOffsetTop + this.rowHeight < this.tableContainer.offsetHeight) {
                 return true
             } else {
                 return false
             }
         }
-        if (direction == 'ArrowDown') {
+        if (direction == 'Down') {
             if (rowTopPlusHeight <= indexTopPlusHeight) {
                 return true
             } else {
@@ -182,11 +183,11 @@ export class CustomTableComponent {
     private selectRow(table: HTMLTableElement, direction: any) {
         if (!isNaN(direction)) {
             this.currentRow = parseInt(direction)
-            document.getElementById('table-input').focus()
         } else {
             if (direction == 'up') this.currentRow--
             if (direction == 'down')++this.currentRow
         }
+        document.getElementById('custom-table-input').focus()
         table.rows[this.currentRow].classList.add('selected')
     }
 
@@ -208,7 +209,7 @@ export class CustomTableComponent {
 
     /**
      * Caller(s):
-     *  Class - HostListener()
+     *  Class - sendRowToService()
      * 
      * Description:
      *  Sends the selected row to the service so that the parent (list) can call the editRecord method
@@ -219,7 +220,7 @@ export class CustomTableComponent {
 
     /**
      * Caller(s):
-     *  Class - addShortcuts()
+     *  Class - gotoRow()
      * 
      * Description:
      *  On every arrow press, send the row to the service
@@ -235,8 +236,8 @@ export class CustomTableComponent {
      * Description:
      *  Removes the 'selected' class from all rows
      */
-    private unselectAllRows() {
-        this.table.querySelectorAll('tr').forEach((element: { classList: { remove: (arg0: string) => void } }) => {
+    private async unselectAllRows() {
+        await this.customTable.querySelectorAll('tr').forEach((element: { classList: { remove: (arg0: string) => void } }) => {
             element.classList.remove('selected')
         })
     }
@@ -249,7 +250,7 @@ export class CustomTableComponent {
      *  Removes the 'selected' class from the current row
      */
     private unselectRow() {
-        this.table.rows[this.currentRow].classList.remove('selected')
+        this.customTable.rows[this.currentRow].classList.remove('selected')
     }
 
 }

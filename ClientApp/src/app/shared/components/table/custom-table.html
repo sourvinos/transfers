@@ -1,4 +1,4 @@
-<table id="table" (domChange)="onDomChange($event)">
+<table id="custom-table" (domChange)="onDomChange($event)">
     <thead>
         <tr>
             <th *ngFor="let header of headers, index as i" [style.width]="widths[i]" [style.display]="visibility[i]" (click)="onHeaderClick($event)">{{ header }}</th>
@@ -11,4 +11,4 @@
     </tbody>
 </table>
 
-<input type="text" id="table-input">
+<input type="text" id="custom-table-input">
