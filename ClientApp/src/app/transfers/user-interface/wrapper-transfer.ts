@@ -5,13 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DriverService } from 'src/app/services/driver.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { TransferService } from './../classes/service-api-transfer';
 import { DialogAssignDriverComponent } from './dialog-assign-driver';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { DriverService } from 'src/app/drivers/classes/service-api-driver';
 
 @Component({
     selector: 'wrapper-transfer',
@@ -33,7 +33,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    // #endregion Init
+    // #endregion
 
     constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionService: BaseInteractionService, private transferService: TransferService, public dialog: MatDialog, private driverService: DriverService, private snackbarService: SnackbarService) { }
 
@@ -117,7 +117,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
                 width: '550px',
                 data: {
                     title: 'Assign driver',
-                    drivers: this.driverService.getDrivers(),
+                    drivers: this.driverService.getAll(),
                     actions: ['cancel', 'ok']
                 },
                 panelClass: 'dialog'
@@ -321,7 +321,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Class - subscribeToInderactionService()
+     *  Class - subscribeTointeractionService()
      * 
      * Description:
      *  Gets the record status from the form through the interaction service
@@ -335,7 +335,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Class - subscribeToInderactionService()
+     *  Class - subscribeToInteractionService()
      * 
      * Description:
      *  Gets the table status from the table through the interaction service

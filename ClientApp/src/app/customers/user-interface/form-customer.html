@@ -14,45 +14,28 @@
     <form [formGroup]="form" autocomplete="off">
         <div id="section-one">
             <mat-form-field>
-                <input type="text" matInput placeholder="Description" formControlName="description" tabindex="1" id="description">
+                <input type="text" matInput placeholder="Description" formControlName="description" tabindex="1" id="description" [inputTabStop]="input">
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Profession" formControlName="profession" tabindex="2" id="profession">
+                <input type="text" matInput placeholder="Profession" formControlName="profession" tabindex="2" id="profession" [inputTabStop]="input">
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Address" formControlName="address" tabindex="3" id="address">
+                <input type="text" matInput placeholder="Address" formControlName="address" tabindex="3" id="address" [inputTabStop]="input">
                 <mat-error *ngIf="address.invalid"></mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Phones" formControlName="phones" tabindex="4" id="phones">
+                <input type="text" matInput placeholder="Phones" formControlName="phones" tabindex="4" id="phones" [inputTabStop]="input">
                 <mat-error *ngIf="phones.invalid"></mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Person in charge" formControlName="personInCharge" tabindex="5" id="personInCharge">
-                <mat-error *ngIf="personInCharge.invalid"></mat-error>
+                <input type="text" matInput placeholder="Person in charge" formControlName="personInCharge" tabindex="5" id="personInCharge" [inputTabStop]="input">
             </mat-form-field>
         </div>
         <div id="section-two">
             <mat-form-field>
-                <input type="text" matInput placeholder="Email" formControlName="email" tabindex="6" id="email">
-                <mat-error *ngIf="email.invalid"></mat-error>
+                <input type="text" matInput placeholder="Email" formControlName="email" tabindex="6" id="email" [inputTabStop]="input">
             </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput placeholder="Tax no" formControlName="taxNo" tabindex="7" id="taxNo">
-                <mat-error *ngIf="taxNo.invalid"></mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput placeholder="Account code" formControlName="accountCode" tabindex="8" id="accountCode">
-                <mat-error *ngIf="accountCode.invalid"></mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput placeholder="Tax office" formControlName="taxOfficeDescription" tabindex="9" id="taxOfficeDescription" (change)="lookupIndex(taxOffices, 'Tax offices', ['taxOfficeId','taxOfficeDescription'], ['id','description'], ['Id','Description'], ['1px','440px'], ['none',''], ['center','left'], $event)">
-                <mat-error *ngIf="taxOfficeDescription.invalid"></mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput placeholder="VAT regime" formControlName="vatStateDescription" tabindex="10" id="vatStateDescription" (change)="lookupIndex(vatStates, 'VAT regimes', ['vatStateId','vatStateDescription'], ['id','description'], ['Id','Description'], ['1px','440px'], ['none',''], ['center','left'], $event)">
-                <mat-error *ngIf="vatStateDescription.invalid"></mat-error>
-            </mat-form-field>
+            <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
         </div>
     </form>
 </div>
@@ -60,7 +43,6 @@
 <div id="footer">
     <mat-divider></mat-divider>
     <div id="buttons">
-        <p class="form-value" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
         <button mat-flat-button class="delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
         <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>
     </div>

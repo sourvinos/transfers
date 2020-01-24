@@ -13,8 +13,6 @@
     /* Dialogs */
     --font-size-mat-dialog-title: 2.0rem;
     --font-size-mat-dialog-content: 1.0rem;
-    /* Input boxes */
-    --font-size-customInput: 1.0rem;
     /* Transfer summary boxes */
     --font-size-summary-block-header: 1.5rem;
     --font-size-summary-block-header-total: 1.3rem;
@@ -39,8 +37,6 @@
     --font-family-headers: "Roboto";
     /* Labels */
     --font-family-labels: "Lato";
-    /* Custom inputs */
-    --font-family-customInput: "Play";
     /* Dialogs */
     --font-family-dialog-header: "Roboto";
     --font-family-dialog-content: "Ubuntu Condensed";

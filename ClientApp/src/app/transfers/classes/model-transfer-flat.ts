@@ -1,4 +1,4 @@
-export interface ITransferFlat {
+export class TransferFlat {
     id: string
     destination: string
     route: string

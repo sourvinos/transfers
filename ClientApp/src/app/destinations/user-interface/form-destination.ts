@@ -9,7 +9,7 @@ import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { DestinationService } from '../classes/service-api-destination';
-import { IDestination } from './../classes/model-destination';
+import { Destination } from './../classes/model-destination';
 
 @Component({
     selector: 'form-destination',
@@ -22,7 +22,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
     // #region Init
 
     id: number
-    destination: IDestination
+    destination: Destination
     url: string = '/destinations'
 
     unlisten: Unlisten
@@ -32,16 +32,16 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         id: 0,
         abbreviation: ['', [Validators.maxLength(5)]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
-        userName: [this.helperService.getUsernameFromLocalStorage()]
+        userName: ''
     })
 
-    // #endregion Init   
+    // #endregion
 
     constructor(private destinationService: DestinationService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['id']
             if (this.id) {
-                this.getDestination()
+                this.getRecord()
             } else {
                 this.populateFormWithDefaultData()
             }
@@ -147,14 +147,19 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
                 this.deleteRecord()
             },
             "Alt.S": (event: KeyboardEvent) => {
-                this.saveRecord()
+                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+                    event.preventDefault()
+                    this.saveRecord()
+                }
             },
             "Alt.C": (event: KeyboardEvent) => {
+                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
                     document.getElementById('cancel').click()
                 }
             },
             "Alt.O": (event: KeyboardEvent) => {
+                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
                     document.getElementById('ok').click()
                 }
@@ -184,9 +189,9 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
      * Description:
      *  Gets the selected record from the api
      */
-    private getDestination() {
+    private getRecord() {
         if (this.id) {
-            this.destinationService.getSingle(this.id).subscribe(result => {
+            this.destinationService.getSingle(this.id).then(result => {
                 this.destination = result
                 this.populateFields()
             })
@@ -272,6 +277,6 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         return this.form.get('description')
     }
 
-    // #endregion Helper properties
+    // #endregion
 
 }

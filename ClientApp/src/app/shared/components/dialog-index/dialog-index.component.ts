@@ -27,7 +27,7 @@ export class DialogIndexComponent implements OnInit, OnDestroy {
 
 	ngUnsubscribe = new Subject<void>();
 
-	// #endregion Init
+	// #endregion
 
 	constructor(public dialogRef: MatDialogRef<DialogIndexComponent>, private indexInteractionService: IndexInteractionService, @Inject(MAT_DIALOG_DATA) public data: any) {
 		this.title = data.title
@@ -40,7 +40,7 @@ export class DialogIndexComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.subscribeToIndexInderactionService()
+		this.subscribeToIndexinteractionService()
 	}
 
 	ngOnDestroy() {
@@ -48,10 +48,12 @@ export class DialogIndexComponent implements OnInit, OnDestroy {
 		this.ngUnsubscribe.unsubscribe();
 	}
 
-	private subscribeToIndexInderactionService() {
+	private subscribeToIndexinteractionService() {
+		console.log('Subscribing to index interaction service')
 		this.indexInteractionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
 			this.selectedRecord = response
 			this.indexInteractionService.dialogMustClose.subscribe(response => {
+				console.log('Response', response)
 				if (response) {
 					this.dialogRef.close(this.selectedRecord);
 				}

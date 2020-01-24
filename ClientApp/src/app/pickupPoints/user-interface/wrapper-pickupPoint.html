@@ -7,7 +7,7 @@
         <div id="search-box">
             <mat-form-field>
                 <input type="text" placeholder="Route" matInput [formControl]="routeDescription" [inputFormat]="'text'" id="routeDescription" [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectionChanged($event)">
+                <mat-autocomplete #auto="matAutocomplete" class="scrollable" (optionSelected)="onSelectionChanged($event)">
                     <mat-option *ngFor="let route of filteredRoutes | async" [value]="route.abbreviation" [id]="route.id">
                         {{ route.abbreviation }}
                     </mat-option>

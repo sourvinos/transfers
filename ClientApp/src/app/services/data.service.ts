@@ -6,14 +6,14 @@ import { Observable } from 'rxjs'
 
 export class DataService {
 
-    constructor(private http: HttpClient, private url: string) { }
+    constructor(public http: HttpClient, public url: string) { }
 
-    get() {
+    getAll(): Observable<any[]> {
         return this.http.get<any[]>(this.url)
     }
 
-    getSingle(id: number) {
-        return this.http.get(this.url + '/' + id.toString())
+    async getSingle(id: number) {
+        return await this.http.get<any>(this.url + '/' + id).toPromise()
     }
 
     add(formData: any): Observable<any> {

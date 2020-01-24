@@ -1,18 +1,9 @@
-import { ITaxOffice } from "../../models/taxOffice"
-import { IVatState } from "../../models/vatState"
+import { KeyValuePair } from "src/app/shared/classes/model-keyValuePair"
 
-export interface ICustomer {
-    id: number
-    description: string
+export class Customer extends KeyValuePair {
     profession: string
-    taxOffice: ITaxOffice
-    vatState: IVatState
     address: string
     phones: string
     personInCharge: string
     email: string
-    taxNo: string
-    accountCode: string
-    isSelected: boolean
-    userName: string
 }

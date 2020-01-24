@@ -6,18 +6,18 @@ import { forkJoin, Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { CustomerService } from "src/app/customers/classes/service-api-customer"
 import { DestinationService } from "src/app/destinations/classes/service-api-destination"
-import { IDriver } from 'src/app/models/driver'
 import { PickupPointService } from "src/app/pickupPoints/classes/service-api-pickupPoint"
 import { DialogService } from "src/app/services/dialog.service"
-import { DriverService } from 'src/app/services/driver.service'
 import { HelperService } from 'src/app/services/helper.service'
 import { KeyboardShortcuts, Unlisten } from "src/app/services/keyboard-shortcuts.service"
-import { PortService } from 'src/app/services/port.service'
 import { Utils } from 'src/app/shared/classes/utils'
 import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component"
 import { BaseInteractionService } from "src/app/shared/services/base-interaction.service"
 import { TransferService } from '../classes/service-api-transfer'
-import { ITransfer } from './../classes/model-transfer'
+import { Transfer } from './../classes/model-transfer'
+import { Driver } from "src/app/drivers/classes/model-driver"
+import { DriverService } from "src/app/drivers/classes/service-api-driver"
+import { PortService } from "src/app/ports/classes/service-api-port"
 
 @Component({
     selector: 'form-transfer',
@@ -30,7 +30,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     // #region Init
 
     id: number
-    transfer: ITransfer
+    transfer: Transfer
     url: string = '/transfers'
 
     destinations: any[]
@@ -40,7 +40,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     drivers: any[]
     ports: any[]
 
-    defaultDriver: IDriver
+    defaultDriver: Driver
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
@@ -61,13 +61,13 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: ''
     })
 
-    // #endregion Init
+    // #endregion
 
     constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['transferId']
             if (this.id) {
-                this.getTransfer()
+                this.getRecord()
                 this.setStatus('editRecord')
             } else {
                 this.driverService.getDefaultDriver()
@@ -84,7 +84,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         this.scrollToForm()
         this.addShortcuts()
         this.populateDropDowns()
-        this.subscribeToInderactionService()
+        this.subscribeToInteractionService()
     }
 
     ngAfterViewInit() {
@@ -135,7 +135,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Class - subscribeToInderactionService()
+     *  Class - subscribeTointeractionService()
      * 
      * Description:
      *  Deletes the current record
@@ -143,7 +143,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     deleteRecord() {
         this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.').subscribe(response => {
             if (response) {
-                this.transferService.deleteTransfer(this.form.value.id).subscribe(() => {
+                this.transferService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar('Record deleted', 'info')
                     this.goBack()
                 })
@@ -187,7 +187,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Class - subscribeToInderactionService()
+     *  Class - subscribeTointeractionService()
      * 
      * Description:
      *  Adds or updates an existing record
@@ -195,7 +195,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     saveRecord() {
         if (!this.form.valid) return
         if (this.form.value.id == 0) {
-            this.transferService.addTransfer(this.form.value).subscribe(() => {
+            this.transferService.add(this.form.value).subscribe(() => {
                 this.showSnackbar('Record saved', 'info')
                 this.resetForm()
                 this.populateFormWithDefaultData(this.defaultDriver)
@@ -204,7 +204,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
             })
         }
         else {
-            this.transferService.updateTransfer(this.form.value.id, this.form.value).subscribe(() => {
+            this.transferService.update(this.form.value.id, this.form.value).subscribe(() => {
                 this.showSnackbar('Record updated', 'info')
                 this.resetForm()
                 this.goBack()
@@ -221,7 +221,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            "Escape": (): void => {
+            "Escape": (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
                     this.goBack()
                 }
@@ -306,10 +306,10 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * Description:
      *  Gets the selected record from the api
      */
-    private getTransfer() {
+    private getRecord() {
         if (this.id) {
-            this.transferService.getTransfer(this.id).subscribe(result => {
-                this.transfer = result
+            this.transferService.getSingle(this.id).then(response => {
+                this.transfer = response
                 this.populateFields(this.transfer)
             })
         }
@@ -361,10 +361,10 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     private populateDropDowns() {
         let sources = []
         sources.push(this.destinationService.getAll())
-        sources.push(this.customerService.getCustomers())
+        sources.push(this.customerService.getAll())
         sources.push(this.pickupPointService.getAll())
-        sources.push(this.driverService.getDrivers())
-        sources.push(this.portService.getPorts())
+        sources.push(this.driverService.getAll())
+        sources.push(this.portService.getAll())
         return forkJoin(sources).subscribe(
             result => {
                 this.destinations = result[0]
@@ -386,7 +386,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * 
      * @param result 
      */
-    private populateFields(result: ITransfer) {
+    private populateFields(result: Transfer) {
         this.form.setValue({
             id: result.id,
             dateIn: result.dateIn,
@@ -411,7 +411,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * Description:
      *  Populates the form with initial values
      */
-    private populateFormWithDefaultData(driver: IDriver) {
+    private populateFormWithDefaultData(driver: Driver) {
         this.form.patchValue({
             dateIn: this.helperService.getDateFromLocalStorage(),
             driverId: driver.id,
@@ -450,12 +450,12 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
- * Caller(s):
- *  Class - populateDropDowns()
- * 
- * Description:
- *  Renames the objects in memory for use in the template
- */
+     * Caller(s):
+     *  Class - populateDropDowns()
+     * 
+     * Description:
+     *  Renames the objects in memory for use in the template
+     */
     private renameObjects() {
         this.destinations.forEach(obj => {
             this.renameKey(obj, 'id', 'destinationId'); this.renameKey(obj, 'description', 'destinationDescription')
@@ -537,11 +537,11 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Caller(s):
-    *  Class - saveRecord()
-    * 
-    * Description:
-    *  Self-explanatory
-    */
+     *  Class - saveRecord()
+     * 
+     * Description:
+     *  Self-explanatory
+     */
     private showSnackbar(message: string, type: string): void {
         this.snackBar.open(message, 'Close', {
             panelClass: [type]
@@ -583,13 +583,13 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
- * Caller(s):
- *  Class - ngOnInit()
- * 
- * Description:
- *  Accepts data from the wrapper through the interaction service and decides which action to perform
- */
-    private subscribeToInderactionService() {
+     * Caller(s):
+     *  Class - ngOnInit()
+     * 
+     * Description:
+     *  Accepts data from the wrapper through the interaction service and decides which action to perform
+     */
+    private subscribeToInteractionService() {
         this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             if (response == 'saveRecord') this.saveRecord()
             if (response == 'deleteRecord') this.deleteRecord()

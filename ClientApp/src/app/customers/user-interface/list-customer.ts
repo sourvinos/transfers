@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.service';
-import { Utils } from '../../shared/classes/utils';
-import { ICustomer } from '../classes/model-customer';
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
-import { takeUntil } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators'
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.service'
+import { Utils } from '../../shared/classes/utils'
+import { Customer } from '../classes/model-customer'
 
 @Component({
     selector: 'list-customer',
@@ -17,8 +17,8 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     // #region Init
 
-    customers: ICustomer[]
-    filteredCustomers: ICustomer[]
+    records: Customer[]
+    filteredRecords: Customer[]
 
     headers = ['Id', 'Description', 'Phones', 'Email']
     widths = ['0px', '50%', '25%', '25%']
@@ -27,18 +27,17 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     fields = ['id', 'description', 'phones', 'email']
 
     unlisten: Unlisten
-    ngUnsubscribe = new Subject<void>();
+    ngUnsubscribe = new Subject<void>()
 
-    // #endregion Init
+    // #endregion
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private route: ActivatedRoute, private baseInteractionService: BaseInteractionService) {
-        this.customers = this.route.snapshot.data['customerList']
-        this.filteredCustomers = this.customers
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService) {
+        this.loadRecords()
     }
 
     ngOnInit() {
         this.addShortcuts()
-        this.setFocus('searchField')
+        this.focus('searchField')
         this.subscribeToInteractionService()
     }
 
@@ -48,31 +47,60 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         this.unlisten && this.unlisten()
     }
 
-    private loadCustomers() {
-        this.customers = this.activatedRoute.snapshot.data['customers']
-        console.log(this.customers)
-    }
-
-    // T
+    /**
+      * Caller(s):
+      *  Class - subscribeTointeractionService()
+      * 
+      * Description:
+      *  Self-explanatory
+      * 
+      * @param id 
+      */
     editRecord(id: number) {
         this.navigateToEditRoute(id)
     }
 
-    // T
+    /**
+     * Caller(s):
+     *  Template - searchField
+     * 
+     * Description:
+     *  Filters and returns the array to the template according to the input
+     * 
+     * @param query 
+     */
     filter(query: string) {
-        this.filteredCustomers = query ? this.customers.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.customers
+        this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
-    // T
+    /**
+     * Caller(s):
+     *  Template - newRecord()
+     * 
+     * Description:
+     *  Navigates to the form so that new records can be appended
+     */
     newRecord() {
         this.router.navigate(['/customers/new'])
     }
 
+    /**
+     * Caller(s):
+     *  Class - ngOnInit()
+     * 
+     * Description:
+     *  Adds keyboard functionality
+     */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
+            "Escape": (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+                    this.goBack()
+                }
+            },
             "Alt.F": (event: KeyboardEvent): void => {
                 event.preventDefault()
-                this.setFocus('searchField')
+                this.focus('searchField')
             },
             "Alt.N": (event: KeyboardEvent): void => {
                 event.preventDefault()
@@ -84,7 +112,39 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         })
     }
 
-    private setFocus(element: string) {
+    /**
+     * Caller(s):
+     *  Class - addShortcuts()
+     * 
+     * Description:
+     *  On escape navigates to the home route
+     */
+    private goBack(): void {
+        this.router.navigate(['/'])
+    }
+
+    /**
+     * Caller(s):
+     *  Class - constructor
+     * 
+     * Description:
+     *  Self-explanatory
+     */
+    private loadRecords() {
+        this.records = this.activatedRoute.snapshot.data['customerList']
+        this.filteredRecords = this.records
+    }
+
+    /**
+     * Caller(s):
+     *  Class - ngOnInit()
+     * 
+     * Description:
+     *  Self-explanatory 
+     * 
+     * @param element 
+     */
+    private focus(element: string) {
         Utils.setFocus(element)
     }
 
@@ -94,7 +154,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
      * 
      * Description:
      *  Gets the selected record from the table through the service and executes the editRecord method
-     *  Refreshes the list after a new record has been added
      */
     private subscribeToInteractionService() {
         this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
@@ -102,8 +161,17 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         })
     }
 
+    /**
+     * Caller(s):
+     *  Class - editRecord()
+     * 
+     * Description:
+     *  Self-explanatory
+     * 
+     * @param id 
+     */
     private navigateToEditRoute(id: number) {
-        this.router.navigate(['/destinations', id])
+        this.router.navigate(['/customers', id])
     }
 
 }

@@ -1,34 +1,13 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Observable } from 'rxjs'
-import { ICustomer } from './model-customer'
+import { DataService } from 'src/app/services/data.service'
 
 @Injectable({ providedIn: 'root' })
 
-export class CustomerService {
+export class CustomerService extends DataService {
 
-    private url: string = '/api/customers'
-
-    constructor(private http: HttpClient) { }
-
-    getCustomers(): Observable<ICustomer[]> {
-        return this.http.get<ICustomer[]>(this.url)
-    }
-
-    getCustomer(id: number): Observable<ICustomer> {
-        return this.http.get<ICustomer>(this.url + '/' + id)
-    }
-
-    addCustomer(formData: ICustomer): Observable<ICustomer> {
-        return this.http.post<ICustomer>(this.url, formData)
-    }
-
-    updateCustomer(id: number, formData: ICustomer): Observable<ICustomer> {
-        return this.http.put<ICustomer>(this.url + '/' + id, formData)
-    }
-
-    deleteCustomer(id: number): Observable<ICustomer> {
-        return this.http.delete<ICustomer>(this.url + '/' + id)
+    constructor(private httpClient: HttpClient) {
+        super(httpClient, '/api/customers')
     }
 
 }

@@ -1,10 +1,10 @@
-export interface ITransfer {
+export class Transfer {
     id: number
     dateIn: string
     customer: {
         id: number
         description: string
-    },
+    }
     pickupPoint: {
         id: number,
         description: string
@@ -21,15 +21,15 @@ export interface ITransfer {
         id: number
         shortDescription: string
         description: string
-    },
+    }
     driver: {
         id: number,
         description: string
-    },
+    }
     port: {
         id: number,
         description: string
-    },
+    }
     adults: number
     kids: number
     free: number

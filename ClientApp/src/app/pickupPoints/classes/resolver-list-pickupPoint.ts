@@ -8,8 +8,6 @@ import { PickupPointService } from './service-api-pickupPoint';
 
 export class PickupPointListResolverService implements Resolve<IPickupPoint[]>{
 
-    dateIn: string
-
     constructor(private pickupPointService: PickupPointService) { }
 
     resolve(route: ActivatedRouteSnapshot): Observable<IPickupPoint[]> {

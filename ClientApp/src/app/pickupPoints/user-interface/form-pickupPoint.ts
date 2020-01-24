@@ -39,7 +39,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
         userName: ''
     })
 
-    // #endregion Init
+    // #endregion
 
     constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, public dialog: MatDialog, private interactionService: BaseInteractionService, private snackbarService: SnackbarService, private dialogService: DialogService) {
         this.activatedRoute.params.subscribe(p => {
@@ -58,7 +58,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
     ngOnInit() {
         this.scrollToForm()
         this.addShortcuts()
-        this.subscribeToInderactionService()
+        this.subscribeTointeractionService()
     }
 
     ngAfterViewInit() {
@@ -97,7 +97,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
 
     /**
      * Caller(s):
-     *  Class - subscribeToInderactionService()
+     *  Class - subscribeTointeractionService()
      * 
      * Description:
      *  Deletes the current record
@@ -116,7 +116,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
 
     /**
      * Caller(s):
-     *  Class - subscribeToInderactionService()
+     *  Class - subscribeTointeractionService()
      * 
      * Description:
      *  Adds or updates an existing record
@@ -199,7 +199,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
      */
     private getPickupPoint() {
         if (this.id) {
-            this.pickupPointService.getSingle(this.id).subscribe(result => {
+            this.pickupPointService.getSingle(this.id).then(result => {
                 this.pickupPoint = result
                 this.populateFields(this.pickupPoint)
             })
@@ -326,7 +326,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
      * Description:
      *  Accepts data from the wrapper through the interaction service and decides which action to perform
      */
-    private subscribeToInderactionService() {
+    private subscribeTointeractionService() {
         this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             if (response == 'saveRecord') this.saveRecord()
             if (response == 'deleteRecord') this.deleteRecord()

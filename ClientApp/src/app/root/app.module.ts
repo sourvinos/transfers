@@ -34,12 +34,10 @@ import { HomeComponent } from './../home/home.component'
 import { LoginComponent } from '../login/user-interface/form-login'
 import { CustomerListComponent } from '../customers/user-interface/list-customer'; import { CustomerFormComponent } from '../customers/user-interface/form-customer'
 import { DestinationListComponent } from '../destinations/user-interface/list-destination'; import { DestinationFormComponent } from '../destinations/user-interface/form-destination'
-import { DriverListComponent } from './../drivers/driver-list.component'; import { DriverFormComponent } from './../drivers/driver-form.component'
-import { PortListComponent } from './../ports/port-list.component'; import { PortFormComponent } from './../ports/port-form.component'
-import { RouteListComponent } from '../routes/route-list.component'; import { RouteFormComponent } from '../routes/route-form.component'
-import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component'; import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'
+import { DriverListComponent } from '../drivers/user-interface/list-driver'; import { DriverFormComponent } from '../drivers/user-interface/form-driver'
+import { PortListComponent } from '../ports/user-interface/list-port'; import { PortFormComponent } from '../ports/user-interface/form-port'
+import { RouteListComponent } from '../routes/user-interface/list-route'; import { RouteFormComponent } from '../routes/user-interface/form-route'
 import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'; import { TableTransferComponent } from '../transfers/user-interface/table-transfer'
-import { VatStateListComponent } from '../vatStates/vatState-list.component'; import { VatStateFormComponent } from '../vatStates/vatState-form.component'
 import { WrapperPickupPointComponent } from '../pickupPoints/user-interface/wrapper-pickupPoint'; import { ListPickupPointComponent } from '../pickupPoints/user-interface/list-pickupPoint'; import { FormPickupPointComponent } from '../pickupPoints/user-interface/form-pickupPoint'; import { TablePickupPointComponent } from '../pickupPoints/user-interface/table-pickupPoint'
 // Directives
 import { InputTabStopDirective } from '../directives/input-tabstop.directive'
@@ -48,6 +46,7 @@ import { DomChangeDirective } from '../directives/dom-change.directive'
 // Pipes
 import { CustomPipe } from '../pipes/custom.pipe'
 import { SafeStylePipe } from './../pipes/safeStyle'
+
 
 @NgModule({
     declarations: [
@@ -69,10 +68,8 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         DriverListComponent, DriverFormComponent,
         PortListComponent, PortFormComponent,
         RouteListComponent, RouteFormComponent,
-        TaxOfficeListComponent, TaxOfficeFormComponent,
         WrapperTransferComponent, ListTransferComponent, FormTransferComponent, TableTransferComponent,
         WrapperPickupPointComponent, ListPickupPointComponent, FormPickupPointComponent, TablePickupPointComponent,
-        VatStateListComponent, VatStateFormComponent,
         // Directives
         InputTabStopDirective,
         InputFormatDirective,

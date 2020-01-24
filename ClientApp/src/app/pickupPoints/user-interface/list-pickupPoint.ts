@@ -1,15 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Params, Router, Route } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IRoute } from 'src/app/models/route';
 import { PickupPointService } from 'src/app/pickupPoints/classes/service-api-pickupPoint';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
-import { RouteService } from 'src/app/services/route.service';
 import { IPickupPoint } from './../classes/model-pickupPoint';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { RouteService } from 'src/app/routes/classes/service-api-route';
 
 @Component({
     selector: 'list-pickupPoint',
@@ -23,7 +22,7 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
 
     routeId: string
 
-    routes: IRoute[] = []
+    routes: Route[] = []
     pickupPoints: IPickupPoint[] = []
 
     headers = ['Id', 'Description', 'Exact point', 'Time']
@@ -37,14 +36,14 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    // #endregion Init
+    // #endregion
 
     constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, public dialog: MatDialog, private formBuilder: FormBuilder, private routeService: RouteService, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService) {
         this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.routeId != '' && this.router.url.split('/').length == 4) {
                 this.mustRefresh = true
-                this.loadPickupPoints()
+                this.loadRecords()
             }
         })
     }
@@ -65,7 +64,14 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
         this.unlisten && this.unlisten()
     }
 
-    private loadPickupPoints() {
+    /**
+     * Caller(s):
+     *  Class - constructor
+     * 
+     * Description:
+     *  Self-explanatory
+     */
+    private loadRecords() {
         this.pickupPoints = this.activatedRoute.snapshot.data['pickupPointList']
     }
 
@@ -90,7 +96,7 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Class - subscribeToInderactionService()
+     *  Class - subscribeTointeractionService()
      * 
      * Description:
      *  Self-explanatory
@@ -106,7 +112,7 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
      *  Class - editRecord()
      * 
      * Description:
-     *  Navigates to the edit route
+     *  Self-explanatory
      * 
      * @param id 
      */

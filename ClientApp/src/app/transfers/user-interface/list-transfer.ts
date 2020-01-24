@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
-import { ITransferFlat } from '../classes/model-transfer-flat';
+import { TransferFlat } from '../classes/model-transfer-flat';
 import { TransferService } from '../classes/service-api-transfer';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 
@@ -38,7 +38,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     checkedDrivers: boolean = true
     checkedPorts: boolean = true
 
-    transfersFlat: ITransferFlat[] = []
+    transfersFlat: TransferFlat[] = []
 
     headers = ['S', 'Id', 'Dest', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
     widths = ['40px', '100px', '50px', '100px', '200px', '200px', '60px', '40px', '40px', '40px', '40px', '100px', '100px']
@@ -184,7 +184,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
 
     /**
      * Caller(s):
-     *  Class - subscribeToInderactionService()
+     *  Class - subscribeTointeractionService()
      * 
      * Description:
      *  Self-explanatory

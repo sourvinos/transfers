@@ -1,36 +1,19 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { DataService } from 'src/app/services/data.service'
 import { Observable } from 'rxjs'
-import { IQueryResult } from 'src/app/models/queryResult'
-import { ITransfer } from './model-transfer'
+import { QueryResult } from './model-viewModel-transfer'
 
 @Injectable({ providedIn: 'root' })
 
-export class TransferService {
+export class TransferService extends DataService {
 
-    private url: string = '/api/transfers'
-
-    constructor(private http: HttpClient) { }
-
-    getTransfers(date: string): Observable<IQueryResult[]> {
-        return this.http.get<IQueryResult[]>(this.url + '/date/' + date)
+    constructor(http: HttpClient) {
+        super(http, '/api/transfers')
     }
 
-    getTransfer(id: number): Observable<ITransfer> {
-        return this.http.get<ITransfer>(this.url + '/' + id.toString())
-    }
-
-    addTransfer(formData: ITransfer): Observable<ITransfer> {
-        return this.http.post<ITransfer>(this.url, formData)
-    }
-
-    updateTransfer(id: number, formData: ITransfer): Observable<ITransfer> {
-        console.log('updating', formData)
-        return this.http.put<ITransfer>(this.url + '/' + id, formData)
-    }
-
-    deleteTransfer(id: number): Observable<ITransfer> {
-        return this.http.delete<ITransfer>(this.url + '/' + id)
+    getTransfers(date: string): Observable<QueryResult[]> {
+        return this.http.get<QueryResult[]>('/api/transfers/date/' + date)
     }
 
     assignDriver(driverId: string, ids: string[]) {

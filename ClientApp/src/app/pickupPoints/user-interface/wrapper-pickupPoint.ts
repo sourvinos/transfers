@@ -5,11 +5,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil, startWith, map } from 'rxjs/operators';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
-import { IRoute } from './../../models/route';
-import { RouteService } from './../../services/route.service';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 import { FormControl } from '@angular/forms';
 import { Utils } from 'src/app/shared/classes/utils';
+import { RouteService } from 'src/app/routes/classes/service-api-route';
+import { Route } from 'src/app/routes/classes/model-route';
 
 @Component({
     selector: 'wrapper-pickupPoint',
@@ -23,21 +23,21 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
 
     id: string = ''
     routeDescription = new FormControl()
-    routes: IRoute[] = []
-    filteredRoutes: Observable<IRoute[]>
+    routes: Route[] = []
+    filteredRoutes: Observable<Route[]>
 
     recordStatus: string = 'empty'
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    // #endregion Init
+    // #endregion
 
     constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionPickupPointService: BaseInteractionService, public dialog: MatDialog, private routeService: RouteService) { }
 
     ngOnInit(): void {
         this.addShortcuts()
-        this.subscribeToInderactionService()
+        this.subscribeTointeractionService()
         this.populateDropDowns()
         this.trackChangesInAutoComplete()
         this.focus('routeDescription')
@@ -152,11 +152,11 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
      * Description:
      *  Filters the array according to the given characters
      * 
-     * @param abbreviation 
+     * @param abbreviation
      */
-    private filter(abbreviation: string): IRoute[] {
+    private filter(abbreviation: string) {
         const filterValue = abbreviation.toLowerCase()
-        return this.routes.filter(option => option.abbreviation.toLowerCase().indexOf(filterValue) === 0)
+        return this.routes.filter(o => o.abbreviation.toLowerCase().indexOf(filterValue) === 0)
     }
 
     /**
@@ -203,7 +203,7 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
      *  Self-explanatory
      */
     private populateDropDowns() {
-        this.routeService.getRoutes().subscribe((result: any) => {
+        this.routeService.getAll().subscribe((result: any) => {
             this.routes = result
         })
     }
@@ -215,7 +215,7 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
      * Description:
      *  Gets the record status from the form through the interaction service
          */
-    private subscribeToInderactionService(): void {
+    private subscribeTointeractionService(): void {
         this.updateRecordStatus()
     }
 
@@ -237,7 +237,7 @@ export class WrapperPickupPointComponent implements OnInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Class - subscribeToInderactionService()
+     *  Class - subscribeTointeractionService()
      * 
      * Description:
      *  Gets the record status from the form through the interaction service

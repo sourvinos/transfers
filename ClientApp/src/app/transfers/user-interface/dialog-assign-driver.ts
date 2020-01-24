@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { IDriver } from './../../models/driver';
+import { Driver } from 'src/app/drivers/classes/model-driver';
 
 @Component({
     selector: 'dialog-assign-driver',
@@ -15,8 +15,8 @@ export class DialogAssignDriverComponent {
 
     id: string = ''
     driverDescription = new FormControl()
-    drivers: IDriver[] = []
-    filteredDrivers: Observable<IDriver[]>
+    drivers: Driver[] = []
+    filteredDrivers: Observable<Driver[]>
 
     constructor(private dialogRef: MatDialogRef<DialogAssignDriverComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
@@ -51,7 +51,7 @@ export class DialogAssignDriverComponent {
      * 
      * @param description 
      */
-    private filter(description: string): IDriver[] {
+    private filter(description: string): Driver[] {
         const filterValue = description.toLowerCase()
         return this.drivers.filter(option => option.description.toLowerCase().indexOf(filterValue) === 0)
     }

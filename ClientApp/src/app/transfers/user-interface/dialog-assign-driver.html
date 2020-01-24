@@ -7,7 +7,7 @@
     <div id="dialog-content">
         <mat-form-field>
             <input type="text" placeholder="Driver" matInput [formControl]="driverDescription" [inputFormat]="'text'" id="driverDescription" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectionChanged($event)">
+            <mat-autocomplete #auto="matAutocomplete" class="scrollable" (optionSelected)="onSelectionChanged($event)">
                 <mat-option *ngFor="let driver of filteredDrivers | async" [value]="driver.description" [id]="driver.id">
                     {{ driver.description }}
                 </mat-option>

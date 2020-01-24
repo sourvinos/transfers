@@ -1,12 +1,10 @@
-import { IRoute } from "src/app/models/route";
+import { KeyValuePair } from "src/app/shared/classes/model-keyValuePair";
 
-export interface IPickupPoint {
-    id: number
+export interface IPickupPoint extends KeyValuePair {
     route: {
         id: number
         description: string
     }
-    description: string
     exactPoint: string
     time: string
     userName: string

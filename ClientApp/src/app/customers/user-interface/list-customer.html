@@ -3,16 +3,15 @@
         <h1>Customers</h1>
     </div>
     <div id="search-box">
-        <form autocomplete="off">
-            <mat-form-field>
-                <input type="text" matInput placeholder="Search" id="searchField" #query (keyup)="filter(query.value)" autocomplete="off">
-            </mat-form-field>
-        </form>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Search" id="searchField" #query (keyup)="filter(query.value)" autocomplete="off">
+            <mat-hint>Enter anything!</mat-hint>
+        </mat-form-field>
     </div>
 </div>
 
-<div id="content">
-    <custom-table [records]="filteredCustomers" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></custom-table>
+<div id="content" class="scrollable">
+    <custom-table [records]="filteredRecords" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></custom-table>
 </div>
 
 <div id="footer">

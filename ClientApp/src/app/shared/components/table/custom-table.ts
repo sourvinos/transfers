@@ -1,5 +1,6 @@
 import { Component, HostListener, Input, IterableChanges, IterableDiffer, IterableDiffers } from '@angular/core'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { IndexInteractionService } from '../../services/index-interaction.service'
 
 @Component({
     selector: 'custom-table',
@@ -29,7 +30,7 @@ export class CustomTableComponent {
 
     // #endregion
 
-    constructor(private baseInteractionService: BaseInteractionService, private iterableDiffers: IterableDiffers) { }
+    constructor(private baseInteractionService: BaseInteractionService, private indexInteractionService: IndexInteractionService, private iterableDiffers: IterableDiffers) { }
 
     @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
         if (event.key == 'Enter') this.sendRowToService()
@@ -164,7 +165,9 @@ export class CustomTableComponent {
      *  Sends the selected row to the service so that the parent (list) can call the editRecord method
      */
     private sendRowToService() {
+        console.log(this.records[this.currentRow - 1])
         this.baseInteractionService.sendObject(this.records[this.currentRow - 1])
+        this.indexInteractionService.sendObject(this.records[this.currentRow - 1])
     }
 
     /**

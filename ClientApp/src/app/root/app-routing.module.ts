@@ -4,29 +4,26 @@ import { RouterModule, Routes } from '@angular/router'
 import { HomeComponent } from '../home/home.component'
 import { LoginComponent } from '../login/user-interface/form-login'
 import { CustomerListComponent } from '../customers/user-interface/list-customer'; import { CustomerFormComponent } from '../customers/user-interface/form-customer'
-import { DestinationListComponent } from './../destinations/user-interface/list-destination'; import { DestinationFormComponent } from '../destinations/user-interface/form-destination';
-import { DriverListComponent } from '../drivers/driver-list.component'; import { DriverFormComponent } from '../drivers/driver-form.component'
-import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
-import { PortListComponent } from '../ports/port-list.component'; import { PortFormComponent } from '../ports/port-form.component'
-import { RouteListComponent } from '../routes/route-list.component'; import { RouteFormComponent } from '../routes/route-form.component'
-import { TaxOfficeListComponent } from '../taxOffices/taxOffice-list.component'; import { TaxOfficeFormComponent } from '../taxOffices/taxOffice-form.component'
-import { VatStateListComponent } from '../vatStates/vatState-list.component'; import { VatStateFormComponent } from '../vatStates/vatState-form.component'
+import { DestinationListComponent } from './../destinations/user-interface/list-destination'; import { DestinationFormComponent } from '../destinations/user-interface/form-destination'
+import { DriverListComponent } from '../drivers/user-interface/list-driver'; import { DriverFormComponent } from '../drivers/user-interface/form-driver'
+import { PortListComponent } from './../ports/user-interface/list-port'; import { PortFormComponent } from '../ports/user-interface/form-port'
+import { RouteListComponent } from '../routes/user-interface/list-route'; import { RouteFormComponent } from '../routes/user-interface/form-route'
 import { WrapperPickupPointComponent } from '../pickupPoints/user-interface/wrapper-pickupPoint'; import { ListPickupPointComponent } from '../pickupPoints/user-interface/list-pickupPoint'; import { FormPickupPointComponent } from '../pickupPoints/user-interface/form-pickupPoint'
 import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'
 // Guards
-import { AuthGuardService } from '../services/auth-guard.service';
+import { AuthGuardService } from '../services/auth-guard.service'
 import { CanDeactivateGuard } from '../services/can-deactivate-guard.service'
 // Resolvers
 import { CustomerListResolverService } from '../customers/classes/resolver-list-customer'
 import { DestinationListResolverService } from '../destinations/classes/resolver-list-destination'
-import { DriverListResolverService } from './../drivers/driver-list-resolver.service'
+import { DriverListResolverService } from '../drivers/classes/resolver-list-driver'
 import { PickupPointListResolverService } from '../pickupPoints/classes/resolver-list-pickupPoint'
-import { PortListResolverService } from '../ports/port-list-resolver.service'
-import { RouteListResolverService } from '../routes/route-list-resolver.service'
-import { TaxOfficeListResolverService } from '../taxOffices/port-list-resolver.service'
+import { RouteListResolverService } from '../routes/classes/resolver-list-route'
 import { TransferEditResolverService } from '../transfers/classes/resolver-edit-transfer'
 import { TransferListResolverService } from '../transfers/classes/resolver-list-transfer'
-import { VatStateListResolverService } from '../vatStates/vatState-list-resolver.service'
+import { PortListResolverService } from '../ports/classes/resolver-list-port'
+
+import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
 
 const appRoutes: Routes = [
 	{ path: '', component: HomeComponent, canActivate: [AuthGuardService], pathMatch: 'full' },
@@ -45,7 +42,6 @@ const appRoutes: Routes = [
 	},
 	{ path: 'ports', component: PortListComponent, canActivate: [AuthGuardService], resolve: { portList: PortListResolverService } }, { path: 'ports/new', component: PortFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'ports/:id', component: PortFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
 	{ path: 'routes', component: RouteListComponent, canActivate: [AuthGuardService], resolve: { routeList: RouteListResolverService } }, { path: 'routes/new', component: RouteFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'routes/:id', component: RouteFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
-	{ path: 'taxOffices', component: TaxOfficeListComponent, resolve: { taxOfficeList: TaxOfficeListResolverService } }, { path: 'taxOffices/new', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] }, { path: 'taxOffices/:id', component: TaxOfficeFormComponent, canDeactivate: [CanDeactivateGuard] },
 	{
 		path: 'transfers', component: WrapperTransferComponent, canActivate: [AuthGuardService], children: [
 			{
@@ -55,7 +51,6 @@ const appRoutes: Routes = [
 				], runGuardsAndResolvers: 'always'
 			}]
 	},
-	{ path: 'vatStates', component: VatStateListComponent, canActivate: [AuthGuardService], resolve: { vatStateList: VatStateListResolverService } }, { path: 'vatStates/new', component: VatStateFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'vatStates/:id', component: VatStateFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
 	{ path: 'pageNotFound', component: PageNotFoundComponent }
 ]
 
