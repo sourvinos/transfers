@@ -339,8 +339,6 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private patchFields(result: any, fields: any[]) {
         if (result) {
-            console.log('patch', result)
-            console.log('fields', fields)
             Object.entries(result).forEach(([key, value]) => {
                 this.form.patchValue({ [key]: value })
             })

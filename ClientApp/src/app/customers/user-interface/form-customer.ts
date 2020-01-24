@@ -236,9 +236,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
                         email: result.email,
                         userName: result.userName
                     })
-                },
-                error => {
-                    Utils.errorLogger(error)
                 })
         }
     }

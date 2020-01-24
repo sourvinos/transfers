@@ -1,4 +1,5 @@
-import { Component, HostListener, Input, IterableChanges, IterableDiffer, IterableDiffers } from '@angular/core'
+import { Component, Input, IterableDiffer, IterableDiffers } from '@angular/core'
+import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 import { IndexInteractionService } from '../../services/index-interaction.service'
 
@@ -28,21 +29,23 @@ export class CustomTableComponent {
 
     differences: IterableDiffer<any>;
 
+    unlisten: Unlisten
+
     // #endregion
 
-    constructor(private baseInteractionService: BaseInteractionService, private indexInteractionService: IndexInteractionService, private iterableDiffers: IterableDiffers) { }
-
-    @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
-        if (event.key == 'Enter') this.sendRowToService()
-        if (event.key == 'ArrowUp' || event.key == 'ArrowDown') this.gotoRow(event.key)
-    }
+    constructor(private baseInteractionService: BaseInteractionService, private indexInteractionService: IndexInteractionService, private iterableDiffers: IterableDiffers, private keyboardShortcutsService: KeyboardShortcuts) { }
 
     ngOnInit() {
         this.differences = this.iterableDiffers.find(this.records).create();
     }
 
     ngAfterViewInit() {
+        this.addShortcuts()
         this.initVariables()
+    }
+
+    ngOnDestroy() {
+        this.unlisten && this.unlisten()
     }
 
     /**
@@ -61,6 +64,33 @@ export class CustomTableComponent {
 
     /**
      * Caller(s):
+     *  Class - ngAfterViewInit()
+     * 
+     * Description:
+     *  Just read me!
+     */
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            "Enter": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                this.sendRowToService()
+            },
+            "Up": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                this.gotoRow('Up')
+            },
+            "Down": (event: KeyboardEvent): void => {
+                event.preventDefault()
+                this.gotoRow('Down')
+            }
+        }, {
+            priority: 3,
+            inputs: true
+        })
+    }
+
+    /**
+     * Caller(s):
      *  Class - HostListener()
      *  Class - onDomChange()
      *  Template - gotoRow()
@@ -68,23 +98,26 @@ export class CustomTableComponent {
      * Description:
      *  Highlights the next / previous row according to the arrow keys or highlights the clicked row
      * 
-     * @param key // The pressed key code or the line number to goto directly
+     * @param key // The pressed key code or the line number to go to directly
      */
     private gotoRow(key: any) {
         if (!isNaN(key)) {
             this.unselectAllRows()
             this.selectRow(this.table, key)
+            this.sendRowToIndexService()
         }
-        if (key == 'ArrowUp' && this.currentRow > 1) {
+        if (key == 'Up' && this.currentRow > 1) {
             this.unselectRow()
             this.selectRow(this.table, 'up')
+            this.sendRowToIndexService()
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
                 this.tableContainer.scrollTop = (this.currentRow - 1) * this.rowHeight
             }
         }
-        if (key == 'ArrowDown' && this.currentRow < this.rowCount) {
+        if (key == 'Down' && this.currentRow < this.rowCount) {
             this.unselectRow()
             this.selectRow(this.table, 'down')
+            this.sendRowToIndexService()
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
                 document.getElementById("line-" + this.currentRow.toString()).scrollIntoView({ block: "end" })
             }
@@ -159,14 +192,39 @@ export class CustomTableComponent {
 
     /**
      * Caller(s):
+     *  Class - addShortcuts()
+     * 
+     * Description:
+     *  If the dialog exists, close it
+     *  If the dialog does not exist, send the row to the service
+     */
+    private sendRowToService() {
+        if (document.getElementsByClassName('mat-dialog-container').length == 0) {
+            this.sendRowToBaseService()
+        } else {
+            this.indexInteractionService.action(true)
+        }
+    }
+
+    /**
+     * Caller(s):
      *  Class - HostListener()
      * 
      * Description:
      *  Sends the selected row to the service so that the parent (list) can call the editRecord method
      */
-    private sendRowToService() {
-        console.log(this.records[this.currentRow - 1])
+    private sendRowToBaseService() {
         this.baseInteractionService.sendObject(this.records[this.currentRow - 1])
+    }
+
+    /**
+     * Caller(s):
+     *  Class - addShortcuts()
+     * 
+     * Description:
+     *  On every arrow press, send the row to the service
+     */
+    private sendRowToIndexService() {
         this.indexInteractionService.sendObject(this.records[this.currentRow - 1])
     }
 

@@ -49,11 +49,9 @@ export class DialogIndexComponent implements OnInit, OnDestroy {
 	}
 
 	private subscribeToIndexinteractionService() {
-		console.log('Subscribing to index interaction service')
 		this.indexInteractionService.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
 			this.selectedRecord = response
 			this.indexInteractionService.dialogMustClose.subscribe(response => {
-				console.log('Response', response)
 				if (response) {
 					this.dialogRef.close(this.selectedRecord);
 				}

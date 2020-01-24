@@ -37,7 +37,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         id: 0,
         abbreviation: ['', [Validators.maxLength(10)]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
-        portId: [''], portDescription: [''],
+        portId: ['', Validators.required], portDescription: ['', Validators.required],
         userName: ''
     })
 
@@ -336,8 +336,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private patchFields(result: any, fields: any[]) {
         if (result) {
-            console.log('patch', result)
-            console.log('fields', fields)
             Object.entries(result).forEach(([key, value]) => {
                 this.form.patchValue({ [key]: value })
             })
