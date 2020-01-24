@@ -34,14 +34,14 @@ namespace Transfers.Controllers
         [HttpGet]
         public async Task<IEnumerable<Customer>> Get()
         {
-            return await context.Customers.Include(x => x.TaxOffice).Include(x => x.VATState).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+            return await context.Customers.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
         }
 
         // GET: api/customers/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomer(int id)
         {
-            Customer customer = await context.Customers.Include(x => x.TaxOffice).Include(x => x.VATState).SingleOrDefaultAsync(m => m.Id == id);
+            Customer customer = await context.Customers.SingleOrDefaultAsync(m => m.Id == id);
 
             if (customer == null) return NotFound();
 
