@@ -21,6 +21,7 @@
             <li *ngIf="(loginStatus | async)" [routerLink]="['/ports']" routerLinkActive="active">Ports</li>
             <li *ngIf="(loginStatus | async)" [routerLink]="['/routes']" routerLinkActive="active">Routes</li>
             <li *ngIf="(loginStatus | async)" [routerLink]="['/transfers']" routerLinkActive="active">Transfers</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/register']" routerLinkActive="active">Register</li>
             <li *ngIf="(loginStatus | async)" (click)="logout()" routerLinkActive="active">Logout</li>
         </ul>
     </div>

@@ -8,7 +8,8 @@ import { map } from 'rxjs/operators'
 
 export class AccountService {
 
-    private url: string = "/api/token/login"
+    private loginUrl: string = "/api/token/login"
+    private registerUrl: string = 'api/account/register'
     private userName = new BehaviorSubject<string>(localStorage.getItem('userName'))
     private displayName = new BehaviorSubject<string>(localStorage.getItem('displayName'))
     private userRole = new BehaviorSubject<string>(localStorage.getItem('userRole'))
@@ -18,7 +19,7 @@ export class AccountService {
 
     login(userName: string, password: string) {
         const grantType = "password"
-        return this.http.post<any>(this.url, { userName, password, grantType }).pipe(
+        return this.http.post<any>(this.loginUrl, { userName, password, grantType }).pipe(
             map(result => {
                 if (result && result.authToken.token) {
                     this.loginStatus.next(true)
@@ -49,12 +50,20 @@ export class AccountService {
         this.router.navigate(['/login'])
     }
 
+    register(formData: any) {
+        return this.http.post<any>(this.registerUrl, formData).pipe(
+            map(result => {
+                console.log('Registration successful!', result)
+            })
+        )
+    }
+
     getNewRefreshToken(): Observable<any> {
         console.log('getNewRefreshToken')
         let userName = localStorage.getItem('userName')
         let refreshToken = localStorage.getItem('refreshToken')
         const grantType = "refresh_token"
-        return this.http.post<any>(this.url, { userName, refreshToken, grantType }).pipe(
+        return this.http.post<any>(this.loginUrl, { userName, refreshToken, grantType }).pipe(
             map(result => {
                 if (result && result.authToken.token) {
                     this.loginStatus.next(true)

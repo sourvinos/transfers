@@ -1,3 +1,4 @@
+import { RegisterComponent } from './../register/user-interface/form-register';
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 // Routes
@@ -51,6 +52,7 @@ const appRoutes: Routes = [
 				], runGuardsAndResolvers: 'always'
 			}]
 	},
+	{ path: 'register', component: RegisterComponent },
 	{ path: 'pageNotFound', component: PageNotFoundComponent }
 ]
 

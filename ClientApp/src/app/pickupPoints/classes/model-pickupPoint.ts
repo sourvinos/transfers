@@ -1,6 +1,6 @@
 import { KeyValuePair } from "src/app/shared/classes/model-keyValuePair";
 
-export interface IPickupPoint extends KeyValuePair {
+export class PickupPoint extends KeyValuePair {
     route: {
         id: number
         description: string

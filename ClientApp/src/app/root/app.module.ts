@@ -39,6 +39,7 @@ import { PortListComponent } from '../ports/user-interface/list-port'; import { 
 import { RouteListComponent } from '../routes/user-interface/list-route'; import { RouteFormComponent } from '../routes/user-interface/form-route'
 import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'; import { TableTransferComponent } from '../transfers/user-interface/table-transfer'
 import { WrapperPickupPointComponent } from '../pickupPoints/user-interface/wrapper-pickupPoint'; import { ListPickupPointComponent } from '../pickupPoints/user-interface/list-pickupPoint'; import { FormPickupPointComponent } from '../pickupPoints/user-interface/form-pickupPoint'; import { TablePickupPointComponent } from '../pickupPoints/user-interface/table-pickupPoint'
+import { RegisterComponent } from './../register/user-interface/form-register'
 // Directives
 import { InputTabStopDirective } from '../directives/input-tabstop.directive'
 import { InputFormatDirective } from '../directives/input-format.directive'
@@ -70,6 +71,7 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         RouteListComponent, RouteFormComponent,
         WrapperTransferComponent, ListTransferComponent, FormTransferComponent, TableTransferComponent,
         WrapperPickupPointComponent, ListPickupPointComponent, FormPickupPointComponent, TablePickupPointComponent,
+        RegisterComponent,
         // Directives
         InputTabStopDirective,
         InputFormatDirective,

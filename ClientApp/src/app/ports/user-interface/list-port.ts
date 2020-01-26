@@ -1,3 +1,4 @@
+import { PortService } from './../classes/service-api-port';
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Subject } from 'rxjs'
@@ -6,6 +7,7 @@ import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts
 import { Utils } from 'src/app/shared/classes/utils'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 import { Port } from '../classes/model-port'
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
     selector: 'list-port',
@@ -31,7 +33,7 @@ export class PortListComponent implements OnInit, OnDestroy {
 
     // #endregion
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService) {
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService, private portService: PortService) {
         this.loadRecords()
     }
 
@@ -174,10 +176,10 @@ export class PortListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/ports', id])
     }
 
-    // createPDF() {
-    //     this.portService.createPDF().subscribe((file: HttpResponse<Blob>) => {
-    //         window.location.href = file.url
-    //     })
-    // }
+    createPdf() {
+        this.portService.createPDF().subscribe((file: HttpResponse<Blob>) => {
+            window.location.href = file.url
+        })
+    }
 
 }
