@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PickupPointService } from 'src/app/pickupPoints/classes/service-api-pickupPoint';
 import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
-import { IPickupPoint } from './../classes/model-pickupPoint';
+import { PickupPoint } from './../classes/model-pickupPoint';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 import { RouteService } from 'src/app/routes/classes/service-api-route';
 
@@ -23,7 +23,7 @@ export class ListPickupPointComponent implements OnInit, OnDestroy {
     routeId: string
 
     routes: Route[] = []
-    pickupPoints: IPickupPoint[] = []
+    pickupPoints: PickupPoint[] = []
 
     headers = ['Id', 'Description', 'Exact point', 'Time']
     widths = ['0', '45%', '45%', '10%']

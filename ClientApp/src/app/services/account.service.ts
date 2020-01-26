@@ -19,7 +19,7 @@ export class AccountService {
 
     login(userName: string, password: string) {
         const grantType = "password"
-        return this.http.post<any>(this.loginUrl, { userName, password, grantType }).pipe(
+        const result = this.http.post<any>(this.loginUrl, { userName, password, grantType }).pipe(
             map(result => {
                 if (result && result.authToken.token) {
                     this.loginStatus.next(true)
@@ -37,6 +37,7 @@ export class AccountService {
                 return result
             })
         )
+        return result
     }
 
     logout() {
@@ -53,7 +54,7 @@ export class AccountService {
     register(formData: any) {
         return this.http.post<any>(this.registerUrl, formData).pipe(
             map(result => {
-                console.log('Registration successful!', result)
+                console.log('From the server', result)
             })
         )
     }

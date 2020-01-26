@@ -1,4 +1,3 @@
-import { RegisterComponent } from './../register/user-interface/form-register';
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 // Routes
@@ -8,6 +7,7 @@ import { CustomerListComponent } from '../customers/user-interface/list-customer
 import { DestinationListComponent } from './../destinations/user-interface/list-destination'; import { DestinationFormComponent } from '../destinations/user-interface/form-destination'
 import { DriverListComponent } from '../drivers/user-interface/list-driver'; import { DriverFormComponent } from '../drivers/user-interface/form-driver'
 import { PortListComponent } from './../ports/user-interface/list-port'; import { PortFormComponent } from '../ports/user-interface/form-port'
+import { RegisterComponent } from './../register/user-interface/form-register'
 import { RouteListComponent } from '../routes/user-interface/list-route'; import { RouteFormComponent } from '../routes/user-interface/form-route'
 import { WrapperPickupPointComponent } from '../pickupPoints/user-interface/wrapper-pickupPoint'; import { ListPickupPointComponent } from '../pickupPoints/user-interface/list-pickupPoint'; import { FormPickupPointComponent } from '../pickupPoints/user-interface/form-pickupPoint'
 import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'
@@ -52,7 +52,7 @@ const appRoutes: Routes = [
 				], runGuardsAndResolvers: 'always'
 			}]
 	},
-	{ path: 'register', component: RegisterComponent },
+	{ path: 'register', component: RegisterComponent, canActivate: [AuthGuardService] },
 	{ path: 'pageNotFound', component: PageNotFoundComponent }
 ]
 

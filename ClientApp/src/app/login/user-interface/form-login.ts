@@ -63,11 +63,12 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.router.navigateByUrl(this.returnUrl)
 			this.countdownService.reset()
 			this.countdownService.countdown.subscribe(data => { this.countdown = data })
-		},
-			error => {
-				this.invalidLogin = true
-				this.errorMessage = error.error.loginError
-			})
+		})
+		// ,
+		// 	error => {
+		// 		this.invalidLogin = true
+		// 		this.errorMessage = error.error.loginError
+		// 	})
 	}
 
     /**

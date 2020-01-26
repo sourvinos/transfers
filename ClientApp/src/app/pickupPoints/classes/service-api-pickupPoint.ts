@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IPickupPoint } from './model-pickupPoint';
+import { PickupPoint } from './model-pickupPoint';
 import { DataService } from 'src/app/services/data.service';
 
 @Injectable({ providedIn: 'root' })
@@ -12,8 +12,8 @@ export class PickupPointService extends DataService {
         super(http, '/api/pickupPoints')
     }
 
-    getAllForRoute(routeId: string): Observable<IPickupPoint[]> {
-        return this.http.get<IPickupPoint[]>('/api/pickupPoints/routeId/' + routeId)
+    getAllForRoute(routeId: string): Observable<PickupPoint[]> {
+        return this.http.get<PickupPoint[]>('/api/pickupPoints/routeId/' + routeId)
     }
 
 }

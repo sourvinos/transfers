@@ -11,23 +11,25 @@ export class JwtInterceptor implements HttpInterceptor {
     private isTokenRefreshing: boolean = false
     private tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null)
 
-    constructor(private acct: AccountService) { }
+    constructor(private accountService: AccountService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(this.attachTokenToRequest(request)).pipe(tap((event: HttpEvent<any>) => {
             if (event instanceof HttpResponse) { }
         }),
             catchError((err): Observable<any> => {
-                if (err instanceof HttpErrorResponse) {
-                    switch ((<HttpErrorResponse>err).status) {
-                        case 400:
-                            return <any>this.acct.logout()
-                        case 401:
-                            console.log("Token expired. Attempting refresh ...")
-                            return this.handleHttpResponseError(request, next)
+                if (this.isUserLoggedIn()) {
+                    if (err instanceof HttpErrorResponse) {
+                        switch ((<HttpErrorResponse>err).status) {
+                            case 400:
+                                return <any>this.accountService.logout()
+                            case 401:
+                                console.log("Token expired. Attempting refresh ...")
+                                return this.handleHttpResponseError(request, next)
+                        }
+                    } else {
+                        return throwError(this.handleError)
                     }
-                } else {
-                    return throwError(this.handleError)
                 }
             })
         )
@@ -36,6 +38,10 @@ export class JwtInterceptor implements HttpInterceptor {
     private attachTokenToRequest(request: HttpRequest<any>) {
         var token = localStorage.getItem('jwt')
         return request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+    }
+
+    private isUserLoggedIn() {
+        return localStorage.getItem('loginStatus') == '1'
     }
 
     private handleError(errorResponse: HttpErrorResponse) {
@@ -52,7 +58,7 @@ export class JwtInterceptor implements HttpInterceptor {
         if (!this.isTokenRefreshing) {
             this.isTokenRefreshing = true
             this.tokenSubject.next(null)
-            return this.acct.getNewRefreshToken().pipe(
+            return this.accountService.getNewRefreshToken().pipe(
                 switchMap((tokenresponse: any) => {
                     if (tokenresponse) {
                         this.tokenSubject.next(tokenresponse.authToken.token)
@@ -66,10 +72,10 @@ export class JwtInterceptor implements HttpInterceptor {
                         console.log("Token refreshed...")
                         return next.handle(this.attachTokenToRequest(request))
                     }
-                    return <any>this.acct.logout()
+                    return <any>this.accountService.logout()
                 }),
                 catchError(err => {
-                    this.acct.logout()
+                    this.accountService.logout()
                     return this.handleError(err)
                 }),
                 finalize(() => {

@@ -94,7 +94,6 @@ export class DriverListComponent implements OnInit, OnDestroy {
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             "Escape": (event: KeyboardEvent): void => {
-                console.log('Escaping...')
                 if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
                     this.goBack()
                 }

@@ -10,7 +10,7 @@ import { SnackbarService } from 'src/app/services/snackbar.service';
 import { PickupPointService } from '../classes/service-api-pickupPoint';
 import { DialogService } from './../../services/dialog.service';
 import { Utils } from './../../shared/classes/utils';
-import { IPickupPoint } from './../classes/model-pickupPoint';
+import { PickupPoint } from './../classes/model-pickupPoint';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
     // #region Init
 
     id: number
-    pickupPoint: IPickupPoint
+    pickupPoint: PickupPoint
     url: string = '/pickupPoints'
 
     unlisten: Unlisten
@@ -228,7 +228,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
      * 
      * @param result 
      */
-    private populateFields(result: IPickupPoint) {
+    private populateFields(result: PickupPoint) {
         this.form.setValue({
             id: result.id,
             routeId: result.route.id,

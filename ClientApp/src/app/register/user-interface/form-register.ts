@@ -1,22 +1,23 @@
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core'
-import { AccountService } from 'src/app/services/account.service'
-import { FormBuilder, Validators } from '@angular/forms'
-import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service'
-import { Subject } from 'rxjs'
-import { Utils } from 'src/app/shared/classes/utils'
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { AccountService } from 'src/app/services/account.service';
+import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
+import { Utils } from 'src/app/shared/classes/utils';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'form-register',
     templateUrl: './form-register.html',
-    styleUrls: ['./form-register.css']
+    styleUrls: ['../../shared/styles/forms.css']
 })
 
 export class RegisterComponent implements OnInit {
 
     // #region Init
 
-    url: string = '/account/register'
+    url: string = '/'
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
@@ -30,14 +31,14 @@ export class RegisterComponent implements OnInit {
 
     // #endregion
 
-    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private http: HttpClient) { }
+    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private router: Router) { }
 
     ngOnInit() {
         this.addShortcuts()
     }
 
     ngAfterViewInit() {
-        this.focus('userName')
+        this.focus('email')
     }
 
     ngOnDestroy(): void {
@@ -48,13 +49,19 @@ export class RegisterComponent implements OnInit {
 
     /**
      * Caller(s):
-     *  Template - login()
+     *  Template - register()
      * 
      * Description:
      *  Self-explanatory
      */
     register() {
-        this.accountService.register(this.form.value).subscribe(result => { console.log(result) })
+        if (!this.form.valid) return
+        this.accountService.register(this.form.value).subscribe(result => {
+            alert(result)
+            if (result != null) {
+                this.goBack()
+            }
+        })
     }
 
     /**
@@ -79,6 +86,7 @@ export class RegisterComponent implements OnInit {
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
+
      * Description:
      *  Calls the public method()
      * 
@@ -86,6 +94,17 @@ export class RegisterComponent implements OnInit {
      */
     private focus(field: string) {
         Utils.setFocus(field)
+    }
+
+    /**
+     * Caller(s): 
+     *  Class - canDeactive(), deleteRecord(), saveRecord()
+     * 
+     * Description:
+     *  On successful user creation, goes to the home page
+     */
+    private goBack() {
+        this.router.navigate([this.url])
     }
 
     // #region Helper properties
