@@ -5,13 +5,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
-import { Utils } from 'src/app/shared/classes/utils';
-import { TransferService } from './../classes/service-api-transfer';
-import { DialogAssignDriverComponent } from './dialog-assign-driver';
-import { SnackbarService } from 'src/app/services/snackbar.service';
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 import { DriverService } from 'src/app/drivers/classes/service-api-driver';
+import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
+import { SnackbarService } from 'src/app/services/snackbar.service';
+import { Utils } from 'src/app/shared/classes/utils';
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { TransferFlat } from 'src/app/transfers/classes/model-transfer-flat';
+import { TransferService } from './../classes/service-api-transfer';
+import { PdfService } from './../classes/service-pdf-transfer';
+import { DialogAssignDriverComponent } from './dialog-assign-driver';
 
 @Component({
     selector: 'wrapper-transfer',
@@ -26,16 +28,18 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     dateIn: string = '01/10/2019'
     dateInISO: string = ''
     records: string[] = []
+    drivers: string[] = []
+    transfersFlat: TransferFlat[] = []
 
     recordStatus: string = 'empty'
     hasTableData: boolean = false
 
     unlisten: Unlisten
-    ngUnsubscribe = new Subject<void>();
+    ngUnsubscribe = new Subject<void>()
 
     // #endregion
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionService: BaseInteractionService, private transferService: TransferService, public dialog: MatDialog, private driverService: DriverService, private snackbarService: SnackbarService) { }
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionService: BaseInteractionService, private transferService: TransferService, public dialog: MatDialog, private driverService: DriverService, private snackbarService: SnackbarService, private pdfService: PdfService) { }
 
     ngOnInit(): void {
         this.addShortcuts()
@@ -44,10 +48,52 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.unsubscribe();
+        this.ngUnsubscribe.next()
+        this.ngUnsubscribe.unsubscribe()
         this.unlisten && this.unlisten()
         this.removeSelectedIdsFromLocalStorage()
+    }
+
+    /**
+     * Caller(s):
+     *  Template - assignDriver()
+     * 
+     * Description:
+     *  Assign a driver to the checked records
+     */
+    assignDriver(): void {
+        if (this.isRecordSelected()) {
+            const dialogRef = this.dialog.open(DialogAssignDriverComponent, {
+                height: '350px',
+                width: '550px',
+                data: {
+                    title: 'Assign driver',
+                    drivers: this.driverService.getAll(),
+                    actions: ['cancel', 'ok']
+                },
+                panelClass: 'dialog'
+            })
+            dialogRef.afterClosed().subscribe(result => {
+                if (result != undefined) {
+                    this.transferService.assignDriver(result, this.records).subscribe(() => {
+                        this.removeSelectedIdsFromLocalStorage()
+                        this.navigateToList()
+                        this.showSnackbar('All records have been processed', 'info')
+                    })
+                }
+            })
+        }
+    }
+
+    /**
+     * Caller(s):
+     *  Template - createPdf()
+     * 
+     * Description:
+     *  Sends the records to the service
+     */
+    createPdf() {
+        this.pdfService.createReport(this.transfersFlat, this.getDriversFromLocalStorage(), this.dateIn)
     }
 
     /**
@@ -101,37 +147,6 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      */
     saveRecord(): void {
         this.interactionService.performAction('saveRecord')
-    }
-
-    /**
-     * Caller(s):
-     *  Template - assignDriver()
-     * 
-     * Description:
-     *  Assign a driver to the checked records
-     */
-    assignDriver(): void {
-        if (this.isRecordSelected()) {
-            const dialogRef = this.dialog.open(DialogAssignDriverComponent, {
-                height: '350px',
-                width: '550px',
-                data: {
-                    title: 'Assign driver',
-                    drivers: this.driverService.getAll(),
-                    actions: ['cancel', 'ok']
-                },
-                panelClass: 'dialog'
-            })
-            dialogRef.afterClosed().subscribe(result => {
-                if (result != undefined) {
-                    this.transferService.assignDriver(result, this.records).subscribe(() => {
-                        this.removeSelectedIdsFromLocalStorage()
-                        this.navigateToList()
-                        this.showSnackbar('All records have been processed', 'info')
-                    })
-                }
-            })
-        }
     }
 
     /**
@@ -306,6 +321,10 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     private subscribeToInteractionService(): void {
         this.updateRecordStatus()
         this.updateTableStatus()
+        this.interactionService.transfers.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+            this.transfersFlat = response
+        })
+
     }
 
     /**
@@ -345,6 +364,11 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
         this.interactionService.hasTableData.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.hasTableData = response
         })
+    }
+
+    private getDriversFromLocalStorage() {
+        let localStorageData = JSON.parse(localStorage.getItem('transfers'))
+        return JSON.parse(localStorageData.drivers)
     }
 
 }

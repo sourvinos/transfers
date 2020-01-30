@@ -10,8 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Transfers.Identity;
 using Transfers.Models;
 using Transfers.Utils;
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using RazorLight;
 using System.IO;
 using System.Reflection;
@@ -38,9 +36,7 @@ namespace Transfers
             Extensions.AddAuthentication(Configuration, services);
             Extensions.AddAuthorization(services);
             Extensions.AddCors(services);
-            Extensions.AddLibraryForPDF();
 
-            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             services.AddAntiforgery(options => { options.Cookie.Name = "_af"; options.Cookie.HttpOnly = true; options.Cookie.SecurePolicy = CookieSecurePolicy.Always; options.HeaderName = "X-XSRF-TOKEN"; });
             services.AddAutoMapper();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:SqlServerConnection"]));

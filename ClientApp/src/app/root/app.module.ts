@@ -24,8 +24,8 @@ import { RootComponent } from './root.component'
 import { MainComponent } from './../shared/components/main/main.component'
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component'
 import { CustomTableComponent } from '../shared/components/table/custom-table'
-import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
 import { LoaderComponent } from '../shared/components/loader/loader.component'
+import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
 import { DialogIndexComponent } from '../shared/components/dialog-index/dialog-index.component'
 import { DialogAlertComponent } from '../shared/components/dialog-alert/dialog-alert.component'
 import { DialogAssignDriverComponent } from '../transfers/user-interface/dialog-assign-driver'
@@ -47,7 +47,6 @@ import { DomChangeDirective } from '../directives/dom-change.directive'
 // Pipes
 import { CustomPipe } from '../pipes/custom.pipe'
 import { SafeStylePipe } from './../pipes/safeStyle'
-
 
 @NgModule({
     declarations: [

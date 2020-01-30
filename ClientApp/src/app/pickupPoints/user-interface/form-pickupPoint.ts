@@ -290,7 +290,6 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
     private scrollToList() {
         document.getElementById('form').style.height = '0'
         document.getElementById('pickupPointsList').style.height = '100%'
-        document.getElementById('table-input').focus()
         this.interactionService.performAction('')
     }
 

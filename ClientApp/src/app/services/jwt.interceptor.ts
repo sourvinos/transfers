@@ -15,21 +15,21 @@ export class JwtInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(this.attachTokenToRequest(request)).pipe(tap((event: HttpEvent<any>) => {
-            if (event instanceof HttpResponse) { }
+            if (event instanceof HttpResponse) {
+                console.log('Token is valid')
+            }
         }),
             catchError((err): Observable<any> => {
-                if (this.isUserLoggedIn()) {
-                    if (err instanceof HttpErrorResponse) {
-                        switch ((<HttpErrorResponse>err).status) {
-                            case 400:
-                                return <any>this.accountService.logout()
-                            case 401:
-                                console.log("Token expired. Attempting refresh ...")
-                                return this.handleHttpResponseError(request, next)
-                        }
-                    } else {
-                        return throwError(this.handleError)
+                if (err instanceof HttpErrorResponse) {
+                    switch ((<HttpErrorResponse>err).status) {
+                        case 400:
+                            return <any>this.accountService.logout()
+                        case 401:
+                            console.log("Token expired. Attempting refresh")
+                            return this.handleHttpResponseError(request, next)
                     }
+                } else {
+                    return throwError(this.handleError)
                 }
             })
         )
@@ -37,7 +37,10 @@ export class JwtInterceptor implements HttpInterceptor {
 
     private attachTokenToRequest(request: HttpRequest<any>) {
         var token = localStorage.getItem('jwt')
-        return request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+        // console.log(token)
+        let req = request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+        // console.log(req)
+        return req
     }
 
     private isUserLoggedIn() {
@@ -69,7 +72,7 @@ export class JwtInterceptor implements HttpInterceptor {
                         localStorage.setItem('expiration', tokenresponse.authToken.expiration)
                         localStorage.setItem('userRole', tokenresponse.authToken.roles)
                         localStorage.setItem('refreshToken', tokenresponse.authToken.refresh_token)
-                        console.log("Token refreshed...")
+                        console.log("Token refreshed")
                         return next.handle(this.attachTokenToRequest(request))
                     }
                     return <any>this.accountService.logout()

@@ -1,33 +1,27 @@
 ﻿using AutoMapper;
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Transfers.Models;
-using Transfers.Utils;
 
 namespace Transfers.Controllers
 {
     [Route("api/[controller]")]
-    // [Authorize(Policy = "RequireLoggedIn")]
+    [Authorize(Policy = "RequireLoggedIn")]
     public class CustomersController : ControllerBase
     {
         // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
-        private readonly IConverter converter;
 
         // Constructor
-        public CustomersController(IMapper mapper, ApplicationDbContext context, IConverter converter)
+        public CustomersController(IMapper mapper, ApplicationDbContext context)
         {
             this.mapper = mapper;
             this.context = context;
-            this.converter = converter;
         }
 
         // GET: api/customers

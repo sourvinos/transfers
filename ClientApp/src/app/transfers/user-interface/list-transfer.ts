@@ -1,13 +1,13 @@
 import { AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 import { TransferFlat } from '../classes/model-transfer-flat';
 import { TransferService } from '../classes/service-api-transfer';
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { PdfService } from '../classes/service-pdf-transfer';
 
 @Component({
     selector: 'list-transfer',
@@ -53,7 +53,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
 
     // #endregion
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private snackBar: MatSnackBar) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: PdfService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
@@ -80,6 +80,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
         this.initCheckedPersons()
         this.updateTotals()
         this.flattenResults()
+        this.sendRecordsToService()
         this.setTableStatus()
     }
 
@@ -219,7 +220,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      *  Class - toggleItems()
      * 
      * Description: 
-     *  Flattens the queryResultClone array and populates the transfersFlat array with its output
+     *  Flattens the queryResultClone array and populates the transfersFlat array with its output.
      *  The transfersFlat array will be the input for the table on the template
      */
     private flattenResults() {
@@ -341,6 +342,10 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
                 this.ngAfterViewInit()
             })
         })
+        // this.interactionService.transfers.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
+
+
+        // })
     }
 
     /**
@@ -431,6 +436,10 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
         )
     }
 
+    private sendRecordsToService() {
+        this.interactionService.sendRecords(this.transfersFlat)
+    }
+
     /**
      * Caller(s):
      *  Class - toggleItem()
@@ -456,19 +465,6 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
             element.classList.add('activeItem')
             eval(lookupArray).push(item.description)
         }
-    }
-
-    /**
-     * Caller(s):
-     *  Class - showNoDataSnackbar()
-
-     * Description:
-     *  Calls the public method()
-     * 
-     * @param field 
-     */
-    private focus(field: string): void {
-        Utils.setFocus(field)
     }
 
 }

@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Transfers.Models;
@@ -13,7 +11,7 @@ using Transfers.Resources;
 namespace Transfers.Controllers
 {
     [Route("api/[controller]")]
-    // [Authorize(Policy = "RequireLoggedIn")]
+    [Authorize(Policy = "RequireLoggedIn")]
     public class TransfersController : ControllerBase
     {
         // Variables

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,21 +11,19 @@ using Transfers.Models;
 namespace Transfers.Controllers
 {
     [Route("api/[controller]")]
-    // [Authorize(Policy = "RequireLoggedIn")]
+    [Authorize(Policy = "RequireLoggedIn")]
     public class PortsController : ControllerBase
     {
         // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
-        private readonly IConverter converter;
         private readonly IRazorLightEngine razorEngine;
 
         // Constructor
-        public PortsController(IMapper mapper, ApplicationDbContext context, IConverter converter, IRazorLightEngine razorEngine)
+        public PortsController(IMapper mapper, ApplicationDbContext context, IRazorLightEngine razorEngine)
         {
             this.mapper = mapper;
             this.context = context;
-            this.converter = converter;
             this.razorEngine = razorEngine;
         }
 

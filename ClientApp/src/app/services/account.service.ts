@@ -60,12 +60,13 @@ export class AccountService {
     }
 
     getNewRefreshToken(): Observable<any> {
-        console.log('getNewRefreshToken')
         let userName = localStorage.getItem('userName')
         let refreshToken = localStorage.getItem('refreshToken')
         const grantType = "refresh_token"
+        console.log('Inside getNewRefreshToken function')
         return this.http.post<any>(this.loginUrl, { userName, refreshToken, grantType }).pipe(
             map(result => {
+                console.log(result)
                 if (result && result.authToken.token) {
                     this.loginStatus.next(true)
                     localStorage.setItem('loginStatus', '1')

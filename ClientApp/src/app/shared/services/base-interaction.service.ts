@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { TransferFlat } from 'src/app/transfers/classes/model-transfer-flat';
 
 @Injectable({ providedIn: 'root' })
 
@@ -11,6 +12,7 @@ export class BaseInteractionService {
     _hasTableData = new Subject<boolean>()
     _checked = new Subject<number>()
     _refreshList = new Subject<any>()
+    _transfers = new Subject<any[]>()
 
     record = this._record.asObservable()
     recordStatus = this._recordStatus.asObservable()
@@ -18,6 +20,12 @@ export class BaseInteractionService {
     hasTableData = this._hasTableData.asObservable()
     checked = this._checked.asObservable()
     refreshList = this._refreshList.asObservable()
+    transfers = this._transfers.asObservable()
+
+    sendRecords(records: any[]) {
+        this._transfers.next(records)
+        console.log('Records received')
+    }
 
     /**
      * Caller(s):

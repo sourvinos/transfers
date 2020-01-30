@@ -123,7 +123,7 @@ namespace Transfers
                 UserId = userId,
                 Value = Guid.NewGuid().ToString("N"),
                 CreatedDate = DateTime.UtcNow,
-                ExpiryTime = DateTime.UtcNow.AddMinutes(2)
+                ExpiryTime = DateTime.UtcNow.AddMinutes(90)
             };
         }
 

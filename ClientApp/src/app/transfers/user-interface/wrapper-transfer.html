@@ -22,6 +22,7 @@
         <div id="buttons">
             <ng-container *ngIf="recordStatus == 'empty'">
                 <button mat-flat-button class="secondary" id="assignDriver" [class.hidden]="!tableHasData()" (click)="assignDriver()">Assign driver</button>
+                <button mat-flat-button class="secondary" id="createPdf" [class.hidden]="!tableHasData()" (click)="createPdf()">Create PDFs</button>
                 <button mat-flat-button class="primary" id="new" [disabled]="!inList()" (click)="newRecord()">New</button>
             </ng-container>
             <ng-container *ngIf="recordStatus == 'newRecord'">

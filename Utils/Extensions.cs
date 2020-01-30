@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using Transfers.Identity;
-using System.IO;
 
 namespace Transfers.Utils
 {
@@ -86,14 +85,6 @@ namespace Transfers.Utils
                 options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin").RequireAuthenticatedUser());
             });
 
-        }
-
-        // PDF
-        public static void AddLibraryForPDF()
-        {
-            var context = new CustomAssemblyLoadContext();
-
-            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
         }
 
         // Error pages
