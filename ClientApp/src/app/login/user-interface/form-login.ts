@@ -1,11 +1,11 @@
-import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core'
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
+import { Subject } from 'rxjs'
+import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service'
+import { Utils } from 'src/app/shared/classes/utils'
 import { AccountService } from '../../services/account.service'
 import { CountdownService } from '../../services/countdown.service'
-import { Utils } from 'src/app/shared/classes/utils'
-import { Unlisten, KeyboardShortcuts } from 'src/app/services/keyboard-shortcuts.service'
-import { Subject } from 'rxjs'
 
 @Component({
 	selector: 'form-login',
@@ -17,7 +17,6 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	// #region Init
 
-	errorMessage: string
 	countdown: number = 0
 	invalidLogin: boolean
 	returnUrl: string
@@ -64,11 +63,6 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.countdownService.reset()
 			this.countdownService.countdown.subscribe(data => { this.countdown = data })
 		})
-		// ,
-		// 	error => {
-		// 		this.invalidLogin = true
-		// 		this.errorMessage = error.error.loginError
-		// 	})
 	}
 
     /**

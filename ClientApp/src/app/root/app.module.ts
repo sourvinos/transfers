@@ -19,6 +19,7 @@ import { MatTableModule } from '@angular/material/table'
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
 import { HttpErrorInterceptor } from '../services/error.interceptor'
+import { CustomErrorHandler } from '../services/error-handler'
 // Common components
 import { RootComponent } from './root.component'
 import { MainComponent } from './../shared/components/main/main.component'
