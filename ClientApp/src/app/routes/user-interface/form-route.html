@@ -23,7 +23,7 @@
                 <input type="text" matInput placeholder="Port" formControlName="portDescription" tabindex="3" id="portDescription" [inputTabStop]="input" (change)="lookupIndex(
                 ports, 'Ports', ['portId', 'portDescription'], ['portId', 'portDescription'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
             </mat-form-field>
-            <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
+            <span id="form-values" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</span>
         </div>
     </form>
 </div>

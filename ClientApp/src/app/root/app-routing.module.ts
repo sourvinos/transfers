@@ -11,6 +11,8 @@ import { RegisterComponent } from './../register/user-interface/form-register'
 import { RouteListComponent } from '../routes/user-interface/list-route'; import { RouteFormComponent } from '../routes/user-interface/form-route'
 import { WrapperPickupPointComponent } from '../pickupPoints/user-interface/wrapper-pickupPoint'; import { ListPickupPointComponent } from '../pickupPoints/user-interface/list-pickupPoint'; import { FormPickupPointComponent } from '../pickupPoints/user-interface/form-pickupPoint'
 import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'
+import { UserListComponent } from '../users/user-interface/list-user'; import { UserFormComponent } from '../users/user-interface/form-user';
+
 // Guards
 import { AuthGuardService } from '../services/auth-guard.service'
 import { CanDeactivateGuard } from '../services/can-deactivate-guard.service'
@@ -23,8 +25,7 @@ import { RouteListResolverService } from '../routes/classes/resolver-list-route'
 import { TransferEditResolverService } from '../transfers/classes/resolver-edit-transfer'
 import { TransferListResolverService } from '../transfers/classes/resolver-list-transfer'
 import { PortListResolverService } from '../ports/classes/resolver-list-port'
-
-import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
+import { UserListResolverService } from '../users/classes/resolver-list-user';
 
 const appRoutes: Routes = [
 	{ path: '', component: HomeComponent, canActivate: [AuthGuardService], pathMatch: 'full' },
@@ -52,8 +53,9 @@ const appRoutes: Routes = [
 				], runGuardsAndResolvers: 'always'
 			}]
 	},
+	{ path: 'users', component: UserListComponent, canActivate: [AuthGuardService], resolve: { userList: UserListResolverService } }, { path: 'users/:id', component: UserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
 	{ path: 'register', component: RegisterComponent, canActivate: [AuthGuardService] },
-	{ path: 'pageNotFound', component: PageNotFoundComponent }
+	{ path: '**', component: LoginComponent }
 ]
 
 @NgModule({

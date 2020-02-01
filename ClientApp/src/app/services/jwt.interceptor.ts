@@ -15,21 +15,20 @@ export class JwtInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(this.attachTokenToRequest(request)).pipe(tap((event: HttpEvent<any>) => {
-            if (event instanceof HttpResponse) {
-                console.log('Token is valid')
-            }
+            if (event instanceof HttpResponse) { }
         }),
             catchError((err): Observable<any> => {
-                if (err instanceof HttpErrorResponse) {
-                    switch ((<HttpErrorResponse>err).status) {
-                        case 400:
-                            return <any>this.accountService.logout()
-                        case 401:
-                            console.log("Token expired. Attempting refresh")
-                            return this.handleHttpResponseError(request, next)
+                if (this.isUserLoggedIn()) {
+                    if (err instanceof HttpErrorResponse) {
+                        switch ((<HttpErrorResponse>err).status) {
+                            case 400:
+                                return <any>this.accountService.logout()
+                            case 401:
+                                return this.handleHttpResponseError(request, next)
+                        }
+                    } else {
+                        return throwError(this.handleError)
                     }
-                } else {
-                    return throwError(this.handleError)
                 }
             })
         )
@@ -37,24 +36,12 @@ export class JwtInterceptor implements HttpInterceptor {
 
     private attachTokenToRequest(request: HttpRequest<any>) {
         var token = localStorage.getItem('jwt')
-        // console.log(token)
         let req = request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-        // console.log(req)
         return req
     }
 
     private isUserLoggedIn() {
         return localStorage.getItem('loginStatus') == '1'
-    }
-
-    private handleError(errorResponse: HttpErrorResponse) {
-        let errorMsg: string
-        if (errorResponse.error instanceof Error) {
-            errorMsg = "An error occured :" + errorResponse.error.message
-        } else {
-            errorMsg = `Backend returned code ${errorResponse.status}, body was: ${errorResponse.error}`
-        }
-        return throwError(errorMsg)
     }
 
     private handleHttpResponseError(request: HttpRequest<any>, next: HttpHandler) {
@@ -72,7 +59,6 @@ export class JwtInterceptor implements HttpInterceptor {
                         localStorage.setItem('expiration', tokenresponse.authToken.expiration)
                         localStorage.setItem('userRole', tokenresponse.authToken.roles)
                         localStorage.setItem('refreshToken', tokenresponse.authToken.refresh_token)
-                        console.log("Token refreshed")
                         return next.handle(this.attachTokenToRequest(request))
                     }
                     return <any>this.accountService.logout()
@@ -91,5 +77,16 @@ export class JwtInterceptor implements HttpInterceptor {
             return this.tokenSubject.pipe(filter(token => token != null), take(1), switchMap(token => { return next.handle(this.attachTokenToRequest(request)) }))
         }
     }
+
+    private handleError(errorResponse: HttpErrorResponse) {
+        let errorMsg: string
+        if (errorResponse.error instanceof Error) {
+            errorMsg = "An error occured :" + errorResponse.error.message
+        } else {
+            errorMsg = `Backend returned code ${errorResponse.status}, body was: ${errorResponse.error}`
+        }
+        return throwError(errorMsg)
+    }
+
 
 }

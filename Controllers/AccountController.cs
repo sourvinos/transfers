@@ -23,7 +23,7 @@ namespace Transfers.Controllers
             _appSettings = appSettings.Value;
         }
 
-        // api/account/register
+        // POST: api/account/register
         [HttpPost("[action]")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel formdata)
         {

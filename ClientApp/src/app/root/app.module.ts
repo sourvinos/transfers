@@ -19,14 +19,11 @@ import { MatTableModule } from '@angular/material/table'
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
 import { HttpErrorInterceptor } from '../services/error.interceptor'
-import { CustomErrorHandler } from '../services/error-handler'
 // Common components
 import { RootComponent } from './root.component'
 import { MainComponent } from './../shared/components/main/main.component'
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component'
 import { CustomTableComponent } from '../shared/components/table/custom-table'
-import { LoaderComponent } from '../shared/components/loader/loader.component'
-import { PageNotFoundComponent } from '../shared/components/page-not-found/page-not-found.component'
 import { DialogIndexComponent } from '../shared/components/dialog-index/dialog-index.component'
 import { DialogAlertComponent } from '../shared/components/dialog-alert/dialog-alert.component'
 import { DialogAssignDriverComponent } from '../transfers/user-interface/dialog-assign-driver'
@@ -41,6 +38,7 @@ import { RouteListComponent } from '../routes/user-interface/list-route'; import
 import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'; import { TableTransferComponent } from '../transfers/user-interface/table-transfer'
 import { WrapperPickupPointComponent } from '../pickupPoints/user-interface/wrapper-pickupPoint'; import { ListPickupPointComponent } from '../pickupPoints/user-interface/list-pickupPoint'; import { FormPickupPointComponent } from '../pickupPoints/user-interface/form-pickupPoint'; import { TablePickupPointComponent } from '../pickupPoints/user-interface/table-pickupPoint'
 import { RegisterComponent } from './../register/user-interface/form-register'
+import { UserListComponent } from './../users/user-interface/list-user'; import { UserFormComponent } from './../users/user-interface/form-user'
 // Directives
 import { InputTabStopDirective } from '../directives/input-tabstop.directive'
 import { InputFormatDirective } from '../directives/input-format.directive'
@@ -55,8 +53,6 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         MainComponent,
         RootComponent,
         SidebarComponent,
-        LoaderComponent,
-        PageNotFoundComponent,
         DialogIndexComponent,
         DialogAlertComponent,
         DialogAssignDriverComponent,
@@ -71,6 +67,7 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         RouteListComponent, RouteFormComponent,
         WrapperTransferComponent, ListTransferComponent, FormTransferComponent, TableTransferComponent,
         WrapperPickupPointComponent, ListPickupPointComponent, FormPickupPointComponent, TablePickupPointComponent,
+        UserListComponent, UserFormComponent,
         RegisterComponent,
         // Directives
         InputTabStopDirective,
@@ -112,7 +109,7 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
         { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } },
-        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 4000 } }
+        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 3500 } }
     ],
     bootstrap: [RootComponent]
 })

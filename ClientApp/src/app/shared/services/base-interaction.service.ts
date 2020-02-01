@@ -24,7 +24,6 @@ export class BaseInteractionService {
 
     sendRecords(records: any[]) {
         this._transfers.next(records)
-        console.log('Records received')
     }
 
     /**

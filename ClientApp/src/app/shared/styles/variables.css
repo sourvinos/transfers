@@ -32,24 +32,21 @@
 * {
     /* Font families */
     /* Buttons */
-    --font-family-buttons: "Play";
+    --font-family-buttons: "Noto Sans";
     /* All headers */
-    --font-family-headers: "Roboto";
-    /* Labels */
-    --font-family-labels: "Lato";
+    --font-family-headers: "Noto Sans";
     /* Dialogs */
-    --font-family-dialog-header: "Roboto";
-    --font-family-dialog-content: "Ubuntu Condensed";
+    --font-family-dialog-header: "Noto Sans";
+    --font-family-dialog-content: "Noto Sans";
     /* Tables */
-    --font-family-table: 'Roboto Condensed';
+    --font-family-table: 'Noto Sans';
     /* Transfer summary boxes */
-    --font-family-summary-block: "Roboto Condensed";
+    --font-family-summary-block: "Noto Sans";
     /* Sidebar  */
-    --font-family-copyright: "Play";
+    --font-family-user-info: "Noto Sans";
     --font-family-logo: "Anton";
-    --font-family-logo: "Anton";
-    --font-family-menu-list-items: "Play";
-    --font-family-user-info: "Play";
+    --font-family-menu-list-items: "Noto Sans";
+    --font-family-copyright: "Noto Sans";
 }
 
 * {
@@ -68,7 +65,7 @@
     /* Hamburger */
     --color-hamburger: #939393;
     /* All headers */
-    --color-headers: #939393;
+    --color-headers: #ffc788;
     /* Input boxes */
     --color-input-text-caret: #FFFFFF;
     --color-input-text-error: #FC3B3B;
@@ -98,7 +95,8 @@
     --color-table-header: #b3b2b2;
     --color-table-header-border: #57617B;
     --color-table-row: #B3B2B2;
-    --color-table-row-alternative: #363D44;
+    --color-table-row-odd: #363D44;
+    --color-table-row-even: #3c434b;
     --color-table-row-selected: #394D59;
     --color-table-rows-hover: #394D59;
     /* Transfer summary boxes */

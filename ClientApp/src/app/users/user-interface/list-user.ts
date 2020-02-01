@@ -2,29 +2,29 @@ import { Component, OnDestroy, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
-import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service'
-import { Utils } from 'src/app/shared/classes/utils'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
-import { Driver } from '../classes/model-driver'
+import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.service'
+import { Utils } from '../../shared/classes/utils'
+import { User } from '../classes/model-user'
 
 @Component({
-    selector: 'list-driver',
-    templateUrl: './list-driver.html',
+    selector: 'list-user',
+    templateUrl: './list-user.html',
     styleUrls: ['../../shared/styles/lists.css']
 })
 
-export class DriverListComponent implements OnInit, OnDestroy {
+export class UserListComponent implements OnInit, OnDestroy {
 
     // #region Init
 
-    records: Driver[]
-    filteredRecords: Driver[]
+    records: User[]
+    filteredRecords: User[]
 
-    headers = ['Id', 'Name', 'Phones']
-    widths = ['0px', '50%', '50%']
-    visibility = ['none', '', '']
-    justify = ['center', 'left', 'left']
-    fields = ['id', 'description', 'phones']
+    headers = ['Id', 'Display name', 'Username', 'Email']
+    widths = ['0px', '40%', '30%', '30%']
+    visibility = ['none', '', '', '', '']
+    justify = ['center', 'left', 'left', 'left']
+    fields = ['id', 'displayName', 'userName', 'email']
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
@@ -54,7 +54,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
       * Description:
       *  Self-explanatory
       * 
-      * @param id
+      * @param id 
       */
     editRecord(id: number) {
         this.navigateToEditRoute(id)
@@ -70,7 +70,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
      * @param query 
      */
     filter(query: string) {
-        this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
+        this.filteredRecords = query ? this.records.filter(p => p.userName.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
     /**
@@ -81,7 +81,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
      *  Navigates to the form so that new records can be appended
      */
     newRecord() {
-        this.router.navigate(['/drivers/new'])
+        this.router.navigate(['/users/new'])
     }
 
     /**
@@ -107,7 +107,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
                 document.getElementById('new').click()
             }
         }, {
-            priority: 2,
+            priority: 1,
             inputs: true
         })
     }
@@ -131,7 +131,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
      *  Self-explanatory
      */
     private loadRecords() {
-        this.records = this.activatedRoute.snapshot.data['driverList']
+        this.records = this.activatedRoute.snapshot.data['userList']
         this.filteredRecords = this.records
     }
 
@@ -171,7 +171,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
      * @param id 
      */
     private navigateToEditRoute(id: number) {
-        this.router.navigate(['/drivers', id])
+        this.router.navigate(['/users', id])
     }
 
 }

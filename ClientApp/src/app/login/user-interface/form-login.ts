@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 	ngUnsubscribe = new Subject<void>()
 
 	form = this.formBuilder.group({
-		userName: ['aa', Validators.required],
+		userName: ['maria', Validators.required],
 		password: ['Abc!123456', Validators.required]
 	})
 
@@ -56,8 +56,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
      */
 	login() {
 		let userlogin = this.form.value
-		this.service.login(userlogin.userName, userlogin.password).subscribe(result => {
-			let token = (<any>result).authToken.token
+		this.service.login(userlogin.userName, userlogin.password).subscribe(() => {
 			this.invalidLogin = false
 			this.router.navigateByUrl(this.returnUrl)
 			this.countdownService.reset()

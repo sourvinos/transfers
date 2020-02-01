@@ -32,8 +32,12 @@ tr {
     transition-duration: 200ms;
 }
 
+tbody tr:nth-child(odd) {
+    background-color: var(--color-table-row-odd);
+}
+
 tbody tr:nth-child(even) {
-    background-color: var(--color-table-row-alternative);
+    background-color: var(--color-table-row-even);
 }
 
 tr.selected {

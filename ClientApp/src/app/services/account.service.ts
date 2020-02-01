@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable } from 'rxjs'
+import { BehaviorSubject, Observable, of } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
@@ -53,9 +53,7 @@ export class AccountService {
 
     register(formData: any) {
         return this.http.post<any>(this.registerUrl, formData).pipe(
-            map(result => {
-                console.log('From the server', result)
-            })
+            map(result => { })
         )
     }
 
@@ -63,10 +61,8 @@ export class AccountService {
         let userName = localStorage.getItem('userName')
         let refreshToken = localStorage.getItem('refreshToken')
         const grantType = "refresh_token"
-        console.log('Inside getNewRefreshToken function')
         return this.http.post<any>(this.loginUrl, { userName, refreshToken, grantType }).pipe(
             map(result => {
-                console.log(result)
                 if (result && result.authToken.token) {
                     this.loginStatus.next(true)
                     localStorage.setItem('loginStatus', '1')

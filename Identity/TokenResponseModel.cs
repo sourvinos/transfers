@@ -1,6 +1,6 @@
 using System;
 
-namespace Transfers
+namespace Transfers.Identity
 {
     public class TokenResponseModel
     {

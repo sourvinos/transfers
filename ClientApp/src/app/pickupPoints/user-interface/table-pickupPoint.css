@@ -33,7 +33,7 @@ tr {
 }
 
 tbody tr:nth-child(even) {
-    background-color: var(--color-table-row-alternative);
+    background-color: var(--color-table-row-odd);
 }
 
 tr.selected {

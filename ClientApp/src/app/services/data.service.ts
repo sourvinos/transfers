@@ -12,7 +12,7 @@ export class DataService {
         return this.http.get<any[]>(this.url)
     }
 
-    async getSingle(id: number) {
+    async getSingle(id: string | number) {
         return await this.http.get<any>(this.url + '/' + id).toPromise()
     }
 
@@ -20,7 +20,7 @@ export class DataService {
         return this.http.post<any>(this.url, formData)
     }
 
-    update(id: number, formData: any): Observable<any> {
+    update(id: string | number, formData: any): Observable<any> {
         return this.http.put<any>(this.url + '/' + id, formData)
     }
 

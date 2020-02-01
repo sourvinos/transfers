@@ -1,7 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Anton&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Play&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 @import "buttons.css";
@@ -21,17 +19,35 @@ html, body {
     height: 100vh;
 }
 
-body, h1, h2 {
+body, h1, h2, p {
     margin: 0 !important;
     padding: 0 !important;
 }
 
 #loader {
     align-items: center;
+    background: url(../../../assets/loader.gif) center 60% no-repeat var(--color-background);
     display: flex;
+    flex-direction: column;
     height: 100%;
     justify-content: center;
-    background: url(../../../assets/loader.gif) center center no-repeat var(--color-background);
+}
+
+#loader {
+    font-family: var(--font-family-logo);
+}
+
+#loader>:first-child {
+    color: var(--color-company-logo-first-child) !important;
+    font-size: var(--font-size-logo-first-child) !important;
+    margin: 0;
+}
+
+#loader>:last-child {
+    color: var(--color-company-logo-second-child) !important;
+    font-size: var(--font-size-logo-second-child) !important;
+    font-weight: normal !important;
+    margin: -1rem 0 0 0 !important;
 }
 
 #footer {
