@@ -7,15 +7,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive'
 import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-// Material
-import { MatButtonModule } from '@angular/material/button'
-import { MatDialogModule, MatListModule, MAT_LABEL_GLOBAL_OPTIONS, MatExpansionModule, MatCheckboxModule, MatAutocompleteModule } from '@angular/material'
-import { MatFormFieldModule } from '@angular/material/form-field'
-import { MatIconModule } from '@angular/material/icon'
-import { MatInputModule } from '@angular/material/input'
-import { MatSelectModule } from '@angular/material/select'
-import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar'
-import { MatTableModule } from '@angular/material/table'
 // Services
 import { JwtInterceptor } from '../services/jwt.interceptor'
 import { HttpErrorInterceptor } from '../services/error.interceptor'
@@ -44,8 +35,8 @@ import { InputTabStopDirective } from '../directives/input-tabstop.directive'
 import { InputFormatDirective } from '../directives/input-format.directive'
 import { DomChangeDirective } from '../directives/dom-change.directive'
 // Pipes
-import { CustomPipe } from '../pipes/custom.pipe'
 import { SafeStylePipe } from './../pipes/safeStyle'
+import { MaterialModule } from '../shared/modules/material.module'
 
 @NgModule({
     declarations: [
@@ -74,7 +65,6 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         InputFormatDirective,
         DomChangeDirective,
         // Pipes
-        CustomPipe,
         SafeStylePipe
     ],
     imports: [
@@ -84,21 +74,8 @@ import { SafeStylePipe } from './../pipes/safeStyle'
         FormsModule,
         HttpClientModule,
         ReactiveFormsModule,
+        MaterialModule,
         NgIdleKeepaliveModule.forRoot(),
-        // Material
-        MatAutocompleteModule,
-        MatButtonModule,
-        MatCheckboxModule,
-        MatCheckboxModule,
-        MatDialogModule,
-        MatExpansionModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatListModule,
-        MatSelectModule,
-        MatSnackBarModule,
-        MatTableModule
     ],
     entryComponents: [
         DialogIndexComponent,
@@ -107,9 +84,7 @@ import { SafeStylePipe } from './../pipes/safeStyle'
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
-        { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } },
-        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 3500 } }
+        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
     ],
     bootstrap: [RootComponent]
 })
