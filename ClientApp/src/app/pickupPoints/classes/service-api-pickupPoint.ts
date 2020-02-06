@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PickupPoint } from './model-pickupPoint';
-import { DataService } from 'src/app/services/data.service';
+import { DataService } from 'src/app/shared/services/data.service';
 
 @Injectable({ providedIn: 'root' })
 

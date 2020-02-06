@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
-import { KeyboardShortcuts, Unlisten } from '../../services/keyboard-shortcuts.service'
+import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service'
 import { Utils } from '../../shared/classes/utils'
 import { Customer } from '../classes/model-customer'
 

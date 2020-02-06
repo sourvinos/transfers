@@ -2,7 +2,7 @@ import { AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit } from '@
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Unlisten } from 'src/app/services/keyboard-shortcuts.service';
+import { Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 import { TransferFlat } from '../classes/model-transfer-flat';

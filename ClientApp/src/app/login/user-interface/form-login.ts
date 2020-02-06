@@ -2,10 +2,10 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 import { Subject } from 'rxjs'
-import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service'
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { Utils } from 'src/app/shared/classes/utils'
-import { AccountService } from '../../services/account.service'
-import { CountdownService } from '../../services/countdown.service'
+import { AccountService } from '../../shared/services/account.service'
+import { CountdownService } from '../../shared/services/countdown.service'
 
 @Component({
 	selector: 'form-login',

@@ -1,7 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
-import { DataService } from 'src/app/services/data.service'
+import { DataService } from 'src/app/shared/services/data.service'
 
 @Injectable({ providedIn: 'root' })
 

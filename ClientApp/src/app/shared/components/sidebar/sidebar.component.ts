@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core'
 import { Observable } from 'rxjs'
-import { AccountService } from '../../../services/account.service'
-import { CountdownService } from '../../../services/countdown.service'
+import { AccountService } from '../../services/account.service'
+import { CountdownService } from '../../services/countdown.service'
 
 @Component({
     selector: 'sidebar',

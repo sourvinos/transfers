@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { DataService } from 'src/app/services/data.service'
+import { DataService } from 'src/app/shared/services/data.service'
 import { Observable } from 'rxjs'
 import { QueryResult } from './model-viewModel-transfer'
 

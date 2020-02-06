@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core'
 import { Observable, of } from 'rxjs'
 import { MatDialog } from '@angular/material'
-import { DialogAlertComponent } from '../shared/components/dialog-alert/dialog-alert.component'
+import { DialogAlertComponent } from '../components/dialog-alert/dialog-alert.component'
 import { FormGroup, FormBuilder } from '@angular/forms'
 
 @Injectable({ providedIn: 'root' })

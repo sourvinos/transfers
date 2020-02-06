@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { AccountService } from 'src/app/services/account.service';
-import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
+import { AccountService } from 'src/app/shared/services/account.service';
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { Router } from '@angular/router';
 

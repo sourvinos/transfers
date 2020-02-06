@@ -1,5 +1,5 @@
 import { Component, Input, IterableDiffer, IterableDiffers } from '@angular/core'
-import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service'
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 import { IndexInteractionService } from '../../services/index-interaction.service'
 

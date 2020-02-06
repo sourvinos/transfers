@@ -7,9 +7,9 @@ import { takeUntil } from 'rxjs/operators'
 import { CustomerService } from "src/app/customers/classes/service-api-customer"
 import { DestinationService } from "src/app/destinations/classes/service-api-destination"
 import { PickupPointService } from "src/app/pickupPoints/classes/service-api-pickupPoint"
-import { DialogService } from "src/app/services/dialog.service"
-import { HelperService } from 'src/app/services/helper.service'
-import { KeyboardShortcuts, Unlisten } from "src/app/services/keyboard-shortcuts.service"
+import { DialogService } from "src/app/shared/services/dialog.service"
+import { HelperService } from 'src/app/shared/services/helper.service'
+import { KeyboardShortcuts, Unlisten } from "src/app/shared/services/keyboard-shortcuts.service"
 import { Utils } from 'src/app/shared/classes/utils'
 import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component"
 import { BaseInteractionService } from "src/app/shared/services/base-interaction.service"

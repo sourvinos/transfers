@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil, startWith, map } from 'rxjs/operators';
-import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 import { FormControl } from '@angular/forms';
 import { Utils } from 'src/app/shared/classes/utils';

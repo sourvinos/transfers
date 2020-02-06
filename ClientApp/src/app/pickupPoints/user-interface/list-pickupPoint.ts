@@ -5,7 +5,7 @@ import { ActivatedRoute, NavigationEnd, Params, Router, Route } from '@angular/r
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PickupPointService } from 'src/app/pickupPoints/classes/service-api-pickupPoint';
-import { KeyboardShortcuts, Unlisten } from 'src/app/services/keyboard-shortcuts.service';
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { PickupPoint } from './../classes/model-pickupPoint';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 import { RouteService } from 'src/app/routes/classes/service-api-route';

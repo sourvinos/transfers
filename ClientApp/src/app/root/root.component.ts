@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, HostListener } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
-import { AccountService } from './../services/account.service';
+import { AccountService } from '../shared/services/account.service';
 
 @Component({
     selector: 'root',
