@@ -41,6 +41,7 @@ import { UserFormComponent } from './../users/user-interface/form-user';
 import { UserListComponent } from './../users/user-interface/list-user';
 import { AppRoutingModule } from './app-routing.module';
 import { RootComponent } from './root.component';
+import { EmptyPageComponent } from '../shared/components/empty-page/empty-page.component';
 
 @NgModule({
     declarations: [
@@ -65,6 +66,7 @@ import { RootComponent } from './root.component';
         InputTabStopDirective,
         InputFormatDirective,
         SafeStylePipe,
+        EmptyPageComponent,
     ],
     imports: [
         AppRoutingModule,

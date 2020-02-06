@@ -12,6 +12,7 @@ import { RouteListComponent } from '../routes/user-interface/list-route'; import
 import { WrapperPickupPointComponent } from '../pickupPoints/user-interface/wrapper-pickupPoint'; import { ListPickupPointComponent } from '../pickupPoints/user-interface/list-pickupPoint'; import { FormPickupPointComponent } from '../pickupPoints/user-interface/form-pickupPoint'
 import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'
 import { UserListComponent } from '../users/user-interface/list-user'; import { UserFormComponent } from '../users/user-interface/form-user';
+import { EmptyPageComponent } from '../shared/components/empty-page/empty-page.component';
 // Guards
 import { AuthGuardService } from '../shared/services/auth-guard.service'
 import { CanDeactivateGuard } from '../shared/services/can-deactivate-guard.service'
@@ -54,7 +55,7 @@ const appRoutes: Routes = [
 	},
 	{ path: 'users', component: UserListComponent, canActivate: [AuthGuardService], resolve: { userList: UserListResolverService } }, { path: 'users/:id', component: UserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
 	{ path: 'register', component: RegisterComponent, canActivate: [AuthGuardService] },
-	{ path: '**', component: LoginComponent }
+	{ path: '**', component: EmptyPageComponent }
 ]
 
 @NgModule({
