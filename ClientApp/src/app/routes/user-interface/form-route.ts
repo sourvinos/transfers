@@ -35,7 +35,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     form = this.formBuilder.group({
         id: 0,
-        abbreviation: ['', [Validators.maxLength(10)]],
+        abbreviation: ['', [Validators.required, Validators.maxLength(10)]],
         description: ['', [Validators.required, Validators.maxLength(100)]],
         portId: ['', Validators.required], portDescription: ['', Validators.required],
         userName: ''

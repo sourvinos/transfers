@@ -13,7 +13,7 @@ import { User } from '../classes/model-user'
     styleUrls: ['../../shared/styles/lists.css']
 })
 
-export class UserListComponent implements OnInit, OnDestroy {
+export class ListUserComponent implements OnInit, OnDestroy {
 
     // #region Init
 
