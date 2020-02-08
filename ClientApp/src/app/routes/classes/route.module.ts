@@ -5,6 +5,7 @@ import { SharedModule } from 'src/app/shared/modules/shared.module';
 import { MaterialModule } from '../../shared/modules/material.module';
 import { RouteFormComponent } from '../user-interface/form-route';
 import { RouteListComponent } from '../user-interface/list-route';
+import { RouteRoutingModule } from './route-routing.module';
 
 @NgModule({
     declarations: [
@@ -15,7 +16,8 @@ import { RouteListComponent } from '../user-interface/list-route';
         CommonModule,
         ReactiveFormsModule,
         SharedModule,
-        MaterialModule
+        MaterialModule,
+        RouteRoutingModule
     ]
 })
 

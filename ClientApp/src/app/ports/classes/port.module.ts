@@ -5,6 +5,7 @@ import { SharedModule } from 'src/app/shared/modules/shared.module';
 import { MaterialModule } from '../../shared/modules/material.module';
 import { PortFormComponent } from '../user-interface/form-port';
 import { PortListComponent } from '../user-interface/list-port';
+import { PortRoutingModule } from './port-routing.module';
 
 @NgModule({
     declarations: [
@@ -15,7 +16,8 @@ import { PortListComponent } from '../user-interface/list-port';
         CommonModule,
         ReactiveFormsModule,
         SharedModule,
-        MaterialModule
+        MaterialModule,
+        PortRoutingModule
     ]
 })
 

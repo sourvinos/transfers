@@ -3,8 +3,9 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
 import { MaterialModule } from '../../shared/modules/material.module';
-import { DestinationFormComponent } from './form-destination';
-import { DestinationListComponent } from './list-destination';
+import { DestinationFormComponent } from '../user-interface/form-destination';
+import { DestinationListComponent } from '../user-interface/list-destination';
+import { DestinationRoutingModule } from './destination-routing.module';
 
 @NgModule({
     declarations: [
@@ -15,7 +16,8 @@ import { DestinationListComponent } from './list-destination';
         CommonModule,
         ReactiveFormsModule,
         SharedModule,
-        MaterialModule
+        MaterialModule,
+        DestinationRoutingModule
     ]
 })
 

@@ -5,6 +5,7 @@ import { SharedModule } from 'src/app/shared/modules/shared.module';
 import { CustomerFormComponent } from '../user-interface/form-customer';
 import { CustomerListComponent } from '../user-interface/list-customer';
 import { MaterialModule } from './../../shared/modules/material.module';
+import { CustomerRoutingModule } from './customer-routing.module';
 
 @NgModule({
     declarations: [
@@ -15,7 +16,8 @@ import { MaterialModule } from './../../shared/modules/material.module';
         CommonModule,
         ReactiveFormsModule,
         SharedModule,
-        MaterialModule
+        MaterialModule,
+        CustomerRoutingModule
     ]
 })
 

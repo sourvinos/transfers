@@ -22,7 +22,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // #region Init
 
     id: number
-    customer: Customer
+    // customer: Customer
     url: string = '/customers'
 
     unlisten: Unlisten
@@ -196,8 +196,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private getRecord() {
         if (this.id) {
             this.customerService.getSingle(this.id).then(result => {
-                this.customer = result
-                this.populateFields()
+                this.populateFields(result)
             })
         }
     }
@@ -222,22 +221,17 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
      * 
      * @param result 
      */
-    private populateFields() {
-        if (this.id) {
-            this.customerService.getSingle(this.id).then(
-                result => {
-                    this.form.setValue({
-                        id: result.id,
-                        description: result.description,
-                        profession: result.profession,
-                        address: result.address,
-                        phones: result.phones,
-                        personInCharge: result.personInCharge,
-                        email: result.email,
-                        userName: result.userName
-                    })
-                })
-        }
+    private populateFields(result: any) {
+        this.form.setValue({
+            id: result.id,
+            description: result.description,
+            profession: result.profession,
+            address: result.address,
+            phones: result.phones,
+            personInCharge: result.personInCharge,
+            email: result.email,
+            userName: result.userName
+        })
     }
 
     /**
