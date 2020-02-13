@@ -11,32 +11,32 @@ import { MaterialModule } from './material.module';
 import { SafeStylePipe } from '../pipes/safeStyle';
 
 @NgModule({
-    declarations: [
-        CustomTableComponent,
-        DialogAlertComponent,
-        DialogIndexComponent,
-        InputFormatDirective,
-        InputTabStopDirective,
-        SafeStylePipe
-    ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        MaterialModule
-    ],
-    exports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        CustomTableComponent,
-        InputFormatDirective,
-        InputTabStopDirective,
-        RouterModule
-    ],
-    entryComponents: [
-        DialogAlertComponent,
-        DialogIndexComponent
-    ]
+        declarations: [
+                CustomTableComponent,
+                DialogAlertComponent,
+                DialogIndexComponent,
+                InputFormatDirective,
+                InputTabStopDirective,
+                SafeStylePipe
+        ],
+        imports: [
+                CommonModule,
+                FormsModule,
+                MaterialModule
+        ],
+        exports: [
+                CommonModule,
+                FormsModule,
+                ReactiveFormsModule,
+                CustomTableComponent,
+                InputFormatDirective,
+                InputTabStopDirective,
+                RouterModule
+        ],
+        entryComponents: [
+                DialogAlertComponent,
+                DialogIndexComponent
+        ]
 })
 
 export class SharedModule { }

@@ -1,8 +1,8 @@
+import { Unlisten, KeyboardShortcuts } from './../../shared/services/keyboard-shortcuts.service';
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
-import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { Utils } from 'src/app/shared/classes/utils'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 import { Destination } from '../classes/model-destination'
@@ -132,6 +132,7 @@ export class DestinationListComponent implements OnInit, OnDestroy {
      */
     private loadRecords() {
         this.records = this.activatedRoute.snapshot.data['destinationList']
+        console.log(this.records)
         this.filteredRecords = this.records
     }
 

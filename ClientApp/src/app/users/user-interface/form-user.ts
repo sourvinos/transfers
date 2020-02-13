@@ -10,6 +10,7 @@ import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shor
 import { Utils } from '../../shared/classes/utils';
 import { User } from '../classes/model-user';
 import { UserService } from '../classes/service-api-user';
+import { AccountService } from 'src/app/shared/services/account.service';
 
 @Component({
     selector: 'form-user',
@@ -31,13 +32,14 @@ export class UserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     form = this.formBuilder.group({
         id: '',
         userName: ['', [Validators.required, Validators.maxLength(100)]],
-        displayName: ['', [Validators.maxLength(100)]],
-        email: ['', [Validators.maxLength(100)]],
+        displayName: ['', [Validators.required, Validators.maxLength(20)]],
+        email: ['', [Validators.required, Validators.maxLength(100)]],
+        password: ['', [Validators.required, Validators.maxLength(100)]],
     })
 
     // #endregion
 
-    constructor(private userService: UserService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) {
+    constructor(private userService: UserService, private accountService: AccountService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['id']
             if (this.id) {
@@ -111,7 +113,8 @@ export class UserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     saveRecord() {
         if (!this.form.valid) return
         if (this.form.value.id == 0) {
-            this.userService.add(this.form.value).subscribe(() => {
+            if (!this.form.valid) return
+            this.accountService.register(this.form.value).subscribe(result => {
                 this.showSnackbar('Record saved', 'info')
                 this.resetForm()
                 this.goBack()
@@ -217,17 +220,13 @@ export class UserFormComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param result 
      */
     private populateFields() {
-        if (this.id) {
-            this.userService.getSingle(this.id).then(
-                result => {
-                    this.form.setValue({
-                        id: result.id,
-                        userName: result.userName,
-                        displayName: result.displayName,
-                        email: result.email
-                    })
-                })
-        }
+        this.form.setValue({
+            id: this.user.id,
+            userName: this.user.userName,
+            displayName: this.user.displayName,
+            email: this.user.email,
+            password: ''
+        })
     }
 
     /**
@@ -242,7 +241,8 @@ export class UserFormComponent implements OnInit, AfterViewInit, OnDestroy {
             id: 0,
             userName: '',
             displayName: '',
-            email: ''
+            email: '',
+            password: ''
         })
     }
 
@@ -269,6 +269,10 @@ export class UserFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     get email() {
         return this.form.get('address')
+    }
+
+    get password() {
+        return this.form.get('password')
     }
 
     // #endregion

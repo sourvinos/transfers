@@ -34,7 +34,7 @@ export class FormPickupPointComponent implements OnInit, AfterViewInit, OnDestro
         id: 0,
         routeId: [0, Validators.required],
         description: ['', [Validators.required, Validators.maxLength(100)]],
-        exactPoint: ['', [Validators.maxLength(100)]],
+        exactPoint: ['', [Validators.required, Validators.maxLength(100)]],
         time: ['', [Validators.required, Validators.pattern("[0-9][0-9]:[0-9][0-9]")]],
         userName: ''
     })
