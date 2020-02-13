@@ -5,14 +5,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DriverService } from 'src/app/drivers/classes/service-api-driver';
+import { DriverService } from 'src/app/drivers/classes/driver.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
-import { TransferFlat } from 'src/app/transfers/classes/model-transfer-flat';
-import { TransferService } from './../classes/service-api-transfer';
-import { PdfService } from './../classes/service-pdf-transfer';
+import { TransferFlat } from 'src/app/transfers/classes/transferFlat';
+import { TransferService } from '../classes/transfer.service';
+import { TransferPdfService } from '../classes/transfer-pdf.service';
 import { DialogAssignDriverComponent } from './dialog-assign-driver';
 
 @Component({
@@ -39,7 +39,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
 
     // #endregion
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionService: BaseInteractionService, private transferService: TransferService, public dialog: MatDialog, private driverService: DriverService, private snackbarService: SnackbarService, private pdfService: PdfService) { }
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionService: BaseInteractionService, private transferService: TransferService, public dialog: MatDialog, private driverService: DriverService, private snackbarService: SnackbarService, private pdfService: TransferPdfService) { }
 
     ngOnInit(): void {
         this.addShortcuts()

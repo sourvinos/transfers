@@ -1,23 +1,23 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core"
-import { FormBuilder, Validators } from "@angular/forms"
-import { MatDialog, MatSnackBar } from '@angular/material'
-import { ActivatedRoute, Router } from '@angular/router'
-import { forkJoin, Subject } from 'rxjs'
-import { takeUntil } from 'rxjs/operators'
-import { CustomerService } from "src/app/customers/classes/service-api-customer"
-import { DestinationService } from "src/app/destinations/classes/service-api-destination"
-import { PickupPointService } from "src/app/pickupPoints/classes/service-api-pickupPoint"
-import { DialogService } from "src/app/shared/services/dialog.service"
-import { HelperService } from 'src/app/shared/services/helper.service'
-import { KeyboardShortcuts, Unlisten } from "src/app/shared/services/keyboard-shortcuts.service"
-import { Utils } from 'src/app/shared/classes/utils'
-import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component"
-import { BaseInteractionService } from "src/app/shared/services/base-interaction.service"
-import { TransferService } from '../classes/service-api-transfer'
-import { Transfer } from './../classes/model-transfer'
-import { Driver } from "src/app/drivers/classes/model-driver"
-import { DriverService } from "src/app/drivers/classes/service-api-driver"
-import { PortService } from "src/app/ports/classes/service-api-port"
+import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
+import { FormBuilder, Validators } from "@angular/forms";
+import { MatDialog, MatSnackBar } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { CustomerService } from 'src/app/customers/classes/customer.service';
+import { DestinationService } from "src/app/destinations/classes/destination.service";
+import { Driver } from "src/app/drivers/classes/driver";
+import { DriverService } from "src/app/drivers/classes/driver.service";
+import { PickupPointService } from "src/app/pickupPoints/classes/pickupPoint.service";
+import { PortService } from "src/app/ports/classes/port.service";
+import { Utils } from 'src/app/shared/classes/utils';
+import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component";
+import { BaseInteractionService } from "src/app/shared/services/base-interaction.service";
+import { DialogService } from "src/app/shared/services/dialog.service";
+import { HelperService } from 'src/app/shared/services/helper.service';
+import { KeyboardShortcuts, Unlisten } from "src/app/shared/services/keyboard-shortcuts.service";
+import { Transfer } from '../classes/transfer';
+import { TransferService } from "../classes/transfer.service";
 
 @Component({
     selector: 'form-transfer',

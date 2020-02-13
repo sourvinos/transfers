@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { TransferFlat } from 'src/app/transfers/classes/model-transfer-flat';
 
 @Injectable({ providedIn: 'root' })
 

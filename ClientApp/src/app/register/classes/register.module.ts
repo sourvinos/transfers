@@ -1,11 +1,11 @@
 import { NgModule } from "@angular/core";
 import { MaterialModule } from '../../shared/modules/material.module';
 import { SharedModule } from '../../shared/modules/shared.module';
-import { RegisterComponent } from "../user-interface/form-register";
+import { RegisterFormComponent } from "../user-interface/register-form";
 
 @NgModule({
     declarations: [
-        RegisterComponent
+        RegisterFormComponent
     ],
     imports: [
         SharedModule,

@@ -5,9 +5,9 @@ import { takeUntil } from 'rxjs/operators';
 import { Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
-import { TransferFlat } from '../classes/model-transfer-flat';
-import { TransferService } from '../classes/service-api-transfer';
-import { PdfService } from '../classes/service-pdf-transfer';
+import { TransferFlat } from '../classes/transferFlat';
+import { TransferService } from '../classes/transfer.service';
+import { TransferPdfService } from '../classes/transfer-pdf.service';
 
 @Component({
     selector: 'list-transfer',
@@ -53,7 +53,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
 
     // #endregion
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: PdfService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: TransferPdfService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {

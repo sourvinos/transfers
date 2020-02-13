@@ -1,4 +1,3 @@
-
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -23,7 +22,7 @@ import { HomeComponent } from './../home/home.component';
 import { LoginModule } from './../login/classes/login.module';
 import { MainComponent } from './../shared/components/main/main.component';
 import { TransferModule } from './../transfers/classes/transfer.module';
-import { AppRoutingModule } from './app-routing.module';
+import { AppRouting } from './app.routing';
 import { RootComponent } from './root.component';
 
 @NgModule({
@@ -36,7 +35,7 @@ import { RootComponent } from './root.component';
         EmptyPageComponent,
     ],
     imports: [
-        AppRoutingModule,
+        AppRouting,
         BrowserAnimationsModule,
         BrowserModule,
         FormsModule,

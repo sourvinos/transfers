@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { Driver } from 'src/app/drivers/classes/model-driver';
+import { Driver } from 'src/app/drivers/classes/driver';
 
 @Component({
     selector: 'dialog-assign-driver',
