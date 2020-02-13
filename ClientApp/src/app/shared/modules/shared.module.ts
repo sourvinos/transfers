@@ -4,31 +4,38 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { InputFormatDirective } from 'src/app/shared/directives/input-format.directive';
 import { InputTabStopDirective } from 'src/app/shared/directives/input-tabstop.directive';
-import { DialogIndexComponent } from '../components/dialog-index/dialog-index.component';
 import { DialogAlertComponent } from '../components/dialog-alert/dialog-alert.component';
+import { DialogIndexComponent } from '../components/dialog-index/dialog-index.component';
+import { CustomTableComponent } from '../components/table/custom-table';
 import { MaterialModule } from './material.module';
 import { SafeStylePipe } from '../pipes/safeStyle';
 
 @NgModule({
     declarations: [
+        CustomTableComponent,
+        DialogAlertComponent,
+        DialogIndexComponent,
         InputFormatDirective,
         InputTabStopDirective,
-        DialogAlertComponent,
-        SafeStylePipe,
+        SafeStylePipe
     ],
     imports: [
+        CommonModule,
+        FormsModule,
         MaterialModule
     ],
     exports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
+        CustomTableComponent,
         InputFormatDirective,
         InputTabStopDirective,
-        ReactiveFormsModule,
         RouterModule
     ],
     entryComponents: [
         DialogAlertComponent,
+        DialogIndexComponent
     ]
 })
 
