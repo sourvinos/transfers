@@ -6,7 +6,7 @@ import { PickupPointService } from './pickupPoint.service';
 
 @Injectable({ providedIn: 'root' })
 
-export class PickupPointListResolver implements Resolve<PickupPoint[]>{
+export class PickupPointListResolver implements Resolve<PickupPoint[]> {
 
     constructor(private pickupPointService: PickupPointService) { }
 

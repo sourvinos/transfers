@@ -6,7 +6,7 @@ import { UserService } from './user.service'
 
 @Injectable({ providedIn: 'root' })
 
-export class UserListResolver implements Resolve<User[]>{
+export class UserListResolver implements Resolve<User[]> {
 
     constructor(private userService: UserService) { }
 

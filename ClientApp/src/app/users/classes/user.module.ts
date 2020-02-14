@@ -1,7 +1,7 @@
-import { NgModule } from "@angular/core";
+import { NgModule } from '@angular/core';
 import { MaterialModule } from '../../shared/modules/material.module';
 import { SharedModule } from '../../shared/modules/shared.module';
-import { UserListComponent } from "../user-interface/user-list";
+import { UserListComponent } from '../user-interface/user-list';
 import { UserFormComponent } from './../user-interface/user-form';
 
 @NgModule({

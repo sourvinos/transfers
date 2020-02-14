@@ -4,15 +4,15 @@ import { AccountService } from '../../services/account.service'
 import { CountdownService } from '../../services/countdown.service'
 
 @Component({
-    selector: 'sidebar',
+    selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css']
 })
 
 export class SidebarComponent implements OnInit, AfterViewInit {
 
-    countdown: number = 0
-    isNotLoaded: boolean = true
+    countdown = 0
+    isNotLoaded = true
     loginStatus: Observable<boolean>
     displayName: Observable<string>
 
@@ -33,7 +33,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     }
 
     triggerEvent(elem: HTMLElement, event: string) {
-        let clickEvent = new Event(event)
+        const clickEvent = new Event(event)
         elem.dispatchEvent(clickEvent)
     }
 
@@ -42,9 +42,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     }
 
     closeSidebar() {
-        var hamburger = document.getElementById("hamburger")
-        if (hamburger.className == "open") {
-            this.triggerEvent(hamburger, "click")
+        const hamburger = document.getElementById('hamburger')
+        if (hamburger.className === 'open') {
+            this.triggerEvent(hamburger, 'click')
         }
     }
 }

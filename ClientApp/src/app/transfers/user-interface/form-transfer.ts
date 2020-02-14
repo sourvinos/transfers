@@ -1,23 +1,23 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CustomerService } from 'src/app/customers/classes/customer.service';
-import { DestinationService } from "src/app/destinations/classes/destination.service";
-import { Driver } from "src/app/drivers/classes/driver";
-import { DriverService } from "src/app/drivers/classes/driver.service";
-import { PickupPointService } from "src/app/pickupPoints/classes/pickupPoint.service";
-import { PortService } from "src/app/ports/classes/port.service";
+import { DestinationService } from 'src/app/destinations/classes/destination.service';
+import { Driver } from 'src/app/drivers/classes/driver';
+import { DriverService } from 'src/app/drivers/classes/driver.service';
+import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.service';
+import { PortService } from 'src/app/ports/classes/port.service';
 import { Utils } from 'src/app/shared/classes/utils';
-import { DialogIndexComponent } from "src/app/shared/components/dialog-index/dialog-index.component";
-import { BaseInteractionService } from "src/app/shared/services/base-interaction.service";
-import { DialogService } from "src/app/shared/services/dialog.service";
+import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { DialogService } from 'src/app/shared/services/dialog.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
-import { KeyboardShortcuts, Unlisten } from "src/app/shared/services/keyboard-shortcuts.service";
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { Transfer } from '../classes/transfer';
-import { TransferService } from "../classes/transfer.service";
+import { TransferService } from '../classes/transfer.service';
 
 @Component({
     selector: 'form-transfer',
@@ -27,11 +27,11 @@ import { TransferService } from "../classes/transfer.service";
 
 export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Init
+    // #region Variables
 
     id: number
     transfer: Transfer
-    url: string = '/transfers'
+    url = '/transfers'
 
     destinations: any[]
     customers: any[]
@@ -94,13 +94,13 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
-        this.unlisten && this.unlisten()
+        this.unlisten()
     }
 
     /**
      * Caller(s):
      *  Service - CanDeactivateGuard()
-     * 
+     *
      * Description:
      *  Desides which action to perform when a route change is requested
      */
@@ -114,8 +114,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
                     return true
                 }
             })
-        }
-        else {
+        } else {
             this.scrollToList()
             return true
         }
@@ -124,19 +123,19 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - calculateTotalPersons()
-     * 
+     *
      * Description:
      *  Calculates the total persons for the transfer
      */
     calculateTotalPersons() {
-        let totalPersons = parseInt(this.form.value.adults) + parseInt(this.form.value.kids) + parseInt(this.form.value.free)
+        const totalPersons = parseInt(this.form.value.adults, 10) + parseInt(this.form.value.kids, 10) + parseInt(this.form.value.free, 10)
         this.form.patchValue({ totalPersons: !!Number(totalPersons) ? totalPersons : 0 })
     }
 
     /**
      * Caller(s):
      *  Class - subscribeTointeractionService()
-     * 
+     *
      * Description:
      *  Deletes the current record
      */
@@ -154,24 +153,24 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - lookupIndex()
-     * 
+     *
      * Description:
      *  Filters the given array according to the user input and displays a table to select a record
-     * 
-     * @param lookupArray 
-     * @param title 
-     * @param formFields 
-     * @param fields 
-     * @param headers 
-     * @param widths 
-     * @param visibility 
-     * @param justify 
-     * @param value 
+     *
+     * @param lookupArray
+     * @param title
+     * @param formFields
+     * @param fields
+     * @param headers
+     * @param widths
+     * @param visibility
+     * @param justify
+     * @param value
      */
     lookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
-            var key = fields[1]
+            const key = fields[1]
             if (x[key].toUpperCase().includes(value.target.value.toUpperCase())) {
                 filteredArray.push(x)
             }
@@ -179,7 +178,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
         if (filteredArray.length > 0) {
             this.showModalIndex(filteredArray, title, fields, headers, widths, visibility, justify)
         }
-        if (filteredArray.length == 0) {
+        if (filteredArray.length === 0) {
             this.clearFields(null, formFields[0], formFields[1])
             this.focus(formFields[1])
         }
@@ -188,13 +187,13 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - subscribeTointeractionService()
-     * 
+     *
      * Description:
      *  Adds or updates an existing record
      */
     saveRecord() {
-        if (!this.form.valid) return
-        if (this.form.value.id == 0) {
+        if (!this.form.valid) { return }
+        if (this.form.value.id === 0) {
             this.transferService.add(this.form.value).subscribe(() => {
                 this.showSnackbar('Record saved', 'info')
                 this.resetForm()
@@ -202,8 +201,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.focus('destinationDescription')
                 this.refreshSummaries()
             })
-        }
-        else {
+        } else {
             this.transferService.update(this.form.value.id, this.form.value).subscribe(() => {
                 this.showSnackbar('Record updated', 'info')
                 this.resetForm()
@@ -215,31 +213,31 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Adds keyboard shortcuts
      */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            "Escape": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+            'Escape': (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.goBack()
                 }
             },
-            "Alt.D": (event: KeyboardEvent): void => {
+            'Alt.D': (event: KeyboardEvent): void => {
                 event.preventDefault()
                 this.deleteRecord()
             },
-            "Alt.S": (event: KeyboardEvent): void => {
+            'Alt.S': (event: KeyboardEvent): void => {
                 this.saveRecord()
             },
-            "Alt.C": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
+            'Alt.C': (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     document.getElementById('cancel').click()
                 }
             },
-            "Alt.O": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
+            'Alt.O': (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     document.getElementById('ok').click()
                 }
             }
@@ -252,13 +250,13 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - lookupIndex(), showModalIndex()
-     * 
+     *
      * Description:
      *  Populates the form fields with empty values from the lookupIndex() or response values from the showModalIndex()
-     *  
-     * @param result 
-     * @param id 
-     * @param description 
+     *
+     * @param result
+     * @param id
+     * @param description
      */
     private clearFields(result: any, id: any, description: any) {
         this.form.patchValue({ [id]: result ? result.id : '' })
@@ -268,13 +266,13 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - populateDropDowns()
-     * 
+     *
      * Description:
      *  Creates a new object used in the template
      */
     private flattenPickupPoints(): any[] {
         this.pickupPointsFlat = []
-        for (var {
+        for (const {
             id: a,
             description: b,
             exactPoint: c,
@@ -292,8 +290,8 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
 
      * Description:
      *  Calls the public method()
-     * 
-     * @param field 
+     *
+     * @param field
      */
     private focus(field: string) {
         Utils.setFocus(field)
@@ -302,7 +300,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - constructor()
-     * 
+     *
      * Description:
      *  Gets the selected record from the api
      */
@@ -316,9 +314,9 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller(s): 
+     * Caller(s):
      *  Class - canDeactive(), deleteRecord(), saveRecord()
-     * 
+     *
      * Description:
      *  Send 'empty' to the 'setRecordStatus', so that the wrapper will display the 'new' button
      *  On escape navigates to the list
@@ -331,33 +329,33 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - showModalIndex()
-     * 
+     *
      * Description:
      *  Assigns the key-value pair from the selected item in the modal to the form fields
-     *  
-     * @param result 
+     *
+     * @param result
      */
     private patchFields(result: any, fields: any[]) {
         if (result) {
             Object.entries(result).forEach(([key, value]) => {
                 this.form.patchValue({ [key]: value })
             })
-        }
-        else
+        } else {
             fields.forEach(field => {
                 this.form.patchValue({ [field]: '' })
             })
+        }
     }
 
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Populates the dropdowns
      */
     private populateDropDowns() {
-        let sources = []
+        const sources = []
         sources.push(this.destinationService.getAll())
         sources.push(this.customerService.getAll())
         sources.push(this.pickupPointService.getAll())
@@ -378,11 +376,11 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - getTransfer()
-     * 
+     *
      * Description:
      *  Populates the form with record values
-     * 
-     * @param result 
+     *
+     * @param result
      */
     private populateFields(result: Transfer) {
         this.form.setValue({
@@ -405,7 +403,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - constructor()
-     * 
+     *
      * Description:
      *  Populates the form with initial values
      */
@@ -421,7 +419,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - saveRecord()
-     * 
+     *
      * Description:
      *  Tells the list to refresh the summaries
      */
@@ -432,13 +430,13 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - renameObjects()
-     * 
+     *
      * Description:
      *  Renames the selected in memory object
-     * 
-     * @param obj 
-     * @param oldKey 
-     * @param newKey 
+     *
+     * @param obj
+     * @param oldKey
+     * @param newKey
      */
     private renameKey(obj: Object, oldKey: string, newKey: string) {
         if (oldKey !== newKey) {
@@ -450,7 +448,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - populateDropDowns()
-     * 
+     *
      * Description:
      *  Renames the objects in memory for use in the template
      */
@@ -472,7 +470,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - saveRecord()
-     * 
+     *
      * Description:
      *  Resets the form with default values
      */
@@ -497,7 +495,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Hides the list and shows the form
      */
@@ -508,7 +506,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - canDeactivate()
-     * 
+     *
      * Description:
      *  Hides the form, shows the list and focuses on the table
      */
@@ -523,11 +521,11 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
      * Caller(s):
      *  Class - constructor()
      *  Class - goBack()
-     * 
+     *
      * Desciption:
      *  Tells the wrapper which buttons to display
-     * 
-     * @param status 
+     *
+     * @param status
      */
     private setStatus(status: string) {
         this.interactionService.setRecordStatus(status)
@@ -536,7 +534,7 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - saveRecord()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
@@ -549,18 +547,18 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - lookupIndex()
-     * 
+     *
      * Description:
      *  Displays a modal window with a table so a record can be selected
-     * 
-     * @param elements 
-     * @param title 
-     * @param formFields 
-     * @param fields 
-     * @param headers 
-     * @param widths    
-     * @param visibility 
-     * @param justify 
+     *
+     * @param elements
+     * @param title
+     * @param formFields
+     * @param fields
+     * @param headers
+     * @param widths
+     * @param visibility
+     * @param justify
      */
     private showModalIndex(elements: any, title: string, fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {
         const dialog = this.dialog.open(DialogIndexComponent, {
@@ -583,14 +581,14 @@ export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Accepts data from the wrapper through the interaction service and decides which action to perform
      */
     private subscribeToInteractionService() {
         this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            if (response == 'saveRecord') this.saveRecord()
-            if (response == 'deleteRecord') this.deleteRecord()
+            if (response === 'saveRecord') { this.saveRecord() }
+            if (response === 'deleteRecord') { this.deleteRecord() }
         })
     }
 

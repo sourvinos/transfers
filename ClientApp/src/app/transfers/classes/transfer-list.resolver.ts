@@ -6,7 +6,7 @@ import { TransferViewModel } from './transferViewModel';
 
 @Injectable({ providedIn: 'root' })
 
-export class TransferListResolver implements Resolve<TransferViewModel[]>{
+export class TransferListResolver implements Resolve<TransferViewModel[]> {
 
     dateIn: string
 

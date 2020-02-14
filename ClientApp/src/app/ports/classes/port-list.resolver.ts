@@ -6,7 +6,7 @@ import { PortService } from './port.service';
 
 @Injectable({ providedIn: 'root' })
 
-export class PortListResolver implements Resolve<Port[]>{
+export class PortListResolver implements Resolve<Port[]> {
 
     constructor(private portService: PortService) { }
 

@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core"
-import { CanDeactivate } from "@angular/router"
+import { Injectable } from '@angular/core'
+import { CanDeactivate } from '@angular/router'
 
 export interface CanComponentDeactivate {
     canDeactivate: () => boolean
@@ -13,4 +13,4 @@ export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate>
         return component.canDeactivate ? component.canDeactivate() : true
     }
 
-} 
+}

@@ -6,7 +6,7 @@ import { DriverService } from './driver.service';
 
 @Injectable({ providedIn: 'root' })
 
-export class DriverListResolver implements Resolve<Driver[]>{
+export class DriverListResolver implements Resolve<Driver[]> {
 
     constructor(private driverService: DriverService) { }
 

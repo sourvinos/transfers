@@ -5,7 +5,7 @@ import { RouteService } from './route.service';
 
 @Injectable({ providedIn: 'root' })
 
-export class RouteListResolver implements Resolve<Route[]>{
+export class RouteListResolver implements Resolve<Route[]> {
 
     constructor(private routeService: RouteService) { }
 

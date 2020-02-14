@@ -8,7 +8,7 @@ import { AccountService } from './account.service'
 
 export class JwtInterceptor implements HttpInterceptor {
 
-    private isTokenRefreshing: boolean = false
+    private isTokenRefreshing = false
     private tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null)
 
     constructor(private accountService: AccountService) { }
@@ -35,13 +35,13 @@ export class JwtInterceptor implements HttpInterceptor {
     }
 
     private attachTokenToRequest(request: HttpRequest<any>) {
-        var token = localStorage.getItem('jwt')
-        let req = request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+        const token = localStorage.getItem('jwt')
+        const req = request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
         return req
     }
 
     private isUserLoggedIn() {
-        return localStorage.getItem('loginStatus') == '1'
+        return localStorage.getItem('loginStatus') === '1'
     }
 
     private handleHttpResponseError(request: HttpRequest<any>, next: HttpHandler) {
@@ -71,17 +71,16 @@ export class JwtInterceptor implements HttpInterceptor {
                     this.isTokenRefreshing = false
                 })
             )
-        }
-        else {
+        } else {
             this.isTokenRefreshing = false
-            return this.tokenSubject.pipe(filter(token => token != null), take(1), switchMap(token => { return next.handle(this.attachTokenToRequest(request)) }))
+            return this.tokenSubject.pipe(filter(token => token != null), take(1), switchMap(token => next.handle(this.attachTokenToRequest(request))))
         }
     }
 
     private handleError(errorResponse: HttpErrorResponse) {
         let errorMsg: string
         if (errorResponse.error instanceof Error) {
-            errorMsg = "An error occured :" + errorResponse.error.message
+            errorMsg = 'An error occured :' + errorResponse.error.message
         } else {
             errorMsg = `Backend returned code ${errorResponse.status}, body was: ${errorResponse.error}`
         }

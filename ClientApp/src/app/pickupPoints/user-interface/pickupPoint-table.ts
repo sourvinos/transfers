@@ -1,13 +1,13 @@
-import { Component, HostListener, Input, IterableChanges, IterableDiffer, IterableDiffers } from '@angular/core'
+import { Component, HostListener, Input, IterableChanges, IterableDiffer, IterableDiffers, OnInit, AfterViewInit } from '@angular/core'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 
 @Component({
-    selector: 'pickupPoint-table',
+    selector: 'pickuppoint-table',
     templateUrl: './pickupPoint-table.html',
     styleUrls: ['./pickupPoint-table.css']
 })
 
-export class PickupPointTableComponent {
+export class PickupPointTableComponent implements OnInit, AfterViewInit {
 
     // #region Variables
 
@@ -19,11 +19,11 @@ export class PickupPointTableComponent {
     @Input() justify: any
     @Input() fields: any
 
-    currentRow: number = 0
+    currentRow = 0
     tableContainer: any
     table: any
-    rowHeight: number = 0
-    rowCount: number = 0
+    rowHeight = 0
+    rowCount = 0
 
     differences: IterableDiffer<any>;
 
@@ -32,8 +32,8 @@ export class PickupPointTableComponent {
     constructor(private transferPickupPointService: BaseInteractionService, private iterableDiffers: IterableDiffers) { }
 
     @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
-        if (event.key == 'Enter') this.sendRowToService()
-        if (event.key == 'ArrowUp' || event.key == 'ArrowDown') this.gotoRow(event.key)
+        if (event.key === 'Enter') { this.sendRowToService() }
+        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') { this.gotoRow(event.key) }
     }
 
     ngOnInit() {
@@ -47,11 +47,11 @@ export class PickupPointTableComponent {
     /**
      * Caller(s):
      *  Template - table
-     * 
+     *
      * Description:
      *  Uses the DomChangeDirective to listen for DOM changes
-     * 
-     * @param $event 
+     *
+     * @param $event
      */
     onDomChange($event: Event) {
         document.getElementById('table-input').focus()
@@ -63,10 +63,10 @@ export class PickupPointTableComponent {
      *  Class - HostListener()
      *  Class - onDomChange()
      *  Template - gotoRow()
-     * 
+     *
      * Description:
      *  Highlights the next / previous row according to the arrow keys or highlights the clicked row
-     * 
+     *
      * @param key // The pressed key code or the line number to goto directly
      */
     private gotoRow(key: any) {
@@ -74,18 +74,18 @@ export class PickupPointTableComponent {
             this.unselectAllRows()
             this.selectRow(this.table, key)
         }
-        if (key == 'ArrowUp' && this.currentRow > 1) {
+        if (key === 'ArrowUp' && this.currentRow > 1) {
             this.unselectRow()
             this.selectRow(this.table, 'up')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
                 this.tableContainer.scrollTop = (this.currentRow - 1) * this.rowHeight
             }
         }
-        if (key == 'ArrowDown' && this.currentRow < this.rowCount) {
+        if (key === 'ArrowDown' && this.currentRow < this.rowCount) {
             this.unselectRow()
             this.selectRow(this.table, 'down')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
-                document.getElementById("transfer-" + this.currentRow.toString()).scrollIntoView({ block: "end" })
+                document.getElementById('transfer-' + this.currentRow.toString()).scrollIntoView({ block: 'end' })
             }
         }
     }
@@ -93,7 +93,7 @@ export class PickupPointTableComponent {
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
-     * 
+     *
      * Description:
      *  Initializes local variables
      */
@@ -107,26 +107,26 @@ export class PickupPointTableComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  Checks if the selected row is fully visible
-     * 
-     * @param row 
-     * @param direction 
+     *
+     * @param row
+     * @param direction
      */
     private isRowIntoView(row: HTMLTableRowElement, direction: string) {
         const rowOffsetTop = row.offsetTop
         const scrollTop = this.tableContainer.scrollTop
         const rowTopPlusHeight = rowOffsetTop + row.offsetHeight
         const indexTopPlusHeight = scrollTop + this.tableContainer.offsetHeight
-        if (direction == 'ArrowUp') {
+        if (direction === 'ArrowUp') {
             if (indexTopPlusHeight - rowOffsetTop + this.rowHeight < this.tableContainer.offsetHeight) {
                 return true
             } else {
                 return false
             }
         }
-        if (direction == 'ArrowDown') {
+        if (direction === 'ArrowDown') {
             if (rowTopPlusHeight <= indexTopPlusHeight) {
                 return true
             } else {
@@ -138,20 +138,20 @@ export class PickupPointTableComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  Updates the currentRow variable and highlights
-     * 
-     * @param table 
-     * @param direction 
+     *
+     * @param table
+     * @param direction
      */
     private selectRow(table: HTMLTableElement, direction: any) {
         if (!isNaN(direction)) {
-            this.currentRow = parseInt(direction)
+            this.currentRow = parseInt(direction, 10)
             document.getElementById('table-input').focus()
         } else {
-            if (direction == 'up') this.currentRow--
-            if (direction == 'down')++this.currentRow
+            if (direction === 'up') { this.currentRow-- }
+            if (direction === 'down') { ++this.currentRow }
         }
         table.rows[this.currentRow].classList.add('selected')
     }
@@ -159,7 +159,7 @@ export class PickupPointTableComponent {
     /**
      * Caller(s):
      *  Class - HostListener()
-     * 
+     *
      * Description:
      *  Sends the selected row to the service so that the parent (list-transfer) can call the editRecord method
      */
@@ -170,7 +170,7 @@ export class PickupPointTableComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  Removes the 'selected' class from all rows
      */
@@ -183,7 +183,7 @@ export class PickupPointTableComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  Removes the 'selected' class from the current row
      */

@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit, DoCheck } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -15,9 +15,9 @@ import { TransferPdfService } from '../classes/transfer-pdf.service';
     styleUrls: ['./list-transfer.css']
 })
 
-export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
+export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewChecked, DoCheck, OnDestroy {
 
-    // #region Init
+    // #region Variables
 
     dateIn: string
 
@@ -32,11 +32,11 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     selectedDrivers: string[] = []
     selectedPorts: string[] = []
 
-    checkedDestinations: boolean = true
-    checkedCustomers: boolean = true
-    checkedRoutes: boolean = true
-    checkedDrivers: boolean = true
-    checkedPorts: boolean = true
+    checkedDestinations = true
+    checkedCustomers = true
+    checkedRoutes = true
+    checkedDrivers = true
+    checkedPorts = true
 
     transfersFlat: TransferFlat[] = []
 
@@ -46,7 +46,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     justify = ['center', 'center', 'center', 'center', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
     fields = ['', 'id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
 
-    mustRefresh: boolean = true
+    mustRefresh = true
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
@@ -56,7 +56,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: TransferPdfService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.router.events.subscribe((navigation: any) => {
-            if (navigation instanceof NavigationEnd && this.dateIn != '' && this.router.url.split('/').length == 4) {
+            if (navigation instanceof NavigationEnd && this.dateIn !== '' && this.router.url.split('/').length === 4) {
                 this.mustRefresh = true
                 this.loadTransfers()
             }
@@ -85,7 +85,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     ngAfterViewChecked() {
-        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - document.getElementById("totals").offsetHeight - 16 + 'px'
+        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - document.getElementById('totals').offsetHeight - 16 + 'px'
     }
 
     ngDoCheck() {
@@ -98,23 +98,23 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
-        this.unlisten && this.unlisten()
+        this.unlisten()
     }
 
     /**
      * Caller(s):
      *  Template - toggleItem()
-     * 
-     * Description: 
-     *  Adds / removes the class 'activeItem' to / from the clicked item 
+     *
+     * Description:
+     *  Adds / removes the class 'activeItem' to / from the clicked item
      *  Adds / removes the item to / from the lookupArray
      *  Filters the list according to the selected items
-     *  Updates the transfersFlat array 
-     * 
+     *  Updates the transfersFlat array
+     *
      * @param item // The element that was clicked
      * @param lookupArray // The array that the element belongs to
      */
-    toggleItem(item: any, lookupArray: string) {
+    toggleItem(item: any, lookupArray: string[]) {
         this.toggleActiveItem(item, lookupArray)
         this.initCheckedPersons()
         this.filterByCriteria()
@@ -126,14 +126,14 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Template - toggleItems()
-     * 
+     *
      * Description:
      *  It stops the panel's default behavior to expand or collapse
      *  Clears all items from the lookupArray
      *  Calls 'selectItems' method to either select or deselect all items
-     *  Calls 'filterByCriteria()' 
+     *  Calls 'filterByCriteria()'
      *  Calls 'flattenResults()'
-     * 
+     *
      * @param lookupArray // The array that must fill or empty
      */
     toggleItems(className: string, lookupArray: { splice: (arg0: number) => void; }, checkedArray: any) {
@@ -149,17 +149,17 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Class - addActiveClassToSelectedArrays()
-     * 
+     *
      * Description:
      *  Adds the class 'activeItem' to the element if it's part of the lookupArray
-     * 
+     *
      * @param className // The items with this class
      * @param lookupArray // The array with the selected items
      */
     private addActiveClassToElements(className: string, lookupArray: string[]) {
-        let elements = document.querySelectorAll(className)
+        const elements = document.querySelectorAll(className)
         elements.forEach((element) => {
-            let position = lookupArray.indexOf(element.id)
+            const position = lookupArray.indexOf(element.id)
             if (position >= 0) {
                 element.classList.add('activeItem')
             }
@@ -169,7 +169,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
-     * 
+     *
      * Description:
      *  Calls the 'addActiveClassToElements()' for every summary group
      */
@@ -186,31 +186,31 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Class - subscribeTointeractionService()
-     * 
+     *
      * Description:
      *  Self-explanatory
-     * 
-     * @param id 
+     *
+     * @param id
      */
     private editRecord(id: number) {
         this.navigateToEditRoute(id)
     }
 
     /**
-     * Caller(s): 
+     * Caller(s):
      *  Class - ngAfterViewInit(), toggleItem(), toggleItems()
-     * 
+     *
      * Description:
      *  Stores the data from the initial read to the queryResultClone array
      *  Filters the queryResultClone array according to the selected items
      */
     private filterByCriteria() {
         this.queryResultClone.transfers = this.queryResult.transfers
-            .filter((destination: { destination: { description: string } }) => { return this.selectedDestinations.indexOf(destination.destination.description) != -1 })
-            .filter((customer: { customer: { description: string } }) => { return this.selectedCustomers.indexOf(customer.customer.description) != -1 })
-            .filter((route: { pickupPoint: { route: { abbreviation: string } } }) => { return this.selectedRoutes.indexOf(route.pickupPoint.route.abbreviation) != -1 })
-            .filter((driver: { driver: { description: string } }) => { return this.selectedDrivers.indexOf(driver.driver.description) != -1 })
-            .filter((port: { pickupPoint: { route: { port: { description: string } } } }) => { return this.selectedPorts.indexOf(port.pickupPoint.route.port.description) != -1 })
+            .filter((destination: { destination: { description: string } }) => this.selectedDestinations.indexOf(destination.destination.description) !== -1)
+            .filter((customer: { customer: { description: string } }) => this.selectedCustomers.indexOf(customer.customer.description) !== -1)
+            .filter((route: { pickupPoint: { route: { abbreviation: string } } }) => this.selectedRoutes.indexOf(route.pickupPoint.route.abbreviation) !== -1)
+            .filter((driver: { driver: { description: string } }) => this.selectedDrivers.indexOf(driver.driver.description) !== -1)
+            .filter((port: { pickupPoint: { route: { port: { description: string } } } }) => this.selectedPorts.indexOf(port.pickupPoint.route.port.description) !== -1)
     }
 
     /**
@@ -218,14 +218,14 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      *  Class - loadTransfers()
      *  Class - toggleItem()
      *  Class - toggleItems()
-     * 
-     * Description: 
+     *
+     * Description:
      *  Flattens the queryResultClone array and populates the transfersFlat array with its output.
      *  The transfersFlat array will be the input for the table on the template
      */
     private flattenResults() {
         this.transfersFlat.splice(0)
-        for (var {
+        for (const {
             id: a,
             destination: { abbreviation: b },
             customer: { description: c },
@@ -246,7 +246,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
-     * 
+     *
      * Description:
      *  Checks if localStorage has any data
      */
@@ -257,7 +257,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Class - constructor()
-     * 
+     *
      * Description:
      *  Loads the records from the api for the given date
      */
@@ -268,11 +268,11 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Class - editRecord()
-     * 
+     *
      * Description:
      *  Navigates to the edit route
-     * 
-     * @param id 
+     *
+     * @param id
      */
     private navigateToEditRoute(id: number) {
         this.router.navigate(['transfer/', id], { relativeTo: this.activatedRoute })
@@ -281,43 +281,43 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Class - ngAfterViewInit(), toggleItems()
-     * 
+     *
      * Description:
      *  Saves the selected items in the localStorage
      */
     private saveToLocalStorage() {
-        let summaryItems = {
-            "destinations": JSON.stringify(this.selectedDestinations),
-            "customers": JSON.stringify(this.selectedCustomers),
-            "routes": JSON.stringify(this.selectedRoutes),
-            "drivers": JSON.stringify(this.selectedDrivers),
-            "ports": JSON.stringify(this.selectedPorts),
+        const summaryItems = {
+            'destinations': JSON.stringify(this.selectedDestinations),
+            'customers': JSON.stringify(this.selectedCustomers),
+            'routes': JSON.stringify(this.selectedRoutes),
+            'drivers': JSON.stringify(this.selectedDrivers),
+            'ports': JSON.stringify(this.selectedPorts),
         }
         localStorage.setItem('transfers', JSON.stringify(summaryItems))
         localStorage.removeItem('selectedIds')
     }
 
     /**
-     * Caller(s): 
+     * Caller(s):
      *  Class - toggleItems()
      *  Template - toggleItems()
-     * 
+     *
      * Description:
      *  According to the checked = true / false
      *  Toggles the class 'activeItem' for every item in the given className
      *  Adds / removes all items to / from the lookupArray
-     * 
-     * @param className 
-     * @param lookupArray 
-     * @param checked 
+     *
+     * @param className
+     * @param lookupArray
+     * @param checked
      */
     private selectItems(className: string, lookupArray: any, checked: boolean) {
-        let elements = document.getElementsByClassName('item ' + className)
+        const elements = document.getElementsByClassName('item ' + className)
         for (let index = 0; index < elements.length; index++) {
             const element = elements[index]
             if (checked) {
                 element.classList.add('activeItem')
-                eval(lookupArray).push(element.id)
+                lookupArray.push(element.id)
             } else {
                 element.classList.remove('activeItem')
             }
@@ -325,9 +325,9 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     /**
-     * Caller(s): 
+     * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Gets the selected record from the table through the service and executes the editRecord method
      *  Refreshes the list after a new record has been added
@@ -351,10 +351,10 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
-     * 
+     *
      * Description:
      *  Stores the data from the initial result to the arrays
-     * 
+     *
      */
     private updateSelectedArraysFromInitialResults() {
         this.queryResult.personsPerDestination.forEach((element: { description: string; }) => { this.selectedDestinations.push(element.description) })
@@ -367,12 +367,12 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
-     * 
+     *
      * Description:
      *  Stores the data from the localStorage to the arrays
      */
     private updateSelectedArraysFromLocalStorage() {
-        let localStorageData = JSON.parse(localStorage.getItem('transfers'))
+        const localStorageData = JSON.parse(localStorage.getItem('transfers'))
         this.selectedDestinations = JSON.parse(localStorageData.destinations)
         this.selectedCustomers = JSON.parse(localStorageData.customers)
         this.selectedRoutes = JSON.parse(localStorageData.routes)
@@ -383,7 +383,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
-     * 
+     *
      * Description:
      *  Sends true or false to the service so that the wrapper can decide whether to display the 'Assing driver' button or not
      */
@@ -396,7 +396,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      *  Class - ngAfterViewInit()
      *  Class - toggleItem()
      *  Class - toggleItems()
-     * 
+     *
      * Description:
      *  Populates the array with the total persons displayed in the template
      */
@@ -413,7 +413,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
      *  Class - ngAfterViewInit()
      *  Class - toggleItem()
      *  Class - toggleItems()
-     * 
+     *
      * Description:
      *  Sets checked persons to zero
      */
@@ -424,7 +424,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Prepare the array of totals
      */
@@ -443,19 +443,19 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     /**
      * Caller(s):
      *  Class - toggleItem()
-     * 
+     *
      * Description:
      *  Toggles activeItem class to the clicked item and updates the array with all the selected
-     * 
-     * @param item 
-     * @param lookupArray 
+     *
+     * @param item
+     * @param lookupArray
      */
-    private toggleActiveItem(item: { description: string; }, lookupArray: string) {
-        var element = document.getElementById(item.description)
+    private toggleActiveItem(item: { description: string; }, lookupArray: string[]) {
+        const element = document.getElementById(item.description)
         if (element.classList.contains('activeItem')) {
-            for (var i = 0; i < eval(lookupArray).length; i++) {
-                if (eval(lookupArray)[i] == item.description) {
-                    eval(lookupArray).splice(i, 1)
+            for (let i = 0; i < lookupArray.length; i++) {
+                if ((lookupArray)[i] === item.description) {
+                    lookupArray.splice(i, 1)
                     i--
                     element.classList.remove('activeItem')
                     break
@@ -463,7 +463,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
             }
         } else {
             element.classList.add('activeItem')
-            eval(lookupArray).push(item.description)
+            lookupArray.push(item.description)
         }
     }
 

@@ -5,7 +5,7 @@ import { PickupPointService } from './pickupPoint.service';
 
 @Injectable({ providedIn: 'root' })
 
-export class PickupPointFormResolver implements Resolve<PickupPoint>{
+export class PickupPointFormResolver implements Resolve<PickupPoint> {
 
     constructor(private pickupPointService: PickupPointService) { }
 

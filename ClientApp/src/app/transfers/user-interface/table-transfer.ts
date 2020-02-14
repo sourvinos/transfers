@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, IterableChanges, IterableDiffer, IterableDiffers } from '@angular/core'
+import { Component, HostListener, Input, IterableChanges, IterableDiffer, IterableDiffers, OnInit, AfterViewInit, DoCheck } from '@angular/core'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 
 @Component({
@@ -7,7 +7,7 @@ import { BaseInteractionService } from 'src/app/shared/services/base-interaction
     styleUrls: ['./table-transfer.css']
 })
 
-export class TableTransferComponent {
+export class TableTransferComponent implements OnInit, AfterViewInit, DoCheck {
 
     // #region Variables
 
@@ -19,14 +19,14 @@ export class TableTransferComponent {
     @Input() justify: any
     @Input() fields: any
 
-    currentRow: number = 0
+    currentRow = 0
     tableContainer: any
     table: any
-    rowHeight: number = 0
-    rowCount: number = 0
-    checked: boolean = false
+    rowHeight = 0
+    rowCount = 0
+    checked = false
     checkedIds: string[] = []
-    totalPersons: number = 0
+    totalPersons = 0
 
     differences: IterableDiffer<any>;
 
@@ -35,8 +35,8 @@ export class TableTransferComponent {
     constructor(private interactionService: BaseInteractionService, private iterableDiffers: IterableDiffers) { }
 
     @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
-        if (event.key == 'Enter') this.sendRowToService()
-        if (event.key == 'ArrowUp' || event.key == 'ArrowDown') this.gotoRow(event.key)
+        if (event.key === 'Enter') { this.sendRowToService() }
+        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') { this.gotoRow(event.key) }
     }
 
     ngOnInit() {
@@ -57,11 +57,11 @@ export class TableTransferComponent {
     /**
      * Caller(s):
      *  Template - table
-     * 
+     *
      * Description:
      *  Toggles the checkbox and counts the persons for the selected checkboxes
-     * 
-     * @param row 
+     *
+     * @param row
      */
     toggleCheckBox(row: number) {
         this.checkedIds = []
@@ -69,7 +69,7 @@ export class TableTransferComponent {
         this.table.rows[row].classList.toggle('checked')
         this.table.querySelectorAll('tr.checked').forEach((element: { childNodes: { innerText: string }[] }) => {
             this.checkedIds.push(element.childNodes[2].innerText)
-            this.totalPersons += parseInt(element.childNodes[11].innerText)
+            this.totalPersons += parseInt(element.childNodes[11].innerText, 10)
         })
         localStorage.setItem('selectedIds', JSON.stringify(this.checkedIds))
         this.interactionService.setCheckedTotalPersons(this.totalPersons)
@@ -78,14 +78,14 @@ export class TableTransferComponent {
     /**
      * Caller(s):
      *  Template - table
-     * 
+     *
      * Description:
      *  If the first column is clicked, toggle the checkboxes and counts the persons for the selected checkboxes
-     * 
-     * @param column 
+     *
+     * @param column
      */
     onHeaderClick(column: any) {
-        if (column.toElement.cellIndex == 0) {
+        if (column.toElement.cellIndex === 0) {
             this.checked = !this.checked
             this.checkedIds = []
             this.totalPersons = 0
@@ -93,9 +93,8 @@ export class TableTransferComponent {
                 if (this.checked) {
                     element.classList.add('checked')
                     this.checkedIds.push(element.childNodes[2].innerText)
-                    this.totalPersons += parseInt(element.childNodes[11].innerText)
-                }
-                else {
+                    this.totalPersons += parseInt(element.childNodes[11].innerText, 10)
+                } else {
                     element.classList.remove('checked')
                 }
             })
@@ -107,11 +106,11 @@ export class TableTransferComponent {
     /**
      * Caller(s):
      *  Template - table
-     * 
+     *
      * Description:
      *  Uses the DomChangeDirective to listen for DOM changes
-     * 
-     * @param $event 
+     *
+     * @param $event
      */
     onDomChange($event: Event) {
         document.getElementById('table-transfer-input').focus()
@@ -123,10 +122,10 @@ export class TableTransferComponent {
      *  Class - HostListener()
      *  Class - onDomChange()
      *  Template - gotoRow()
-     * 
+     *
      * Description:
      *  Highlights the next / previous row according to the arrow keys or highlights the clicked row
-     * 
+     *
      * @param key // The pressed key code or the line number to goto directly
      */
     private gotoRow(key: any) {
@@ -134,18 +133,18 @@ export class TableTransferComponent {
             this.unselectAllRows()
             this.selectRow(this.table, key)
         }
-        if (key == 'ArrowUp' && this.currentRow > 1) {
+        if (key === 'ArrowUp' && this.currentRow > 1) {
             this.unselectRow()
             this.selectRow(this.table, 'up')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
                 this.tableContainer.scrollTop = (this.currentRow - 1) * this.rowHeight
             }
         }
-        if (key == 'ArrowDown' && this.currentRow < this.rowCount) {
+        if (key === 'ArrowDown' && this.currentRow < this.rowCount) {
             this.unselectRow()
             this.selectRow(this.table, 'down')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {
-                document.getElementById("transfer-" + this.currentRow.toString()).scrollIntoView({ block: "end" })
+                document.getElementById('transfer-' + this.currentRow.toString()).scrollIntoView({ block: 'end' })
             }
         }
     }
@@ -153,7 +152,7 @@ export class TableTransferComponent {
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
-     * 
+     *
      * Description:
      *  Initializes local variables
      */
@@ -167,26 +166,26 @@ export class TableTransferComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  Checks if the selected row is fully visible
-     * 
-     * @param row 
-     * @param direction 
+     *
+     * @param row
+     * @param direction
      */
     private isRowIntoView(row: HTMLTableRowElement, direction: string) {
         const rowOffsetTop = row.offsetTop
         const scrollTop = this.tableContainer.scrollTop
         const rowTopPlusHeight = rowOffsetTop + row.offsetHeight
         const indexTopPlusHeight = scrollTop + this.tableContainer.offsetHeight
-        if (direction == 'ArrowUp') {
+        if (direction === 'ArrowUp') {
             if (indexTopPlusHeight - rowOffsetTop + this.rowHeight < this.tableContainer.offsetHeight) {
                 return true
             } else {
                 return false
             }
         }
-        if (direction == 'ArrowDown') {
+        if (direction === 'ArrowDown') {
             if (rowTopPlusHeight <= indexTopPlusHeight) {
                 return true
             } else {
@@ -198,20 +197,20 @@ export class TableTransferComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  Updates the currentRow variable and highlights
-     * 
-     * @param table 
-     * @param direction 
+     *
+     * @param table
+     * @param direction
      */
     private selectRow(table: HTMLTableElement, direction: any) {
         if (!isNaN(direction)) {
-            this.currentRow = parseInt(direction)
+            this.currentRow = parseInt(direction, 10)
             document.getElementById('table-transfer-input').focus()
         } else {
-            if (direction == 'up') this.currentRow--
-            if (direction == 'down')++this.currentRow
+            if (direction === 'up') { this.currentRow-- }
+            if (direction === 'down') { ++this.currentRow }
         }
         table.rows[this.currentRow].classList.add('selected')
     }
@@ -219,7 +218,7 @@ export class TableTransferComponent {
     /**
      * Caller(s):
      *  Class - HostListener()
-     * 
+     *
      * Description:
      *  Sends the selected row to the service so that the parent (list-transfer) can call the editRecord method
      */
@@ -230,7 +229,7 @@ export class TableTransferComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  Removes the 'selected' class from all rows
      */
@@ -243,7 +242,7 @@ export class TableTransferComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  Removes the 'selected' class from the current row
      */

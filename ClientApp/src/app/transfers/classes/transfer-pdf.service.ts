@@ -10,10 +10,10 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs
 export class TransferPdfService {
 
     createReport(transfers: any[], drivers: any[], date: string) {
-        let array = this.sort(transfers)
+        const array = this.sort(transfers)
         drivers.forEach(driver => {
-            let filteredArray = array.filter(x => x.driver == driver)
-            var dd = {
+            const filteredArray = array.filter(x => x.driver === driver)
+            const dd = {
                 pageMargins: [50, 40, 50, 50],
                 pageOrientation: 'landscape',
                 defaultStyle: { fontSize: 8 },
@@ -45,15 +45,15 @@ export class TransferPdfService {
     }
 
     private buildTableBody(data: any[], columns: any[], align: any[], driver: string) {
-        let body: any = []
-        let pickupPointCount: number = 0
+        const body: any = []
+        let pickupPointCount = 0
         let pickupPointPersons: number[] = [0, 0, 0, 0]
         let driverPersons: number[] = [0, 0, 0, 0]
         let pickupPointDescription = data[0].pickupPoint
         body.push(this.createTableHeaders())
         data.forEach(((row) => {
-            var dataRow = []
-            if (row.pickupPoint == pickupPointDescription) {
+            let dataRow = []
+            if (row.pickupPoint === pickupPointDescription) {
                 const { pickupPointCount: x, total: z } = this.addPersonsToPickupPoint(pickupPointCount, pickupPointPersons, row)
                 pickupPointCount = x
                 pickupPointPersons = z
@@ -70,8 +70,9 @@ export class TransferPdfService {
             dataRow = this.replaceZerosWithBlanks(columns, row, dataRow, align)
             body.push(dataRow)
         }))
-        if (pickupPointCount > 1)
+        if (pickupPointCount > 1) {
             body.push(this.createPickupPointTotalLine(pickupPointDescription, pickupPointPersons))
+        }
         body.push(this.createBlankLine())
         body.push(this.createTotalLineForDriver(driver, driverPersons))
         return body
@@ -95,10 +96,10 @@ export class TransferPdfService {
         return [
             { text: '' },
             { text: 'TOTAL FROM ' + pickupPoint, bold: true },
-            { text: String(total[0]) == "0" ? "" : String(total[0]), alignment: 'right', fillColor: 'white', bold: true },
-            { text: String(total[1]) == "0" ? "" : String(total[1]), alignment: 'right', fillColor: 'white', bold: true },
-            { text: String(total[2]) == "0" ? "" : String(total[2]), alignment: 'right', fillColor: 'white', bold: true },
-            { text: String(total[3]) == "0" ? "" : String(total[3]), alignment: 'right', fillColor: 'white', bold: true },
+            { text: String(total[0]) === '0' ? '' : String(total[0]), alignment: 'right', fillColor: 'white', bold: true },
+            { text: String(total[1]) === '0' ? '' : String(total[1]), alignment: 'right', fillColor: 'white', bold: true },
+            { text: String(total[2]) === '0' ? '' : String(total[2]), alignment: 'right', fillColor: 'white', bold: true },
+            { text: String(total[3]) === '0' ? '' : String(total[3]), alignment: 'right', fillColor: 'white', bold: true },
             { text: '' },
             { text: '' },
             { text: '' }
@@ -106,17 +107,17 @@ export class TransferPdfService {
     }
 
     private sort(array: TransferFlat[]) {
-        let sortedArray = array.sort((a, b) => {
-            if (a.driver > b.driver) return 1
-            if (a.driver > b.driver) return 1
-            if (a.time > b.time) return 1
-            if (a.time < b.time) return -1
-            if (a.pickupPoint > b.pickupPoint) return 1
-            if (a.pickupPoint < b.pickupPoint) return -1
-            if (a.customer > b.customer) return 1
-            if (a.customer < b.customer) return -1
-            if (a.destination > b.destination) return 1
-            if (a.destination < b.destination) return -1
+        const sortedArray = array.sort((a, b) => {
+            if (a.driver > b.driver) { return 1 }
+            if (a.driver > b.driver) { return 1 }
+            if (a.time > b.time) { return 1 }
+            if (a.time < b.time) { return -1 }
+            if (a.pickupPoint > b.pickupPoint) { return 1 }
+            if (a.pickupPoint < b.pickupPoint) { return -1 }
+            if (a.customer > b.customer) { return 1 }
+            if (a.customer < b.customer) { return -1 }
+            if (a.destination > b.destination) { return 1 }
+            if (a.destination < b.destination) { return -1 }
         })
         return sortedArray
     }
@@ -141,7 +142,7 @@ export class TransferPdfService {
             return {
                 table: {
                     widths: '*',
-                    body: [[{ text: "Page " + currentPage.toString() + ' of ' + pageCount, alignment: 'right', style: 'normalText', margin: [0, 10, 50, 0] }]]
+                    body: [[{ text: 'Page ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', style: 'normalText', margin: [0, 10, 50, 0] }]]
                 },
                 layout: 'noBorders'
             }
@@ -158,7 +159,7 @@ export class TransferPdfService {
 
     private replaceZerosWithBlanks(columns: any[], row: { [x: string]: { toString: () => any } }, dataRow: any[], align: any[]) {
         columns.forEach((element, index) => {
-            if (row[element].toString() == "0") row[element] = ""
+            if (row[element].toString() === '0') { row[element] = '' }
             dataRow.push({ text: row[element].toString(), alignment: align[index].toString(), color: '#000000', noWrap: false, })
         })
         return dataRow
@@ -173,14 +174,14 @@ export class TransferPdfService {
     }
 
     private createTotalLineForDriver(driver: string, totals: any[]) {
-        let dataRow = []
+        const dataRow = []
         dataRow.push(
             { text: '' },
             { text: 'TOTAL FOR ' + driver, bold: true },
-            { text: String(totals[0]) == "0" ? "" : String(totals[0]), alignment: 'right', fillColor: 'white', bold: true },
-            { text: String(totals[1]) == "0" ? "" : String(totals[1]), alignment: 'right', fillColor: 'white', bold: true },
-            { text: String(totals[2]) == "0" ? "" : String(totals[2]), alignment: 'right', fillColor: 'white', bold: true },
-            { text: String(totals[3]) == "0" ? "" : String(totals[3]), alignment: 'right', fillColor: 'white', bold: true },
+            { text: String(totals[0]) === '0' ? '' : String(totals[0]), alignment: 'right', fillColor: 'white', bold: true },
+            { text: String(totals[1]) === '0' ? '' : String(totals[1]), alignment: 'right', fillColor: 'white', bold: true },
+            { text: String(totals[2]) === '0' ? '' : String(totals[2]), alignment: 'right', fillColor: 'white', bold: true },
+            { text: String(totals[3]) === '0' ? '' : String(totals[3]), alignment: 'right', fillColor: 'white', bold: true },
             { text: '' },
             { text: '' },
             { text: '' }
@@ -198,7 +199,7 @@ export class TransferPdfService {
     }
 
     private createBlankLine() {
-        let dataRow = []
+        const dataRow = []
         dataRow.push(
             { text: '' },
             { text: '' },

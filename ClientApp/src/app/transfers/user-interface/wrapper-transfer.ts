@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
@@ -23,16 +23,16 @@ import { DialogAssignDriverComponent } from './dialog-assign-driver';
 
 export class WrapperTransferComponent implements OnInit, OnDestroy {
 
-    // #region Init
+    // #region Variables
 
-    dateIn: string = '01/10/2019'
-    dateInISO: string = ''
+    dateIn = '01/10/2019'
+    dateInISO = ''
     records: string[] = []
     drivers: string[] = []
     transfersFlat: TransferFlat[] = []
 
-    recordStatus: string = 'empty'
-    hasTableData: boolean = false
+    recordStatus = 'empty'
+    hasTableData = false
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
@@ -50,14 +50,14 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
-        this.unlisten && this.unlisten()
+        this.unlisten()
         this.removeSelectedIdsFromLocalStorage()
     }
 
     /**
      * Caller(s):
      *  Template - assignDriver()
-     * 
+     *
      * Description:
      *  Assign a driver to the checked records
      */
@@ -74,7 +74,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
                 panelClass: 'dialog'
             })
             dialogRef.afterClosed().subscribe(result => {
-                if (result != undefined) {
+                if (result !== undefined) {
                     this.transferService.assignDriver(result, this.records).subscribe(() => {
                         this.removeSelectedIdsFromLocalStorage()
                         this.navigateToList()
@@ -88,7 +88,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - createPdf()
-     * 
+     *
      * Description:
      *  Sends the records to the service
      */
@@ -99,7 +99,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - deleteRecord()
-     * 
+     *
      * Description:
      *  Executes the delete method on the form through the interaction service
      */
@@ -110,7 +110,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - loadTransfers()
-     * 
+     *
      * Description:
      *  Loads from the api the records for the given date
      */
@@ -125,23 +125,24 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - newRecord()
-     * 
+     *
      * Description:
      *  Check for the default driver and if found, avigates to the form so that new records can be appended
      */
     newRecord(): void {
         this.driverService.getDefaultDriver().then(response => {
-            if (response)
+            if (response) {
                 this.router.navigate([this.location.path() + '/transfer/new'])
-            else
+            } else {
                 this.showSnackbar('No default driver found', 'error')
+            }
         })
     }
 
     /**
      * Caller(s):
      *  Template - saveRecord()
-     * 
+     *
      * Description:
      *  Executes the save method on the form through the interaction service
      */
@@ -152,7 +153,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - tableHasData()
-     * 
+     *
      * Description:
      *  The variable 'hasTableData' will be checked by the template to display or not the 'Assign driver' button
      */
@@ -163,37 +164,37 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - inList()
-     * 
+     *
      * Description:
      *  Returns true if we are list-transfer route in order to enable the 'new' button
      */
     inList(): boolean {
-        return this.router.url.split('/').length == 4
+        return this.router.url.split('/').length === 4
     }
 
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Adds keyboard functionality
      */
     private addShortcuts(): void {
         this.unlisten = this.keyboardShortcutsService.listen({
-            "Escape": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+            'Escape': (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.goBack()
                 }
             },
-            "Alt.A": (event: KeyboardEvent): void => {
+            'Alt.A': (event: KeyboardEvent): void => {
                 event.preventDefault()
                 document.getElementById('assignDriver').click()
             },
-            "Alt.S": (event: KeyboardEvent): void => {
+            'Alt.S': (event: KeyboardEvent): void => {
                 event.preventDefault()
                 document.getElementById('search').click()
             },
-            "Alt.N": (event: KeyboardEvent): void => {
+            'Alt.N': (event: KeyboardEvent): void => {
                 event.preventDefault()
                 document.getElementById('new').click()
             }
@@ -204,9 +205,9 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller(s): 
+     * Caller(s):
      *  Class - loadTransfers()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
@@ -217,12 +218,12 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Calls the public method
-     * 
-     * @param field 
-     * 
+     *
+     * @param field
+     *
      */
     private focus(field: string): void {
         Utils.setFocus(field)
@@ -231,7 +232,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - addShortcuts()
-     * 
+     *
      * Description:
      *  On escape navigates to the home route
      */
@@ -242,13 +243,13 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - assignDriver()
-     * 
+     *
      * Description
      *  Checks user input
      */
     private isRecordSelected(): boolean {
         this.records = JSON.parse(localStorage.getItem('selectedIds'))
-        if (this.records == null || this.records.length == 0) {
+        if (this.records == null || this.records.length === 0) {
             this.showSnackbar('No records have been selected!', 'error')
             return false
         }
@@ -258,18 +259,17 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - loadTransfers()
-     * 
+     *
      * Description:
      *  Checks for valid date
      */
     private isValidDate(): boolean {
-        let date = (<HTMLInputElement>document.getElementById('dateIn')).value
-        if (date.length == 10) {
+        const date = (<HTMLInputElement>document.getElementById('dateIn')).value
+        if (date.length === 10) {
             this.dateInISO = moment(date, 'DD/MM/YYYY').toISOString(true)
             this.dateInISO = moment(this.dateInISO).format('YYYY-MM-DD')
             return true
-        }
-        else {
+        } else {
             this.dateInISO = ''
             return false
         }
@@ -279,7 +279,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * Caller(s):
      *  Class - loadTransfers()
      *  Class - assignDriver()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
@@ -291,7 +291,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      * Caller(s):
      *  Class - ngOnDestroy()
      *  Class - assignDriver()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
@@ -302,7 +302,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - assignDriver()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
@@ -313,7 +313,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Gets the record status from the form through the interaction service
      *  The variable 'recordStatus' will be checked by the template which decides which buttons to display
@@ -328,9 +328,9 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Caller(s): 
+     * Caller(s):
      *  Class - loadTransfers()
-     * 
+     *
      * Description:
      *  Stores the given date to the localStorage for reading in later visits
      */
@@ -341,7 +341,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - subscribeTointeractionService()
-     * 
+     *
      * Description:
      *  Gets the record status from the form through the interaction service
      *  The variable 'recordStatus' will be checked by the template which decides which buttons to display
@@ -355,7 +355,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - subscribeToInteractionService()
-     * 
+     *
      * Description:
      *  Gets the table status from the table through the interaction service
      *  The variable 'hasTableData' will be checked by the template to display or not the 'Assign driver' button
@@ -367,7 +367,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
     }
 
     private getDriversFromLocalStorage() {
-        let localStorageData = JSON.parse(localStorage.getItem('transfers'))
+        const localStorageData = JSON.parse(localStorage.getItem('transfers'))
         return JSON.parse(localStorageData.drivers)
     }
 

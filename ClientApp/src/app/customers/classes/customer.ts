@@ -1,4 +1,4 @@
-import { KeyValuePair } from "src/app/shared/classes/model-keyValuePair"
+import { KeyValuePair } from 'src/app/shared/classes/model-keyValuePair'
 
 export class Customer extends KeyValuePair {
     profession: string

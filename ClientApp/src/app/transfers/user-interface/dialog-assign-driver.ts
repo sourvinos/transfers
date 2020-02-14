@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
@@ -11,9 +11,9 @@ import { Driver } from 'src/app/drivers/classes/driver';
     styleUrls: ['../../shared/styles/dialogs.css', './dialog-assign-driver.css']
 })
 
-export class DialogAssignDriverComponent {
+export class DialogAssignDriverComponent implements OnInit {
 
-    id: string = ''
+    id = ''
     driverDescription = new FormControl()
     drivers: Driver[] = []
     filteredDrivers: Observable<Driver[]>
@@ -32,11 +32,11 @@ export class DialogAssignDriverComponent {
     /**
      * Caller(s):
      *  Template - Autocomplete
-     * 
+     *
      * Description:
      *  Updates the id of the driver
-     * 
-     * @param event 
+     *
+     * @param event
      */
     onSelectionChanged(event: { option: { id: string; }; }) {
         this.id = event.option.id
@@ -45,11 +45,11 @@ export class DialogAssignDriverComponent {
     /**
      * Caller(s):
      *  Class - trackChangesInAutoComplete
-     * 
+     *
      * Description:
      *  Filters the array according to the given characters
-     * 
-     * @param description 
+     *
+     * @param description
      */
     private filter(description: string): Driver[] {
         const filterValue = description.toLowerCase()
@@ -59,7 +59,7 @@ export class DialogAssignDriverComponent {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
@@ -72,7 +72,7 @@ export class DialogAssignDriverComponent {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Keeps track of what is given in the dropdown and filters the array
      */

@@ -1,16 +1,16 @@
-import { AfterViewInit, Component, HostListener } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router } from '@angular/router';
 import { AccountService } from '../shared/services/account.service';
 
 @Component({
-    selector: 'root',
+    selector: 'app-root',
     templateUrl: './root.component.html',
     styleUrls: ['./root.component.css']
 })
 
-export class RootComponent implements AfterViewInit {
+export class RootComponent implements OnInit, AfterViewInit {
 
-    showLoadingIndication: boolean = true
+    showLoadingIndication = true
 
     constructor(private accountService: AccountService, private router: Router) {
         this.router.events.subscribe((routerEvent) => {

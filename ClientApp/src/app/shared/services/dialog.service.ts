@@ -27,4 +27,4 @@ export class DialogService {
         return this.response.afterClosed()
     }
 
-} 
+}

@@ -6,8 +6,8 @@ import { DataService } from 'src/app/shared/services/data.service'
 
 export class DestinationService extends DataService {
 
-	constructor(private httpClient: HttpClient) {
-		super(httpClient, '/api/destinations')
-	}
+    constructor(private httpClient: HttpClient) {
+        super(httpClient, '/api/destinations')
+    }
 
 }

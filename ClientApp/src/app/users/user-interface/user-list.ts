@@ -15,7 +15,7 @@ import { User } from '../classes/user'
 
 export class UserListComponent implements OnInit, OnDestroy {
 
-    // #region Init
+    // #region Variables
 
     records: User[]
     filteredRecords: User[]
@@ -44,17 +44,17 @@ export class UserListComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
-        this.unlisten && this.unlisten()
+        this.unlisten()
     }
 
     /**
       * Caller(s):
       *  Class - subscribeTointeractionService()
-      * 
+      *
       * Description:
       *  Self-explanatory
-      * 
-      * @param id 
+      *
+      * @param id
       */
     editRecord(id: number) {
         this.navigateToEditRoute(id)
@@ -63,11 +63,11 @@ export class UserListComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - searchField
-     * 
+     *
      * Description:
      *  Filters and returns the array to the template according to the input
-     * 
-     * @param query 
+     *
+     * @param query
      */
     filter(query: string) {
         this.filteredRecords = query ? this.records.filter(p => p.userName.toLowerCase().includes(query.toLowerCase())) : this.records
@@ -76,7 +76,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - newRecord()
-     * 
+     *
      * Description:
      *  Navigates to the form so that new records can be appended
      */
@@ -87,22 +87,22 @@ export class UserListComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Adds keyboard functionality
      */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            "Escape": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+            'Escape': (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.goBack()
                 }
             },
-            "Alt.F": (event: KeyboardEvent): void => {
+            'Alt.F': (event: KeyboardEvent): void => {
                 event.preventDefault()
                 this.focus('searchField')
             },
-            "Alt.N": (event: KeyboardEvent): void => {
+            'Alt.N': (event: KeyboardEvent): void => {
                 event.preventDefault()
                 document.getElementById('new').click()
             }
@@ -115,7 +115,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - addShortcuts()
-     * 
+     *
      * Description:
      *  On escape navigates to the home route
      */
@@ -126,7 +126,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - constructor
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
@@ -138,20 +138,20 @@ export class UserListComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
-     *  Self-explanatory 
-     * 
-     * @param element 
+     *  Self-explanatory
+     *
+     * @param element
      */
     private focus(element: string) {
         Utils.setFocus(element)
     }
 
     /**
-     * Caller(s): 
+     * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Gets the selected record from the table through the service and executes the editRecord method
      */
@@ -164,11 +164,11 @@ export class UserListComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - editRecord()
-     * 
+     *
      * Description:
      *  Self-explanatory
-     * 
-     * @param id 
+     *
+     * @param id
      */
     private navigateToEditRoute(id: number) {
         this.router.navigate(['/users', id])

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
@@ -13,11 +13,11 @@ import { Router } from '@angular/router';
     styleUrls: ['../../shared/styles/forms.css']
 })
 
-export class RegisterFormComponent implements OnInit {
+export class RegisterFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Init
+    // #region Variables
 
-    url: string = '/'
+    url = '/'
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
@@ -44,18 +44,18 @@ export class RegisterFormComponent implements OnInit {
     ngOnDestroy(): void {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
-        this.unlisten && this.unlisten()
+        this.unlisten()
     }
 
     /**
      * Caller(s):
      *  Template - register()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
     register() {
-        if (!this.form.valid) return
+        if (!this.form.valid) { return }
         this.accountService.register(this.form.value).subscribe(result => {
             alert(result)
             if (result != null) {
@@ -67,13 +67,13 @@ export class RegisterFormComponent implements OnInit {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            "Alt.R": (event: KeyboardEvent): void => {
+            'Alt.R': (event: KeyboardEvent): void => {
                 event.preventDefault()
                 this.register()
             }
@@ -89,17 +89,17 @@ export class RegisterFormComponent implements OnInit {
 
      * Description:
      *  Calls the public method()
-     * 
-     * @param field 
+     *
+     * @param field
      */
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
     /**
-     * Caller(s): 
+     * Caller(s):
      *  Class - canDeactive(), deleteRecord(), saveRecord()
-     * 
+     *
      * Description:
      *  On successful user creation, goes to the home page
      */

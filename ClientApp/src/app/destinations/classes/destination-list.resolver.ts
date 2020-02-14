@@ -6,7 +6,7 @@ import { DestinationService } from './destination.service';
 
 @Injectable({ providedIn: 'root' })
 
-export class DestinationListResolver implements Resolve<Destination[]>{
+export class DestinationListResolver implements Resolve<Destination[]> {
 
     constructor(private destinationService: DestinationService) { }
 

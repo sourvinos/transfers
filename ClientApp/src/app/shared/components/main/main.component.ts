@@ -1,31 +1,31 @@
 import { Component, HostListener, AfterViewInit } from '@angular/core'
 
 @Component({
-	selector: 'main',
-	templateUrl: './main.component.html',
-	styleUrls: ['./main.component.css']
+    selector: 'app-main',
+    templateUrl: './main.component.html',
+    styleUrls: ['./main.component.css']
 })
 
 export class MainComponent implements AfterViewInit {
 
-	ngAfterViewInit() {
-		this.positionHamburger()
-	}
+    ngAfterViewInit() {
+        this.positionHamburger()
+    }
 
-	@HostListener('window:resize', ['$event']) onResize(event: { target: { innerWidth: any; }; }) {
-		this.positionHamburger()
-	}
+    @HostListener('window:resize', ['$event']) onResize(event: { target: { innerWidth: any; }; }) {
+        this.positionHamburger()
+    }
 
-	toggleMenu() {
-		document.getElementById('hamburger').classList.toggle('open')
-		var sidebar = document.getElementById('sidebar')
-		var main = document.getElementById('main')
-		sidebar.style.width = sidebar.style.width == '17rem' ? '0' : '17rem'
-	}
+    toggleMenu() {
+        document.getElementById('hamburger').classList.toggle('open')
+        const sidebar = document.getElementById('sidebar')
+        const main = document.getElementById('main')
+        sidebar.style.width = sidebar.style.width === '17rem' ? '0' : '17rem'
+    }
 
-	private positionHamburger() {
-		var hamburger = document.getElementById('hamburger')
-		hamburger.style.top = window.innerHeight - 68 + 'px'
-	}
+    private positionHamburger() {
+        const hamburger = document.getElementById('hamburger')
+        hamburger.style.top = window.innerHeight - 68 + 'px'
+    }
 
 }

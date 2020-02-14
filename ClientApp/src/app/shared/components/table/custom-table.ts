@@ -1,4 +1,4 @@
-import { Component, Input, IterableDiffer, IterableDiffers } from '@angular/core'
+import { Component, Input, IterableDiffer, IterableDiffers, OnInit, OnDestroy, AfterViewInit } from '@angular/core'
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 import { IndexInteractionService } from '../../services/index-interaction.service'
@@ -9,7 +9,7 @@ import { IndexInteractionService } from '../../services/index-interaction.servic
     styleUrls: ['./custom-table.css']
 })
 
-export class CustomTableComponent {
+export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Variables
 
@@ -21,11 +21,11 @@ export class CustomTableComponent {
     @Input() justify: any
     @Input() fields: any
 
-    currentRow: number = 0
+    currentRow = 0
     tableContainer: any
     customTable: any
-    rowHeight: number = 0
-    rowCount: number = 0
+    rowHeight = 0
+    rowCount = 0
 
     differences: IterableDiffer<any>;
 
@@ -46,17 +46,17 @@ export class CustomTableComponent {
     }
 
     ngOnDestroy() {
-        this.unlisten && this.unlisten()
+        this.unlisten()
     }
 
     /**
      * Caller(s):
      *  Template - table
-     * 
+     *
      * Description:
      *  Uses the DomChangeDirective to listen for DOM changes
-     * 
-     * @param $event 
+     *
+     * @param $event
      */
     onDomChange($event: Event) {
         this.gotoRow(1)
@@ -65,21 +65,21 @@ export class CustomTableComponent {
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
-     * 
+     *
      * Description:
      *  Just read me!
      */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            "Enter": (event: KeyboardEvent): void => {
+            'Enter': (event: KeyboardEvent): void => {
                 event.preventDefault()
                 this.sendRowToService()
             },
-            "Up": (event: KeyboardEvent): void => {
+            'Up': (event: KeyboardEvent): void => {
                 event.preventDefault()
                 this.gotoRow('Up')
             },
-            "Down": (event: KeyboardEvent): void => {
+            'Down': (event: KeyboardEvent): void => {
                 event.preventDefault()
                 this.gotoRow('Down')
             }
@@ -94,10 +94,10 @@ export class CustomTableComponent {
      *  Class - ngAfterViewInit()
      *  Class - onDomChange()
      *  Class - addShortcuts()
-     * 
+     *
      * Description:
      *  Highlights the next / previous row according to the arrow keys or highlights the clicked row
-     * 
+     *
      * @param key // The pressed key code or the line number to go to directly
      */
     private gotoRow(key: any) {
@@ -107,7 +107,7 @@ export class CustomTableComponent {
                 this.sendRowToIndexService()
             })
         }
-        if (key == 'Up' && this.currentRow > 1) {
+        if (key === 'Up' && this.currentRow > 1) {
             this.unselectRow()
             this.selectRow(this.customTable, 'up')
             this.sendRowToIndexService()
@@ -115,12 +115,12 @@ export class CustomTableComponent {
                 this.tableContainer.scrollTop = (this.currentRow - 1) * this.rowHeight
             }
         }
-        if (key == 'Down' && this.currentRow < this.rowCount) {
+        if (key === 'Down' && this.currentRow < this.rowCount) {
             this.unselectRow()
             this.selectRow(this.customTable, 'down')
             this.sendRowToIndexService()
             if (!this.isRowIntoView(this.customTable.rows[this.currentRow], key)) {
-                document.getElementById("line-" + this.currentRow.toString()).scrollIntoView({ block: "end" })
+                document.getElementById('line-' + this.currentRow.toString()).scrollIntoView({ block: 'end' })
             }
         }
     }
@@ -128,7 +128,7 @@ export class CustomTableComponent {
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
-     * 
+     *
      * Description:
      *  Initializes local variables
      */
@@ -142,26 +142,26 @@ export class CustomTableComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  Checks if the selected row is fully visible
-     * 
-     * @param row 
-     * @param direction 
+     *
+     * @param row
+     * @param direction
      */
     private isRowIntoView(row: HTMLTableRowElement, direction: string) {
         const rowOffsetTop = row.offsetTop
         const scrollTop = this.tableContainer.scrollTop
         const rowTopPlusHeight = rowOffsetTop + row.offsetHeight
         const indexTopPlusHeight = scrollTop + this.tableContainer.offsetHeight
-        if (direction == 'Up') {
+        if (direction === 'Up') {
             if (indexTopPlusHeight - rowOffsetTop + this.rowHeight < this.tableContainer.offsetHeight) {
                 return true
             } else {
                 return false
             }
         }
-        if (direction == 'Down') {
+        if (direction === 'Down') {
             if (rowTopPlusHeight <= indexTopPlusHeight) {
                 return true
             } else {
@@ -173,19 +173,19 @@ export class CustomTableComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  Updates the currentRow variable and highlights
-     * 
-     * @param table 
-     * @param direction 
+     *
+     * @param table
+     * @param direction
      */
     private selectRow(table: HTMLTableElement, direction: any) {
         if (!isNaN(direction)) {
-            this.currentRow = parseInt(direction)
+            this.currentRow = parseInt(direction, 10)
         } else {
-            if (direction == 'up') this.currentRow--
-            if (direction == 'down')++this.currentRow
+            if (direction === 'up') { this.currentRow-- }
+            if (direction === 'down') { ++this.currentRow }
         }
         document.getElementById('custom-table-input').focus()
         table.rows[this.currentRow].classList.add('selected')
@@ -194,13 +194,13 @@ export class CustomTableComponent {
     /**
      * Caller(s):
      *  Class - addShortcuts()
-     * 
+     *
      * Description:
      *  If the dialog exists, close it
      *  If the dialog does not exist, send the row to the service
      */
     private sendRowToService() {
-        if (document.getElementsByClassName('mat-dialog-container').length == 0) {
+        if (document.getElementsByClassName('mat-dialog-container').length === 0) {
             this.sendRowToBaseService()
         } else {
             this.indexInteractionService.action(true)
@@ -210,7 +210,7 @@ export class CustomTableComponent {
     /**
      * Caller(s):
      *  Class - sendRowToService()
-     * 
+     *
      * Description:
      *  Sends the selected row to the service so that the parent (list) can call the editRecord method
      */
@@ -221,7 +221,7 @@ export class CustomTableComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  On every arrow press, send the row to the service
      */
@@ -232,7 +232,7 @@ export class CustomTableComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  Removes the 'selected' class from all rows
      */
@@ -245,7 +245,7 @@ export class CustomTableComponent {
     /**
      * Caller(s):
      *  Class - gotoRow()
-     * 
+     *
      * Description:
      *  Removes the 'selected' class from the current row
      */

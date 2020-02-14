@@ -22,11 +22,11 @@ import { RouteService } from '../classes/route.service'
 
 export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Init
+    // #region Variables
 
     id: number
     route: Route
-    url: string = '/routes'
+    url = '/routes'
 
     ports: any[]
 
@@ -41,7 +41,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: ''
     })
 
-    // #endregion     
+    // #endregion
 
     constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService) {
         this.activatedRoute.params.subscribe(p => {
@@ -67,13 +67,13 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
-        this.unlisten && this.unlisten()
+        this.unlisten()
     }
 
     /**
      * Caller(s):
      *  Service - CanDeactivateGuard()
-     * 
+     *
      * Description:
      *  Desides which action to perform when a route change is requested
      */
@@ -86,8 +86,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
                     return true
                 }
             })
-        }
-        else {
+        } else {
             return true
         }
     }
@@ -95,7 +94,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - subscribeTointeractionService()
-     * 
+     *
      * Description:
      *  Deletes the current record
      */
@@ -113,24 +112,24 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - lookupIndex()
-     * 
+     *
      * Description:
      *  Filters the given array according to the user input and displays a table to select a record
-     * 
-     * @param lookupArray 
-     * @param title 
-     * @param formFields 
-     * @param fields 
-     * @param headers 
-     * @param widths 
-     * @param visibility 
-     * @param justify 
-     * @param value 
+     *
+     * @param lookupArray
+     * @param title
+     * @param formFields
+     * @param fields
+     * @param headers
+     * @param widths
+     * @param visibility
+     * @param justify
+     * @param value
      */
     lookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
-            var key = fields[1]
+            const key = fields[1]
             if (x[key].toUpperCase().includes(value.target.value.toUpperCase())) {
                 filteredArray.push(x)
             }
@@ -138,7 +137,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         if (filteredArray.length > 0) {
             this.showModalIndex(filteredArray, title, fields, headers, widths, visibility, justify)
         }
-        if (filteredArray.length == 0) {
+        if (filteredArray.length === 0) {
             this.clearFields(null, formFields[0], formFields[1])
             this.focus(formFields[1])
         }
@@ -147,31 +146,31 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            "Escape": () => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+            'Escape': () => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.goBack()
                 }
             },
-            "Alt.D": (event: KeyboardEvent) => {
+            'Alt.D': (event: KeyboardEvent) => {
                 event.preventDefault()
                 this.deleteRecord()
             },
-            "Alt.S": (event: KeyboardEvent) => {
+            'Alt.S': (event: KeyboardEvent) => {
                 this.saveRecord()
             },
-            "Alt.C": (event: KeyboardEvent) => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
+            'Alt.C': (event: KeyboardEvent) => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     document.getElementById('cancel').click()
                 }
             },
-            "Alt.O": (event: KeyboardEvent) => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
+            'Alt.O': (event: KeyboardEvent) => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     document.getElementById('ok').click()
                 }
             }
@@ -184,13 +183,13 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - lookupIndex(), showModalIndex()
-     * 
+     *
      * Description:
      *  Populates the form fields with empty values from the lookupIndex() or response values from the showModalIndex()
-     *  
-     * @param result 
-     * @param id 
-     * @param description 
+     *
+     * @param result
+     * @param id
+     * @param description
      */
     private clearFields(result: any, id: any, description: any) {
         this.form.patchValue({ [id]: result ? result.id : '' })
@@ -203,17 +202,17 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
      * Description:
      *  Calls the public method()
-     * 
-     * @param field 
+     *
+     * @param field
      */
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
     /**
-     * Caller(s): 
+     * Caller(s):
      *  Class - canDeactive(), deleteRecord(), saveRecord()
-     * 
+     *
      * Description:
      *  Send 'empty' to the 'setRecordStatus', so that the wrapper will display the 'new' button
      *  On escape navigates to the list
@@ -225,11 +224,11 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - getRecord()
-     * 
+     *
      * Description:
      *  Populates the form with record values
-     * 
-     * @param result 
+     *
+     * @param result
      */
     private populateFields(result: Route) {
         this.form.setValue({
@@ -244,7 +243,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - constructor()
-     * 
+     *
      * Description:
      *  Populates the form with initial values
      */
@@ -257,7 +256,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - saveRecord()
-     * 
+     *
      * Description:
      *  Resets the form with default values
      */
@@ -274,7 +273,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - saveRecord()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
@@ -287,20 +286,19 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - saveRecord()
-     * 
+     *
      * Description:
      *  Adds or updates an existing record
      */
     saveRecord() {
-        if (!this.form.valid) return
-        if (this.form.value.id == 0) {
+        if (!this.form.valid) { return }
+        if (this.form.value.id === 0) {
             this.routeService.add(this.form.value).subscribe(() => {
                 this.showSnackbar('Record saved', 'info')
                 this.resetForm()
                 this.goBack()
             })
-        }
-        else {
+        } else {
             this.routeService.update(this.form.value.id, this.form.value).subscribe(() => {
                 this.showSnackbar('Record updated', 'info')
                 this.resetForm()
@@ -312,7 +310,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - constructor()
-     * 
+     *
      * Description:
      *  Gets the selected record from the api
      */
@@ -328,26 +326,26 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - showModalIndex()
-     * 
+     *
      * Description:
      *  Assigns the key-value pair from the selected item in the modal to the form fields
-     *  
-     * @param result 
+     *
+     * @param result
      */
     private patchFields(result: any, fields: any[]) {
         if (result) {
             Object.entries(result).forEach(([key, value]) => {
                 this.form.patchValue({ [key]: value })
             })
-        }
-        else
+        } else {
             fields.forEach(field => {
                 this.form.patchValue({ [field]: '' })
             })
+        }
     }
 
     private populateDropDowns() {
-        let sources = []
+        const sources = []
         sources.push(this.portService.getAll())
         return forkJoin(sources).subscribe(
             result => {
@@ -360,13 +358,13 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - renameObjects()
-     * 
+     *
      * Description:
      *  Renames the selected in memory object
-     * 
-     * @param obj 
-     * @param oldKey 
-     * @param newKey 
+     *
+     * @param obj
+     * @param oldKey
+     * @param newKey
      */
     private renameKey(obj: Object, oldKey: string, newKey: string) {
         if (oldKey !== newKey) {
@@ -378,7 +376,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - populateDropDowns()
-     * 
+     *
      * Description:
      *  Renames the objects in memory for use in the template
      */
@@ -391,18 +389,18 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - lookupIndex()
-     * 
+     *
      * Description:
      *  Displays a modal window with a table so a record can be selected
-     * 
-     * @param elements 
-     * @param title 
-     * @param formFields 
-     * @param fields 
-     * @param headers 
-     * @param widths    
-     * @param visibility 
-     * @param justify 
+     *
+     * @param elements
+     * @param title
+     * @param formFields
+     * @param fields
+     * @param headers
+     * @param widths
+     * @param visibility
+     * @param justify
      */
     private showModalIndex(elements: any, title: string, fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {
         const dialog = this.dialog.open(DialogIndexComponent, {
@@ -425,14 +423,14 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Accepts data from the wrapper through the interaction service and decides which action to perform
      */
     private subscribeToInteractionService() {
         this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            if (response == 'saveRecord') this.saveRecord()
-            if (response == 'deleteRecord') this.deleteRecord()
+            if (response === 'saveRecord') { this.saveRecord() }
+            if (response === 'deleteRecord') { this.deleteRecord() }
         })
     }
 

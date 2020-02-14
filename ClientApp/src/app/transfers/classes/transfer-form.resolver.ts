@@ -5,7 +5,7 @@ import { TransferService } from './transfer.service';
 
 @Injectable({ providedIn: 'root' })
 
-export class TransferFormResolver implements Resolve<Transfer>{
+export class TransferFormResolver implements Resolve<Transfer> {
 
     constructor(private transferService: TransferService) { }
 

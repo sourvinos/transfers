@@ -19,11 +19,11 @@ import { PortService } from '../classes/port.service'
 
 export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Init
+    // #region Variables
 
     id: number
     port: Port
-    url: string = '/ports'
+    url = '/ports'
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
@@ -34,7 +34,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: ''
     })
 
-    // #endregion     
+    // #endregion
 
     constructor(private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) {
         this.activatedRoute.params.subscribe(p => {
@@ -58,13 +58,12 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
-        this.unlisten && this.unlisten()
+        this.unlisten()
     }
 
     /**
      * Caller(s):
      *  Service - CanDeactivateGuard()
-     * 
      * Description:
      *  Desides which action to perform when a route change is requested
      */
@@ -77,8 +76,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
                     return true
                 }
             })
-        }
-        else {
+        } else {
             return true
         }
     }
@@ -86,7 +84,6 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - deleteRecord()
-     * 
      * Description:
      *  Deletes the current record
      */
@@ -105,20 +102,19 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - saveRecord()
-     * 
+     *
      * Description:
      *  Adds or updates an existing record
      */
     saveRecord() {
-        if (!this.form.valid) return
-        if (this.form.value.id == 0) {
+        if (!this.form.valid) { return }
+        if (this.form.value.id === 0) {
             this.portService.add(this.form.value).subscribe(() => {
                 this.showSnackbar('Record saved', 'info')
                 this.resetForm()
                 this.goBack()
             })
-        }
-        else {
+        } else {
             this.portService.update(this.form.value.id, this.form.value).subscribe(() => {
                 this.showSnackbar('Record updated', 'info')
                 this.resetForm()
@@ -130,36 +126,36 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            "Escape": () => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+            'Escape': () => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.goBack()
                 }
             },
-            "Alt.D": (event: KeyboardEvent) => {
+            'Alt.D': (event: KeyboardEvent) => {
                 event.preventDefault()
                 this.deleteRecord()
             },
-            "Alt.S": (event: KeyboardEvent) => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+            'Alt.S': (event: KeyboardEvent) => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     event.preventDefault()
                     this.saveRecord()
                 }
             },
-            "Alt.C": (event: KeyboardEvent) => {
+            'Alt.C': (event: KeyboardEvent) => {
                 event.preventDefault()
-                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
+                if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     document.getElementById('cancel').click()
                 }
             },
-            "Alt.O": (event: KeyboardEvent) => {
+            'Alt.O': (event: KeyboardEvent) => {
                 event.preventDefault()
-                if (document.getElementsByClassName('cdk-overlay-pane').length != 0) {
+                if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     document.getElementById('ok').click()
                 }
             }
@@ -175,8 +171,8 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
      * Description:
      *  Calls the public method()
-     * 
-     * @param field 
+     *
+     * @param field
      */
     private focus(field: string) {
         Utils.setFocus(field)
@@ -185,7 +181,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - constructor()
-     * 
+     *
      * Description:
      *  Gets the selected record from the api
      */
@@ -199,9 +195,8 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller(s): 
+     * Caller(s):
      *  Class - canDeactive(), deleteRecord(), saveRecord()
-     * 
      * Description:
      *  On escape navigates to the list
      */
@@ -212,11 +207,10 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - getRecord()
-     * 
      * Description:
      *  Populates the form with record values
-     * 
-     * @param result 
+     *
+     * @param result
      */
     private populateFields() {
         if (this.id) {
@@ -234,7 +228,6 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - constructor()
-     * 
      * Description:
      *  Populates the form with initial values
      */
@@ -247,7 +240,6 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - canDeactivate() - saveRecord()
-     * 
      * Description:
      *  Resets the form with default values
      */
@@ -262,7 +254,6 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - saveRecord() - deleteRecord()
-     * 
      * Description:
      *  Self-explanatory
      */
@@ -276,6 +267,6 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.form.get('description')
     }
 
-    // #endregion 
+    // #endregion
 
 }

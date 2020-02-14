@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
@@ -12,21 +12,21 @@ import { RouteService } from 'src/app/routes/classes/route.service';
 import { Route } from 'src/app/routes/classes/route';
 
 @Component({
-    selector: 'pickupPoint-wrapper',
+    selector: 'pickuppoint-wrapper',
     templateUrl: './pickupPoint-wrapper.html',
     styleUrls: ['../../shared/styles/lists.css', './pickupPoint-wrapper.css']
 })
 
 export class PickupPointWrapperComponent implements OnInit, OnDestroy {
 
-    // #region Init
+    // #region Variables
 
-    id: string = ''
+    id = ''
     routeDescription = new FormControl()
     routes: Route[] = []
     filteredRoutes: Observable<Route[]>
 
-    recordStatus: string = 'empty'
+    recordStatus = 'empty'
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
@@ -46,13 +46,12 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.unsubscribe();
-        this.unlisten && this.unlisten()
+        this.unlisten()
     }
 
     /**
      * Caller(s):
      *  Template - deleteRecord()
-     * 
      * Description:
      *  Executes the delete method on the form through the interaction service
      */
@@ -63,7 +62,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - loadPickupPoints()
-     * 
+     *
      * Description:
      *  Loads from the api the records for the given route
      */
@@ -74,7 +73,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - newRecord()
-     * 
+     *
      * Description:
      *  Navigates to the form so that new records can be appended
      */
@@ -85,11 +84,11 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - Autocomplete
-     * 
+     *
      * Description:
      *  Updates the id which is used to find the relative pickup points
-     * 
-     * @param event 
+     *
+     * @param event
      */
     onSelectionChanged(event: { option: { id: string; }; }) {
         this.id = event.option.id
@@ -98,7 +97,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - saveRecord()
-     * 
+     *
      * Description:
      *  Executes the save method on the form through the interaction service
      */
@@ -109,33 +108,33 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - inList()
-     * 
+     *
      * Description:
      *  Returns true if we are list route in order to enable the 'new' button
      */
     inList(): boolean {
-        return this.router.url.split('/').length == 4
+        return this.router.url.split('/').length === 4
     }
 
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Adds keyboard functionality
      */
     private addShortcuts(): void {
         this.unlisten = this.keyboardShortcutsService.listen({
-            "Escape": (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length == 0) {
+            'Escape': (event: KeyboardEvent): void => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.goBack()
                 }
             },
-            "Alt.S": (event: KeyboardEvent): void => {
+            'Alt.S': (event: KeyboardEvent): void => {
                 event.preventDefault()
                 document.getElementById('search').click()
             },
-            "Alt.N": (event: KeyboardEvent): void => {
+            'Alt.N': (event: KeyboardEvent): void => {
                 event.preventDefault()
                 document.getElementById('new').click()
             }
@@ -148,10 +147,10 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - trackChangesInAutoComplete
-     * 
+     *
      * Description:
      *  Filters the array according to the given characters
-     * 
+     *
      * @param abbreviation
      */
     private filter(abbreviation: string) {
@@ -162,12 +161,12 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Calls the public method
-     * 
-     * @param field 
-     * 
+     *
+     * @param field
+     *
      */
     private focus(field: string): void {
         Utils.setFocus(field)
@@ -176,7 +175,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - addShortcuts()
-     * 
+     *
      * Description:
      *  On escape navigates to the home route
      */
@@ -187,7 +186,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - loadPickupPoints()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
@@ -198,7 +197,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Self-explanatory
      */
@@ -211,7 +210,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Gets the record status from the form through the interaction service
          */
@@ -222,7 +221,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     * 
+     *
      * Description:
      *  Keeps track of what is given in the dropdown and filters the array
      */
@@ -238,7 +237,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - subscribeTointeractionService()
-     * 
+     *
      * Description:
      *  Gets the record status from the form through the interaction service
      *  The variable 'recordStatus' will be checked by the template which decides which buttons to display

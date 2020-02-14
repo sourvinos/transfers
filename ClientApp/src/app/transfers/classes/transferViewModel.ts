@@ -1,9 +1,9 @@
-import { Transfer } from "./transfer";
+import { Transfer } from './transfer'
 
 export class TransferViewModel {
-	persons: number
-	transfers: Transfer[]
-	personsPerCustomer: number[]
-	personsPerDestination: number[]
-	personsPerRoute: number[]
+    persons: number
+    transfers: Transfer[]
+    personsPerCustomer: number[]
+    personsPerDestination: number[]
+    personsPerRoute: number[]
 }
