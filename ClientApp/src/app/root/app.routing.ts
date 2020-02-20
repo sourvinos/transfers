@@ -8,10 +8,9 @@ import { CustomerListComponent } from '../customers/user-interface/customer-list
 import { DestinationListComponent } from '../destinations/user-interface/destination-list'; import { DestinationFormComponent } from '../destinations/user-interface/destination-form'
 import { DriverListComponent } from '../drivers/user-interface/driver-list'; import { DriverFormComponent } from '../drivers/user-interface/driver-form'
 import { PortListComponent } from '../ports/user-interface/port-list'; import { PortFormComponent } from '../ports/user-interface/port-form'
-import { RegisterFormComponent } from '../register/user-interface/register-form'
 import { RouteListComponent } from '../routes/user-interface/route-list'; import { RouteFormComponent } from '../routes/user-interface/route-form'
 import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'
-import { UserListComponent } from '../users/user-interface/user-list'; import { UserFormComponent } from '../users/user-interface/user-form';
+import { UserListComponent } from '../users/user-interface/user-list'; import { RegisterFormComponent } from '../users/user-interface/register-form';
 import { EmptyPageComponent } from '../shared/components/empty-page/empty-page.component';
 // Guards
 import { AuthGuardService } from '../shared/services/auth-guard.service'
@@ -55,7 +54,7 @@ const appRoutes: Routes = [
                 ], runGuardsAndResolvers: 'always'
             }]
     },
-    { path: 'users', component: UserListComponent, canActivate: [AuthGuardService], resolve: { userList: UserListResolver } }, { path: 'users/:id', component: UserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
+    { path: 'users', component: UserListComponent, canActivate: [AuthGuardService], resolve: { userList: UserListResolver } }, { path: 'users/new', component: RegisterFormComponent }, { path: 'users/:id', component: RegisterFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
     { path: 'register', component: RegisterFormComponent, canActivate: [AuthGuardService] },
     { path: '**', component: EmptyPageComponent }
 ]

@@ -11,11 +11,9 @@ using Microsoft.IdentityModel.Tokens;
 using Transfers.Identity;
 using Transfers.Models;
 
-namespace Transfers
-{
+namespace Transfers {
     [Route("api/[controller]")]
-    public class TokenController : Controller
-    {
+    public class TokenController : Controller {
         // Variables
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppSettings _appSettings;
@@ -23,8 +21,7 @@ namespace Transfers
         private readonly ApplicationDbContext _db;
 
         // Constructor
-        public TokenController(UserManager<ApplicationUser> userManager, IOptions<AppSettings> appSettings, TokenModel token, ApplicationDbContext db)
-        {
+        public TokenController(UserManager<ApplicationUser> userManager, IOptions<AppSettings> appSettings, TokenModel token, ApplicationDbContext db) {
             _userManager = userManager;
             _appSettings = appSettings.Value;
             _token = token;
@@ -33,12 +30,10 @@ namespace Transfers
 
         // api/token/login
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login([FromBody] TokenRequestModel model)
-        {
+        public async Task<IActionResult> Login([FromBody] TokenRequestModel model) {
             if (model == null) return new StatusCodeResult(500);
 
-            switch (model.GrantType)
-            {
+            switch (model.GrantType) {
                 case "password":
                     return await GenerateNewToken(model);
                 case "refresh_token":
@@ -48,19 +43,15 @@ namespace Transfers
             }
         }
 
-        private async Task<IActionResult> GenerateNewToken(TokenRequestModel model)
-        {
+        private async Task<IActionResult> GenerateNewToken(TokenRequestModel model) {
             var user = await _userManager.FindByNameAsync(model.UserName);
 
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-            {
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password)) {
                 var newRtoken = CreateRefreshToken(_appSettings.ClientId, user.Id);
                 var oldrTokens = _db.Tokens.Where(rt => rt.UserId == user.Id);
 
-                if (oldrTokens != null)
-                {
-                    foreach (var oldrt in oldrTokens)
-                    {
+                if (oldrTokens != null) {
+                    foreach (var oldrt in oldrTokens) {
                         _db.Tokens.Remove(oldrt);
                     }
                 }
@@ -78,22 +69,19 @@ namespace Transfers
 
         }
 
-        private async Task<TokenResponseModel> CreateAccessToken(ApplicationUser user, string refreshToken)
-        {
+        private async Task<TokenResponseModel> CreateAccessToken(ApplicationUser user, string refreshToken) {
             double tokenExpiryTime = Convert.ToDouble(_appSettings.ExpireTime);
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.Secret));
             var roles = await _userManager.GetRolesAsync(user);
             var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(ClaimTypes.NameIdentifier, user.Id),
-                        new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
-                        new Claim("LoggedOn", DateTime.Now.ToString()),
-                     }),
+            var tokenDescriptor = new SecurityTokenDescriptor {
+                Subject = new ClaimsIdentity(new Claim[] {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
+                new Claim("LoggedOn", DateTime.Now.ToString()),
+                }),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature),
                 Issuer = _appSettings.Site,
                 Audience = _appSettings.Audience,
@@ -103,34 +91,29 @@ namespace Transfers
             var newtoken = tokenHandler.CreateToken(tokenDescriptor);
             var encodedToken = tokenHandler.WriteToken(newtoken);
 
-            return new TokenResponseModel()
-            {
+            return new TokenResponseModel() {
                 token = encodedToken,
-                expiration = newtoken.ValidTo,
-                refresh_token = refreshToken,
-                roles = roles.FirstOrDefault(),
-                userName = user.UserName,
-                displayName = user.DisplayName
+                    expiration = newtoken.ValidTo,
+                    refresh_token = refreshToken,
+                    roles = roles.FirstOrDefault(),
+                    userName = user.UserName,
+                    displayName = user.DisplayName
             };
 
         }
 
-        private TokenModel CreateRefreshToken(string clientId, string userId)
-        {
-            return new TokenModel()
-            {
+        private TokenModel CreateRefreshToken(string clientId, string userId) {
+            return new TokenModel() {
                 ClientId = clientId,
-                UserId = userId,
-                Value = Guid.NewGuid().ToString("N"),
-                CreatedDate = DateTime.UtcNow,
-                ExpiryTime = DateTime.UtcNow.AddMinutes(90)
+                    UserId = userId,
+                    Value = Guid.NewGuid().ToString("N"),
+                    CreatedDate = DateTime.UtcNow,
+                    ExpiryTime = DateTime.UtcNow.AddMinutes(90)
             };
         }
 
-        private async Task<IActionResult> RefreshToken(TokenRequestModel model)
-        {
-            try
-            {
+        private async Task<IActionResult> RefreshToken(TokenRequestModel model) {
+            try {
                 var rt = _db.Tokens.FirstOrDefault(t => t.ClientId == _appSettings.ClientId && t.Value == model.RefreshToken.ToString());
 
                 if (rt == null) return new UnauthorizedResult();
@@ -149,9 +132,7 @@ namespace Transfers
                 var response = await CreateAccessToken(user, rtNew.Value);
 
                 return Ok(new { authToken = response });
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Console.WriteLine(ex);
 
                 return new UnauthorizedResult();

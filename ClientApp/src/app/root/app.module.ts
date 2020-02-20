@@ -9,7 +9,6 @@ import { DestinationModule } from '../destinations/classes/destination.module';
 import { DriverModule } from '../drivers/classes/driver.module';
 import { PickupPointModule } from '../pickupPoints/classes/pickupPoint.module';
 import { PortModule } from '../ports/classes/port.module';
-import { RegisterModule } from '../register/classes/register.module';
 import { RouteModule } from '../routes/classes/route.module';
 import { EmptyPageComponent } from '../shared/components/empty-page/empty-page.component';
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
@@ -52,7 +51,6 @@ import { RootComponent } from './root.component';
         RouteModule,
         TransferModule,
         UserModule,
-        RegisterModule,
 
         NgIdleKeepaliveModule.forRoot(),
     ],

@@ -1,7 +1,7 @@
-namespace Transfers.Identity
-{
-    public class AppSettings
-    {
+namespace Transfers.Identity {
+
+    public class AppSettings {
+
         public string Site { get; set; }
         public string Audience { get; set; }
         public string ExpireTime { get; set; }
@@ -10,5 +10,7 @@ namespace Transfers.Identity
         public string RefreshToken { get; set; }
         public string GrantType { get; set; }
         public string ClientId { get; set; }
+
     }
+
 }

@@ -1,3 +1,5 @@
+using System.IO;
+using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,20 +9,15 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RazorLight;
 using Transfers.Identity;
 using Transfers.Models;
 using Transfers.Utils;
-using RazorLight;
-using System.IO;
-using System.Reflection;
 
-namespace Transfers
-{
-    public class Startup
-    {
+namespace Transfers {
+    public class Startup {
         // Constructor
-        public Startup(IConfiguration configuration)
-        {
+        public Startup(IConfiguration configuration) {
             Configuration = configuration;
         }
 
@@ -28,21 +25,20 @@ namespace Transfers
         public IConfiguration Configuration { get; }
 
         // Add configurations
-        public void ConfigureServices(IServiceCollection services)
-        {
+        public void ConfigureServices(IServiceCollection services) {
             services.AddScoped<TokenModel>();
 
             Extensions.AddIdentity(services);
             Extensions.AddAuthentication(Configuration, services);
             Extensions.AddAuthorization(services);
             Extensions.AddCors(services);
+            Extensions.AddEmailProviders(Configuration, services);
 
             services.AddAntiforgery(options => { options.Cookie.Name = "_af"; options.Cookie.HttpOnly = true; options.Cookie.SecurePolicy = CookieSecurePolicy.Always; options.HeaderName = "X-XSRF-TOKEN"; });
             services.AddAutoMapper();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:SqlServerConnection"]));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddScoped<IRazorLightEngine>(sp =>
-            {
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddScoped<IRazorLightEngine>(sp => {
                 var engine = new RazorLightEngineBuilder()
                     .UseFilesystemProject(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location))
                     .UseMemoryCachingProvider()
@@ -54,8 +50,7 @@ namespace Transfers
         }
 
         // Use configurations
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
             if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); } else { app.UseExceptionHandler("/Error"); app.UseHsts(); }
 
             app.UseAuthentication();

@@ -13,12 +13,12 @@ import { UserService } from '../classes/user.service';
 import { AccountService } from 'src/app/shared/services/account.service';
 
 @Component({
-    selector: 'user-form',
-    templateUrl: './user-form.html',
+    selector: 'register-form',
+    templateUrl: './register-form.html',
     styleUrls: ['../../shared/styles/forms.css']
 })
 
-export class UserFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class RegisterFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Variables
 
@@ -30,7 +30,7 @@ export class UserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     ngUnsubscribe = new Subject<void>();
 
     form = this.formBuilder.group({
-        id: '',
+        id: 0,
         userName: ['', [Validators.required, Validators.maxLength(100)]],
         displayName: ['', [Validators.required, Validators.maxLength(20)]],
         email: ['', [Validators.required, Validators.maxLength(100)]],
