@@ -1,8 +1,7 @@
-import { Injectable, NgZone } from '@angular/core'
-import { Observable, of } from 'rxjs'
+import { Injectable } from '@angular/core'
 import { MatDialog } from '@angular/material'
+import { Observable } from 'rxjs'
 import { DialogAlertComponent } from '../components/dialog-alert/dialog-alert.component'
-import { FormGroup, FormBuilder } from '@angular/forms'
 
 @Injectable({ providedIn: 'root' })
 
@@ -12,15 +11,15 @@ export class DialogService {
 
     constructor(public dialog: MatDialog) { }
 
-    public open(title: string, titleColor: string, message: string): Observable<boolean> {
+    public open(title: string, titleColor: string, message: string, actions: string[]): Observable<boolean> {
         this.response = this.dialog.open(DialogAlertComponent, {
-            height: '250px',
+            height: '300px',
             width: '550px',
             data: {
                 title: title,
                 titleColor: titleColor,
                 message: message,
-                actions: ['cancel', 'ok']
+                actions: actions
             },
             panelClass: 'dialog'
         })

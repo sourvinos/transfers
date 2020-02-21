@@ -20,11 +20,22 @@
                 <input type="text" matInput placeholder="Display name" formControlName="displayName" tabindex="2" id="displayName" [inputTabStop]="input">
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Email" formControlName="email" tabindex="3" id="email" [inputTabStop]="input">
+                <input type="email" matInput placeholder="Email" formControlName="email" tabindex="3" id="email" [inputTabStop]="input">
             </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput placeholder="Password" formControlName="password" tabindex="4" id="password" [inputTabStop]="input">
-            </mat-form-field>
+            <div formGroupName="passwords" id="passwords">
+                <mat-form-field>
+                    <input [type]="hidePassword ? 'password' : 'text'" matInput placeholder="Password" formControlName="password" tabindex="4" id="password" [inputTabStop]="input">
+                    <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+                        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                </mat-form-field>
+                <mat-form-field>
+                    <input [type]="hidePassword ? 'password' : 'text'" matInput placeholder="Verify password" formControlName="verifyPassword" tabindex="5" id="verifyPassword" [inputTabStop]="input" [errorStateMatcher]="errorMatcher">
+                    <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+                        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
             <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
         </div>
     </form>

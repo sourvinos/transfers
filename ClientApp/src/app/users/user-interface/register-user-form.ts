@@ -3,28 +3,33 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { AccountService } from 'src/app/shared/services/account.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { Utils } from '../../shared/classes/utils';
 import { HelperService } from '../../shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
-import { Utils } from '../../shared/classes/utils';
 import { User } from '../classes/user';
 import { UserService } from '../classes/user.service';
-import { AccountService } from 'src/app/shared/services/account.service';
+import { PasswordValidator } from 'src/app/shared/services/password-validator';
+import { CrossFieldErrorMatcher } from 'src/app/shared/services/cross-field-matcher';
 
 @Component({
-    selector: 'register-form',
-    templateUrl: './register-form.html',
-    styleUrls: ['../../shared/styles/forms.css']
+    selector: 'register-user-form',
+    templateUrl: './register-user-form.html',
+    styleUrls: ['../../shared/styles/forms.css', './register-user-form.css']
 })
 
-export class RegisterFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Variables
 
     id: string
     user: User
     url = '/users'
+    errorMatcher = new CrossFieldErrorMatcher()
+    hidePassword = true
+    flatForm: {}
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
@@ -33,8 +38,13 @@ export class RegisterFormComponent implements OnInit, AfterViewInit, OnDestroy {
         id: 0,
         userName: ['', [Validators.required, Validators.maxLength(100)]],
         displayName: ['', [Validators.required, Validators.maxLength(20)]],
-        email: ['', [Validators.required, Validators.maxLength(100)]],
-        password: ['', [Validators.required, Validators.maxLength(100)]],
+        email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
+        passwords: this.formBuilder.group({
+            password: ['', [Validators.required, Validators.maxLength(100)]],
+            verifyPassword: [''],
+        }, {
+            validator: PasswordValidator
+        })
     })
 
     // #endregion
@@ -71,7 +81,7 @@ export class RegisterFormComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     canDeactivate() {
         if (this.form.dirty) {
-            this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.').subscribe(response => {
+            this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.', ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
                     this.goBack()
@@ -91,7 +101,7 @@ export class RegisterFormComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Deletes the current record
      */
     deleteRecord() {
-        this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.').subscribe(response => {
+        this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.', ['ok', 'cancel']).subscribe(response => {
             if (response) {
                 this.userService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar('Record deleted', 'info')
@@ -113,8 +123,9 @@ export class RegisterFormComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.form.valid) { return }
         if (this.form.value.id === 0) {
             if (!this.form.valid) { return }
-            this.accountService.register(this.form.value).subscribe(result => {
-                this.showSnackbar('Record saved', 'info')
+            this.flattenFormFields()
+            this.accountService.register(this.flatForm).subscribe(() => {
+                this.showConfirmation()
                 this.resetForm()
                 this.goBack()
             })
@@ -167,6 +178,16 @@ export class RegisterFormComponent implements OnInit, AfterViewInit, OnDestroy {
             priority: 2,
             inputs: true
         })
+    }
+
+    private flattenFormFields() {
+        this.flatForm = {
+            id: this.form.value.id,
+            userName: this.form.value.userName,
+            displayName: this.form.value.displayName,
+            email: this.form.value.email,
+            password: this.form.value.passwords.password
+        }
     }
 
     /**
@@ -246,10 +267,21 @@ export class RegisterFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Caller(s):
+     *  Class - saveRecord()
+     */
+    private showConfirmation() {
+        this.dialogService.open('Confirmation', '#36fee0', 'We\'ve just sent you an email, so please open it and confirm your email address!', ['ok']).subscribe(response => {
+            if (response) {
+                this.resetForm()
+                this.goBack()
+                return true
+            }
+        })
+    }
+
+    /**
+     * Caller(s):
      *  Class - saveRecord() - deleteRecord()
-     *
-     * Description:
-     *  Self-explanatory
      */
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)

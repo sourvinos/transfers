@@ -9,11 +9,14 @@
     <form [formGroup]="form" autocomplete="off">
         <div id="section-one">
             <mat-form-field>
-                <input type="text" matInput placeholder="Username" formControlName="userName" tabindex="1" id="userName">
-                <!-- <input type="text" matInput placeholder="Username" formControlName="userName" tabindex="1" id="userName" [inputTabStop]="input"> -->
+                <!-- <input type="text" matInput placeholder="Username" formControlName="userName" tabindex="1" id="userName"> -->
+                <input type="text" matInput placeholder="Username" formControlName="userName" tabindex="1" id="userName" [inputTabStop]="input">
             </mat-form-field>
             <mat-form-field>
-                <input type="password" matInput placeholder="Password" formControlName="password" tabindex="2" id="password">
+                <input [type]="hidePassword ? 'password' : 'text'" matInput placeholder="Password" formControlName="password" tabindex="2" id="password" [inputTabStop]="input">
+                <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+                    <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
                 <!-- <input type="password" matInput placeholder="Password" formControlName="password" tabindex="2" id="password" [inputTabStop]="input"> -->
             </mat-form-field>
         </div>

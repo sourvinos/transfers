@@ -28,11 +28,12 @@ namespace Transfers.Controllers {
         // POST: api/account/register
         [HttpPost("[action]")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel formdata) {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             var user = new ApplicationUser { Email = formdata.Email, UserName = formdata.UserName, DisplayName = formdata.DisplayName, SecurityStamp = Guid.NewGuid().ToString() };
             var result = await userManager.CreateAsync(user, formdata.Password);
             if (result.Succeeded) {
                 await addUserToRole(user);
-                await sendConfirmationEmail(user);
+                // await sendConfirmationEmail(user);
                 return Ok();
             } else {
                 return StatusCode(409);

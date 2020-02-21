@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
-import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service'
 import { Utils } from '../../shared/classes/utils'
+import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service'
 import { User } from '../classes/user'
 
 @Component({
@@ -50,10 +50,6 @@ export class UserListComponent implements OnInit, OnDestroy {
     /**
       * Caller(s):
       *  Class - subscribeTointeractionService()
-      *
-      * Description:
-      *  Self-explanatory
-      *
       * @param id
       */
     editRecord(id: number) {
@@ -63,10 +59,8 @@ export class UserListComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - searchField
-     *
      * Description:
      *  Filters and returns the array to the template according to the input
-     *
      * @param query
      */
     filter(query: string) {
@@ -164,10 +158,6 @@ export class UserListComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - editRecord()
-     *
-     * Description:
-     *  Self-explanatory
-     *
      * @param id
      */
     private navigateToEditRoute(id: number) {

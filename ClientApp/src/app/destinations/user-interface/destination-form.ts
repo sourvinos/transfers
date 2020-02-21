@@ -71,7 +71,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
      */
     canDeactivate() {
         if (this.form.dirty) {
-            this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.').subscribe(response => {
+            this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.', ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
                     this.goBack()
@@ -91,7 +91,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
      *  Deletes the current record
      */
     deleteRecord() {
-        this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.').subscribe(response => {
+        this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.', ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.destinationService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar('Record deleted', 'info')

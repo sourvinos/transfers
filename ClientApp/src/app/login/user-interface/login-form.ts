@@ -20,6 +20,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
     countdown = 0
     invalidLogin: boolean
     returnUrl: string
+    hidePassword = true
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
