@@ -70,8 +70,7 @@
     --color-input-text-caret: #FFFFFF;
     --color-input-text-error: #FC3B3B;
     --color-input-text-focus: #FE9F36;
-    --color-input-text-label: #999999;
-    --color-select-arrow: #999999;
+    --color-input-text-label: #e2dcdc;
     --color-input-text-underline: #5F5E5E;
     --color-input-text-underline-focus: #BA680B;
     --color-input-text-not-focus: #FFFFFF;
@@ -88,8 +87,8 @@
     --color-company-logo-second-child: #FFE85C;
     --color-copyright: #FE9F36;
     --color-menu-active-item: #FE9F36;
-    --color-menu-list-items: #9F9F9F;
-    --color-user-info: #9F9F9F;
+    --color-menu-list-items: #e2dcdc;
+    --color-user-info: #e2dcdc;
     /* Tables */
     --color-table-background: #373F46;
     --color-table-header: #b3b2b2;

@@ -10,12 +10,12 @@ import { TransferService } from '../classes/transfer.service';
 import { TransferPdfService } from '../classes/transfer-pdf.service';
 
 @Component({
-    selector: 'list-transfer',
-    templateUrl: './list-transfer.html',
-    styleUrls: ['./list-transfer.css']
+    selector: 'transfer-list',
+    templateUrl: './transfer-list.html',
+    styleUrls: ['./transfer-list.css']
 })
 
-export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewChecked, DoCheck, OnDestroy {
+export class TransferListComponent implements OnInit, AfterViewInit, AfterViewChecked, DoCheck, OnDestroy {
 
     // #region Variables
 
@@ -98,7 +98,7 @@ export class ListTransferComponent implements OnInit, AfterViewInit, AfterViewCh
     ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
-        this.unlisten()
+        // this.unlisten()
     }
 
     /**

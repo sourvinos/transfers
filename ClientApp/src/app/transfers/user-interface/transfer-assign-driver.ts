@@ -6,19 +6,19 @@ import { map, startWith } from 'rxjs/operators';
 import { Driver } from 'src/app/drivers/classes/driver';
 
 @Component({
-    selector: 'dialog-assign-driver',
-    templateUrl: './dialog-assign-driver.html',
-    styleUrls: ['../../shared/styles/dialogs.css', './dialog-assign-driver.css']
+    selector: 'transfer-assign-driver',
+    templateUrl: './transfer-assign-driver.html',
+    styleUrls: ['../../shared/styles/dialogs.css', './transfer-assign-driver.css']
 })
 
-export class DialogAssignDriverComponent implements OnInit {
+export class TransferAssignDriverComponent implements OnInit {
 
     id = ''
     driverDescription = new FormControl()
     drivers: Driver[] = []
     filteredDrivers: Observable<Driver[]>
 
-    constructor(private dialogRef: MatDialogRef<DialogAssignDriverComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(private dialogRef: MatDialogRef<TransferAssignDriverComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit() {
         this.populateDropDowns()

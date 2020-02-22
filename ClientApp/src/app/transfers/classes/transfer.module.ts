@@ -1,26 +1,26 @@
 import { MaterialModule } from './../../shared/modules/material.module';
 import { SharedModule } from './../../shared/modules/shared.module';
 import { NgModule } from '@angular/core';
-import { WrapperTransferComponent } from '../user-interface/wrapper-transfer';
-import { ListTransferComponent } from '../user-interface/list-transfer';
-import { FormTransferComponent } from '../user-interface/form-transfer';
-import { DialogAssignDriverComponent } from '../user-interface/dialog-assign-driver';
-import { TableTransferComponent } from '../user-interface/table-transfer';
+import { TransferWrapperComponent } from '../user-interface/transfer-wrapper';
+import { TransferListComponent } from '../user-interface/transfer-list';
+import { TransferFormComponent } from '../user-interface/transfer-form';
+import { TransferAssignDriverComponent } from '../user-interface/transfer-assign-driver';
+import { TransferTableComponent } from '../user-interface/transfer-table';
 
 @NgModule({
     declarations: [
-        WrapperTransferComponent,
-        ListTransferComponent,
-        FormTransferComponent,
-        TableTransferComponent,
-        DialogAssignDriverComponent
+        TransferWrapperComponent,
+        TransferListComponent,
+        TransferFormComponent,
+        TransferTableComponent,
+        TransferAssignDriverComponent
     ],
     imports: [
         SharedModule,
         MaterialModule
     ],
     entryComponents: [
-        DialogAssignDriverComponent
+        TransferAssignDriverComponent
     ]
 })
 

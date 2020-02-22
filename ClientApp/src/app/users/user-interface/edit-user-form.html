@@ -1,0 +1,36 @@
+<div id="header">
+    <div id="navigation">
+        <button mat-mini-fab class="navigation">
+            <mat-icon id="goBack" (click)="goBack()">arrow_back</mat-icon>
+        </button>
+    </div>
+    <div id="title">
+        <h1>User</h1>
+    </div>
+    <mat-divider></mat-divider>
+</div>
+
+<div id="content">
+    <form [formGroup]="form" autocomplete="off">
+        <div id="section-one">
+            <mat-form-field>
+                <input type="text" matInput placeholder="Username" formControlName="userName" tabindex="1" id="userName" [inputTabStop]="input">
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" matInput placeholder="Display name" formControlName="displayName" tabindex="2" id="displayName" [inputTabStop]="input">
+            </mat-form-field>
+            <mat-form-field>
+                <input type="email" matInput placeholder="Email" formControlName="email" tabindex="3" id="email" [inputTabStop]="input">
+            </mat-form-field>
+            <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
+        </div>
+    </form>
+</div>
+
+<div id="footer">
+    <mat-divider></mat-divider>
+    <div id="buttons">
+        <button mat-flat-button class="delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
+        <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>
+    </div>
+</div>

@@ -2,12 +2,12 @@ import { Component, HostListener, Input, IterableChanges, IterableDiffer, Iterab
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 
 @Component({
-    selector: 'table-transfer',
-    templateUrl: './table-transfer.html',
-    styleUrls: ['./table-transfer.css']
+    selector: 'transfer-table',
+    templateUrl: './transfer-table.html',
+    styleUrls: ['./transfer-table.css']
 })
 
-export class TableTransferComponent implements OnInit, AfterViewInit, DoCheck {
+export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
 
     // #region Variables
 

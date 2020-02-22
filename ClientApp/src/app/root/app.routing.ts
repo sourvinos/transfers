@@ -1,32 +1,30 @@
-import { CustomerListResolver } from './../customers/classes/customer-list.resolver';
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
-// Routes
+// Components
 import { HomeComponent } from '../home/home.component'
 import { LoginFormComponent } from '../login/user-interface/login-form'
+import { EmptyPageComponent } from '../shared/components/empty-page/empty-page.component';
+// Route components
 import { CustomerListComponent } from '../customers/user-interface/customer-list'; import { CustomerFormComponent } from '../customers/user-interface/customer-form'
 import { DestinationListComponent } from '../destinations/user-interface/destination-list'; import { DestinationFormComponent } from '../destinations/user-interface/destination-form'
 import { DriverListComponent } from '../drivers/user-interface/driver-list'; import { DriverFormComponent } from '../drivers/user-interface/driver-form'
+import { PickupPointWrapperComponent } from '../pickupPoints/user-interface/pickupPoint-wrapper'; import { PickupPointListComponent } from '../pickupPoints/user-interface/pickupPoint-list'; import { PickupPointFormComponent } from '../pickupPoints/user-interface/pickupPoint-form';
 import { PortListComponent } from '../ports/user-interface/port-list'; import { PortFormComponent } from '../ports/user-interface/port-form'
 import { RouteListComponent } from '../routes/user-interface/route-list'; import { RouteFormComponent } from '../routes/user-interface/route-form'
-import { WrapperTransferComponent } from '../transfers/user-interface/wrapper-transfer'; import { ListTransferComponent } from '../transfers/user-interface/list-transfer'; import { FormTransferComponent } from '../transfers/user-interface/form-transfer'
-import { UserListComponent } from '../users/user-interface/user-list'; import { RegisterUserFormComponent } from '../users/user-interface/register-user-form';
-import { EmptyPageComponent } from '../shared/components/empty-page/empty-page.component';
-// Guards
-import { AuthGuardService } from '../shared/services/auth-guard.service'
-import { CanDeactivateGuard } from '../shared/services/can-deactivate-guard.service'
+import { TransferWrapperComponent } from '../transfers/user-interface/transfer-wrapper'; import { TransferListComponent } from '../transfers/user-interface/transfer-list'; import { TransferFormComponent } from '../transfers/user-interface/transfer-form'
+import { UserListComponent } from '../users/user-interface/user-list'; import { RegisterUserFormComponent } from '../users/user-interface/register-user-form'; import { EditUserFormComponent } from '../users/user-interface/edit-user-form'
 // Resolvers
+import { CustomerListResolver } from './../customers/classes/customer-list.resolver';
 import { DestinationListResolver } from '../destinations/classes/destination-list.resolver'
 import { DriverListResolver } from '../drivers/classes/driver-list.resolver'
 import { PickupPointListResolver } from '../pickupPoints/classes/pickupPoint-list.resolver'
 import { PortListResolver } from '../ports/classes/port-list.resolver'
 import { RouteListResolver } from '../routes/classes/route-list.resolver'
-import { TransferListResolver } from '../transfers/classes/transfer-list.resolver'
+import { TransferListResolver } from '../transfers/classes/transfer-list.resolver'; import { TransferFormResolver } from '../transfers/classes/transfer-form.resolver';
 import { UserListResolver } from '../users/classes/user-list.resolver';
-import { PickupPointWrapperComponent } from '../pickupPoints/user-interface/pickupPoint-wrapper';
-import { PickupPointListComponent } from '../pickupPoints/user-interface/pickupPoint-list';
-import { PickupPointFormComponent } from '../pickupPoints/user-interface/pickupPoint-form';
-import { TransferFormResolver } from '../transfers/classes/transfer-form.resolver';
+// Guards
+import { AuthGuardService } from '../shared/services/auth-guard.service'
+import { CanDeactivateGuard } from '../shared/services/can-deactivate-guard.service'
 
 const appRoutes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuardService], pathMatch: 'full' },
@@ -46,16 +44,15 @@ const appRoutes: Routes = [
     { path: 'ports', component: PortListComponent, canActivate: [AuthGuardService], resolve: { portList: PortListResolver } }, { path: 'ports/new', component: PortFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'ports/:id', component: PortFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
     { path: 'routes', component: RouteListComponent, canActivate: [AuthGuardService], resolve: { routeList: RouteListResolver } }, { path: 'routes/new', component: RouteFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'routes/:id', component: RouteFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
     {
-        path: 'transfers', component: WrapperTransferComponent, canActivate: [AuthGuardService], children: [
+        path: 'transfers', component: TransferWrapperComponent, canActivate: [AuthGuardService], children: [
             {
-                path: 'dateIn/:dateIn', component: ListTransferComponent, canActivate: [AuthGuardService], resolve: { transferList: TransferListResolver }, children: [
-                    { path: 'transfer/new', component: FormTransferComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
-                    { path: 'transfer/:transferId', component: FormTransferComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard], resolve: { transferForm: TransferFormResolver } }
+                path: 'dateIn/:dateIn', component: TransferListComponent, canActivate: [AuthGuardService], resolve: { transferList: TransferListResolver }, children: [
+                    { path: 'transfer/new', component: TransferFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
+                    { path: 'transfer/:transferId', component: TransferFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard], resolve: { transferForm: TransferFormResolver } }
                 ], runGuardsAndResolvers: 'always'
             }]
     },
-    { path: 'users', component: UserListComponent, canActivate: [AuthGuardService], resolve: { userList: UserListResolver } }, { path: 'users/new', component: RegisterUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'users/:id', component: RegisterUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
-    { path: 'register', component: RegisterUserFormComponent, canActivate: [AuthGuardService] },
+    { path: 'users', component: UserListComponent, canActivate: [AuthGuardService], resolve: { userList: UserListResolver } }, { path: 'users/new', component: RegisterUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'users/:id', component: EditUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
     { path: '**', component: EmptyPageComponent }
 ]
 

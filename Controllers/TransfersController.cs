@@ -1,34 +1,36 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Transfers.Models;
 using Transfers.Resources;
 
-namespace Transfers.Controllers
-{
+namespace Transfers.Controllers {
+
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLoggedIn")]
-    public class TransfersController : ControllerBase
-    {
+
+    public class TransfersController : ControllerBase {
+
         // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
         // Constructor
-        public TransfersController(IMapper mapper, ApplicationDbContext context)
-        {
+        public TransfersController(IMapper mapper, ApplicationDbContext context) {
+
             this.mapper = mapper;
             this.context = context;
+
         }
 
         // GET: api/transfers/date/YYYY-MM-DD
         [HttpGet("date/{dateIn}")]
-        public TransferGroupResultResource<TransferResource> getTransfers(DateTime dateIn)
-        {
+        public TransferGroupResultResource<TransferResource> getTransfers(DateTime dateIn) {
+
             var details = context.Transfers
                 .Include(x => x.Customer)
                 .Include(x => x.PickupPoint).ThenInclude(y => y.Route).ThenInclude(z => z.Port)
@@ -41,8 +43,7 @@ namespace Transfers.Controllers
             var totalPersonsPerDriver = context.Transfers.Include(x => x.Driver).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.Driver.Description }).Select(x => new TotalPersonsPerDriver { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
             var totalPersonsPerPort = context.Transfers.Include(x => x.PickupPoint.Route.Port).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.PickupPoint.Route.Port.Description }).Select(x => new TotalPersonsPerPort { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
 
-            var groupResult = new TransferGroupResult<Transfer>
-            {
+            var groupResult = new TransferGroupResult<Transfer> {
                 Persons = details.Sum(x => x.TotalPersons),
                 Transfers = details.ToList(),
                 PersonsPerCustomer = totalPersonsPerCustomer.ToList(),
@@ -57,8 +58,8 @@ namespace Transfers.Controllers
 
         // GET: api/transfers/5
         [HttpGet("{id}")]
-        public async Task<TransferResource> GetTransfer(int id)
-        {
+        public async Task<TransferResource> GetTransfer(int id) {
+
             Transfer transfer = await context.Transfers
                 .Include(x => x.Customer)
                 .Include(x => x.PickupPoint).ThenInclude(y => y.Route).ThenInclude(z => z.Port)
@@ -67,12 +68,13 @@ namespace Transfers.Controllers
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             return mapper.Map<Transfer, TransferResource>(transfer);
+
         }
 
         // POST: api/transfers
         [HttpPost]
-        public async Task<IActionResult> PostTransfer([FromBody] Transfer transfer)
-        {
+        public async Task<IActionResult> PostTransfer([FromBody] Transfer transfer) {
+
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             context.Transfers.Add(transfer);
@@ -80,14 +82,14 @@ namespace Transfers.Controllers
             await context.SaveChangesAsync();
 
             return Ok(transfer);
+
         }
 
         // PUT: api/transfers/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransfer([FromRoute] int id, [FromBody] SaveTransferResource transferResource)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+        public async Task<IActionResult> PutTransfer([FromRoute] int id, [FromBody] SaveTransferResource transferResource) {
 
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             if (id != transferResource.Id) return BadRequest();
 
             var transfer = await context.Transfers.SingleOrDefaultAsync(m => m.Id == id);
@@ -96,25 +98,22 @@ namespace Transfers.Controllers
 
             context.Entry(transfer).State = EntityState.Modified;
 
-            try
-            {
+            try {
                 await context.SaveChangesAsync();
-            }
-
-            catch (DbUpdateConcurrencyException)
-            {
+            } catch (DbUpdateConcurrencyException) {
                 transfer = await context.Transfers.SingleOrDefaultAsync(m => m.Id == id);
 
-                if (transfer == null) return NotFound(); else throw;
+                if (transfer == null) return NotFound();
             }
 
             return Ok();
+
         }
 
         // PATCH: api/transfers/assignDriver?driverId=7&id=77905&id=77910
         [HttpPatch("assignDriver")]
-        public async Task<IActionResult> AssignDriver(int driverId, [FromQuery(Name = "id")] int[] ids)
-        {
+        public async Task<IActionResult> AssignDriver(int driverId, [FromQuery(Name = "id")] int[] ids) {
+
             var transfers = await context.Transfers.Where(x => ids.Contains(x.Id)).ToListAsync();
 
             transfers.ForEach(a => a.DriverId = driverId);
@@ -122,13 +121,13 @@ namespace Transfers.Controllers
             await context.SaveChangesAsync();
 
             return Ok(transfers);
-        }
 
+        }
 
         // DELETE: api/transfers/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTransfer([FromRoute] int id)
-        {
+        public async Task<IActionResult> DeleteTransfer([FromRoute] int id) {
+
             Transfer transfer = await context.Transfers.SingleOrDefaultAsync(m => m.Id == id);
 
             if (transfer == null) return NotFound();
@@ -138,6 +137,9 @@ namespace Transfers.Controllers
             await context.SaveChangesAsync();
 
             return NoContent();
+
         }
+
     }
+
 }

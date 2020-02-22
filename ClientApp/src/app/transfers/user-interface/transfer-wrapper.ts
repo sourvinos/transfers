@@ -13,15 +13,15 @@ import { BaseInteractionService } from 'src/app/shared/services/base-interaction
 import { TransferFlat } from 'src/app/transfers/classes/transferFlat';
 import { TransferService } from '../classes/transfer.service';
 import { TransferPdfService } from '../classes/transfer-pdf.service';
-import { DialogAssignDriverComponent } from './dialog-assign-driver';
+import { TransferAssignDriverComponent } from './transfer-assign-driver';
 
 @Component({
-    selector: 'wrapper-transfer',
-    templateUrl: './wrapper-transfer.html',
-    styleUrls: ['../../shared/styles/lists.css', './wrapper-transfer.css']
+    selector: 'transfer-wrapper',
+    templateUrl: './transfer-wrapper.html',
+    styleUrls: ['../../shared/styles/lists.css', './transfer-wrapper.css']
 })
 
-export class WrapperTransferComponent implements OnInit, OnDestroy {
+export class TransferWrapperComponent implements OnInit, OnDestroy {
 
     // #region Variables
 
@@ -63,7 +63,7 @@ export class WrapperTransferComponent implements OnInit, OnDestroy {
      */
     assignDriver(): void {
         if (this.isRecordSelected()) {
-            const dialogRef = this.dialog.open(DialogAssignDriverComponent, {
+            const dialogRef = this.dialog.open(TransferAssignDriverComponent, {
                 height: '350px',
                 width: '550px',
                 data: {

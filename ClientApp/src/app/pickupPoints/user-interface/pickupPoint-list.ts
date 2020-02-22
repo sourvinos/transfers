@@ -61,7 +61,7 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
     ngOnDestroy(): void {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
-        this.unlisten()
+        // this.unlisten()
     }
 
     /**

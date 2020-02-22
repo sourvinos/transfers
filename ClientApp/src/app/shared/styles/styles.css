@@ -100,10 +100,6 @@ body, h1, h2, p {
     color: var(--color-summary-block-expansion-indicator) !important;
 }
 
-.mat-select-arrow {
-    color: var(--color-select-arrow) !important;
-}
-
 .mat-expansion-panel {
     border: 1px dotted var(--color-summary-block-border) !important;
 }

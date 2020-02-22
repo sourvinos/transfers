@@ -20,12 +20,12 @@ import { Transfer } from '../classes/transfer';
 import { TransferService } from '../classes/transfer.service';
 
 @Component({
-    selector: 'form-transfer',
-    templateUrl: './form-transfer.html',
-    styleUrls: ['./form-transfer.css']
+    selector: 'transfer-form',
+    templateUrl: './transfer-form.html',
+    styleUrls: ['./transfer-form.css']
 })
 
-export class FormTransferComponent implements OnInit, AfterViewInit, OnDestroy {
+export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Variables
 
