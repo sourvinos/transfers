@@ -87,6 +87,7 @@ namespace Transfers.Controllers {
         public async Task<IActionResult> PutUser([FromRoute] string id, [FromBody] UserViewModel vm) {
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (id != vm.Id) return BadRequest();
 
             ApplicationUser user = await userManager.FindByIdAsync(id);
 
@@ -98,11 +99,7 @@ namespace Transfers.Controllers {
                 IdentityResult result = await userManager.UpdateAsync(user);
 
                 if (result.Succeeded) {
-                    var p = await userManager.ChangePasswordAsync(user, vm.CurrentPassword, vm.NewPassword);
-
-                    if (p.Succeeded) {
-                        return Ok(user);
-                    }
+                    return Ok(user);
                 }
             }
 

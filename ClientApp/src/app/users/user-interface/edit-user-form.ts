@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
+import { CrossFieldErrorMatcher } from 'src/app/shared/services/cross-field-matcher';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
@@ -11,8 +12,6 @@ import { HelperService } from '../../shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { User } from '../classes/user';
 import { UserService } from '../classes/user.service';
-import { PasswordValidator } from 'src/app/shared/services/password-validator';
-import { CrossFieldErrorMatcher } from 'src/app/shared/services/cross-field-matcher';
 
 @Component({
     selector: 'edit-user-form',
@@ -111,7 +110,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Template - saveRecord()
      *
      * Description:
-     *  Adds or updates an existing record
+     *  Updates an existing record
      */
     saveRecord() {
         if (!this.form.valid) { return }
