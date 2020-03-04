@@ -2,8 +2,8 @@ import { AbstractControl } from '@angular/forms'
 
 export function PasswordValidator(control: AbstractControl): { [key: string]: any } | null {
     const password = control.get('password')
-    const verifyPassword = control.get('verifyPassword')
-    const validationFailed = password && verifyPassword && !password.pristine && !verifyPassword.pristine && password.value !== verifyPassword.value
+    const confirmPassword = control.get('confirmPassword')
+    const validationFailed = password && confirmPassword && !password.pristine && !confirmPassword.pristine && password.value !== confirmPassword.value
 
     return validationFailed ? { 'mismatch': { value: true } } : null
 }

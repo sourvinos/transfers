@@ -21,7 +21,7 @@ namespace Transfers {
             Configuration = configuration;
         }
 
-        // Variables
+        // Variablescon
         public IConfiguration Configuration { get; }
 
         // Add configurations

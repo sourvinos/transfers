@@ -122,9 +122,8 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     saveRecord() {
         if (!this.form.valid) { return }
         if (this.form.value.id === 0) {
-            if (!this.form.valid) { return }
             this.flattenFormFields()
-            this.accountService.register(this.flatForm).subscribe(() => {
+            this.userService.add(this.flatForm).subscribe(() => {
                 this.showConfirmation()
                 this.resetForm()
                 this.goBack()

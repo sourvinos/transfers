@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -62,7 +63,8 @@ namespace Transfers.Utils {
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ClockSkew = TimeSpan.Zero
                     };
-                });
+                }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                    configuration.Bind("CookieSettings", options));
         }
 
         // Authorization

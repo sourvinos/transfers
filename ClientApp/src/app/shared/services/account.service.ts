@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators'
 export class AccountService {
 
     private loginUrl = '/api/token/login'
-    private registerUrl = 'api/account/register'
+    private registerUrl = 'api/user/register'
     private userName = new BehaviorSubject<string>(localStorage.getItem('userName'))
     private displayName = new BehaviorSubject<string>(localStorage.getItem('displayName'))
     private userRole = new BehaviorSubject<string>(localStorage.getItem('userRole'))

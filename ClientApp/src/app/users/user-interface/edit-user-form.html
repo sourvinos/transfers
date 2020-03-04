@@ -31,6 +31,7 @@
     <mat-divider></mat-divider>
     <div id="buttons">
         <button mat-flat-button class="delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
+        <button mat-flat-button class="secondary" id="save" (click)="changePassword()">Change password</button>
         <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>
     </div>
 </div>

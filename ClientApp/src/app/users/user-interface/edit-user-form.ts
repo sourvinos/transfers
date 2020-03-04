@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
@@ -8,7 +9,6 @@ import { CrossFieldErrorMatcher } from 'src/app/shared/services/cross-field-matc
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
-import { HelperService } from '../../shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { User } from '../classes/user';
 import { UserService } from '../classes/user.service';
@@ -28,13 +28,13 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     url = '/users'
     errorMatcher = new CrossFieldErrorMatcher()
     hidePassword = true
-    flatForm: {}
+    // flatForm: {}
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
     form = this.formBuilder.group({
-        id: 0,
+        id: '',
         userName: ['', [Validators.required, Validators.maxLength(100)]],
         displayName: ['', [Validators.required, Validators.maxLength(20)]],
         email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]]
@@ -42,7 +42,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #endregion
 
-    constructor(private userService: UserService, private accountService: AccountService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) {
+    constructor(private userService: UserService, private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private location: Location) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['id']
             if (this.id) {
@@ -84,6 +84,10 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             return true
         }
+    }
+
+    changePassword() {
+        this.router.navigate([this.location.path() + '/changePassword'])
     }
 
     /**
