@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RazorLight;
+// using MySql.Data;
+// using RazorLight;
 using Transfers.Identity;
 using Transfers.Models;
 using Transfers.Utils;
@@ -36,15 +37,8 @@ namespace Transfers {
 
             services.AddAntiforgery(options => { options.Cookie.Name = "_af"; options.Cookie.HttpOnly = true; options.Cookie.SecurePolicy = CookieSecurePolicy.Always; options.HeaderName = "X-XSRF-TOKEN"; });
             services.AddAutoMapper();
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:SqlServerConnection"]));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(Configuration["ConnectionStrings:MySqlServerConnection"]));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddScoped<IRazorLightEngine>(sp => {
-                var engine = new RazorLightEngineBuilder()
-                    .UseFilesystemProject(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location))
-                    .UseMemoryCachingProvider()
-                    .Build();
-                return engine;
-            });
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
             services.Configure<CookiePolicyOptions>(options => { options.CheckConsentNeeded = context => true; options.MinimumSameSitePolicy = SameSiteMode.None; });
         }
