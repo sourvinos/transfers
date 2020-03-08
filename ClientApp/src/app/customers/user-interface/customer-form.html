@@ -15,6 +15,7 @@
         <div id="section-one">
             <mat-form-field>
                 <input type="text" matInput placeholder="Description" formControlName="description" tabindex="1" id="description" [inputTabStop]="input">
+                <mat-error *ngIf="description.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <input type="text" matInput placeholder="Profession" formControlName="profession" tabindex="2" id="profession" [inputTabStop]="input">
@@ -33,7 +34,7 @@
             <mat-form-field>
                 <input type="text" matInput placeholder="Email" formControlName="email" tabindex="6" id="email" [inputTabStop]="input">
             </mat-form-field>
-            <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
+            <span id="form-values" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</span>
         </div>
     </form>
 </div>

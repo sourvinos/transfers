@@ -144,6 +144,10 @@ body, h1, h2, p {
     background-color: var(--color-snackbar-background--info) !important;
 }
 
+.mat-form-field-wrapper {
+    margin-bottom: 1rem !important;
+}
+
 /* ! Wide screen */
 @media only screen and (min-width: 1367px) {
     .icon {
