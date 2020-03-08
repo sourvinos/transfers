@@ -25,39 +25,30 @@ namespace Transfers.Controllers {
 
         // Constructor
         public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<EmailSettings> emailSettings) {
-
             this.userManager = userManager;
             this.signManager = signInManager;
             this.emailSettings = emailSettings.Value;
-
         }
 
         // GET: api/users
         [HttpGet]
         public List<UserListViewModel> Get() {
-
             List<UserListViewModel> vm = new List<UserListViewModel>();
-
             vm = userManager.Users.Select(u => new UserListViewModel {
                 Id = u.Id,
                     UserName = u.UserName,
                     DisplayName = u.DisplayName,
                     Email = u.Email
             }).ToList();
-
             return vm;
-
         }
 
         // GET: api/users/5
         [HttpGet("{id}")]
         public async Task<UserViewModel> GetUser(string id) {
-
             UserViewModel vm = new UserViewModel { };
-
             if (!String.IsNullOrEmpty(id)) {
                 ApplicationUser user = await userManager.FindByIdAsync(id);
-
                 if (user != null) {
                     vm.Id = user.Id;
                     vm.UserName = user.UserName;
@@ -65,9 +56,7 @@ namespace Transfers.Controllers {
                     vm.Email = user.Email;
                 }
             }
-
             return vm;
-
         }
 
         // POST: api/users
@@ -82,10 +71,10 @@ namespace Transfers.Controllers {
             if (result.Succeeded) {
                 await addUserToRole(user);
                 // await sendConfirmationEmail(user);
-                return Ok();
-            } else {
-                return StatusCode(409);
+                return Ok(user);
             }
+
+            return StatusCode(409);
 
         }
 
@@ -117,25 +106,17 @@ namespace Transfers.Controllers {
         // POST: api/users/5
         [HttpPost("{id}")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordViewModel vm) {
-
             if (ModelState.IsValid) {
-
                 var user = await userManager.GetUserAsync(User);
-
                 if (user == null) return NotFound();
-
                 var result = await userManager.ChangePasswordAsync(user, vm.CurrentPassword, vm.NewPassword);
-
-                if (!result.Succeeded) return BadRequest();
-
-                await signManager.RefreshSignInAsync(user);
-
-                return Ok(user);
-
+                if (result.Succeeded) {
+                    await signManager.RefreshSignInAsync(user);
+                    return Ok();
+                }
+                return StatusCode(406);
             }
-
             return BadRequest();
-
         }
 
         private async Task<IActionResult> addUserToRole(ApplicationUser user) {

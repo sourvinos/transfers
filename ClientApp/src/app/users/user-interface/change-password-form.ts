@@ -103,6 +103,8 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
             this.showSnackbar('Record updated', 'info')
             this.resetForm()
             this.goBack()
+        }, error => {
+            this.showSnackbar('Record not updated', 'danger')
         })
     }
 

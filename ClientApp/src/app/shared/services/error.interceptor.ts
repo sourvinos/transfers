@@ -14,14 +14,15 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         const req = request.clone();
         return next.handle(req).pipe(
             catchError(response => {
-                if (response.status === 401 && this.loginStatus() === '0') {
-                    this.snackbarService.open('These credentials are invalid.', 'error')
+                if (this.loginStatus() === '0') {
+                    if (response.status === 401) { this.snackbarService.open('These credentials are invalid.', 'error') }
                 }
                 switch (response.status) {
                     case 400: this.snackbarService.open('This was a bad request.', 'error'); break
                     case 401 && this.loginStatus() === '0': this.snackbarService.open('These credentials are invalid.', 'error'); break
                     case 404: this.snackbarService.open('This record was not found.', 'error'); break
                     case 405: this.snackbarService.open('This action is not allowed.', 'error'); break
+                    case 406: this.snackbarService.open('The form has errors', 'error'); break
                     case 409: this.snackbarService.open('This account cannot be created.', 'error'); break
                     case 500: this.snackbarService.open('This record is in use and can not be deleted.', 'error'); break
                 }
