@@ -25,7 +25,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // #region Variables
 
     id: number
-    route: Route
     url = '/routes'
 
     ports: any[]
@@ -73,7 +72,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Service - CanDeactivateGuard()
-     *
      * Description:
      *  Desides which action to perform when a route change is requested
      */
@@ -94,7 +92,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - subscribeTointeractionService()
-     *
      * Description:
      *  Deletes the current record
      */
@@ -112,10 +109,8 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - lookupIndex()
-     *
      * Description:
      *  Filters the given array according to the user input and displays a table to select a record
-     *
      * @param lookupArray
      * @param title
      * @param formFields
@@ -146,7 +141,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     *
      * Description:
      *  Self-explanatory
      */
@@ -183,7 +177,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - lookupIndex(), showModalIndex()
-     *
      * Description:
      *  Populates the form fields with empty values from the lookupIndex() or response values from the showModalIndex()
      *
@@ -199,7 +192,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
-
      * Description:
      *  Calls the public method()
      *
@@ -212,7 +204,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - canDeactive(), deleteRecord(), saveRecord()
-     *
      * Description:
      *  Send 'empty' to the 'setRecordStatus', so that the wrapper will display the 'new' button
      *  On escape navigates to the list
@@ -224,7 +215,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - getRecord()
-     *
      * Description:
      *  Populates the form with record values
      *
@@ -243,7 +233,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - constructor()
-     *
      * Description:
      *  Populates the form with initial values
      */
@@ -256,7 +245,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - saveRecord()
-     *
      * Description:
      *  Resets the form with default values
      */
@@ -273,7 +261,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - saveRecord()
-     *
      * Description:
      *  Self-explanatory
      */
@@ -286,7 +273,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - saveRecord()
-     *
      * Description:
      *  Adds or updates an existing record
      */
@@ -310,15 +296,13 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - constructor()
-     *
      * Description:
      *  Gets the selected record from the api
      */
     private getRecord() {
         if (this.id) {
-            this.routeService.getSingle(this.id).then(response => {
-                this.route = response
-                this.populateFields(this.route)
+            this.routeService.getSingle(this.id).then(result => {
+                this.populateFields(result)
             })
         }
     }
@@ -326,7 +310,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - showModalIndex()
-     *
      * Description:
      *  Assigns the key-value pair from the selected item in the modal to the form fields
      *
@@ -358,7 +341,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - renameObjects()
-     *
      * Description:
      *  Renames the selected in memory object
      *
@@ -376,7 +358,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - populateDropDowns()
-     *
      * Description:
      *  Renames the objects in memory for use in the template
      */
@@ -389,10 +370,8 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - lookupIndex()
-     *
      * Description:
      *  Displays a modal window with a table so a record can be selected
-     *
      * @param elements
      * @param title
      * @param formFields
@@ -423,7 +402,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     *
      * Description:
      *  Accepts data from the wrapper through the interaction service and decides which action to perform
      */

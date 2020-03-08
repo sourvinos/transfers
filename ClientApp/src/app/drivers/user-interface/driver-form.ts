@@ -3,13 +3,12 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { Utils } from 'src/app/shared/classes/utils';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
-import { Utils } from 'src/app/shared/classes/utils';
 import { DriverService } from '../classes/driver.service';
-import { Driver } from '../classes/driver';
 
 @Component({
     selector: 'driver-form',
@@ -22,7 +21,6 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // #region Variables
 
     id: number
-    driver: Driver
     url = '/drivers'
 
     unlisten: Unlisten
@@ -65,7 +63,6 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Service - CanDeactivateGuard()
-     *
      * Description:
      *  Desides which action to perform when a route change is requested
      */
@@ -86,7 +83,6 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - deleteRecord()
-     *
      * Description:
      *  Deletes the current record
      */
@@ -105,13 +101,12 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - saveRecord()
-     *
      * Description:
      *  Adds or updates an existing record
      */
     saveRecord() {
         if (!this.form.valid) { return }
-        if (this.form.value.id = 0) {
+        if (this.form.value.id === 0) {
             this.driverService.add(this.form.value).subscribe(() => {
                 this.showSnackbar('Record saved', 'info')
                 this.resetForm()
@@ -129,7 +124,6 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     *
      * Description:
      *  Self-explanatory
      */
@@ -188,8 +182,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private getRecord() {
         if (this.id) {
             this.driverService.getSingle(this.id).then(result => {
-                this.driver = result
-                this.populateFields()
+                this.populateFields(result)
             })
         }
     }
@@ -211,18 +204,13 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Populates the form with record values
      * @param result
      */
-    private populateFields() {
-        if (this.id) {
-            this.driverService.getSingle(this.id).then(
-                result => {
-                    this.form.setValue({
-                        id: result.id,
-                        description: result.description,
-                        phones: result.phones,
-                        userName: result.userName
-                    })
-                })
-        }
+    private populateFields(result: any) {
+        this.form.setValue({
+            id: result.id,
+            description: result.description,
+            phones: result.phones,
+            userName: result.userName
+        })
     }
 
     /**
@@ -255,7 +243,6 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - saveRecord() - deleteRecord()
-     *
      * Description:
      *  Self-explanatory
      */

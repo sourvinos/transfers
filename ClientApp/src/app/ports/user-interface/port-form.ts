@@ -8,7 +8,6 @@ import { DialogService } from 'src/app/shared/services/dialog.service'
 import { HelperService } from 'src/app/shared/services/helper.service'
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { SnackbarService } from 'src/app/shared/services/snackbar.service'
-import { Port } from '../classes/port'
 import { PortService } from '../classes/port.service'
 
 @Component({
@@ -22,7 +21,6 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // #region Variables
 
     id: number
-    port: Port
     url = '/ports'
 
     unlisten: Unlisten
@@ -30,6 +28,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     form = this.formBuilder.group({
         id: 0,
+
         description: ['', [Validators.required, Validators.maxLength(100)]],
         userName: ''
     })
@@ -102,7 +101,6 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Template - saveRecord()
-     *
      * Description:
      *  Adds or updates an existing record
      */
@@ -126,7 +124,6 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     *
      * Description:
      *  Self-explanatory
      */
@@ -168,10 +165,8 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngAfterViewInit()
-
      * Description:
      *  Calls the public method()
-     *
      * @param field
      */
     private focus(field: string) {
@@ -181,15 +176,13 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - constructor()
-     *
      * Description:
      *  Gets the selected record from the api
      */
     private getRecord() {
         if (this.id) {
             this.portService.getSingle(this.id).then(result => {
-                this.port = result
-                this.populateFields()
+                this.populateFields(result)
             })
         }
     }
@@ -212,17 +205,13 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @param result
      */
-    private populateFields() {
-        if (this.id) {
-            this.portService.getSingle(this.id).then(
-                result => {
-                    this.form.setValue({
-                        id: result.id,
-                        description: result.description,
-                        userName: result.userName
-                    })
-                })
-        }
+    private populateFields(result: any) {
+        this.form.setValue({
+            id: result.id,
+            description: result.description,
+            userName: result.userName
+
+        })
     }
 
     /**

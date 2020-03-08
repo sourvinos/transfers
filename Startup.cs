@@ -1,5 +1,3 @@
-using System.IO;
-using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,8 +7,6 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-// using MySql.Data;
-// using RazorLight;
 using Transfers.Identity;
 using Transfers.Models;
 using Transfers.Utils;
@@ -28,13 +24,11 @@ namespace Transfers {
         // Add configurations
         public void ConfigureServices(IServiceCollection services) {
             services.AddScoped<TokenModel>();
-
             Extensions.AddIdentity(services);
             Extensions.AddAuthentication(Configuration, services);
             Extensions.AddAuthorization(services);
             Extensions.AddCors(services);
             Extensions.AddEmailProviders(Configuration, services);
-
             services.AddAntiforgery(options => { options.Cookie.Name = "_af"; options.Cookie.HttpOnly = true; options.Cookie.SecurePolicy = CookieSecurePolicy.Always; options.HeaderName = "X-XSRF-TOKEN"; });
             services.AddAutoMapper();
             services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(Configuration["ConnectionStrings:MySqlServerConnection"]));
