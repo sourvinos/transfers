@@ -50,10 +50,15 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Caller(s):
+     *  Template - forgotPassword()
+     */
+    forgotPassword() {
+        alert('Forgot password activated')
+    }
+
+    /**
+     * Caller(s):
      *  Template - login()
-     *
-     * Description:
-     *  Self-explanatory
      */
     login() {
         const userlogin = this.form.value
@@ -68,7 +73,6 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - ngOnInit()
-     *
      * Description:
      *  Self-explanatory
      */

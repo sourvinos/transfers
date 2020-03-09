@@ -31,6 +31,10 @@
     margin: 0 1rem;
 }
 
+span#form-values {
+    color: olivedrab;
+    font-family: "Ubuntu Condensed";
+}
 
 /* Small heights */
 @media only screen and (max-height: 60rem) {

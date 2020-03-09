@@ -483,10 +483,10 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             pickupPointId: 0, pickupPointDescription: '',
             driverId: 0, driverDescription: '',
             portId: 0, portDescription: '',
-            adults: '0',
-            kids: '0',
-            free: '0',
-            totalPersons: '0',
+            adults: 0,
+            kids: 0,
+            free: 0,
+            totalPersons: 0,
             remarks: '',
             userName: ''
         })
