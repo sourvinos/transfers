@@ -1,10 +1,12 @@
-﻿namespace Transfers.Models
-{
-    public class Destination
-    {
+﻿namespace Transfers.Models {
+
+    public class Destination {
+
         public int Id { get; set; }
         public string Abbreviation { get; set; }
         public string Description { get; set; }
         public string UserName { get; set; }
+
     }
+
 }

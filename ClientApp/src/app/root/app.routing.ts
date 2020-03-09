@@ -13,6 +13,7 @@ import { PortListComponent } from '../ports/user-interface/port-list'; import { 
 import { RouteListComponent } from '../routes/user-interface/route-list'; import { RouteFormComponent } from '../routes/user-interface/route-form'
 import { TransferWrapperComponent } from '../transfers/user-interface/transfer-wrapper'; import { TransferListComponent } from '../transfers/user-interface/transfer-list'; import { TransferFormComponent } from '../transfers/user-interface/transfer-form'
 import { UserListComponent } from '../users/user-interface/user-list'; import { RegisterUserFormComponent } from '../users/user-interface/register-user-form'; import { EditUserFormComponent } from '../users/user-interface/edit-user-form'; import { ChangePasswordFormComponent } from '../users/user-interface/change-password-form'
+import { ForgotPasswordFormComponent } from '../account/user-interface/forgot-password-form';
 // Resolvers
 import { CustomerListResolver } from './../customers/classes/customer-list.resolver';
 import { DestinationListResolver } from '../destinations/classes/destination-list.resolver'
@@ -52,10 +53,8 @@ const appRoutes: Routes = [
                 ], runGuardsAndResolvers: 'always'
             }]
     },
-    { path: 'users', component: UserListComponent, canActivate: [AuthGuardService], resolve: { userList: UserListResolver } },
-    { path: 'users/new', component: RegisterUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
-    { path: 'users/:id/changePassword', component: ChangePasswordFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
-    { path: 'users/:id', component: EditUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
+    { path: 'users', component: UserListComponent, canActivate: [AuthGuardService], resolve: { userList: UserListResolver } }, { path: 'users/new', component: RegisterUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'users/:id/changePassword', component: ChangePasswordFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'users/:id', component: EditUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
+    { path: 'forgotPassword', component: ForgotPasswordFormComponent },
     { path: '**', component: EmptyPageComponent }
 ]
 

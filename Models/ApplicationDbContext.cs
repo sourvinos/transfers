@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Transfers.Identity;
 
 namespace Transfers.Models {
+
     public class ApplicationDbContext : IdentityDbContext<IdentityUser> {
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Customer> Customers { get; set; }
@@ -13,11 +15,10 @@ namespace Transfers.Models {
         public DbSet<PickupPoint> PickupPoints { get; set; }
         public DbSet<Port> Ports { get; set; }
         public DbSet<Route> Routes { get; set; }
-        public DbSet<TaxOffice> TaxOffices { get; set; }
         public DbSet<Transfer> Transfers { get; set; }
-        public DbSet<VATState> VATStates { get; set; }
 
         public DbSet<TokenModel> Tokens { get; set; }
+
     }
 
 }

@@ -1,9 +1,9 @@
 ﻿using Transfers.Models;
 
-namespace Transfers.Models
-{
-    public class PickupPoint
-    {
+namespace Transfers.Models {
+
+    public class PickupPoint {
+
         public int Id { get; set; }
         public string Description { get; set; }
         public string ExactPoint { get; set; }
@@ -14,4 +14,5 @@ namespace Transfers.Models
 
         public Route Route { get; set; }
     }
+
 }

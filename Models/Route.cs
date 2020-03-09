@@ -1,7 +1,7 @@
-namespace Transfers.Models
-{
-    public class Route
-    {
+namespace Transfers.Models {
+
+    public class Route {
+
         public int Id { get; set; }
         public string Abbreviation { get; set; }
         public string Description { get; set; }
@@ -10,5 +10,7 @@ namespace Transfers.Models
         public int PortId { get; set; }
 
         public Port Port { get; set; }
+
     }
+
 }

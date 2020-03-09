@@ -17,6 +17,7 @@ import { MaterialModule } from '../shared/modules/material.module';
 import { HttpErrorInterceptor } from '../shared/services/error.interceptor';
 import { JwtInterceptor } from '../shared/services/jwt.interceptor';
 import { UserModule } from '../users/classes/user.module';
+import { AccountModule } from './../account/classes/account.module';
 import { HomeComponent } from './../home/home.component';
 import { LoginModule } from './../login/classes/login.module';
 import { MainComponent } from './../shared/components/main/main.component';
@@ -31,7 +32,7 @@ import { RootComponent } from './root.component';
         HomeComponent,
         SidebarComponent,
         DomChangeDirective,
-        EmptyPageComponent,
+        EmptyPageComponent
     ],
     imports: [
         AppRouting,
@@ -41,7 +42,7 @@ import { RootComponent } from './root.component';
         HttpClientModule,
         ReactiveFormsModule,
         MaterialModule,
-
+        AccountModule,
         CustomerModule,
         DestinationModule,
         DriverModule,
@@ -51,7 +52,6 @@ import { RootComponent } from './root.component';
         RouteModule,
         TransferModule,
         UserModule,
-
         NgIdleKeepaliveModule.forRoot(),
     ],
     providers: [

@@ -1,4 +1,5 @@
-namespace Transfers.Models
-{
+namespace Transfers.Models {
+
 	public class TotalPersonsPerCustomer : TotalPersonsKeyValuePair { }
+
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Transfers.Identity;
 using Transfers.Models;
@@ -61,7 +62,7 @@ namespace Transfers.Controllers {
 
         // POST: api/users
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] RegisterViewModel formdata) {
+        public async Task<IActionResult> PostUser([FromBody] RegisterViewModel formdata) {
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
