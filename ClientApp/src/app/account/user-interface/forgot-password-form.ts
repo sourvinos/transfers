@@ -25,13 +25,12 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
     ngUnsubscribe = new Subject<void>();
 
     form = this.formBuilder.group({
-        id: '',
         email: ['', [Validators.required, Validators.maxLength(100)]],
     })
 
     // #endregion
 
-    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService) { }
+    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService) { }
 
     ngOnInit() {
         this.addShortcuts()
@@ -66,10 +65,15 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
 
     /**
      * Caller(s):
+     *  Template - goBack()
+     */
+    goBack() {
+        this.router.navigate([this.url])
+    }
+
+    /**
+     * Caller(s):
      *  Class - ngOnInit()
-     *
-     * Description:
-     *  Self-explanatory
      */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
@@ -81,7 +85,7 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     event.preventDefault()
-                    this.saveRecord()
+                    // this.saveRecord()
                 }
             }
         }, {
@@ -101,22 +105,12 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
 
     /**
      * Caller(s):
-     *  Template - goBack()
-     *
-     * Description:
-     *  On escape navigates to the list
-     */
-    private goBack() {
-        this.router.navigate([this.url])
-    }
-
-    /**
-     * Caller(s):
      *  Class - saveRecord()
      */
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
+
 
     // #region Helper properties
 

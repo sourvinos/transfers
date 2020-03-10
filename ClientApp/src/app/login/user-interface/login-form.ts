@@ -53,7 +53,6 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
      *  Template - forgotPassword()
      */
     forgotPassword() {
-        alert('Password reset')
         this.router.navigate(['/forgotPassword'])
     }
 

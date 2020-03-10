@@ -136,6 +136,7 @@ namespace Transfers {
                     logger.Log(LogLevel.Information, passwordResetLink);
                     return Ok(passwordResetLink);
                 }
+                return Ok();
             }
             return BadRequest();
         }
