@@ -49,7 +49,4 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         }
     }
 
-    forgotPassword() {
-        this.router.navigate(['/forgotPassword'])
-    }
 }

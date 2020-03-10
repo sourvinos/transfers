@@ -8,8 +8,8 @@ export class AccountService {
 
     constructor(public http: HttpClient) { }
 
-    forgotPassword(formData: any): Observable<any> {
-        return this.http.post<any>('api/account/forgotPassword', formData)
+    resetPassword(formData: any): Observable<any> {
+        return this.http.post<any>('api/account/resetPassword', formData)
     }
 
 }

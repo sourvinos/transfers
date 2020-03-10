@@ -9,12 +9,12 @@ import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shor
 import { AccountService } from '../classes/account.service';
 
 @Component({
-    selector: 'forgot-password-form',
-    templateUrl: './forgot-password-form.html',
+    selector: 'reset-password-form',
+    templateUrl: './reset-password-form.html',
     styleUrls: ['../../shared/styles/forms.css']
 })
 
-export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Variables
 
@@ -55,7 +55,7 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
      */
     saveRecord() {
         if (!this.form.valid) { return }
-        this.accountService.forgotPassword(this.form.value).subscribe(() => {
+        this.accountService.resetPassword(this.form.value).subscribe(() => {
             this.showSnackbar('Token created', 'info')
             this.goBack()
         }, () => {

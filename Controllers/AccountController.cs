@@ -125,9 +125,9 @@ namespace Transfers {
             }
         }
 
-        // api/account/forgotPassword
+        // api/account/resetPassword
         [HttpPost("[action]")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPassword model) {
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPassword model) {
             if (ModelState.IsValid) {
                 var user = await userManager.FindByEmailAsync(model.Email);
                 if (user != null && await userManager.IsEmailConfirmedAsync(user)) {

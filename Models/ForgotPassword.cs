@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Transfers.Models {
 
-    public class ForgotPassword {
+    public class ResetPassword {
 
         public string Email { get; set; }
 

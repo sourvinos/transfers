@@ -50,10 +50,10 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Template - forgotPassword()
+     *  Template - resetPassword()
      */
-    forgotPassword() {
-        this.router.navigate(['/forgotPassword'])
+    resetPassword() {
+        this.router.navigate(['/resetPassword'])
     }
 
     /**
