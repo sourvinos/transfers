@@ -15,7 +15,10 @@
             "request": "launch",
             "name": "Chrome",
             "url": "https://localhost:5001",
-            "webRoot": "${workspaceFolder}/ClientApp"
+            "webRoot": "${workspaceFolder}/ClientApp",
+            "skipFiles": [
+                "node_modules/**/*.js"
+            ]
         },
         {
             "name": ".NET Core",

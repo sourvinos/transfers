@@ -1,7 +1,7 @@
-import { BehaviorSubject, Observable, of } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
+import { BehaviorSubject, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 @Injectable({ providedIn: 'root' })
@@ -76,6 +76,16 @@ export class AccountService {
                 return <any>result
             })
         )
+    }
+
+    resetPassword(formData: any): Observable<any> {
+        return this.http.post<any>('api/account/forgetPassword', formData)
+    }
+
+    confirmEmail(url: any) {
+        this.http.get<any>('api/account/confirmEmail', url).subscribe(result => {
+            console.log(result)
+        })
     }
 
     private checkLoginStatus(): boolean {

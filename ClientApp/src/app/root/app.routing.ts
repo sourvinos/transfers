@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 // Components
 import { HomeComponent } from '../home/home.component'
-import { LoginFormComponent } from '../login/user-interface/login-form'
 import { EmptyPageComponent } from '../shared/components/empty-page/empty-page.component';
-// Route components
+import { EmailConfirmedComponent } from '../account/user-interface/email-confirmed';
+import { LoginFormComponent } from '../login/user-interface/login-form'
 import { CustomerListComponent } from '../customers/user-interface/customer-list'; import { CustomerFormComponent } from '../customers/user-interface/customer-form'
 import { DestinationListComponent } from '../destinations/user-interface/destination-list'; import { DestinationFormComponent } from '../destinations/user-interface/destination-form'
 import { DriverListComponent } from '../drivers/user-interface/driver-list'; import { DriverFormComponent } from '../drivers/user-interface/driver-form'
@@ -13,7 +13,7 @@ import { PortListComponent } from '../ports/user-interface/port-list'; import { 
 import { RouteListComponent } from '../routes/user-interface/route-list'; import { RouteFormComponent } from '../routes/user-interface/route-form'
 import { TransferWrapperComponent } from '../transfers/user-interface/transfer-wrapper'; import { TransferListComponent } from '../transfers/user-interface/transfer-list'; import { TransferFormComponent } from '../transfers/user-interface/transfer-form'
 import { UserListComponent } from '../users/user-interface/user-list'; import { RegisterUserFormComponent } from '../users/user-interface/register-user-form'; import { EditUserFormComponent } from '../users/user-interface/edit-user-form'; import { ChangePasswordFormComponent } from '../users/user-interface/change-password-form'
-import { ResetPasswordFormComponent } from '../account/user-interface/reset-password-form';
+import { ForgotPasswordFormComponent } from '../account/user-interface/forgot-password-form';
 // Resolvers
 import { CustomerListResolver } from './../customers/classes/customer-list.resolver';
 import { DestinationListResolver } from '../destinations/classes/destination-list.resolver'
@@ -54,7 +54,8 @@ const appRoutes: Routes = [
             }]
     },
     { path: 'users', component: UserListComponent, canActivate: [AuthGuardService], resolve: { userList: UserListResolver } }, { path: 'users/new', component: RegisterUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'users/:id/changePassword', component: ChangePasswordFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'users/:id', component: EditUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
-    { path: 'resetPassword', component: ResetPasswordFormComponent },
+    { path: 'forgotPassword', component: ForgotPasswordFormComponent },
+    { path: 'emailConfirmed', component: EmailConfirmedComponent },
     { path: '**', component: EmptyPageComponent }
 ]
 

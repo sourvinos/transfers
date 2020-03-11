@@ -60,7 +60,7 @@ namespace Transfers.Controllers {
         [HttpPost]
         public async Task<IActionResult> PostDriver([FromBody] Driver driver) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
 
             context.Drivers.Add(driver);
 
@@ -74,7 +74,7 @@ namespace Transfers.Controllers {
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDriver([FromRoute] int id, [FromBody] Driver driver) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
             if (id != driver.Id) return BadRequest();
 
             context.Entry(driver).State = EntityState.Modified;

@@ -75,7 +75,7 @@ namespace Transfers.Controllers {
         [HttpPost]
         public async Task<IActionResult> PostTransfer([FromBody] Transfer transfer) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
 
             context.Transfers.Add(transfer);
 
@@ -89,7 +89,7 @@ namespace Transfers.Controllers {
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTransfer([FromRoute] int id, [FromBody] SaveTransferResource transferResource) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
             if (id != transferResource.Id) return BadRequest();
 
             var transfer = await context.Transfers.SingleOrDefaultAsync(m => m.Id == id);

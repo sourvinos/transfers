@@ -1,3 +1,4 @@
+import { AccountService } from 'src/app/shared/services/account.service';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
@@ -6,15 +7,14 @@ import { Subject } from 'rxjs';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
-import { AccountService } from '../classes/account.service';
 
 @Component({
-    selector: 'reset-password-form',
-    templateUrl: './reset-password-form.html',
+    selector: 'forgot-password-form',
+    templateUrl: './forgot-password-form.html',
     styleUrls: ['../../shared/styles/forms.css']
 })
 
-export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Variables
 
@@ -110,7 +110,6 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
-
 
     // #region Helper properties
 

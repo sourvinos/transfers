@@ -58,7 +58,7 @@ namespace Transfers.Controllers {
         [HttpPost]
         public async Task<IActionResult> PostPickupPoint([FromBody] PickupPoint pickupPoint) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
 
             context.PickupPoints.Add(pickupPoint);
 
@@ -72,7 +72,7 @@ namespace Transfers.Controllers {
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPickupPoint([FromRoute] int id, [FromBody] PickupPoint pickupPoint) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
             if (id != pickupPoint.Id) return BadRequest();
 
             context.Entry(pickupPoint).State = EntityState.Modified;

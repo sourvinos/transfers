@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Transfers.Identity;
 using Transfers.Models;
@@ -64,14 +63,15 @@ namespace Transfers.Controllers {
         [HttpPost]
         public async Task<IActionResult> PostUser([FromBody] RegisterViewModel formdata) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
 
             var user = new ApplicationUser { Email = formdata.Email, UserName = formdata.UserName, DisplayName = formdata.DisplayName, SecurityStamp = Guid.NewGuid().ToString() };
             var result = await userManager.CreateAsync(user, formdata.Password);
 
             if (result.Succeeded) {
                 await addUserToRole(user);
-                // await sendConfirmationEmail(user);
+                await sendConfirmationEmail(user);
+
                 return Ok(user);
             }
 
@@ -83,7 +83,7 @@ namespace Transfers.Controllers {
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser([FromRoute] string id, [FromBody] UserViewModel vm) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
             if (id != vm.Id) return BadRequest();
 
             ApplicationUser user = await userManager.FindByIdAsync(id);
@@ -98,6 +98,25 @@ namespace Transfers.Controllers {
                 if (result.Succeeded) {
                     return Ok(user);
                 }
+            }
+
+            return NotFound();
+
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id) {
+
+            ApplicationUser user = await userManager.FindByIdAsync(id);
+
+            if (user != null) {
+
+                IdentityResult result = await userManager.DeleteAsync(user);
+
+                if (result.Succeeded) {
+                    return Ok(user);
+                }
+
             }
 
             return NotFound();
@@ -131,7 +150,7 @@ namespace Transfers.Controllers {
         private async Task<IActionResult> sendConfirmationEmail(ApplicationUser user) {
 
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationLink = Url.Action("ConfirmEmail", "Identity", new { userId = user.Id, token = token }, Request.Scheme);
+            var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
 
             using(MailMessage mail = new MailMessage()) {
                 mail.From = new MailAddress(emailSettings.From);

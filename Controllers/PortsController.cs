@@ -50,7 +50,7 @@ namespace Transfers.Controllers {
         [HttpPost]
         public async Task<IActionResult> PostPort([FromBody] Port port) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
 
             context.Ports.Add(port);
 
@@ -64,7 +64,7 @@ namespace Transfers.Controllers {
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPort([FromRoute] int id, [FromBody] Port port) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
             if (id != port.Id) return BadRequest();
 
             context.Entry(port).State = EntityState.Modified;

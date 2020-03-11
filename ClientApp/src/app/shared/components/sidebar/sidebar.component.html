@@ -23,6 +23,7 @@
             <li *ngIf="(loginStatus | async)" [routerLink]="['/transfers']" routerLinkActive="active">Transfers</li>
             <li *ngIf="(loginStatus | async)" [routerLink]="['/users']" routerLinkActive="active">Users</li>
             <li *ngIf="(loginStatus | async)" (click)="logout()" routerLinkActive="active">Logout</li>
+            <li *ngIf="(loginStatus | async)" [routerLink]="['/emailConfirmed']" routerLinkActive="active">Email confirmed</li>
         </ul>
     </div>
     <div id="copyright">Created with .NET Core<br />and Angular</div>

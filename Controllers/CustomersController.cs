@@ -49,7 +49,7 @@ namespace Transfers.Controllers {
         // POST: api/customers
         [HttpPost]
         public async Task<IActionResult> PostCustomer([FromBody] Customer customer) {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
 
             context.Customers.Add(customer);
 
@@ -62,7 +62,7 @@ namespace Transfers.Controllers {
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer([FromRoute] int id, [FromBody] Customer customer) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
             if (id != customer.Id) return BadRequest();
 
             context.Entry(customer).State = EntityState.Modified;

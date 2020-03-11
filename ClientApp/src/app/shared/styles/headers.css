@@ -5,7 +5,7 @@ h1 {
     font-weight: var(--font-weight-headers) !important;
 }
 
-h2 {
+h2, h3 {
     color: var(--color-headers) !important;
     font-family: var(--font-family-headers) !important;
     font-weight: var(--font-weight-headers) !important;

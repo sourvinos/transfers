@@ -27,7 +27,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     form = this.formBuilder.group({
         userName: ['maria', Validators.required],
-        password: ['Abc!123456', Validators.required]
+        password: ['2', Validators.required]
     })
 
     // #endregion
@@ -50,10 +50,10 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Template - resetPassword()
+     *  Template - forgotPassword()
      */
-    resetPassword() {
-        this.router.navigate(['/resetPassword'])
+    forgotPassword() {
+        this.router.navigate(['/forgotPassword'])
     }
 
     /**

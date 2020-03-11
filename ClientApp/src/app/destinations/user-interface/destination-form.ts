@@ -202,7 +202,6 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
      *  Class - getDestination()
      * Description:
      *  Populates the form with record values
-     *
      * @param result
      */
     private populateFields(result: any) {

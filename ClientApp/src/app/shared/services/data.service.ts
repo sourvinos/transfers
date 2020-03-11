@@ -24,7 +24,7 @@ export class DataService {
         return this.http.put<any>(this.url + '/' + id, formData)
     }
 
-    delete(id: number): Observable<any> {
+    delete(id: string | number): Observable<any> {
         return this.http.delete<any>(this.url + '/' + id)
     }
 

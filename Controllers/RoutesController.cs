@@ -50,7 +50,7 @@ namespace Transfers.Controllers {
         [HttpPost]
         public async Task<IActionResult> PostRoute([FromBody] Route route) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
 
             context.Routes.Add(route);
 
@@ -64,7 +64,7 @@ namespace Transfers.Controllers {
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRoute(int id, [FromBody] Route route) {
 
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
             if (id != route.Id) return BadRequest();
 
             context.Entry(route).State = EntityState.Modified;
