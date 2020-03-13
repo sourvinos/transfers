@@ -1,6 +1,6 @@
-import { Component, Input, IterableDiffer, IterableDiffers, OnInit, OnDestroy, AfterViewInit } from '@angular/core'
-import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
+import { AfterViewInit, Component, Input, IterableDiffer, IterableDiffers, OnDestroy, OnInit } from '@angular/core'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { IndexInteractionService } from '../../services/index-interaction.service'
 
 @Component({
@@ -26,6 +26,7 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
     customTable: any
     rowHeight = 0
     rowCount = 0
+    sortOrder = 'desc'
 
     differences: IterableDiffer<any>;
 
@@ -64,10 +65,18 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Caller(s):
+     *  Template - table header
+     * @param columnName
+     * @param sortOrder
+     */
+    sortMe(columnName: string, sortOrder: string) {
+        this.records.sort(this.compareValues(columnName, sortOrder))
+        this.sortOrder = this.sortOrder === 'asc' ? this.sortOrder = 'desc' : this.sortOrder = 'asc'
+    }
+
+    /**
+     * Caller(s):
      *  Class - ngAfterViewInit()
-     *
-     * Description:
-     *  Just read me!
      */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
@@ -251,6 +260,23 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private unselectRow() {
         this.customTable.rows[this.currentRow].classList.remove('selected')
+    }
+
+    /**
+     * Caller(s)
+     *  Class - sortMe()
+     * @param key
+     * @param order
+     */
+    private compareValues(key: string, order = 'asc') {
+        return function innerSort(a: { [x: string]: any; hasOwnProperty: (arg0: string) => any }, b: { [x: string]: any; hasOwnProperty: (arg0: string) => any }) {
+            if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) { return 0 }
+            let comparison = 0
+            const varA = (typeof a[key] === 'string') ? a[key].toUpperCase() : a[key]
+            const varB = (typeof b[key] === 'string') ? b[key].toUpperCase() : b[key]
+            comparison = varA > varB ? 1 : -1
+            return ((order === 'desc') ? (comparison * -1) : comparison)
+        }
     }
 
 }

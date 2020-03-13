@@ -1,11 +1,11 @@
 <table id="custom-table" (domChange)="onDomChange($event)">
     <thead>
         <tr>
-            <th *ngFor="let header of headers, index as i" [style.width]="widths[i]" [style.display]="visibility[i]" (click)="onHeaderClick($event)">{{ header }}</th>
+            <th *ngFor="let header of headers, index as i" [style.width]="widths[i]" [style.display]="visibility[i]" (click)="sortMe(fields[i], sortOrder)">{{ header }}</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let record of records, index as index" (click)="gotoRow(index+1)" id="line-{{ index+1 }}">
+        <tr *ngFor=" let record of records, index as index" (click)="gotoRow(index+1)" (dblclick)="sendRowToService()" id="line-{{ index+1 }}">
             <td *ngFor="let field of fields, index as i" [style.text-align]="justify[i]" [style.display]="visibility[i]">{{ record[field] }}</td>
         </tr>
     </tbody>

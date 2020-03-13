@@ -30,7 +30,6 @@
     flex: 1;
     font-family: var(--font-family-dialog-content) !important;
     line-height: 2rem;
-    padding-left: 1rem;
     scroll-behavior: smooth;
 }
 

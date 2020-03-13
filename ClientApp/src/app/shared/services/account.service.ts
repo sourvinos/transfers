@@ -10,6 +10,7 @@ export class AccountService {
 
     private loginUrl = '/api/account/login'
     private registerUrl = 'api/user/register'
+    private confirmEmailUrl = 'api/account/confirmEmail'
     private userName = new BehaviorSubject<string>(localStorage.getItem('userName'))
     private displayName = new BehaviorSubject<string>(localStorage.getItem('displayName'))
     private userRole = new BehaviorSubject<string>(localStorage.getItem('userRole'))
@@ -82,10 +83,11 @@ export class AccountService {
         return this.http.post<any>('api/account/forgetPassword', formData)
     }
 
-    confirmEmail(url: any) {
-        this.http.get<any>('api/account/confirmEmail', url).subscribe(result => {
-            console.log(result)
-        })
+    confirmEmail(url: any): Observable<any> {
+        const userId = url.userId
+        const token = url.token
+
+        return this.http.get<any>(this.confirmEmailUrl + '/' + url)
     }
 
     private checkLoginStatus(): boolean {

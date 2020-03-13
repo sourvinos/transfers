@@ -26,13 +26,13 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
     ngUnsubscribe = new Subject<void>()
 
     form = this.formBuilder.group({
-        userName: ['maria', Validators.required],
-        password: ['2', Validators.required]
+        userName: ['sourvinos', Validators.required],
+        password: ['1234', Validators.required]
     })
 
     // #endregion
 
-    constructor(private service: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts) { }
+    constructor(private accountService: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts) { }
 
     ngOnInit() {
         this.addShortcuts()
@@ -62,7 +62,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     login() {
         const userlogin = this.form.value
-        this.service.login(userlogin.userName, userlogin.password).subscribe(() => {
+        this.accountService.login(userlogin.userName, userlogin.password).subscribe(() => {
             this.invalidLogin = false
             this.router.navigateByUrl(this.returnUrl)
             this.countdownService.reset()

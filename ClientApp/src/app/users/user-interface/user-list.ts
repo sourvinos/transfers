@@ -120,9 +120,6 @@ export class UserListComponent implements OnInit, OnDestroy {
     /**
      * Caller(s):
      *  Class - constructor
-     *
-     * Description:
-     *  Self-explanatory
      */
     private loadRecords() {
         this.records = this.activatedRoute.snapshot.data['userList']

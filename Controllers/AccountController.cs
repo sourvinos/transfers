@@ -85,10 +85,10 @@ namespace Transfers {
 
         // api/account/confirmEmail/userId/token
         [HttpGet("[action]")]
-        public async Task<IActionResult> ConfirmEmail([FromBody] UserIdToken model) {
+        public async Task<IActionResult> ConfirmEmail(string userId, string token) {
 
-            var user = await userManager.FindByIdAsync(model.UserId);
-            var result = await userManager.ConfirmEmailAsync(user, model.Token);
+            var user = await userManager.FindByIdAsync(userId);
+            var result = await userManager.ConfirmEmailAsync(user, token);
 
             if (result.Succeeded) {
                 return Ok();

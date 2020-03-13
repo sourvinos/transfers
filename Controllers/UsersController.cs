@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Transfers.Identity;
 using Transfers.Models;
@@ -32,14 +33,14 @@ namespace Transfers.Controllers {
 
         // GET: api/users
         [HttpGet]
-        public List<UserListViewModel> Get() {
+        public async Task<IEnumerable<UserListViewModel>> Get() {
             List<UserListViewModel> vm = new List<UserListViewModel>();
-            vm = userManager.Users.Select(u => new UserListViewModel {
+            vm = await userManager.Users.Select(u => new UserListViewModel {
                 Id = u.Id,
                     UserName = u.UserName,
                     DisplayName = u.DisplayName,
                     Email = u.Email
-            }).ToList();
+            }).OrderBy(o => o.UserName).AsNoTracking().ToListAsync();
             return vm;
         }
 
@@ -69,8 +70,8 @@ namespace Transfers.Controllers {
             var result = await userManager.CreateAsync(user, formdata.Password);
 
             if (result.Succeeded) {
-                await addUserToRole(user);
-                await sendConfirmationEmail(user);
+                await AddUserToRole(user);
+                await SendConfirmationEmail(user);
 
                 return Ok(user);
             }
@@ -104,6 +105,7 @@ namespace Transfers.Controllers {
 
         }
 
+        // DELETE: api/users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id) {
 
@@ -139,7 +141,7 @@ namespace Transfers.Controllers {
             return BadRequest();
         }
 
-        private async Task<IActionResult> addUserToRole(ApplicationUser user) {
+        private async Task<IActionResult> AddUserToRole(ApplicationUser user) {
 
             var result = await userManager.AddToRoleAsync(user, "User");
 
@@ -147,7 +149,7 @@ namespace Transfers.Controllers {
 
         }
 
-        private async Task<IActionResult> sendConfirmationEmail(ApplicationUser user) {
+        private async Task<IActionResult> SendConfirmationEmail(ApplicationUser user) {
 
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
             var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
@@ -156,10 +158,10 @@ namespace Transfers.Controllers {
                 mail.From = new MailAddress(emailSettings.From);
                 mail.To.Add(user.Email);
                 mail.Subject = "Complete your account setup";
-                mail.Body = "<h1 style='color: #008080;'>Hello, " + user.DisplayName + "</h1>";
-                mail.Body += "<h2 style='color: #2e6c80;'>Welcome to our group of users!</h2>";
+                mail.Body = "<h2 style='color: #FE9F36;'>Hello, " + user.DisplayName + "!" + "</h2>";
+                mail.Body += "<h2 style='color: #2e6c80;'>Welcome to People Movers!</h2>";
                 mail.Body += "<p>Click the following button to confirm your email account.</p>";
-                mail.Body += "<a style='margin: 1rem 0; background-color: #5e9ca0; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px;' href=" + confirmationLink + ">Confirm email</a>";
+                mail.Body += "<a style='margin: 1rem 0; background-color: #FE9F36; color: white; padding: 15px 25px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px;' href=" + confirmationLink + ">Confirm email</a>";
                 mail.Body += "<p>If clicking doesn't work, copy and paste this link:</p>";
                 mail.Body += "<p>" + confirmationLink + "</p>";
                 mail.Body += "<p style='font-size: 11px; margin: 2rem 0;'>&copy; People Movers " + DateTime.Now.ToString("yyyy") + "</p>";

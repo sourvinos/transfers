@@ -16,22 +16,28 @@ export class EmailConfirmedComponent implements OnInit, OnDestroy {
 
     // #region Variables
 
+
     id = '7f5cf428-6cae-400a-9cc3-a5033a6647e1'
     token = 'CfDJ8MjXBd69tQJPoUGQUWpMOnkaqo3Slt%2B2tQNDnULNlBt4Yio%2Fo1vspxDouE4eIuQn9ri3E2ssjovlmbDXUdiRasMmi4XmGVRTyR4TyiNGVMuQVlvlqLjCSz08avZFrbTlIySZtzc%2BiFS7XblZo3V9ds28on4uCsM0Mlo6EMrRJuP8Bir4Xj9rHv2I5L7pT4uuKjazoOk5m8bTBdi0ET%2FYoXNy39noKi3vRc%2FbJJUpZenRQd6%2FuPtiS6Twy1oLxkjROQ%3D%3D'
+
     url: string
+    snapshot: { userId: string, token: string }
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
     // #endregion
 
-    constructor(private http: HttpClient, private accountService: AccountService, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private activatedRoute: ActivatedRoute) { }
+    constructor(private http: HttpClient, private accountService: AccountService, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private activatedRoute: ActivatedRoute) {
+        this.snapshot = {
+            userId: '7f5cf428-6cae-400a-9cc3-a5033a6647e1',
+            token: 'CfDJ8MjXBd69tQJPoUGQUWpMOnkaq'
+        }
+    }
 
     ngOnInit() {
         this.addShortcuts()
-        this.http.get<any>('api/account/confirmEmail/' + this.id + '/' + this.token).subscribe(result => {
-            console.log(result)
-        })
+        this.confirmEmail()
     }
 
     ngOnDestroy() {
@@ -79,6 +85,12 @@ export class EmailConfirmedComponent implements OnInit, OnDestroy {
         }, {
             priority: 2,
             inputs: true
+        })
+    }
+
+    private confirmEmail() {
+        this.accountService.confirmEmail(this.snapshot.userId).subscribe(result => {
+            alert(result)
         })
     }
 
