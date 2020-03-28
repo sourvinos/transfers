@@ -49,6 +49,7 @@ namespace Transfers.Controllers {
         // POST: api/customers
         [HttpPost]
         public async Task<IActionResult> PostCustomer([FromBody] Customer customer) {
+
             if (!ModelState.IsValid) return BadRequest();
 
             context.Customers.Add(customer);
@@ -56,6 +57,7 @@ namespace Transfers.Controllers {
             await context.SaveChangesAsync();
 
             return Ok(customer);
+
         }
 
         // PUT: api/customers/5

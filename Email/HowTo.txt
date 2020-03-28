@@ -1,0 +1,9 @@
+1. Include a reference in Project.csproj: <PackageReference Include="SendGrid" Version="9.13.1"/>
+2. Email credentials are stored in appsettings.json or secrets.json
+3. SendEmailResponse.cs holds the result of the send action
+4. IEmailSender is the interface that will be implemented in order to send the email
+5. SendGridEmailSender.cs is the implementation of the IEmailSender.
+6. SendGridExtensions.cs will be added to the pipeline in Startup.cs
+7. NotificationsController.cs => EmailConfirmed action will be used to redirect the user if email confirmation was successful. It displays the 'EmailConfirmed' view
+8. AccountController.cs => ConfirmEmail will be called from the link that was sent to the newly registered user.
+9. AccountController.cs => Register calls the above method.

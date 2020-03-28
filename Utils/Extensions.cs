@@ -46,7 +46,6 @@ namespace Transfers.Utils {
             services.Configure<Identity.AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<Identity.AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-
             services
                 .AddAuthentication(options => {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

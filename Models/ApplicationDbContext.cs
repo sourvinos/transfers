@@ -17,7 +17,7 @@ namespace Transfers.Models {
         public DbSet<Route> Routes { get; set; }
         public DbSet<Transfer> Transfers { get; set; }
 
-        public DbSet<TokenModel> Tokens { get; set; }
+        public DbSet<Token> Tokens { get; set; }
 
     }
 

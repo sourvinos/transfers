@@ -1,11 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Transfers.Identity;
 
-namespace Transfers.Identity
-{
-    public class TokenModel
-    {
+namespace Transfers.Models {
+
+    public class Token {
+
         [Key]
         public int Id { get; set; }
 
@@ -31,4 +32,5 @@ namespace Transfers.Identity
         public virtual ApplicationUser User { get; set; }
 
     }
+
 }

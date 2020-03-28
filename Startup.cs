@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Transfers.Identity;
+using Transfers.Email;
 using Transfers.Models;
 using Transfers.Utils;
 
@@ -23,12 +23,12 @@ namespace Transfers {
 
         // Add configurations
         public void ConfigureServices(IServiceCollection services) {
-            services.AddScoped<TokenModel>();
+            services.AddScoped<Token>();
             Extensions.AddIdentity(services);
             Extensions.AddAuthentication(Configuration, services);
             Extensions.AddAuthorization(services);
             Extensions.AddCors(services);
-            Extensions.AddEmailProviders(Configuration, services);
+            services.AddEmailSenders();
             services.AddAntiforgery(options => { options.Cookie.Name = "_af"; options.Cookie.HttpOnly = true; options.Cookie.SecurePolicy = CookieSecurePolicy.Always; options.HeaderName = "X-XSRF-TOKEN"; });
             services.AddAutoMapper();
             services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(Configuration["ConnectionStrings:MySqlServerConnection"]));

@@ -2,8 +2,8 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 import { Subject } from 'rxjs'
-import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { Utils } from 'src/app/shared/classes/utils'
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { AccountService } from '../../shared/services/account.service'
 import { CountdownService } from '../../shared/services/countdown.service'
 
@@ -15,7 +15,7 @@ import { CountdownService } from '../../shared/services/countdown.service'
 
 export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
+    // #region Init
 
     countdown = 0
     invalidLogin: boolean
@@ -27,7 +27,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     form = this.formBuilder.group({
         userName: ['sourvinos', Validators.required],
-        password: ['1234', Validators.required]
+        password: ['12345', Validators.required]
     })
 
     // #endregion
@@ -49,33 +49,23 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Caller(s):
+     * Caller(s)
      *  Template - forgotPassword()
      */
     forgotPassword() {
         this.router.navigate(['/forgotPassword'])
     }
 
-    /**
-     * Caller(s):
-     *  Template - login()
-     */
     login() {
         const userlogin = this.form.value
         this.accountService.login(userlogin.userName, userlogin.password).subscribe(() => {
             this.invalidLogin = false
-            this.router.navigateByUrl(this.returnUrl)
+            this.router.navigate(['/'])
             this.countdownService.reset()
             this.countdownService.countdown.subscribe(data => { this.countdown = data })
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     * Description:
-     *  Self-explanatory
-     */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Alt.L': (event: KeyboardEvent): void => {
@@ -88,14 +78,6 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     * Description:
-     *  Calls the public method()
-     *
-     * @param field
-     */
     private focus(field: string) {
         Utils.setFocus(field)
     }

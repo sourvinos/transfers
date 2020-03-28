@@ -34,20 +34,25 @@ namespace Transfers.Controllers {
         // GET: api/users
         [HttpGet]
         public async Task<IEnumerable<UserListViewModel>> Get() {
+
             List<UserListViewModel> vm = new List<UserListViewModel>();
+
             vm = await userManager.Users.Select(u => new UserListViewModel {
                 Id = u.Id,
                     UserName = u.UserName,
                     DisplayName = u.DisplayName,
                     Email = u.Email
             }).OrderBy(o => o.UserName).AsNoTracking().ToListAsync();
+
             return vm;
         }
 
         // GET: api/users/5
         [HttpGet("{id}")]
         public async Task<UserViewModel> GetUser(string id) {
+
             UserViewModel vm = new UserViewModel { };
+
             if (!String.IsNullOrEmpty(id)) {
                 ApplicationUser user = await userManager.FindByIdAsync(id);
                 if (user != null) {
@@ -57,7 +62,9 @@ namespace Transfers.Controllers {
                     vm.Email = user.Email;
                 }
             }
+
             return vm;
+
         }
 
         // POST: api/users
@@ -141,6 +148,7 @@ namespace Transfers.Controllers {
             return BadRequest();
         }
 
+        // Caller: PostUser()
         private async Task<IActionResult> AddUserToRole(ApplicationUser user) {
 
             var result = await userManager.AddToRoleAsync(user, "User");
@@ -149,10 +157,15 @@ namespace Transfers.Controllers {
 
         }
 
+        // Caller: PostUser()
         private async Task<IActionResult> SendConfirmationEmail(ApplicationUser user) {
 
-            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
+            string token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            string confirmationLink = Url.Action("confirmEmail", "account", new { userId = user.Id, token = token }, Request.Scheme);
+
+            confirmationLink = confirmationLink.Replace("/api", "");
+            confirmationLink = confirmationLink.Replace("?userId=", "/");
+            confirmationLink = confirmationLink.Replace("&token=", "/");
 
             using(MailMessage mail = new MailMessage()) {
                 mail.From = new MailAddress(emailSettings.From);

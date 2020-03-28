@@ -1,38 +1,35 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { AccountService } from 'src/app/shared/services/account.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { UserService } from 'src/app/users/classes/user.service';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
-    selector: 'email-confirmed',
-    templateUrl: './email-confirmed.html',
-    styleUrls: ['../../shared/styles/forms.css', './email-confirmed.css']
+    selector: 'email-confirmed-form',
+    templateUrl: './email-confirmed-form.html',
+    styleUrls: ['../../shared/styles/forms.css', './email-confirmed-form.css']
 })
 
 export class EmailConfirmedComponent implements OnInit, OnDestroy {
 
     // #region Variables
 
-
-    id = '7f5cf428-6cae-400a-9cc3-a5033a6647e1'
-    token = 'CfDJ8MjXBd69tQJPoUGQUWpMOnkaqo3Slt%2B2tQNDnULNlBt4Yio%2Fo1vspxDouE4eIuQn9ri3E2ssjovlmbDXUdiRasMmi4XmGVRTyR4TyiNGVMuQVlvlqLjCSz08avZFrbTlIySZtzc%2BiFS7XblZo3V9ds28on4uCsM0Mlo6EMrRJuP8Bir4Xj9rHv2I5L7pT4uuKjazoOk5m8bTBdi0ET%2FYoXNy39noKi3vRc%2FbJJUpZenRQd6%2FuPtiS6Twy1oLxkjROQ%3D%3D'
-
     url: string
-    snapshot: { userId: string, token: string }
+    userId: string
+    token: string
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
     // #endregion
 
-    constructor(private http: HttpClient, private accountService: AccountService, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private activatedRoute: ActivatedRoute) {
-        this.snapshot = {
-            userId: '7f5cf428-6cae-400a-9cc3-a5033a6647e1',
-            token: 'CfDJ8MjXBd69tQJPoUGQUWpMOnkaq'
-        }
+    constructor(private http: HttpClient, private userService: UserService, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private activatedRoute: ActivatedRoute) {
+        this.activatedRoute.params.subscribe(p => {
+            this.userId = p.userId
+            this.token = p.token
+        })
     }
 
     ngOnInit() {
@@ -54,7 +51,7 @@ export class EmailConfirmedComponent implements OnInit, OnDestroy {
      *  Creates a token to reset the password
      */
     login() {
-        this.router.navigateByUrl('login')
+        this.router.navigate(['/'])
     }
 
     /**
@@ -89,7 +86,7 @@ export class EmailConfirmedComponent implements OnInit, OnDestroy {
     }
 
     private confirmEmail() {
-        this.accountService.confirmEmail(this.snapshot.userId).subscribe(result => {
+        this.userService.confirmEmail(this.userId, this.token).subscribe(result => {
             alert(result)
         })
     }

@@ -13,7 +13,7 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Chrome",
+            "name": "Front-End",
             "url": "https://localhost:5001",
             "webRoot": "${workspaceFolder}/ClientApp",
             "skipFiles": [
@@ -21,7 +21,7 @@
             ]
         },
         {
-            "name": ".NET Core",
+            "name": "Back-End",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",

@@ -32,7 +32,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     }
 
     private loginStatus() {
-        return localStorage.getItem('loginStatus')
+        return localStorage.getItem('loginStatus') ? localStorage.getItem('loginStatus') : '0'
     }
 
 }

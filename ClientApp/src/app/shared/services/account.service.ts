@@ -8,108 +8,125 @@ import { map } from 'rxjs/operators'
 
 export class AccountService {
 
-    private loginUrl = '/api/account/login'
-    private registerUrl = 'api/user/register'
-    private confirmEmailUrl = 'api/account/confirmEmail'
-    private userName = new BehaviorSubject<string>(localStorage.getItem('userName'))
-    private displayName = new BehaviorSubject<string>(localStorage.getItem('displayName'))
-    private userRole = new BehaviorSubject<string>(localStorage.getItem('userRole'))
+    // #region Init
+
+    private baseUrlRegister = '/api/account/register'
+    private baseUrlForgotPassword = '/api/account/forgotPassword'
+    private baseUrlResetPassword = '/api/account/resetPassword'
+    private baseUrlToken = '/api/token/auth'
+
     private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus())
+    private displayName = new BehaviorSubject<string>(localStorage.getItem('displayName'))
 
-    constructor(private router: Router, private http: HttpClient) { }
+    // #endregion
 
-    login(userName: string, password: string) {
+    constructor(private http: HttpClient, private router: Router) { }
+
+    register(username: string, password: string, email: string) {
+        return this.http.post<any>(this.baseUrlRegister, { username, password, email }).pipe(map(result => {
+            return result
+        }, (error: any) => {
+            return error
+        }))
+    }
+
+    login(username: string, password: string) {
         const grantType = 'password'
-        const result = this.http.post<any>(this.loginUrl, { userName, password, grantType }).pipe(
-            map(x => {
-                if (x && x.authToken.token) {
-                    this.loginStatus.next(true)
-                    localStorage.setItem('loginStatus', '1')
-                    localStorage.setItem('jwt', x.authToken.token)
-                    localStorage.setItem('userName', x.authToken.userName)
-                    localStorage.setItem('displayName', x.authToken.displayName)
-                    localStorage.setItem('expiration', x.authToken.expiration)
-                    localStorage.setItem('userRole', x.authToken.roles)
-                    localStorage.setItem('refreshToken', x.authToken.refresh_token)
-                    this.userName.next(localStorage.getItem('userName'))
-                    this.displayName.next(localStorage.getItem('displayName'))
-                    this.userRole.next(localStorage.getItem('userRole'))
-                }
-                return x
-            })
-        )
-        return result
+        return this.http.post<any>(this.baseUrlToken, { username, password, grantType }).pipe(map(result => {
+            if (result && result.authToken.token) {
+                this.setLoginStatus(true)
+                this.setLocalStorage(result.authToken)
+                this.setDisplayName(result.authToken.displayName)
+            }
+        }))
     }
 
     logout() {
-        this.loginStatus.next(false)
-        localStorage.removeItem('jwt')
-        localStorage.removeItem('userRole')
-        localStorage.removeItem('userName')
-        localStorage.removeItem('displayName')
-        localStorage.removeItem('expiration')
-        localStorage.setItem('loginStatus', '0')
-        this.router.navigate(['/login'])
+        this.clearLocalStorage()
+        this.setLoginStatus(false)
+        this.navigateToLogin()
     }
 
-    register(formData: any) {
-        return this.http.post<any>(this.registerUrl, formData).pipe(
-            map(result => { })
-        )
+    forgotPassword(email: string) {
+        return this.http.post<any>(this.baseUrlForgotPassword, { email }).pipe(map(result => {
+            return result
+        }, (error: any) => {
+            return error
+        }))
+    }
+
+    resetPassword(email: string, password: string, confirmPassword: string, token: string) {
+        return this.http.post<any>(this.baseUrlResetPassword, { email, password, confirmPassword, token }).pipe(map(result => {
+            return result
+        }, (error: any) => {
+            return error
+        }))
     }
 
     getNewRefreshToken(): Observable<any> {
-        const userName = localStorage.getItem('userName')
+        const userName = localStorage.getItem('username')
         const refreshToken = localStorage.getItem('refreshToken')
         const grantType = 'refresh_token'
-        return this.http.post<any>(this.loginUrl, { userName, refreshToken, grantType }).pipe(
+        return this.http.post<any>(this.baseUrlToken, { userName, refreshToken, grantType }).pipe(
             map(result => {
                 if (result && result.authToken.token) {
-                    this.loginStatus.next(true)
-                    localStorage.setItem('loginStatus', '1')
-                    localStorage.setItem('jwt', result.authToken.token)
-                    localStorage.setItem('userName', result.authToken.userName)
-                    localStorage.setItem('displayName', result.authToken.displayName)
-                    localStorage.setItem('expiration', result.authToken.expiration)
-                    localStorage.setItem('userRole', result.authToken.roles)
-                    localStorage.setItem('refreshToken', result.authToken.refresh_token)
+                    this.setLoginStatus(true)
+                    this.setDisplayName(result.authToken.displayName)
+                    this.setLocalStorage(result.authToken)
                 }
                 return <any>result
             })
         )
     }
 
-    resetPassword(formData: any): Observable<any> {
-        return this.http.post<any>('api/account/forgetPassword', formData)
+    private clearLocalStorage() {
+        localStorage.removeItem('displayName')
+        localStorage.removeItem('expiration')
+        localStorage.removeItem('jwt')
+        localStorage.removeItem('loginStatus')
+        localStorage.removeItem('refreshToken')
+        localStorage.removeItem('username')
     }
 
-    confirmEmail(url: any): Observable<any> {
-        const userId = url.userId
-        const token = url.token
-
-        return this.http.get<any>(this.confirmEmailUrl + '/' + url)
+    private navigateToLogin() {
+        this.router.navigate(['/login'])
     }
 
     private checkLoginStatus(): boolean {
+
         const loginCookie = localStorage.getItem('loginStatus')
+
         if (loginCookie === '1') {
-            if (localStorage.getItem('jwt') != null || localStorage.getItem('jwt') !== undefined) {
+            if (localStorage.getItem('jwt') !== null || localStorage.getItem('jwt') !== undefined) {
                 return true
             }
         }
-        return false
+
     }
 
-    get isLoggedIn() {
-        return this.loginStatus.asObservable()
+    private setLoginStatus(status: boolean) {
+        this.loginStatus.next(status)
+    }
+
+    private setLocalStorage(result) {
+        localStorage.setItem('displayName', result.displayName)
+        localStorage.setItem('expiration', result.expiration)
+        localStorage.setItem('jwt', result.token)
+        localStorage.setItem('loginStatus', '1')
+        localStorage.setItem('refreshToken', result.refresh_token)
+        localStorage.setItem('username', result.username)
+    }
+
+    private setDisplayName(name: string) {
+        this.displayName.next(name)
     }
 
     get currentDisplayName() {
         return this.displayName.asObservable()
     }
 
-    get currentUserRole() {
-        return this.userRole.asObservable()
+    get isLoggedIn() {
+        return this.loginStatus.asObservable()
     }
 
 }

@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router'
 // Components
 import { HomeComponent } from '../home/home.component'
 import { EmptyPageComponent } from '../shared/components/empty-page/empty-page.component';
-import { EmailConfirmedComponent } from '../account/user-interface/email-confirmed';
+import { EmailConfirmedComponent } from '../users/user-interface/email-confirmed-form';
 import { LoginFormComponent } from '../login/user-interface/login-form'
 import { CustomerListComponent } from '../customers/user-interface/customer-list'; import { CustomerFormComponent } from '../customers/user-interface/customer-form'
 import { DestinationListComponent } from '../destinations/user-interface/destination-list'; import { DestinationFormComponent } from '../destinations/user-interface/destination-form'
@@ -26,6 +26,7 @@ import { UserListResolver } from '../users/classes/user-list.resolver';
 // Guards
 import { AuthGuardService } from '../shared/services/auth-guard.service'
 import { CanDeactivateGuard } from '../shared/services/can-deactivate-guard.service'
+import { ResetPasswordFormComponent } from '../account/user-interface/reset-password-form';
 
 const appRoutes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuardService], pathMatch: 'full' },
@@ -55,7 +56,8 @@ const appRoutes: Routes = [
     },
     { path: 'users', component: UserListComponent, canActivate: [AuthGuardService], resolve: { userList: UserListResolver } }, { path: 'users/new', component: RegisterUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'users/:id/changePassword', component: ChangePasswordFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'users/:id', component: EditUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
     { path: 'forgotPassword', component: ForgotPasswordFormComponent },
-    { path: 'emailConfirmed', component: EmailConfirmedComponent },
+    { path: 'account/confirmEmail/:userId/:token', component: EmailConfirmedComponent },
+    { path: 'account/resetPassword/:email/:token', component: ResetPasswordFormComponent },
     { path: '**', component: EmptyPageComponent }
 ]
 
