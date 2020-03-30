@@ -3,10 +3,10 @@ input.date {
 }
 
 input::selection {
-    background-color: darkgray;
+    background-color: var(--color-input-text-selected);
 }
 
-input[type=text] {
+input[type=text], input[type=email] {
     caret-color: var(--color-input-text-caret);
     color: var(--color-input-text-not-focus);
     cursor: text !important;

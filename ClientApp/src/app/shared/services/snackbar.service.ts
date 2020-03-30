@@ -10,7 +10,7 @@ export class SnackbarService {
     public open(message: string, type: string) {
         this.zone.run(() => {
             this.snackBar.open(message, 'Close', {
-                panelClass: [type]
+                panelClass: [type],
             })
         })
     }

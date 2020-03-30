@@ -108,17 +108,15 @@ namespace Transfers {
                     string baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value.ToString()}{this.Request.PathBase.Value.ToString()}";
                     string passwordResetLink = Url.Content($"{baseUrl}/account/resetPassword/{model.Email}/{tokenEncoded}");
 
-                    emailSender.SendResetPasswordEmail(user.Email, passwordResetLink);
-
-                    return Ok(new { message = "Reset email sent successfully" });
+                    emailSender.SendResetPasswordEmail(user.Email, user.DisplayName, passwordResetLink);
 
                 }
 
-                return Ok(new { message = "This user was not found or the email is not confirmed yet." });
+                return Ok(new { message = "Reset email sent successfully" });
 
             }
 
-            return BadRequest(new { message = "Password must not be blank" });
+            return BadRequest(new { message = "Form has errors" });
 
         }
 
@@ -139,18 +137,22 @@ namespace Transfers {
                 var user = await userManager.FindByEmailAsync(model.Email);
 
                 if (user != null) {
+
                     var tokenDecoded = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Token));
                     var result = await userManager.ResetPasswordAsync(user, tokenDecoded, model.Password);
+
                     if (result.Succeeded) {
                         return Ok(new { message = "Password is reset" });
                     }
+
                     List<string> errors = new List<string>();
 
                     foreach (var error in result.Errors) {
                         errors.Add(error.Description);
                     }
 
-                    return new JsonResult(errors);
+                    return BadRequest(new JsonResult(errors));
+
                 }
 
             }

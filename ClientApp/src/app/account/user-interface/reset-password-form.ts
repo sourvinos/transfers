@@ -11,7 +11,7 @@ import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shor
 @Component({
     selector: 'reset-password-form',
     templateUrl: './reset-password-form.html',
-    styleUrls: ['../../shared/styles/forms.css']
+    styleUrls: ['../../shared/styles/forms.css', './reset-password-form.css']
 })
 
 export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -61,8 +61,6 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         this.accountService.resetPassword(this.email, this.form.value.passwords.password, this.form.value.passwords.confirmPassword, this.token).subscribe(() => {
             this.showSnackbar('Password has been reset', 'info')
             this.goBack()
-        }, () => {
-            this.showSnackbar('Token not created', 'danger')
         })
     }
 

@@ -20,19 +20,15 @@ export class AccountService {
 
     // #endregion
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(private httpClient: HttpClient, private router: Router) { }
 
     register(username: string, password: string, email: string) {
-        return this.http.post<any>(this.baseUrlRegister, { username, password, email }).pipe(map(result => {
-            return result
-        }, (error: any) => {
-            return error
-        }))
+        return this.httpClient.post<any>(this.baseUrlRegister, { username, password, email })
     }
 
     login(username: string, password: string) {
         const grantType = 'password'
-        return this.http.post<any>(this.baseUrlToken, { username, password, grantType }).pipe(map(result => {
+        return this.httpClient.post<any>(this.baseUrlToken, { username, password, grantType }).pipe(map(result => {
             if (result && result.authToken.token) {
                 this.setLoginStatus(true)
                 this.setLocalStorage(result.authToken)
@@ -48,26 +44,18 @@ export class AccountService {
     }
 
     forgotPassword(email: string) {
-        return this.http.post<any>(this.baseUrlForgotPassword, { email }).pipe(map(result => {
-            return result
-        }, (error: any) => {
-            return error
-        }))
+        return this.httpClient.post<any>(this.baseUrlForgotPassword, { email })
     }
 
     resetPassword(email: string, password: string, confirmPassword: string, token: string) {
-        return this.http.post<any>(this.baseUrlResetPassword, { email, password, confirmPassword, token }).pipe(map(result => {
-            return result
-        }, (error: any) => {
-            return error
-        }))
+        return this.httpClient.post<any>(this.baseUrlResetPassword, { email, password, confirmPassword, token })
     }
 
     getNewRefreshToken(): Observable<any> {
         const userName = localStorage.getItem('username')
         const refreshToken = localStorage.getItem('refreshToken')
         const grantType = 'refresh_token'
-        return this.http.post<any>(this.baseUrlToken, { userName, refreshToken, grantType }).pipe(
+        return this.httpClient.post<any>(this.baseUrlToken, { userName, refreshToken, grantType }).pipe(
             map(result => {
                 if (result && result.authToken.token) {
                     this.setLoginStatus(true)

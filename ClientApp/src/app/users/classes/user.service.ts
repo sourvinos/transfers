@@ -7,7 +7,7 @@ import { DataService } from 'src/app/shared/services/data.service'
 
 export class UserService extends DataService {
 
-    private confirmEmailUrl = 'api/account/confirmEmail'
+    private confirmEmailUrl = 'api/users/changePassword'
 
     constructor(private httpClient: HttpClient) {
         super(httpClient, '/api/users')

@@ -1,7 +1,7 @@
 * {
     --font-weight-buttons: 100 !important;
     --font-weight-headers: 100 !important;
-    --font-weight-labels: 100 !important;
+    --font-weight-labels: 500 !important;
 }
 
 * {
@@ -27,6 +27,8 @@
     /* Tables */
     --font-size-table-header: 1.3rem;
     --font-size-table-rows: 1.0rem;
+    /* Instructions */
+    --font-size-paragraphs: 0.8rem;
 }
 
 * {
@@ -47,6 +49,8 @@
     --font-family-logo: "Anton";
     --font-family-menu-list-items: "Noto Sans";
     --font-family-copyright: "Noto Sans";
+    /* Instructions */
+    --font-family-paragraphs: "Noto Sans";
 }
 
 * {
@@ -72,6 +76,7 @@
     --color-input-text-focus: #FE9F36;
     --color-input-text-label: #e2dcdc;
     --color-input-text-underline: #5F5E5E;
+    --color-input-text-selected: #5F5E5E;
     --color-input-text-underline-focus: #BA680B;
     --color-input-text-not-focus: #FFFFFF;
     /* Main background */
@@ -79,8 +84,8 @@
     /* Navigation icon */
     --color-navigation-button: #373F46;
     /* Scrollbars */
-    --color-scrollbar: rgb(254, 159, 54);
-    --color-scrollbar-background: rgba(254, 159, 54, 0.5);
+    --color-scrollbar: #fe9f36;
+    --color-scrollbar-background: #fe9f3680;
     /* Sidebar */
     --color-sidebar-background: #1D2733;
     --color-company-logo-first-child: #FE9F36;
@@ -121,4 +126,7 @@
     --color-autocomplete-color: #B3B2B2;
     --color-autocomplete-ripple: #648e9f4a;
     --color-autocomplete-selected: #b3b2b245;
+    /* Instructions on forms */
+    --color-paragraphs: #ffc788;
+
 }

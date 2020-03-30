@@ -41,6 +41,8 @@
 
 #content {
     align-content: flex-start;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     margin: 0 auto;
     width: 80%;
@@ -49,23 +51,23 @@
 #content form {
     display: flex;
     flex-direction: column;
+    width: 100%;
+}
+
+#content #instructions {
+    margin-top: auto;
 }
 
 #footer {
     grid-area: "footer";
     margin: 0;
-    padding: 2rem 2rem 2rem 2rem;
+    padding: 0 2rem 2rem 2rem;
 }
 
 #section-one, #section-two {
     display: flex;
     flex-direction: column;
     width: 100%;
-}
-
-span#form-values {
-    color: olivedrab;
-    font-family: "Ubuntu Condensed";
 }
 
 /* ! Narrow screen */

@@ -141,11 +141,11 @@ namespace Transfers.Controllers {
                 var result = await userManager.ChangePasswordAsync(user, vm.CurrentPassword, vm.NewPassword);
                 if (result.Succeeded) {
                     await signManager.RefreshSignInAsync(user);
-                    return Ok();
+                    return Ok(new { message = "Password changed successfully" });
                 }
-                return StatusCode(406);
+                return BadRequest(new { message = "Unable to change password" });
             }
-            return BadRequest();
+            return BadRequest(new { message = "Form has errors" });
         }
 
         // Caller: PostUser()

@@ -17,14 +17,12 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
 
     // #region Variables
 
-    id: string
     url = '/login'
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
     form = this.formBuilder.group({
-        email: ['', [Validators.required, Validators.maxLength(100)]],
+        email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
     })
 
     // #endregion
@@ -45,35 +43,20 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
         this.unlisten()
     }
 
-    /**
-     * Caller(s):
-     *  Template - saveRecord()
-     *
-     * Description:
-     *  Creates a token to reset the password
-     */
-    saveRecord() {
+    onSubmit() {
         if (!this.form.valid) { return }
         this.accountService.forgotPassword(this.form.value.email).subscribe(() => {
-            this.showSnackbar('Token created', 'info')
+            this.showSnackbar('Email sent', 'info')
             this.goBack()
         }, () => {
-            this.showSnackbar('Token not created', 'danger')
+            this.showSnackbar('Email not sent', 'danger')
         })
     }
 
-    /**
-     * Caller(s):
-     *  Template - goBack()
-     */
     goBack() {
         this.router.navigate([this.url])
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
@@ -84,7 +67,7 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     event.preventDefault()
-                    // this.saveRecord()
+                    this.onSubmit()
                 }
             }
         }, {
@@ -93,19 +76,10 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     * @param field
-     */
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
-    /**
-     * Caller(s):
-     *  Class - saveRecord()
-     */
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
