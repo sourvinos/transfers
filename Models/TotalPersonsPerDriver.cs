@@ -1,4 +1,4 @@
-namespace Transfers.Models {
+namespace Transfers {
 
     public class TotalPersonsPerDriver : TotalPersonsKeyValuePair { }
 

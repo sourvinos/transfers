@@ -1,19 +1,15 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
-using Transfers.Email;
-using Transfers.Identity;
-using Transfers.Models;
 
 namespace Transfers {
 
     [Route("api/[controller]")]
-
     public class AccountController : Controller {
 
         private readonly AppSettings appSettings;
@@ -21,103 +17,58 @@ namespace Transfers {
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, IOptions<AppSettings> appSettings) {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
-            this.appSettings = appSettings.Value;
-            this.emailSender = emailSender;
-        }
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, IOptions<AppSettings> appSettings) =>
+            (this.userManager, this.signInManager, this.appSettings, this.emailSender) = (userManager, signInManager, appSettings.Value, emailSender);
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel formData) {
-
-            List<string> errorList = new List<string>();
-
-            var user = new ApplicationUser {
-                Email = formData.Email,
-                UserName = formData.UserName,
-                DisplayName = formData.DisplayName,
-                SecurityStamp = Guid.NewGuid().ToString()
-            };
-
-            var result = await userManager.CreateAsync(user, formData.Password);
-
-            if (result.Succeeded) {
-
-                await userManager.AddToRoleAsync(user, "User");
-                var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Code = code }, protocol : HttpContext.Request.Scheme);
-                emailSender.SendRegistrationEmail(user.Email, user.UserName, callbackUrl);
-                return Ok(new { message = "Registration Successful, confirm your email address" });
-
+            if (ModelState.IsValid) {
+                var user = new ApplicationUser {
+                    Email = formData.Email,
+                    DisplayName = formData.Displayname,
+                    UserName = formData.Username,
+                    SecurityStamp = Guid.NewGuid().ToString()
+                };
+                var result = await userManager.CreateAsync(user, formData.Password);
+                if (result.Succeeded) {
+                    await userManager.AddToRoleAsync(user, "User");
+                    string token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    string callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Token = token }, protocol : HttpContext.Request.Scheme);
+                    emailSender.SendRegistrationEmail(user.Email, user.UserName, callbackUrl);
+                    return Ok(new { response = "User created successfully" });
+                } else {
+                    return BadRequest(new { response = result.Errors.Select(x => x.Description) });
+                }
             }
-
-            foreach (var error in result.Errors) {
-                ModelState.AddModelError("", error.Description);
-                errorList.Add(error.Description);
-            }
-
-            return BadRequest(new JsonResult(errorList));
-
+            return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code) {
-
-            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code)) {
-                ModelState.AddModelError("", "User Id and code are required");
-                return BadRequest(ModelState);
-            }
-
+        public async Task<IActionResult> ConfirmEmail(string userId, string token) {
             var user = await userManager.FindByIdAsync(userId);
-
-            if (user == null) { return new JsonResult("Error"); }
+            if (user == null) { return BadRequest(new { response = "User not found" }); }
             if (user.EmailConfirmed) { return Redirect("/login"); }
-
-            var result = await userManager.ConfirmEmailAsync(user, code);
-
+            var result = await userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded) {
-
-                return RedirectToAction("EmailConfirmation", "Notifications", new { userId, code });
-
-            } else {
-
-                List<string> errors = new List<string>();
-
-                foreach (var error in result.Errors) {
-                    errors.Add(error.ToString());
-                }
-
-                return new JsonResult(errors);
-
+                return RedirectToAction("EmailConfirmation", "Notifications", new { userId, token });
             }
-
+            return BadRequest(new { response = result.Errors.Select(x => x.Description) });
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPassword model) {
-
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordViewModel model) {
             if (ModelState.IsValid) {
-
                 var user = await userManager.FindByEmailAsync(model.Email);
-
                 if (user != null && await userManager.IsEmailConfirmedAsync(user)) {
-
                     string token = await userManager.GeneratePasswordResetTokenAsync(user);
                     string tokenEncoded = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
                     string baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value.ToString()}{this.Request.PathBase.Value.ToString()}";
-                    string passwordResetLink = Url.Content($"{baseUrl}/account/resetPassword/{model.Email}/{tokenEncoded}");
-
-                    emailSender.SendResetPasswordEmail(user.Email, user.DisplayName, passwordResetLink);
-
+                    string passwordResetLink = Url.Content($"{baseUrl}/resetPassword/{model.Email}/{tokenEncoded}");
+                    emailSender.SendResetPasswordEmail(user.Email, passwordResetLink);
                 }
-
-                return Ok(new { message = "Reset email sent successfully" });
-
+                return Ok(new { response = "An email was sent to your account" });
             }
-
-            return BadRequest(new { message = "Form has errors" });
-
+            return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
         }
 
         [HttpGet("[action]")]
@@ -126,39 +77,39 @@ namespace Transfers {
                 Email = email,
                 Token = tokenEncoded
             };
-            return Ok(model);
+            return Ok(new { response = model });
         }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel model) {
-
             if (ModelState.IsValid) {
-
                 var user = await userManager.FindByEmailAsync(model.Email);
-
-                if (user != null) {
-
-                    var tokenDecoded = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Token));
-                    var result = await userManager.ResetPasswordAsync(user, tokenDecoded, model.Password);
-
-                    if (result.Succeeded) {
-                        return Ok(new { message = "Password is reset" });
-                    }
-
-                    List<string> errors = new List<string>();
-
-                    foreach (var error in result.Errors) {
-                        errors.Add(error.Description);
-                    }
-
-                    return BadRequest(new JsonResult(errors));
-
+                if (user == null) { return BadRequest(new { response = "User not found" }); }
+                var tokenDecoded = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Token));
+                var result = await userManager.ResetPasswordAsync(user, tokenDecoded, model.Password);
+                if (result.Succeeded) {
+                    return Ok(new { response = "Password reset successfully" });
                 }
-
+                return BadRequest(new { response = result.Errors.Select(x => x.Description) });
             }
-
-            return BadRequest();
+            return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
         }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordViewModel vm) {
+            if (ModelState.IsValid) {
+                var user = await userManager.FindByNameAsync("sourvinos");
+                if (user == null) { return Unauthorized(new { response = "Authentication failed" }); }
+                var result = await userManager.ChangePasswordAsync(user, vm.CurrentPassword, vm.Password);
+                if (result.Succeeded) {
+                    await signInManager.RefreshSignInAsync(user);
+                    return Ok(new { response = "Password changed successfully" });
+                }
+                return BadRequest(new { response = result.Errors.Select(x => x.Description) });
+            }
+            return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
+        }
+
     }
 
 }

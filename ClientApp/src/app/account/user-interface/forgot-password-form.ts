@@ -18,6 +18,7 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
     // #region Variables
 
     url = '/login'
+    errorList: string[] = []
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
@@ -44,13 +45,18 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
     }
 
     onSubmit() {
-        if (!this.form.valid) { return }
-        this.accountService.forgotPassword(this.form.value.email).subscribe(() => {
-            this.showSnackbar('Email sent', 'info')
+        const form = this.form.value;
+        this.accountService.forgotPassword(form.email).subscribe(() => {
+            this.showSnackbar(`An email was sent to ${form.email} with instructions`, 'info')
             this.goBack()
-        }, () => {
-            this.showSnackbar('Email not sent', 'danger')
-        })
+        }, error => {
+            this.errorList = []
+            error.error.response.forEach((element: string) => {
+                this.errorList.push(element + '\n');
+                console.log(element)
+            });
+            alert(this.errorList)
+        });
     }
 
     goBack() {

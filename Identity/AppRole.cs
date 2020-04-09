@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Transfers.Identity
-{
+namespace Transfers {
 	public class AppRole : IdentityRole { }
 }

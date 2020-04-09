@@ -1,11 +1,12 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
-import { Router } from '@angular/router'
-import { Subject } from 'rxjs'
-import { Utils } from 'src/app/shared/classes/utils'
-import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
-import { AccountService } from '../../shared/services/account.service'
-import { CountdownService } from '../../shared/services/countdown.service'
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { Utils } from 'src/app/shared/classes/utils';
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
+import { AccountService } from '../../shared/services/account.service';
+import { CountdownService } from '../../shared/services/countdown.service';
+import { SnackbarService } from './../../shared/services/snackbar.service';
 
 @Component({
     selector: 'login-form',
@@ -26,20 +27,20 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
     ngUnsubscribe = new Subject<void>()
 
     form = this.formBuilder.group({
-        userName: ['sourvinos', Validators.required],
+        username: ['sourvinos', Validators.required],
         password: ['12345', Validators.required]
     })
 
     // #endregion
 
-    constructor(private accountService: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts) { }
+    constructor(private accountService: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService) { }
 
     ngOnInit() {
         this.addShortcuts()
     }
 
     ngAfterViewInit() {
-        this.focus('userName')
+        this.focus('username')
     }
 
     ngOnDestroy(): void {
@@ -48,29 +49,26 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten()
     }
 
-    /**
-     * Caller(s)
-     *  Template - forgotPassword()
-     */
-    forgotPassword() {
-        this.router.navigate(['/forgotPassword'])
+    onForgotPassword() {
+        this.router.navigateByUrl('/forgotPassword');
     }
 
-    login() {
-        const userlogin = this.form.value
-        this.accountService.login(userlogin.userName, userlogin.password).subscribe(() => {
-            this.invalidLogin = false
-            this.router.navigate(['/'])
+    onLogin() {
+        const form = this.form.value
+        this.accountService.login(form.username, form.password).subscribe(() => {
+            this.router.navigateByUrl(this.returnUrl);
             this.countdownService.reset()
             this.countdownService.countdown.subscribe(data => { this.countdown = data })
-        })
+        }, error => {
+            this.showSnackbar(error.error.response, 'error')
+        });
     }
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Alt.L': (event: KeyboardEvent): void => {
                 event.preventDefault()
-                this.login()
+                this.onLogin()
             }
         }, {
             priority: 2,
@@ -82,10 +80,14 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
         Utils.setFocus(field)
     }
 
+    private showSnackbar(message: string, type: string): void {
+        this.snackbarService.open(message, type)
+    }
+
     // #region Helper properties
 
-    get userName() {
-        return this.form.get('userName')
+    get username() {
+        return this.form.get('username')
     }
 
     get password() {

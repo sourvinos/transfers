@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { CrossFieldErrorMatcher } from 'src/app/shared/services/cross-field-matcher';
@@ -28,7 +27,6 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
     errorMatcher = new CrossFieldErrorMatcher()
     hidePassword = true
     flatForm: {}
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
@@ -96,7 +94,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
      * Description:
      *  Changes the current password for the logged in user
      */
-    saveRecord() {
+    onSubmit() {
         if (!this.form.valid) { return }
         this.flattenFormFields();
         this.userService.updatePassword(this.form.value.id, this.flatForm).subscribe(() => {
@@ -125,7 +123,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     event.preventDefault()
-                    this.saveRecord()
+                    this.onSubmit()
                 }
             },
             'Alt.C': (event: KeyboardEvent) => {

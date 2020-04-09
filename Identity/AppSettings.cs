@@ -1,4 +1,4 @@
-namespace Transfers.Identity {
+namespace Transfers {
 
     public class AppSettings {
 

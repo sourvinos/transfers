@@ -1,9 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Transfers.Identity;
 
-namespace Transfers.Models {
+namespace Transfers {
 
     public class Token {
 

@@ -1,7 +1,5 @@
-namespace Transfers.Identity
-{
-    public class UserListViewModel
-    {
+namespace Transfers {
+    public class UserListViewModel {
         public string Id { get; set; }
         public string UserName { get; set; }
         public string DisplayName { get; set; }

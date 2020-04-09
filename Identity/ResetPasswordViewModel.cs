@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Transfers.ViewModels {
+namespace transfersViewModels {
 
     public class ResetPasswordViewModel {
 

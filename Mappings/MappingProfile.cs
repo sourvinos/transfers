@@ -1,34 +1,27 @@
 using AutoMapper;
-using Transfers.Resources;
 
-namespace Transfers.Mappings
-{
-    public class MappingProfile : Profile
-    {
-        public MappingProfile()
-        {
+namespace Transfers {
+    public class MappingProfile : Profile {
+        public MappingProfile() {
             // From domain to api
             CreateMap<Transfer, TransferResource>()
                 .ForMember(tr => tr.Destination, opt => opt.MapFrom(v => new DestinationResource { Id = v.Destination.Id, Abbreviation = v.Destination.Abbreviation, Description = v.Destination.Description }))
                 .ForMember(tr => tr.Customer, opt => opt.MapFrom(v => new CustomerResource { Id = v.Customer.Id, Description = v.Customer.Description }))
                 .ForMember(tr => tr.Driver, opt => opt.MapFrom(v => new DriverResource { Id = v.Driver.Id, Description = v.Driver.Description }))
-                .ForMember(tr => tr.PickupPoint, opt => opt.MapFrom(v => new PickupPointResource
-                {
+                .ForMember(tr => tr.PickupPoint, opt => opt.MapFrom(v => new PickupPointResource {
                     Id = v.PickupPoint.Id,
-                    Description = v.PickupPoint.Description,
-                    ExactPoint = v.PickupPoint.ExactPoint,
-                    Time = v.PickupPoint.Time,
-                    Route = new RouteResource
-                    {
-                        Id = v.PickupPoint.Route.Id,
-                        Description = v.PickupPoint.Route.Description,
-                        Abbreviation = v.PickupPoint.Route.Abbreviation,
-                        Port = new PortResource
-                        {
-                            Id = v.PickupPoint.Route.PortId,
-                            Description = v.PickupPoint.Route.Port.Description
+                        Description = v.PickupPoint.Description,
+                        ExactPoint = v.PickupPoint.ExactPoint,
+                        Time = v.PickupPoint.Time,
+                        Route = new RouteResource {
+                            Id = v.PickupPoint.Route.Id,
+                                Description = v.PickupPoint.Route.Description,
+                                Abbreviation = v.PickupPoint.Route.Abbreviation,
+                                Port = new PortResource {
+                                    Id = v.PickupPoint.Route.PortId,
+                                        Description = v.PickupPoint.Route.Port.Description
+                                }
                         }
-                    }
                 }));
             // From api to domain 
             // v refers to the domain class (.cs) 

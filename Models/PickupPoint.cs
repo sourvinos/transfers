@@ -1,6 +1,4 @@
-﻿using Transfers.Models;
-
-namespace Transfers.Models {
+﻿namespace Transfers {
 
     public class PickupPoint {
 

@@ -14,9 +14,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         const req = request.clone();
         return next.handle(req).pipe(
             catchError(response => {
-                if (this.loginStatus() === '0') {
-                    if (response.status === 401) { this.snackbarService.open('These credentials are invalid.', 'error') }
-                }
                 switch (response.status) {
                     case 400: this.snackbarService.open('The server did not like this request.', 'error'); break
                     case 401 && this.loginStatus() === '0': this.snackbarService.open('These credentials are invalid.', 'error'); break

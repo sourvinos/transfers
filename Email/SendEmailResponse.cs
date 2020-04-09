@@ -1,4 +1,4 @@
-namespace Transfers.Email {
+namespace Transfers {
 
     public class SendEmailResponse {
 

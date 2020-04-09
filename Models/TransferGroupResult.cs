@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Transfers.Models {
+namespace Transfers {
 
     public class TransferGroupResult<T> {
 

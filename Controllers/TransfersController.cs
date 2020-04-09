@@ -5,10 +5,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Transfers.Models;
-using Transfers.Resources;
 
-namespace Transfers.Controllers {
+namespace Transfers {
 
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLoggedIn")]

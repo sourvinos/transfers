@@ -14,37 +14,41 @@ export class AccountService {
     private baseUrlForgotPassword = '/api/account/forgotPassword'
     private baseUrlResetPassword = '/api/account/resetPassword'
     private baseUrlToken = '/api/token/auth'
+    private baseUrlChangePassword = '/api/account/changePassword'
 
     private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus())
     private displayName = new BehaviorSubject<string>(localStorage.getItem('displayName'))
+    private userRole = new BehaviorSubject<string>(localStorage.getItem('userRole'))
 
     // #endregion
 
     constructor(private httpClient: HttpClient, private router: Router) { }
 
-    register(username: string, password: string, email: string) {
-        return this.httpClient.post<any>(this.baseUrlRegister, { username, password, email })
-    }
-
-    login(username: string, password: string) {
-        const grantType = 'password'
-        return this.httpClient.post<any>(this.baseUrlToken, { username, password, grantType }).pipe(map(result => {
-            if (result && result.authToken.token) {
-                this.setLoginStatus(true)
-                this.setLocalStorage(result.authToken)
-                this.setDisplayName(result.authToken.displayName)
-            }
-        }))
-    }
-
-    logout() {
-        this.clearLocalStorage()
-        this.setLoginStatus(false)
-        this.navigateToLogin()
+    changePassword(currentPassword: string, password: string, confirmPassword: string) {
+        return this.httpClient.post<any>(this.baseUrlChangePassword, { currentPassword, password, confirmPassword })
     }
 
     forgotPassword(email: string) {
         return this.httpClient.post<any>(this.baseUrlForgotPassword, { email })
+    }
+
+    login(username: string, password: string) {
+        const grantType = 'password'
+        return this.httpClient.post<any>(this.baseUrlToken, { username, password, grantType }).pipe(map(response => {
+            this.setLoginStatus(true)
+            this.setLocalStorage(response)
+            this.setUserData()
+        }))
+    }
+
+    logout() {
+        this.setLoginStatus(false)
+        this.clearLocalStorage()
+        this.navigateToLogin()
+    }
+
+    register(username: string, displayName: string, password: string, confirmPassword: string, email: string) {
+        return this.httpClient.post<any>(this.baseUrlRegister, { username, displayName, password, confirmPassword, email })
     }
 
     resetPassword(email: string, password: string, confirmPassword: string, token: string) {
@@ -52,19 +56,29 @@ export class AccountService {
     }
 
     getNewRefreshToken(): Observable<any> {
-        const userName = localStorage.getItem('username')
+        const username = localStorage.getItem('username')
         const refreshToken = localStorage.getItem('refreshToken')
         const grantType = 'refresh_token'
-        return this.httpClient.post<any>(this.baseUrlToken, { userName, refreshToken, grantType }).pipe(
-            map(result => {
-                if (result && result.authToken.token) {
+        return this.httpClient.post<any>(this.baseUrlToken, { username, refreshToken, grantType }).pipe(
+            map(response => {
+                console.log('Refresh token' + response.response.token)
+                if (response.response.token) {
                     this.setLoginStatus(true)
-                    this.setDisplayName(result.authToken.displayName)
-                    this.setLocalStorage(result.authToken)
+                    this.setLocalStorage(response)
                 }
-                return <any>result
+                return <any>response
             })
         )
+    }
+
+    private checkLoginStatus(): boolean {
+        const loginCookie = localStorage.getItem('loginStatus')
+        if (loginCookie === '1') {
+            if (localStorage.getItem('jwt') !== null || localStorage.getItem('jwt') !== undefined) {
+                return true
+            }
+        }
+        return false
     }
 
     private clearLocalStorage() {
@@ -73,6 +87,7 @@ export class AccountService {
         localStorage.removeItem('jwt')
         localStorage.removeItem('loginStatus')
         localStorage.removeItem('refreshToken')
+        localStorage.removeItem('userRole')
         localStorage.removeItem('username')
     }
 
@@ -80,34 +95,26 @@ export class AccountService {
         this.router.navigate(['/login'])
     }
 
-    private checkLoginStatus(): boolean {
-
-        const loginCookie = localStorage.getItem('loginStatus')
-
-        if (loginCookie === '1') {
-            if (localStorage.getItem('jwt') !== null || localStorage.getItem('jwt') !== undefined) {
-                return true
-            }
-        }
-
-    }
-
     private setLoginStatus(status: boolean) {
         this.loginStatus.next(status)
     }
 
-    private setLocalStorage(result) {
-        localStorage.setItem('displayName', result.displayName)
-        localStorage.setItem('expiration', result.expiration)
-        localStorage.setItem('jwt', result.token)
+    private setLocalStorage(response: any) {
+        localStorage.setItem('displayName', response.response.displayName)
+        localStorage.setItem('expiration', response.response.expiration)
+        localStorage.setItem('jwt', response.response.token)
         localStorage.setItem('loginStatus', '1')
-        localStorage.setItem('refreshToken', result.refresh_token)
-        localStorage.setItem('username', result.username)
+        localStorage.setItem('refreshToken', response.response.refresh_token)
+        localStorage.setItem('userRole', response.response.roles)
+        localStorage.setItem('username', response.response.username)
     }
 
-    private setDisplayName(name: string) {
-        this.displayName.next(name)
+    private setUserData() {
+        this.displayName.next(localStorage.getItem('displayName'));
+        this.userRole.next(localStorage.getItem('userRole'));
     }
+
+    //#region Getters
 
     get currentDisplayName() {
         return this.displayName.asObservable()
@@ -116,5 +123,7 @@ export class AccountService {
     get isLoggedIn() {
         return this.loginStatus.asObservable()
     }
+
+    //#endregion
 
 }

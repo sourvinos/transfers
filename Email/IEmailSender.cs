@@ -1,10 +1,8 @@
-namespace Transfers.Email {
+namespace Transfers {
 
     public interface IEmailSender {
-
         SendEmailResponse SendRegistrationEmail(string userEmail, string username, string callbackUrl);
-        SendEmailResponse SendResetPasswordEmail(string userEmail, string displayName, string callbackUrl);
-
+        SendEmailResponse SendResetPasswordEmail(string userEmail, string callbackUrl);
     }
 
 }

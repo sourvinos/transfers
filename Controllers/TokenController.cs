@@ -8,77 +8,52 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Transfers.Identity;
-using Transfers.Models;
 
-namespace Transfers.Controllers {
+namespace Transfers {
 
     [Route("api/[controller]")]
-
     public class TokenController : ControllerBase {
 
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly AppSettings _appSettings;
-        private readonly Token _token;
-        private readonly ApplicationDbContext _db;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly AppSettings appSettings;
+        private readonly Token token;
+        private readonly ApplicationDbContext db;
 
-        public TokenController(UserManager<ApplicationUser> userManager, IOptions<AppSettings> appSettings, Token token, ApplicationDbContext db) {
-            _userManager = userManager;
-            _appSettings = appSettings.Value;
-            _token = token;
-            _db = db;
-        }
+        public TokenController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<AppSettings> appSettings, Token token, ApplicationDbContext db) =>
+            (this.userManager, this.signInManager, this.appSettings, this.token, this.db) = (userManager, signInManager, appSettings.Value, token, db);
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Auth([FromBody] TokenRequest model) {
-            if (model == null) { return new StatusCodeResult(500); }
             switch (model.GrantType) {
                 case "password":
                     return await GenerateNewToken(model);
                 case "refresh_token":
                     return await RefreshToken(model);
                 default:
-                    return new UnauthorizedResult();
+                    return Unauthorized(new { response = "Authentication failed" });
             }
         }
 
         private async Task<IActionResult> GenerateNewToken(TokenRequest model) {
-
-            var user = await _userManager.FindByNameAsync(model.UserName);
-
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password)) {
-
-                if (!await _userManager.IsEmailConfirmedAsync(user)) {
-
-                    ModelState.AddModelError("", "User has not confirmed email");
-
-                    return Unauthorized(new { LoginError = "We sent you an Confirmation Email. Please Confirm Your Registration With Techhowdy.com To Log in." });
-
+            var user = await userManager.FindByNameAsync(model.UserName);
+            if (user != null && await userManager.CheckPasswordAsync(user, model.Password)) {
+                if (!await userManager.IsEmailConfirmedAsync(user)) {
+                    return BadRequest(new { response = "This account is pending email confirmation" });
                 }
-
-                var newRefreshToken = CreateRefreshToken(_appSettings.ClientId, user.Id);
-                var oldRefreshTokens = _db.Tokens.Where(rt => rt.UserId == user.Id);
-
+                var newRefreshToken = CreateRefreshToken(appSettings.ClientId, user.Id);
+                var oldRefreshTokens = db.Tokens.Where(rt => rt.UserId == user.Id);
                 if (oldRefreshTokens != null) {
                     foreach (var token in oldRefreshTokens) {
-                        _db.Tokens.Remove(token);
+                        db.Tokens.Remove(token);
                     }
                 }
-
-                _db.Tokens.Add(newRefreshToken);
-
-                await _db.SaveChangesAsync();
-
+                db.Tokens.Add(newRefreshToken);
+                await db.SaveChangesAsync();
                 var accessToken = await CreateAccessToken(user, newRefreshToken.Value);
-
-                return Ok(new { authToken = accessToken });
-
+                return Ok(new { response = accessToken });
             }
-
-            ModelState.AddModelError("", "Username/Password was not Found");
-
-            return Unauthorized(new { LoginError = "Invalid credentials" });
-
+            return Unauthorized(new { response = "Authentication failed" });
         }
 
         private Token CreateRefreshToken(string clientId, string userId) {
@@ -92,9 +67,9 @@ namespace Transfers.Controllers {
         }
 
         private async Task<TokenResponse> CreateAccessToken(ApplicationUser user, string refreshToken) {
-            double tokenExpiryTime = Convert.ToDouble(_appSettings.ExpireTime);
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.Secret));
-            var roles = await _userManager.GetRolesAsync(user);
+            double tokenExpiryTime = Convert.ToDouble(appSettings.ExpireTime);
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.Secret));
+            var roles = await userManager.GetRolesAsync(user);
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(new Claim[] {
@@ -105,8 +80,8 @@ namespace Transfers.Controllers {
                 new Claim("LoggedOn", DateTime.Now.ToString()),
                 }),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature),
-                Issuer = _appSettings.Site,
-                Audience = _appSettings.Audience,
+                Issuer = appSettings.Site,
+                Audience = appSettings.Audience,
                 Expires = DateTime.UtcNow.AddMinutes(tokenExpiryTime)
             };
             var newtoken = tokenHandler.CreateToken(tokenDescriptor);
@@ -115,6 +90,7 @@ namespace Transfers.Controllers {
                 token = encodedToken,
                     expiration = newtoken.ValidTo,
                     refresh_token = refreshToken,
+                    roles = roles.FirstOrDefault(),
                     username = user.UserName,
                     displayName = user.DisplayName
             };
@@ -122,21 +98,22 @@ namespace Transfers.Controllers {
 
         private async Task<IActionResult> RefreshToken(TokenRequest model) {
             try {
-                var rt = _db.Tokens.FirstOrDefault(t => t.ClientId == _appSettings.ClientId && t.Value == model.RefreshToken.ToString());
+                var rt = db.Tokens.FirstOrDefault(t => t.ClientId == appSettings.ClientId && t.Value == model.RefreshToken.ToString());
                 if (rt == null) return new UnauthorizedResult();
-                if (rt.ExpiryTime < DateTime.UtcNow) return new UnauthorizedResult();
-                var user = await _userManager.FindByIdAsync(rt.UserId);
-                if (user == null) return new UnauthorizedResult();
+                if (rt.ExpiryTime < DateTime.UtcNow) return Unauthorized(new { response = "Authentication failed" });
+                var user = await userManager.FindByIdAsync(rt.UserId);
+                if (user == null) return Unauthorized(new { response = "Authentication failed" });
                 var rtNew = CreateRefreshToken(rt.ClientId, rt.UserId);
-                _db.Tokens.Remove(rt);
-                _db.Tokens.Add(rtNew);
-                _db.SaveChanges();
-                var response = await CreateAccessToken(user, rtNew.Value);
-                return Ok(new { authToken = response });
+                db.Tokens.Remove(rt);
+                db.Tokens.Add(rtNew);
+                db.SaveChanges();
+                var token = await CreateAccessToken(user, rtNew.Value);
+                return Ok(new { response = token });
             } catch {
-                return new UnauthorizedResult();
+                return Unauthorized(new { response = "Authentication failed" });
             }
         }
 
     }
+
 }

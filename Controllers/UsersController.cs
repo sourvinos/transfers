@@ -9,10 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Transfers.Identity;
-using Transfers.Models;
 
-namespace Transfers.Controllers {
+namespace Transfers {
 
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLoggedIn")]
@@ -67,26 +65,6 @@ namespace Transfers.Controllers {
 
         }
 
-        // POST: api/users
-        [HttpPost]
-        public async Task<IActionResult> PostUser([FromBody] RegisterViewModel formdata) {
-
-            if (!ModelState.IsValid) return BadRequest();
-
-            var user = new ApplicationUser { Email = formdata.Email, UserName = formdata.UserName, DisplayName = formdata.DisplayName, SecurityStamp = Guid.NewGuid().ToString() };
-            var result = await userManager.CreateAsync(user, formdata.Password);
-
-            if (result.Succeeded) {
-                await AddUserToRole(user);
-                await SendConfirmationEmail(user);
-
-                return Ok(user);
-            }
-
-            return StatusCode(409);
-
-        }
-
         // PUT: api/users/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser([FromRoute] string id, [FromBody] UserViewModel vm) {
@@ -129,31 +107,6 @@ namespace Transfers.Controllers {
             }
 
             return NotFound();
-
-        }
-
-        // POST: api/users/5
-        [HttpPost("{id}")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordViewModel vm) {
-            if (ModelState.IsValid) {
-                var user = await userManager.GetUserAsync(User);
-                if (user == null) return NotFound();
-                var result = await userManager.ChangePasswordAsync(user, vm.CurrentPassword, vm.NewPassword);
-                if (result.Succeeded) {
-                    await signManager.RefreshSignInAsync(user);
-                    return Ok(new { message = "Password changed successfully" });
-                }
-                return BadRequest(new { message = "Unable to change password" });
-            }
-            return BadRequest(new { message = "Form has errors" });
-        }
-
-        // Caller: PostUser()
-        private async Task<IActionResult> AddUserToRole(ApplicationUser user) {
-
-            var result = await userManager.AddToRoleAsync(user, "User");
-
-            return Ok();
 
         }
 

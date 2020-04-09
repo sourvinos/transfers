@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Transfers.Identity;
 
-namespace Transfers.Models {
+namespace Transfers {
 
     public class ApplicationDbContext : IdentityDbContext<IdentityUser> {
 

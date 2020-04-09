@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-using Transfers.Models;
 
-namespace Transfers.Resources
-{
-    public class TransferGroupResultResource<T>
-    {
+namespace Transfers {
+    public class TransferGroupResultResource<T> {
         public int Persons { get; set; }
 
         public IEnumerable<TransferResource> Transfers { get; set; }

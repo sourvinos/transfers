@@ -56,8 +56,7 @@ const appRoutes: Routes = [
     },
     { path: 'users', component: UserListComponent, canActivate: [AuthGuardService], resolve: { userList: UserListResolver } }, { path: 'users/new', component: RegisterUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'users/:id/changePassword', component: ChangePasswordFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'users/:id', component: EditUserFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
     { path: 'forgotPassword', component: ForgotPasswordFormComponent },
-    { path: 'account/confirmEmail/:userId/:token', component: EmailConfirmedComponent },
-    { path: 'account/resetPassword/:email/:token', component: ResetPasswordFormComponent },
+    { path: 'resetPassword/:email/:token', component: ResetPasswordFormComponent },
     { path: '**', component: EmptyPageComponent }
 ]
 

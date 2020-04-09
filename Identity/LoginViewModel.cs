@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Transfers.Identity
-{
-    public class LoginViewModel
-    {
+namespace Transfers {
+    public class LoginViewModel {
+
         [Required]
         public string Username { get; set; }
 
@@ -11,4 +10,5 @@ namespace Transfers.Identity
         [DataType(DataType.Password)]
         public string Password { get; set; }
     }
+
 }

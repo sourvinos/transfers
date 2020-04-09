@@ -8,10 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Transfers.Identity;
-using Transfers.Models;
+using Transfers;
 
-namespace Transfers.Utils {
+namespace Transfers {
     public static class Extensions {
         // Cors
         public static void AddCors(IServiceCollection services) {
@@ -43,8 +42,8 @@ namespace Transfers.Utils {
         // Authentication
         public static void AddAuthentication(IConfiguration configuration, IServiceCollection services) {
             var appSettingsSection = configuration.GetSection("AppSettings");
-            services.Configure<Identity.AppSettings>(appSettingsSection);
-            var appSettings = appSettingsSection.Get<Identity.AppSettings>();
+            services.Configure<AppSettings>(appSettingsSection);
+            var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services
                 .AddAuthentication(options => {
@@ -73,13 +72,6 @@ namespace Transfers.Utils {
                 options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin").RequireAuthenticatedUser());
             });
 
-        }
-
-        // Email settings
-        public static void AddEmailProviders(IConfiguration configuration, IServiceCollection services) {
-            var emailSettingsSection = configuration.GetSection("EmailSettings");
-            services.Configure<Models.EmailSettings>(emailSettingsSection);
-            var emailSettings = emailSettingsSection.Get<Models.EmailSettings>();
         }
 
         // Error pages

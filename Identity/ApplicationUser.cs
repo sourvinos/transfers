@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
-using Transfers.Models;
 
-namespace Transfers.Identity {
+namespace Transfers {
 
     public class ApplicationUser : IdentityUser {
 

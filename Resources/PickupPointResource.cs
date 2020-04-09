@@ -1,7 +1,5 @@
-namespace Transfers.Resources
-{
-    public class PickupPointResource
-    {
+namespace Transfers {
+    public class PickupPointResource {
         public int Id { get; set; }
         public string Description { get; set; }
         public string ExactPoint { get; set; }

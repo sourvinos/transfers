@@ -7,21 +7,17 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Transfers.Email;
-using Transfers.Models;
-using Transfers.Utils;
 
 namespace Transfers {
+
     public class Startup {
-        // Constructor
+
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
         }
 
-        // Variablescon
         public IConfiguration Configuration { get; }
 
-        // Add configurations
         public void ConfigureServices(IServiceCollection services) {
             services.AddScoped<Token>();
             Extensions.AddIdentity(services);
@@ -37,7 +33,6 @@ namespace Transfers {
             services.Configure<CookiePolicyOptions>(options => { options.CheckConsentNeeded = context => true; options.MinimumSameSitePolicy = SameSiteMode.None; });
         }
 
-        // Use configurations
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
             if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); } else { app.UseExceptionHandler("/Error"); app.UseHsts(); }
 
@@ -49,5 +44,7 @@ namespace Transfers {
             app.UseMvc(routes => { routes.MapRoute(name: "default", template: "{controller}/{action=Index}/{id?}"); });
             app.UseSpa(spa => { spa.Options.SourcePath = "ClientApp"; if (env.IsDevelopment()) { spa.UseAngularCliServer(npmScript: "start"); } });
         }
+
     }
+
 }

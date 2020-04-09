@@ -1,10 +1,7 @@
 using System;
-using Transfers.Models;
 
-namespace Transfers.Resources
-{
-    public class TransferResource
-    {
+namespace Transfers {
+    public class TransferResource {
         public int Id { get; set; }
 
         public DateTime dateIn { get; set; }

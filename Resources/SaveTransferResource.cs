@@ -1,9 +1,7 @@
 using System;
 
-namespace Transfers.Resources
-{
-    public class SaveTransferResource
-    {
+namespace Transfers {
+    public class SaveTransferResource {
         public int Id { get; set; }
 
         public DateTime dateIn { get; set; }

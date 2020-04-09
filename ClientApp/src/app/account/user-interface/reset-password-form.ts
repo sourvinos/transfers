@@ -7,6 +7,8 @@ import { PasswordValidator } from 'src/app/shared/services/password-validator';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
+import { FieldValidators } from 'src/app/shared/services/field-validators';
+import { CrossFieldValidators } from 'src/app/shared/services/cross-field-validators';
 
 @Component({
     selector: 'reset-password-form',
@@ -16,29 +18,30 @@ import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shor
 
 export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
+    // #region Init
 
     email: string
     token: string
     url = '/login'
+    errorList: string[] = [];
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
     form = this.formBuilder.group({
+        email: [this.email],
+        token: [this.token],
         passwords: this.formBuilder.group({
-            password: ['', [Validators.required, Validators.maxLength(100)]],
-            confirmPassword: ['']
-        }, {
-            validator: PasswordValidator
-        })
+            password: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(10), FieldValidators.cannotContainSpace]],
+            confirmPassword: ['', [Validators.required]],
+        }, { validator: CrossFieldValidators.cannotBeDifferent })
     })
 
     // #endregion
 
     constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private activatedRoute: ActivatedRoute) {
         this.activatedRoute.params.subscribe(p => {
-            this.email = p.email
-            this.token = p.token
+            this.email = p['email']
+            this.token = p['token']
         })
     }
 
@@ -55,12 +58,18 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         this.ngUnsubscribe.unsubscribe()
         this.unlisten()
     }
-
-    saveRecord() {
-        if (!this.form.valid) { return }
-        this.accountService.resetPassword(this.email, this.form.value.passwords.password, this.form.value.passwords.confirmPassword, this.token).subscribe(() => {
+    onSubmit() {
+        const form = this.form.value;
+        this.accountService.resetPassword(form.email, form.passwords.password, form.passwords.confirmPassword, form.token).subscribe(() => {
             this.showSnackbar('Password has been reset', 'info')
-            this.goBack()
+            this.router.navigateByUrl('/login');
+        }, error => {
+            this.errorList = []
+            error.error.response.forEach((element: string) => {
+                this.errorList.push(element + '\n');
+                console.log(element)
+            })
+            alert(this.errorList)
         })
     }
 
@@ -78,7 +87,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     event.preventDefault()
-                    this.saveRecord()
+                    this.onSubmit()
                 }
             }
         }, {
@@ -96,13 +105,16 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
     }
 
     // #region Helper properties
-
-    get password() {
-        return this.form.get('email')
+    get Passwords() {
+        return this.form.get('passwords')
     }
 
-    get verifyPassword() {
-        return this.form.get('verifyPassword')
+    get Password() {
+        return this.form.get('passwords.password')
+    }
+
+    get ConfirmPassword() {
+        return this.form.get('passwords.confirmPassword')
     }
 
     // #endregion

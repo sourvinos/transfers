@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Transfers.Email {
+namespace Transfers {
 
     public static class AddEmailExtensions {
 
