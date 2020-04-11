@@ -1,18 +1,19 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
-import { CrossFieldErrorMatcher } from 'src/app/shared/services/cross-field-matcher';
 import { DialogService } from 'src/app/shared/services/dialog.service';
-import { PasswordValidator } from 'src/app/shared/services/password-validator';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
 import { HelperService } from '../../shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { User } from '../classes/user';
 import { UserService } from '../classes/user.service';
+import { PasswordValidator } from 'src/app/shared/services/password-validator';
+import { CrossFieldErrorMatcher } from 'src/app/shared/services/cross-field-matcher';
+import { FieldValidators } from 'src/app/shared/services/field-validators';
 
 @Component({
     selector: 'register-user-form',
@@ -26,44 +27,24 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
 
     id: string
     user: User
-    url = '/users'
+    usersUrl = '/users'
     errorMatcher = new CrossFieldErrorMatcher()
     hidePassword = true
-    flatForm: {}
-
+    form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    form = this.formBuilder.group({
-        id: 0,
-        userName: ['', [Validators.required, Validators.maxLength(100)]],
-        displayName: ['', [Validators.required, Validators.maxLength(20)]],
-        email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
-        passwords: this.formBuilder.group({
-            password: ['', [Validators.required, Validators.maxLength(100)]],
-            verifyPassword: [''],
-        }, {
-            validator: PasswordValidator
-        })
-    })
-
     // #endregion
 
-    constructor(private userService: UserService, private accountService: AccountService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) {
-        this.activatedRoute.params.subscribe(p => {
-            this.id = p['id']
-            if (this.id) {
-                this.getRecord()
-            }
-        })
-    }
+    constructor(private userService: UserService, private accountService: AccountService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) { }
 
     ngOnInit() {
+        this.initForm()
         this.addShortcuts()
     }
 
     ngAfterViewInit() {
-        this.focus('userName')
+        this.focus('username')
     }
 
     ngOnDestroy() {
@@ -72,13 +53,6 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         this.unlisten()
     }
 
-    /**
-     * Caller(s):
-     *  Service - CanDeactivateGuard()
-     *
-     * Description:
-     *  Desides which action to perform when a route change is requested
-     */
     canDeactivate() {
         if (this.form.dirty) {
             this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.', ['cancel', 'ok']).subscribe(response => {
@@ -93,37 +67,10 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    /**
-     * Caller(s):
-     *  Template - deleteRecord()
-     *
-     * Description:
-     *  Deletes the current record
-     */
-    deleteRecord() {
-        this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.', ['ok', 'cancel']).subscribe(response => {
-            if (response) {
-                this.userService.delete(this.form.value.id).subscribe(() => {
-                    this.showSnackbar('Record deleted', 'info')
-                    this.resetForm()
-                    this.goBack()
-                })
-            }
-        })
-    }
-
-    /**
-     * Caller(s):
-     *  Template - saveRecord()
-     *
-     * Description:
-     *  Adds or updates an existing record
-     */
     saveRecord() {
         if (!this.form.valid) { return }
         if (this.form.value.id === 0) {
-            this.flattenFormFields()
-            this.userService.add(this.flatForm).subscribe(() => {
+            this.userService.add(this.form).subscribe(() => {
                 this.showConfirmation()
                 this.resetForm()
                 this.goBack()
@@ -137,23 +84,12 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Self-explanatory
-     */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.goBack()
                 }
-            },
-            'Alt.D': (event: KeyboardEvent) => {
-                event.preventDefault()
-                this.deleteRecord()
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
@@ -179,72 +115,13 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         })
     }
 
-    private flattenFormFields() {
-        this.flatForm = {
-            id: this.form.value.id,
-            userName: this.form.value.userName,
-            displayName: this.form.value.displayName,
-            email: this.form.value.email,
-            password: this.form.value.passwords.password
-        }
-    }
-
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     * Description:
-     *  Calls the public method()
-     *
-     * @param field
-     */
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     *
-     * Description:
-     *  Gets the selected record from the api
-     */
-    private getRecord() {
-        if (this.id) {
-            this.userService.getSingle(this.id).then(result => {
-                this.user = result
-                this.populateFields()
-            })
-        }
-    }
 
-    /**
-     * Caller(s):
-     *  Class - canDeactive(), deleteRecord(), saveRecord()
-     *
-     * Description:
-     *  On escape navigates to the list
-     */
     private goBack() {
-        this.router.navigate([this.url])
-    }
-
-    /**
-     * Caller(s):
-     *  Class - getRecord()
-     *
-     * Description:
-     *  Populates the form with record values
-     *
-     * @param result
-     */
-    private populateFields() {
-        this.form.setValue({
-            id: this.user.id,
-            userName: this.user.userName,
-            displayName: this.user.displayName,
-            email: this.user.email,
-            password: ''
-        })
+        this.router.navigate([this.usersUrl])
     }
 
     /**
@@ -257,7 +134,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     private resetForm() {
         this.form.reset({
             id: 0,
-            userName: '',
+            username: '',
             displayName: '',
             email: '',
             password: ''
@@ -278,30 +155,39 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - saveRecord() - deleteRecord()
-     */
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
 
-    // #region Helper properties
-
-    get userName() {
-        return this.form.get('userName')
+    private initForm() {
+        this.form = this.formBuilder.group({
+            id: 0,
+            email: ['', [Validators.required, Validators.email, Validators.maxLength(128)]],
+            displayName: ['', [Validators.required, Validators.maxLength(32)]],
+            username: ['', [Validators.required, Validators.maxLength(32)]],
+            passwords: this.formBuilder.group({
+                password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(128), FieldValidators.cannotContainSpace]],
+                confirmPassword: ['', [Validators.required]]
+            })
+        })
     }
 
-    get displayName() {
+    // #region Helper properties
+
+    get Username() {
+        return this.form.get('username')
+    }
+
+    get DisplayName() {
         return this.form.get('displayName')
     }
 
-    get email() {
+    get Email() {
         return this.form.get('address')
     }
 
-    get password() {
-        return this.form.get('password')
+    get Password() {
+        return this.form.get('passwords.password')
     }
 
     // #endregion

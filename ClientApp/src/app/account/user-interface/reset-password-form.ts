@@ -18,7 +18,7 @@ import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shor
 
 export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Init
+    // #region Variables
 
     email: string
     token: string
@@ -99,21 +99,14 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         }, { validator: PasswordValidator })
 
     }
+
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
 
     // #region Helper properties
-    get Passwords() {
-        return this.form.get('passwords')
-    }
-
     get Password() {
         return this.form.get('password')
-    }
-
-    get ConfirmPassword() {
-        return this.form.get('confirmPassword')
     }
 
     // #endregion
