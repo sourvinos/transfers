@@ -28,19 +28,18 @@
                     <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
                         <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                     </button>
-                    <mat-error *ngIf="Password?.touched && Password?.invalid">
-                        <mat-error *ngIf="Password.errors?.required">This field is required</mat-error>
-                        <mat-error *ngIf="Password.errors?.minlength">This field must be at least {{ Password.errors.minlength.requiredLength }} characters long</mat-error>
-                        <mat-error *ngIf="Password.errors?.maxlength">This field can be up to {{ Password.errors.maxlength.requiredLength }} characters long</mat-error>
-                        <mat-error *ngIf="Password.errors?.cannotContainSpace">Spaces are not allowed</mat-error>
+                    <mat-error>
+                        {{ errors.password }}
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                    <input [type]="hidePassword ? 'password' : 'text'" matInput placeholder="Confirm password" formControlName="confirmPassword" tabindex="5" id="confirmPassword" [inputTabStop]="input">
+                    <input [type]="hidePassword ? 'password' : 'text'" matInput placeholder="Confirm password" formControlName="confirmPassword" tabindex="5" id="confirmPassword" [inputTabStop]="input" [errorStateMatcher]="confirmValidParentMatcher">
                     <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
                         <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                     </button>
-                    <mat-error *ngIf="passwords?.hasError('passwordsDoNotMatch')">Passwords do not match!</mat-error>
+                    <mat-error>
+                        {{ errors.confirmPassword }}
+                    </mat-error>
                 </mat-form-field>
             </div>
             <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
@@ -52,6 +51,6 @@
     <mat-divider></mat-divider>
     <div id="buttons">
         <button mat-flat-button class="delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
-        <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>
+        <button mat-flat-button class="primary" id="save" (click)="onSubmit()">Save</button>
     </div>
 </div>

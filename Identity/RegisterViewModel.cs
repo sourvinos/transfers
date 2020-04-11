@@ -19,6 +19,7 @@ namespace Transfers {
 
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Password is required")]
+        [MinLength(10, ErrorMessage = "Password can not be less than 10 characters")]
         [MaxLength(128, ErrorMessage = "Password can not be longer than 128 characters")]
         public string Password { get; set; }
 

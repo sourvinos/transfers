@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { CrossFieldErrorMatcher } from 'src/app/shared/services/cross-field-matcher';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { PasswordValidator } from 'src/app/shared/services/password-validator';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
@@ -24,7 +23,6 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
     id: string
     user: User
     url = '/users'
-    errorMatcher = new CrossFieldErrorMatcher()
     hidePassword = true
     flatForm: {}
     unlisten: Unlisten

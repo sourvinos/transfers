@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
-import { CrossFieldErrorMatcher } from 'src/app/shared/services/cross-field-matcher';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
@@ -26,7 +25,6 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     id: string
     user: User
     url = '/users'
-    errorMatcher = new CrossFieldErrorMatcher()
     hidePassword = true
     // flatForm: {}
 

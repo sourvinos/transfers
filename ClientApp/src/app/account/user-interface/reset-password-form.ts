@@ -1,9 +1,8 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators, NgForm, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
-import { CrossFieldErrorMatcher } from 'src/app/shared/services/cross-field-matcher';
 import { FieldValidators } from 'src/app/shared/services/field-validators';
 import { PasswordValidator } from 'src/app/shared/services/password-validator';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
@@ -25,7 +24,6 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
     loginUrl = '/login'
     hidePassword = true
     form: FormGroup
-    errorMatcher = new CrossFieldErrorMatcher()
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
@@ -105,8 +103,13 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
     }
 
     // #region Helper properties
+
+    get Passwords() {
+        return this.form.get('passwords')
+    }
+
     get Password() {
-        return this.form.get('password')
+        return this.form.get('passwords.password')
     }
 
     // #endregion
