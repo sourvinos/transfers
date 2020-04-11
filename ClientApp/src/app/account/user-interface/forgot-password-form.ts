@@ -17,13 +17,12 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
 
     // #region Variables
 
-    url = '/login'
-    errorList: string[] = []
+    loginUrl = '/login'
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
     form = this.formBuilder.group({
-        email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
+        email: ['johnsourvinos@hotmail.com', [Validators.required, Validators.email, Validators.maxLength(100)]],
     })
 
     // #endregion
@@ -46,21 +45,14 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
 
     onSubmit() {
         const form = this.form.value;
-        this.accountService.forgotPassword(form.email).subscribe(() => {
-            this.showSnackbar(`An email was sent to ${form.email} with instructions`, 'info')
+        this.accountService.forgotPassword(form.email).subscribe((response) => {
+            this.showSnackbar(response.response, 'info')
             this.goBack()
-        }, error => {
-            this.errorList = []
-            error.error.response.forEach((element: string) => {
-                this.errorList.push(element + '\n');
-                console.log(element)
-            });
-            alert(this.errorList)
         });
     }
 
     goBack() {
-        this.router.navigate([this.url])
+        this.router.navigate([this.loginUrl])
     }
 
     private addShortcuts() {

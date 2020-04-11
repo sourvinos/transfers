@@ -31,7 +31,7 @@ namespace Transfers {
                 case "refresh_token":
                     return await RefreshToken(model);
                 default:
-                    return Unauthorized(new { response = "Authentication failed" });
+                    return Unauthorized(new { response = "Authentication failed." });
             }
         }
 
@@ -39,7 +39,7 @@ namespace Transfers {
             var user = await userManager.FindByNameAsync(model.UserName);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password)) {
                 if (!await userManager.IsEmailConfirmedAsync(user)) {
-                    return BadRequest(new { response = "This account is pending email confirmation" });
+                    return BadRequest(new { response = "This account is pending email confirmation." });
                 }
                 var newRefreshToken = CreateRefreshToken(appSettings.ClientId, user.Id);
                 var oldRefreshTokens = db.Tokens.Where(rt => rt.UserId == user.Id);
@@ -53,7 +53,7 @@ namespace Transfers {
                 var accessToken = await CreateAccessToken(user, newRefreshToken.Value);
                 return Ok(new { response = accessToken });
             }
-            return Unauthorized(new { response = "Authentication failed" });
+            return Unauthorized(new { response = "Authentication failed." });
         }
 
         private Token CreateRefreshToken(string clientId, string userId) {
@@ -100,9 +100,9 @@ namespace Transfers {
             try {
                 var rt = db.Tokens.FirstOrDefault(t => t.ClientId == appSettings.ClientId && t.Value == model.RefreshToken.ToString());
                 if (rt == null) return new UnauthorizedResult();
-                if (rt.ExpiryTime < DateTime.UtcNow) return Unauthorized(new { response = "Authentication failed" });
+                if (rt.ExpiryTime < DateTime.UtcNow) return Unauthorized(new { response = "Authentication failed." });
                 var user = await userManager.FindByIdAsync(rt.UserId);
-                if (user == null) return Unauthorized(new { response = "Authentication failed" });
+                if (user == null) return Unauthorized(new { response = "Authentication failed." });
                 var rtNew = CreateRefreshToken(rt.ClientId, rt.UserId);
                 db.Tokens.Remove(rt);
                 db.Tokens.Add(rtNew);
@@ -110,7 +110,7 @@ namespace Transfers {
                 var token = await CreateAccessToken(user, rtNew.Value);
                 return Ok(new { response = token });
             } catch {
-                return Unauthorized(new { response = "Authentication failed" });
+                return Unauthorized(new { response = "Authentication failed." });
             }
         }
 

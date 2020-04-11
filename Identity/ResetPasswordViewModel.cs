@@ -8,8 +8,10 @@ namespace transfersViewModels {
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
         [DataType(DataType.Password)]
+        [Required(ErrorMessage = "Password is required")]
+        [MinLength(10, ErrorMessage = "Password can not be less than 10 characters long")]
+        [MaxLength(128, ErrorMessage = "Password can not be more than 128 characters long")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]

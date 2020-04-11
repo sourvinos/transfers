@@ -41,13 +41,13 @@ namespace Transfers {
 
         }
 
-        public SendEmailResponse SendResetPasswordEmail(string userEmail, string callbackUrl) {
+        public SendEmailResponse SendResetPasswordEmail(string displayName, string userEmail, string callbackUrl) {
 
             using(MailMessage mail = new MailMessage()) {
                 mail.From = new MailAddress(_appSettings.From);
                 mail.To.Add(userEmail);
                 mail.Subject = "Password reset";
-                mail.Body = "<h1 style='color: #FE9F36; font-family: Roboto Condensed;'>Hello, " + userEmail + "!" + "</h1>";
+                mail.Body = "<h1 style='color: #FE9F36; font-family: Roboto Condensed;'>Hello, " + displayName + "!" + "</h1>";
                 mail.Body += "<h2 style='color: #2e6c80;'>You have requested a password reset</h2>";
                 mail.Body += "<p>Click the following button to reset your password.</p>";
                 mail.Body += "<div id='button' style='padding: 1rem;'>";

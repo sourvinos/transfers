@@ -1,14 +1,14 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, NgForm, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
+import { CrossFieldErrorMatcher } from 'src/app/shared/services/cross-field-matcher';
+import { FieldValidators } from 'src/app/shared/services/field-validators';
 import { PasswordValidator } from 'src/app/shared/services/password-validator';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
-import { FieldValidators } from 'src/app/shared/services/field-validators';
-import { CrossFieldValidators } from 'src/app/shared/services/cross-field-validators';
 
 @Component({
     selector: 'reset-password-form',
@@ -22,19 +22,12 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
 
     email: string
     token: string
-    url = '/login'
-    errorList: string[] = [];
+    loginUrl = '/login'
+    hidePassword = true
+    form: FormGroup
+    errorMatcher = new CrossFieldErrorMatcher()
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
-
-    form = this.formBuilder.group({
-        email: [this.email],
-        token: [this.token],
-        passwords: this.formBuilder.group({
-            password: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(10), FieldValidators.cannotContainSpace]],
-            confirmPassword: ['', [Validators.required]],
-        }, { validator: CrossFieldValidators.cannotBeDifferent })
-    })
 
     // #endregion
 
@@ -46,6 +39,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
     }
 
     ngOnInit() {
+        this.initForm()
         this.addShortcuts()
     }
 
@@ -58,23 +52,19 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         this.ngUnsubscribe.unsubscribe()
         this.unlisten()
     }
+
     onSubmit() {
         const form = this.form.value;
-        this.accountService.resetPassword(form.email, form.passwords.password, form.passwords.confirmPassword, form.token).subscribe(() => {
-            this.showSnackbar('Password has been reset', 'info')
-            this.router.navigateByUrl('/login');
+        this.accountService.resetPassword(form.email, form.password, form.confirmPassword, form.token).subscribe((response) => {
+            this.showSnackbar(response.response, 'info')
+            this.router.navigateByUrl(this.loginUrl);
         }, error => {
-            this.errorList = []
-            error.error.response.forEach((element: string) => {
-                this.errorList.push(element + '\n');
-                console.log(element)
-            })
-            alert(this.errorList)
+            this.showSnackbar(error.error.response, 'error')
         })
     }
 
     goBack() {
-        this.router.navigate([this.url])
+        this.router.navigate([this.loginUrl])
     }
 
     private addShortcuts() {
@@ -100,6 +90,15 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         Utils.setFocus(field)
     }
 
+    private initForm() {
+        this.form = this.formBuilder.group({
+            email: [this.email],
+            token: [this.token],
+            password: ['1234567890', [Validators.required, Validators.minLength(10), Validators.maxLength(128), FieldValidators.cannotContainSpace]],
+            confirmPassword: ['1234567890', [Validators.required]],
+        }, { validator: PasswordValidator })
+
+    }
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
@@ -110,11 +109,11 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
     }
 
     get Password() {
-        return this.form.get('passwords.password')
+        return this.form.get('password')
     }
 
     get ConfirmPassword() {
-        return this.form.get('passwords.confirmPassword')
+        return this.form.get('confirmPassword')
     }
 
     // #endregion

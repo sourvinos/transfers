@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
+using transfersViewModels;
 
 namespace Transfers {
 
@@ -35,7 +36,7 @@ namespace Transfers {
                     string token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     string callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Token = token }, protocol : HttpContext.Request.Scheme);
                     emailSender.SendRegistrationEmail(user.Email, user.UserName, callbackUrl);
-                    return Ok(new { response = "User created successfully" });
+                    return Ok(new { response = "User created successfully." });
                 } else {
                     return BadRequest(new { response = result.Errors.Select(x => x.Description) });
                 }
@@ -46,7 +47,7 @@ namespace Transfers {
         [HttpGet("[action]")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token) {
             var user = await userManager.FindByIdAsync(userId);
-            if (user == null) { return BadRequest(new { response = "User not found" }); }
+            if (user == null) { return BadRequest(new { response = "User not found." }); }
             if (user.EmailConfirmed) { return Redirect("/login"); }
             var result = await userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded) {
@@ -64,9 +65,9 @@ namespace Transfers {
                     string tokenEncoded = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
                     string baseUrl = $"{this.Request.Scheme}://{this.Request.Host.Value.ToString()}{this.Request.PathBase.Value.ToString()}";
                     string passwordResetLink = Url.Content($"{baseUrl}/resetPassword/{model.Email}/{tokenEncoded}");
-                    emailSender.SendResetPasswordEmail(user.Email, passwordResetLink);
+                    emailSender.SendResetPasswordEmail(user.DisplayName, user.Email, passwordResetLink);
                 }
-                return Ok(new { response = "An email was sent to your account" });
+                return Ok(new { response = $"An email was sent to '{model.Email}' with instructions." });
             }
             return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
         }
@@ -84,11 +85,11 @@ namespace Transfers {
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel model) {
             if (ModelState.IsValid) {
                 var user = await userManager.FindByEmailAsync(model.Email);
-                if (user == null) { return BadRequest(new { response = "User not found" }); }
+                if (user == null) { return BadRequest(new { response = $"Email '{model.Email}' does not exist." }); }
                 var tokenDecoded = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Token));
                 var result = await userManager.ResetPasswordAsync(user, tokenDecoded, model.Password);
                 if (result.Succeeded) {
-                    return Ok(new { response = "Password reset successfully" });
+                    return Ok(new { response = "Password was reset successfully." });
                 }
                 return BadRequest(new { response = result.Errors.Select(x => x.Description) });
             }
@@ -99,11 +100,11 @@ namespace Transfers {
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordViewModel vm) {
             if (ModelState.IsValid) {
                 var user = await userManager.FindByNameAsync("sourvinos");
-                if (user == null) { return Unauthorized(new { response = "Authentication failed" }); }
+                if (user == null) { return Unauthorized(new { response = "Authentication failed." }); }
                 var result = await userManager.ChangePasswordAsync(user, vm.CurrentPassword, vm.Password);
                 if (result.Succeeded) {
                     await signInManager.RefreshSignInAsync(user);
-                    return Ok(new { response = "Password changed successfully" });
+                    return Ok(new { response = "Password was changed successfully." });
                 }
                 return BadRequest(new { response = result.Errors.Select(x => x.Description) });
             }

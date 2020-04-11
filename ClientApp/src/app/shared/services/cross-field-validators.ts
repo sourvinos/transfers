@@ -1,14 +1,8 @@
-import { AbstractControl } from '@angular/forms'
+import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material';
 
-export class CrossFieldValidators {
-
-    static cannotBeDifferent(control: AbstractControl) {
-        const password = control.get('password')
-        const confirmPassword = control.get('confirmPassword')
-        if (password && confirmPassword && !password.pristine && !confirmPassword.pristine && password.value !== confirmPassword.value) {
-            return { cannotBeDifferent: true }
-        }
-        return null
+class CrossFieldErrorMatcher implements ErrorStateMatcher {
+    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        return control.dirty && form.invalid;
     }
-
 }

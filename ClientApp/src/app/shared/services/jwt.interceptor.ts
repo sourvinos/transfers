@@ -8,7 +8,6 @@ import { AccountService } from './account.service'
 
 export class JwtInterceptor implements HttpInterceptor {
 
-
     private isTokenRefreshing = false;
     private tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
