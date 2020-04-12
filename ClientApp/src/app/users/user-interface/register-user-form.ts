@@ -9,6 +9,7 @@ import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shor
 import { User } from '../classes/user';
 import { UserService } from '../classes/user.service';
 import { ConfirmValidParentMatcher, ValidationService } from '../../shared/services/validation.service';
+import { AccountService } from 'src/app/shared/services/account.service';
 
 @Component({
     selector: 'register-user-form',
@@ -32,7 +33,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
 
     // #endregion
 
-    constructor(private userService: UserService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) { }
+    constructor(private accountService: AccountService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) { }
 
     ngOnInit() {
         this.initForm()
@@ -69,7 +70,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
 
     onSubmit() {
         this.flattenFormFields();
-        this.userService.add(this.flatForm).subscribe((response) => {
+        this.accountService.register(this.flatForm).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
             this.resetForm()
             this.goBack()

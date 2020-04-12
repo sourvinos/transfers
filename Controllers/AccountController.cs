@@ -47,7 +47,7 @@ namespace Transfers {
         [HttpGet("[action]")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token) {
             var user = await userManager.FindByIdAsync(userId);
-            if (user == null) { return BadRequest(new { response = "User not found." }); }
+            if (user == null) { return RedirectToAction("EmailConfirmationError", "Notifications"); }
             if (user.EmailConfirmed) { return Redirect("/login"); }
             var result = await userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded) {

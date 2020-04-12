@@ -29,7 +29,7 @@ p.instructions {
     font-family: var(--font-family-paragraphs);
     font-size: var(--font-size-paragraphs);
     overflow: hidden;
-    width: 500px;
+    width: 800px;
 }
 
 

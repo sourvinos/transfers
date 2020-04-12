@@ -91,9 +91,10 @@
 }
 
 #menu ul>li {
+    line-height: 1.5rem;
     outline: 0;
-    transition: font-size;
     transition-duration: 200ms;
+    transition: font-size;
 }
 
 #menu ul>li:last-child {
@@ -120,6 +121,11 @@
     font-size: 10px;
     text-align: center;
 }
+
+#menuItems li {
+    line-height: 2.5rem !important;
+}
+
 
 /* Small heights = hide bus circle */
 @media only screen and (max-height: 60rem) {

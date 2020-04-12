@@ -47,8 +47,8 @@ export class AccountService {
         this.navigateToLogin()
     }
 
-    register(username: string, displayName: string, password: string, confirmPassword: string, email: string) {
-        return this.httpClient.post<any>(this.baseUrlRegister, { username, displayName, password, confirmPassword, email })
+    register(formData: any) {
+        return this.httpClient.post<any>(this.baseUrlRegister, { formData })
     }
 
     resetPassword(email: string, password: string, confirmPassword: string, token: string) {
