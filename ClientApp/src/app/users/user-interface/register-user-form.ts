@@ -3,13 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { DialogService } from 'src/app/shared/services/dialog.service';
-import { FieldValidators } from 'src/app/shared/services/field-validators';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { User } from '../classes/user';
 import { UserService } from '../classes/user.service';
-import { ConfirmValidParentMatcher, CustomValidators, errorMessages } from './custom-validation';
+import { ConfirmValidParentMatcher, ValidationService } from '../../shared/services/validation.service';
 
 @Component({
     selector: 'register-user-form',
@@ -30,7 +29,6 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
     confirmValidParentMatcher = new ConfirmValidParentMatcher();
-    errors = errorMessages;
 
     // #endregion
 
@@ -65,12 +63,18 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
+    onResetForm() {
+        this.form.reset()
+    }
+
     onSubmit() {
         this.flattenFormFields();
-        this.userService.add(this.flatForm).subscribe(() => {
-            this.showConfirmation()
+        this.userService.add(this.flatForm).subscribe((response) => {
+            this.showSnackbar(response.response, 'info')
             this.resetForm()
             this.goBack()
+        }, error => {
+            this.showSnackbar(error.error.response, 'error')
         })
     }
 
@@ -127,9 +131,9 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
             displayName: ['', [Validators.required, Validators.maxLength(32)]],
             username: ['', [Validators.required, Validators.maxLength(32)]],
             passwords: this.formBuilder.group({
-                password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(128), FieldValidators.cannotContainSpace]],
+                password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(128), ValidationService.containsSpace]],
                 confirmPassword: ['', [Validators.required]]
-            }, { validator: CustomValidators.childrenEqual })
+            }, { validator: ValidationService.childrenEqual })
         })
     }
 
@@ -138,26 +142,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     private resetForm() {
-        this.form.reset({
-            id: 0,
-            email: '',
-            displayName: '',
-            username: '',
-            passwords: this.formBuilder.group({
-                password: '',
-                confirmPassword: ''
-            })
-        })
-    }
-
-    private showConfirmation() {
-        this.dialogService.open('Confirmation', '#36fee0', 'We\'ve just sent you an email, so please open it and confirm your email address!', ['ok']).subscribe(response => {
-            if (response) {
-                this.resetForm()
-                this.goBack()
-                return true
-            }
-        })
+        this.form.reset()
     }
 
     private showSnackbar(message: string, type: string): void {
@@ -167,7 +152,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     // #region Helper properties
 
     get Email() {
-        return this.form.get('address')
+        return this.form.get('email')
     }
 
     get DisplayName() {
@@ -184,6 +169,14 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
 
     get Password() {
         return this.form.get('passwords.password')
+    }
+
+    get ConfirmPassword() {
+        return this.form.get('passwords.confirmPassword')
+    }
+
+    get MatchingPasswords() {
+        return this.form.get('passwords.password').value === this.form.get('passwords.confirmPassword').value
     }
 
     // #endregion

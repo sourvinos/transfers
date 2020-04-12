@@ -35,8 +35,8 @@ namespace Transfers {
                     await userManager.AddToRoleAsync(user, "User");
                     string token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     string callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Token = token }, protocol : HttpContext.Request.Scheme);
-                    emailSender.SendRegistrationEmail(user.Email, user.UserName, callbackUrl);
-                    return Ok(new { response = "User created successfully." });
+                    emailSender.SendRegistrationEmail(user.Email, user.DisplayName, callbackUrl);
+                    return Ok(new { response = $"An email was sent to '{formData.Email}' with instructions." });
                 } else {
                     return BadRequest(new { response = result.Errors.Select(x => x.Description) });
                 }

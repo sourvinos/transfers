@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
-import { FieldValidators } from 'src/app/shared/services/field-validators';
 import { PasswordValidator } from 'src/app/shared/services/password-validator';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
+import { ValidationService } from 'src/app/shared/services/validation.service';
 
 @Component({
     selector: 'reset-password-form',
@@ -55,7 +55,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         const form = this.form.value;
         this.accountService.resetPassword(form.email, form.password, form.confirmPassword, form.token).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
-            this.router.navigateByUrl(this.loginUrl);
+            this.router.navigateByUrl(this.loginUrl)
         }, error => {
             this.showSnackbar(error.error.response, 'error')
         })
@@ -92,7 +92,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         this.form = this.formBuilder.group({
             email: [this.email],
             token: [this.token],
-            password: ['1234567890', [Validators.required, Validators.minLength(10), Validators.maxLength(128), FieldValidators.cannotContainSpace]],
+            password: ['1234567890', [Validators.required, Validators.minLength(10), Validators.maxLength(128), ValidationService.containsSpace]],
             confirmPassword: ['1234567890', [Validators.required]],
         }, { validator: PasswordValidator })
 
