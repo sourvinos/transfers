@@ -10,11 +10,11 @@ export class AccountService {
 
     // #region Init
 
-    private baseUrlRegister = '/api/account/register'
-    private baseUrlForgotPassword = '/api/account/forgotPassword'
-    private baseUrlResetPassword = '/api/account/resetPassword'
-    private baseUrlToken = '/api/token/auth'
-    private baseUrlChangePassword = '/api/account/changePassword'
+    private urlRegister = '/api/account/register'
+    private urlForgotPassword = '/api/account/forgotPassword'
+    private urlResetPassword = '/api/account/resetPassword'
+    private urlToken = '/api/token/auth'
+    private urlChangePassword = '/api/account/changePassword'
 
     private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus())
     private displayName = new BehaviorSubject<string>(localStorage.getItem('displayName'))
@@ -25,16 +25,16 @@ export class AccountService {
     constructor(private httpClient: HttpClient, private router: Router) { }
 
     changePassword(currentPassword: string, password: string, confirmPassword: string) {
-        return this.httpClient.post<any>(this.baseUrlChangePassword, { currentPassword, password, confirmPassword })
+        return this.httpClient.post<any>(this.urlChangePassword, { currentPassword, password, confirmPassword })
     }
 
     forgotPassword(email: string) {
-        return this.httpClient.post<any>(this.baseUrlForgotPassword, { email })
+        return this.httpClient.post<any>(this.urlForgotPassword, { email })
     }
 
     login(username: string, password: string) {
         const grantType = 'password'
-        return this.httpClient.post<any>(this.baseUrlToken, { username, password, grantType }).pipe(map(response => {
+        return this.httpClient.post<any>(this.urlToken, { username, password, grantType }).pipe(map(response => {
             this.setLoginStatus(true)
             this.setLocalStorage(response)
             this.setUserData()
@@ -48,18 +48,18 @@ export class AccountService {
     }
 
     register(formData: any) {
-        return this.httpClient.post<any>(this.baseUrlRegister, formData)
+        return this.httpClient.post<any>(this.urlRegister, formData)
     }
 
     resetPassword(email: string, password: string, confirmPassword: string, token: string) {
-        return this.httpClient.post<any>(this.baseUrlResetPassword, { email, password, confirmPassword, token })
+        return this.httpClient.post<any>(this.urlResetPassword, { email, password, confirmPassword, token })
     }
 
     getNewRefreshToken(): Observable<any> {
         const username = localStorage.getItem('username')
         const refreshToken = localStorage.getItem('refreshToken')
         const grantType = 'refresh_token'
-        return this.httpClient.post<any>(this.baseUrlToken, { username, refreshToken, grantType }).pipe(
+        return this.httpClient.post<any>(this.urlToken, { username, refreshToken, grantType }).pipe(
             map(response => {
                 console.log('Refresh token' + response.response.token)
                 if (response.response.token) {

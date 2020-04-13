@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { Utils } from 'src/app/shared/classes/utils';
@@ -19,23 +19,18 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
     // #region Init
 
     countdown = 0
-    invalidLogin: boolean
     returnUrl: string
+    form: FormGroup
     hidePassword = true
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
-
-    form = this.formBuilder.group({
-        username: ['sourvinos', Validators.required],
-        password: ['12345', Validators.required]
-    })
 
     // #endregion
 
     constructor(private accountService: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService) { }
 
     ngOnInit() {
+        this.initForm()
         this.addShortcuts()
     }
 
@@ -53,7 +48,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigateByUrl('/forgotPassword');
     }
 
-    onLogin() {
+    onSubmit() {
         const form = this.form.value
         this.accountService.login(form.username, form.password).subscribe(() => {
             this.router.navigateByUrl(this.returnUrl);
@@ -68,7 +63,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Alt.L': (event: KeyboardEvent): void => {
                 event.preventDefault()
-                this.onLogin()
+                this.onSubmit()
             }
         }, {
             priority: 2,
@@ -80,20 +75,27 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
         Utils.setFocus(field)
     }
 
-    private showSnackbar(message: string, type: string): void {
+    private showSnackbar(message: string | string[], type: string): void {
         this.snackbarService.open(message, type)
     }
 
     // #region Helper properties
 
-    get username() {
+    get Username() {
         return this.form.get('username')
     }
 
-    get password() {
+    get Password() {
         return this.form.get('password')
     }
 
     // #endregion
 
+    private initForm() {
+        this.form = this.formBuilder.group({
+            username: ['sourvinos', Validators.required],
+            password: ['12345', Validators.required]
+        })
+
+    }
 }

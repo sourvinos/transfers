@@ -21,7 +21,6 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
 
     // #region Variables
 
-    id: string
     user: User
     usersUrl = '/users'
     hidePassword = true
@@ -112,7 +111,6 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
 
     private flattenFormFields() {
         this.flatForm = {
-            id: this.form.value.id,
             email: this.form.value.email,
             displayName: this.form.value.displayName,
             username: this.form.value.username,
@@ -127,7 +125,6 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
 
     private initForm() {
         this.form = this.formBuilder.group({
-            id: 0,
             email: ['me@me.com', [Validators.required, Validators.email, Validators.maxLength(128)]],
             displayName: ['Me', [Validators.required, Validators.maxLength(32)]],
             username: ['me', [Validators.required, Validators.maxLength(32)]],

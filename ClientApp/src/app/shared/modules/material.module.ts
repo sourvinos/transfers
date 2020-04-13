@@ -16,7 +16,7 @@ import { MatButtonModule, MatCheckboxModule, MatDialogModule, MatExpansionModule
     ],
     providers: [
         { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } },
-        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 0 } }
+        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 3500 } }
     ]
 })
 

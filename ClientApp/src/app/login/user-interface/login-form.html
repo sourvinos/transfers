@@ -10,12 +10,14 @@
         <div id="section-one">
             <mat-form-field>
                 <input type="text" matInput placeholder="Username" formControlName="username" tabindex="1" id="username" [inputTabStop]="input">
+                <mat-error *ngIf="Username.errors?.required">This field is required</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <input [type]="hidePassword ? 'password' : 'text'" matInput placeholder="Password" formControlName="password" tabindex="2" id="password" [inputTabStop]="input">
                 <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
                     <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
+                <mat-error *ngIf="Password?.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <div id="forgotPassword">
                 <button type="button" mat-button (click)="onForgotPassword()">Forgot password?</button>
@@ -28,6 +30,6 @@
 <div id="footer">
     <mat-divider></mat-divider>
     <div id="buttons">
-        <button mat-flat-button class="primary" id="login" [disabled]="!form.valid" (click)="onLogin()">Login</button>
+        <button mat-flat-button class="primary" id="login" [disabled]="!form.valid" (click)="onSubmit()">Login</button>
     </div>
 </div>
