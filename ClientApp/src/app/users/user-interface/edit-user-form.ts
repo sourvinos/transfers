@@ -9,7 +9,7 @@ import { DialogService } from 'src/app/shared/services/dialog.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
-import { User } from '../classes/user';
+import { User } from '../../account/classes/user';
 import { UserService } from '../classes/user.service';
 
 @Component({
@@ -33,7 +33,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     form = this.formBuilder.group({
         id: '',
-        userName: ['', [Validators.required, Validators.maxLength(100)]],
+        username: ['', [Validators.required, Validators.maxLength(100)]],
         displayName: ['', [Validators.required, Validators.maxLength(20)]],
         email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]]
     })
@@ -54,7 +54,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        this.focus('userName')
+        this.focus('username')
     }
 
     ngOnDestroy() {
@@ -216,7 +216,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private populateFields() {
         this.form.setValue({
             id: this.user.id,
-            userName: this.user.userName,
+            username: this.user.username,
             displayName: this.user.displayName,
             email: this.user.email
         })
@@ -232,7 +232,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private resetForm() {
         this.form.reset({
             id: 0,
-            userName: '',
+            username: '',
             displayName: '',
             email: ''
         })
@@ -248,8 +248,8 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Helper properties
 
-    get userName() {
-        return this.form.get('userName')
+    get username() {
+        return this.form.get('username')
     }
 
     get displayName() {

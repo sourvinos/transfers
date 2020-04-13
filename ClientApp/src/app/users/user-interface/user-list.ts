@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/operators'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 import { Utils } from '../../shared/classes/utils'
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service'
-import { User } from '../classes/user'
+import { User } from '../../account/classes/user'
 
 @Component({
     selector: 'user-list',
@@ -24,7 +24,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     widths = ['0px', '40%', '30%', '30%']
     visibility = ['none', '', '', '', '']
     justify = ['center', 'left', 'left', 'left']
-    fields = ['id', 'displayName', 'userName', 'email']
+    fields = ['id', 'displayName', 'username', 'email']
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
@@ -64,7 +64,7 @@ export class UserListComponent implements OnInit, OnDestroy {
      * @param query
      */
     filter(query: string) {
-        this.filteredRecords = query ? this.records.filter(p => p.userName.toLowerCase().includes(query.toLowerCase())) : this.records
+        this.filteredRecords = query ? this.records.filter(p => p.username.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
     /**

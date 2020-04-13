@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Resolve } from '@angular/router'
 import { Observable } from 'rxjs'
-import { User } from './user'
+import { User } from '../../account/classes/user'
 import { UserService } from './user.service'
 
 @Injectable({ providedIn: 'root' })

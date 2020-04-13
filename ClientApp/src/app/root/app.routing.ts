@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router'
 // Components
 import { HomeComponent } from '../home/home.component'
 import { EmptyPageComponent } from '../shared/components/empty-page/empty-page.component';
-import { EmailConfirmedComponent } from '../users/user-interface/email-confirmed-form';
 import { LoginFormComponent } from '../login/user-interface/login-form'
 import { CustomerListComponent } from '../customers/user-interface/customer-list'; import { CustomerFormComponent } from '../customers/user-interface/customer-form'
 import { DestinationListComponent } from '../destinations/user-interface/destination-list'; import { DestinationFormComponent } from '../destinations/user-interface/destination-form'

@@ -8,6 +8,7 @@
 @import "headers.css";
 @import "inputs.css";
 @import "labels.css";
+@import "snackbar.css";
 @import "scrollable.css";
 @import "variables.css";
 
@@ -23,15 +24,6 @@ body, h1, h2, h3, p {
     margin: 0 !important;
     padding: 0 !important;
 }
-
-p.instructions {
-    color: var(--color-paragraphs);
-    font-family: var(--font-family-paragraphs);
-    font-size: var(--font-size-paragraphs);
-    overflow: hidden;
-    width: 800px;
-}
-
 
 #loader {
     align-items: center;
@@ -87,11 +79,27 @@ p.instructions {
     display: none !important;
 }
 
+p.instructions {
+    color: var(--color-paragraphs);
+    font-family: var(--font-family-paragraphs);
+    font-size: var(--font-size-paragraphs);
+    overflow: hidden;
+    width: 800px;
+}
+
 .navigation-icon {
     cursor: pointer;
     font-size: 2.3rem;
     margin-left: -2px !important;
     margin-top: -2px !important;
+}
+
+.error {
+    background-color: var(--color-snackbar-background-danger) !important;
+}
+
+.info {
+    background-color: var(--color-snackbar-background-info) !important;
 }
 
 .mat-divider {
@@ -121,12 +129,6 @@ p.instructions {
     margin: 0;
 }
 
-.mat-simple-snackbar>span {
-    font-family: var(--font-family-buttons);
-    color: var(--color-snackbar-text);
-    padding-left: 0.4rem;
-}
-
 .mat-autocomplete-panel {
     background-color: var(--color-autocomplete-background) !important;
     max-height: 500px;
@@ -144,20 +146,16 @@ p.instructions {
     background-color: var(--color-autocomplete-selected) !important;
 }
 
-.error {
-    background-color: var(--color-snackbar-background-danger) !important;
-}
-
-.info {
-    background-color: var(--color-snackbar-background--info) !important;
-}
-
 .mat-form-field-wrapper {
     margin-bottom: 1rem !important;
 }
 
 .mat-form-field-label-wrapper {
     font-size: 1.2rem;
+}
+
+.mat-snack-bar-container {
+    padding: 10px 16px !important;
 }
 
 

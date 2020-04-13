@@ -7,7 +7,7 @@ import { PasswordValidator } from 'src/app/shared/services/password-validator';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
-import { User } from '../classes/user';
+import { User } from '../../account/classes/user';
 import { UserService } from '../classes/user.service';
 
 @Component({
@@ -215,7 +215,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
     private resetForm() {
         this.form.reset({
             id: 0,
-            userName: '',
+            username: '',
             displayName: '',
             email: ''
         })

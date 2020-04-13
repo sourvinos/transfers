@@ -1,3 +1,4 @@
+import { SnackbarComponent } from '../components/snackbar/snackbar.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -14,6 +15,7 @@ import { SafeStylePipe } from '../pipes/safeStyle';
         declarations: [
                 CustomTableComponent,
                 DialogAlertComponent,
+                SnackbarComponent,
                 DialogIndexComponent,
                 InputFormatDirective,
                 InputTabStopDirective,
@@ -35,7 +37,8 @@ import { SafeStylePipe } from '../pipes/safeStyle';
         ],
         entryComponents: [
                 DialogAlertComponent,
-                DialogIndexComponent
+                DialogIndexComponent,
+                SnackbarComponent
         ]
 })
 

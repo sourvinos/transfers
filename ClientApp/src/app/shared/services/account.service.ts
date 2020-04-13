@@ -48,7 +48,7 @@ export class AccountService {
     }
 
     register(formData: any) {
-        return this.httpClient.post<any>(this.baseUrlRegister, { formData })
+        return this.httpClient.post<any>(this.baseUrlRegister, formData)
     }
 
     resetPassword(email: string, password: string, confirmPassword: string, token: string) {

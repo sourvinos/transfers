@@ -13,6 +13,8 @@
     /* Dialogs */
     --font-size-mat-dialog-title: 2.0rem;
     --font-size-mat-dialog-content: 1.1rem;
+    /* Snackbar*/
+    --font-size-snackbar: 0.95rem;
     /* Transfer summary boxes */
     --font-size-summary-block-header: 1.5rem;
     --font-size-summary-block-header-total: 1.3rem;
@@ -40,6 +42,8 @@
     /* Dialogs */
     --font-family-dialog-header: "Noto Sans";
     --font-family-dialog-content: "Noto Sans";
+    /* Snackbars */
+    --font-family-snackbar: "Noto Sans";
     /* Tables */
     --font-family-table: 'Noto Sans';
     /* Transfer summary boxes */
@@ -64,6 +68,8 @@
     --color-dialog-background: #373F46;
     --color-dialog-content: #939393;
     --color-dialog-title: #939393;
+    /* Snackbar */
+    --color-snackbar: #e2dcdc;
     /* Divider lines */
     --color-divider: #57617B;
     /* Hamburger */
@@ -117,7 +123,7 @@
     /* Snackbars */
     --color-snackbar-text: #ffffff;
     --color-snackbar-background-danger: #a52a2a;
-    --color-snackbar-background--info: #0e8d97;
+    --color-snackbar-background-info: #0e8d97;
     /* Spinner */
     --color-spinner: #d67474;
     --color-spinner-background: #FFE85C;

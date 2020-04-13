@@ -2,14 +2,14 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { AccountService } from 'src/app/shared/services/account.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
-import { User } from '../classes/user';
-import { UserService } from '../classes/user.service';
 import { ConfirmValidParentMatcher, ValidationService } from '../../shared/services/validation.service';
-import { AccountService } from 'src/app/shared/services/account.service';
+import { User } from '../../account/classes/user';
+import { RegisterUser } from '../../account/classes/register-user';
 
 @Component({
     selector: 'register-user-form',
@@ -26,7 +26,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     usersUrl = '/users'
     hidePassword = true
     form: FormGroup
-    flatForm: {}
+    flatForm: RegisterUser
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
     confirmValidParentMatcher = new ConfirmValidParentMatcher();
@@ -128,12 +128,12 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
-            email: ['', [Validators.required, Validators.email, Validators.maxLength(128)]],
-            displayName: ['', [Validators.required, Validators.maxLength(32)]],
-            username: ['', [Validators.required, Validators.maxLength(32)]],
+            email: ['me@me.com', [Validators.required, Validators.email, Validators.maxLength(128)]],
+            displayName: ['Me', [Validators.required, Validators.maxLength(32)]],
+            username: ['me', [Validators.required, Validators.maxLength(32)]],
             passwords: this.formBuilder.group({
-                password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(128), ValidationService.containsSpace]],
-                confirmPassword: ['', [Validators.required]]
+                password: ['1234567890', [Validators.required, Validators.minLength(10), Validators.maxLength(128), ValidationService.containsSpace]],
+                confirmPassword: ['1234567890', [Validators.required]]
             }, { validator: ValidationService.childrenEqual })
         })
     }
@@ -146,7 +146,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         this.form.reset()
     }
 
-    private showSnackbar(message: string, type: string): void {
+    private showSnackbar(message: string | string[], type: string): void {
         this.snackbarService.open(message, type)
     }
 
