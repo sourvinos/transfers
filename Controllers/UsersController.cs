@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,70 +11,65 @@ using Microsoft.Extensions.Options;
 namespace Transfers {
 
     [Route("api/[controller]")]
-    [Authorize(Policy = "RequireLoggedIn")]
+    // [Authorize(Policy = "RequireLoggedIn")]
     public class UsersController : ControllerBase {
 
-        // Variables
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signManager;
         private readonly EmailSettings emailSettings;
 
-        // Constructor
-        public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<EmailSettings> emailSettings) {
-            this.userManager = userManager;
-            this.signManager = signInManager;
-            this.emailSettings = emailSettings.Value;
-        }
+        public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<EmailSettings> emailSettings) =>
+            (this.userManager, this.signManager, this.emailSettings) = (userManager, signInManager, emailSettings.Value);
 
         // GET: api/users
-        [HttpGet]
-        public async Task<IEnumerable<UserListViewModel>> Get() {
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Get() {
             List<UserListViewModel> vm = new List<UserListViewModel>();
-            vm = await userManager.Users.Select(u => new UserListViewModel {
-                Id = u.Id,
-                    UserName = u.UserName,
-                    DisplayName = u.DisplayName,
-                    Email = u.Email
-            }).OrderBy(o => o.UserName).AsNoTracking().ToListAsync();
-            return vm;
+            vm = await userManager.Users.Select(u => new UserListViewModel { Id = u.Id, UserName = u.UserName, DisplayName = u.DisplayName, Email = u.Email }).OrderBy(o => o.UserName).AsNoTracking().ToListAsync();
+            if (vm != null) {
+                return Ok(new { response = vm });
+            }
+            return BadRequest(new { response = "Unable to get data from the server" });
         }
 
         // GET: api/users/5
-        [HttpGet("{id}")]
-        public async Task<UserViewModel> GetUser(string id) {
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetUser(string id) {
             UserViewModel vm = new UserViewModel { };
-            if (!String.IsNullOrEmpty(id)) {
-                ApplicationUser user = await userManager.FindByIdAsync(id);
-                if (user != null) {
-                    vm.Id = user.Id;
-                    vm.UserName = user.UserName;
-                    vm.DisplayName = user.DisplayName;
-                    vm.Email = user.Email;
-                }
+            ApplicationUser user = await userManager.FindByIdAsync(id);
+            if (user != null) {
+                vm.Id = user.Id;
+                vm.UserName = user.UserName;
+                vm.DisplayName = user.DisplayName;
+                vm.Email = user.Email;
+                return Ok(vm);
             }
-            return vm;
+            return BadRequest(new { response = "Record not found" });
         }
 
         // PUT: api/users/5
-        [HttpPut("{id}")]
+        [HttpPut("[action]/{id}")]
         public async Task<IActionResult> PutUser([FromRoute] string id, [FromBody] UserViewModel vm) {
-            if (!ModelState.IsValid) return BadRequest();
-            if (id != vm.Id) return BadRequest();
-            ApplicationUser user = await userManager.FindByIdAsync(id);
-            if (user != null) {
-                user.UserName = vm.UserName;
-                user.DisplayName = vm.DisplayName;
-                user.Email = vm.Email;
-                IdentityResult result = await userManager.UpdateAsync(user);
-                if (result.Succeeded) {
-                    return Ok(user);
+            if (ModelState.IsValid) {
+                if (id != vm.Id) return BadRequest(new { response = "Unexpected user id" });
+                ApplicationUser user = await userManager.FindByIdAsync(id);
+                if (user != null) {
+                    user.UserName = vm.UserName;
+                    user.DisplayName = vm.DisplayName;
+                    user.Email = vm.Email;
+                    IdentityResult result = await userManager.UpdateAsync(user);
+                    if (result.Succeeded) {
+                        return Ok(user);
+                    }
+                    return BadRequest(new { response = result.Errors.Select(x => x.Description) });
                 }
+                return NotFound(new { response = "User not found" });
             }
-            return NotFound();
+            return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
         }
 
         // DELETE: api/users/5
-        [HttpDelete("{id}")]
+        [HttpDelete("[action]/{id}")]
         public async Task<IActionResult> DeleteUser(string id) {
             ApplicationUser user = await userManager.FindByIdAsync(id);
             if (user != null) {

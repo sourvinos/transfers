@@ -125,12 +125,12 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
 
     private initForm() {
         this.form = this.formBuilder.group({
-            email: ['me@me.com', [Validators.required, Validators.email, Validators.maxLength(128)]],
-            displayName: ['Me', [Validators.required, Validators.maxLength(32)]],
-            username: ['me', [Validators.required, Validators.maxLength(32)]],
+            email: ['', [Validators.required, Validators.email, Validators.maxLength(128)]],
+            displayName: ['', [Validators.required, Validators.maxLength(32)]],
+            username: ['', [Validators.required, Validators.maxLength(32)]],
             passwords: this.formBuilder.group({
-                password: ['1234567890', [Validators.required, Validators.minLength(10), Validators.maxLength(128), ValidationService.containsSpace]],
-                confirmPassword: ['1234567890', [Validators.required]]
+                password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(128), ValidationService.containsSpace]],
+                confirmPassword: ['', [Validators.required]]
             }, { validator: ValidationService.childrenEqual })
         })
     }
