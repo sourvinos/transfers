@@ -22,5 +22,6 @@
 			"username": "sa"
 		}
 	],
-	"better-comments.highlightPlainText": true
+	"better-comments.highlightPlainText": true,
+	"debug.javascript.suggestPrettyPrinting": false
 }

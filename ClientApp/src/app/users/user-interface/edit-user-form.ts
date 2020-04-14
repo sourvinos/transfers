@@ -58,7 +58,10 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onChangePassword() {
-        this.router.navigate([this.location.path() + '/changePassword'])
+        // const link: any = this.location.path() + '/changePassword'
+        // this.router.navigate(link)
+        // this.router.navigate(['/users/' + this.form.value.id + '/changePassword'])
+        this.router.navigate(['/users/changePassword/' + this.form.value.id])
     }
 
     onDelete() {
@@ -95,7 +98,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.onDelete()
             },
             'Alt.S': (event: KeyboardEvent) => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0 && this.form.valid) {
                     event.preventDefault()
                     this.onSave()
                 }

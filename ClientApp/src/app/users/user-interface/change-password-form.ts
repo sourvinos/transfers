@@ -1,14 +1,15 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { DialogService } from 'src/app/shared/services/dialog.service';
-import { PasswordValidator } from 'src/app/shared/services/password-validator';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { ValidationService, ConfirmValidParentMatcher } from 'src/app/shared/services/validation.service';
+import { User } from '../../account/classes/user';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
-import { User } from '../../account/classes/user';
 import { UserService } from '../classes/user.service';
+import { ChangePassword } from './../classes/change-password';
 
 @Component({
     selector: 'change-password-form',
@@ -18,39 +19,23 @@ import { UserService } from '../classes/user.service';
 
 export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
-
-    id: string
     user: User
     url = '/users'
+    form: FormGroup
     hidePassword = true
-    flatForm: {}
+    flatForm: ChangePassword
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
-
-    form = this.formBuilder.group({
-        id: '',
-        currentPassword: ['', [Validators.required, Validators.maxLength(100)]],
-        passwords: this.formBuilder.group({
-            newPassword: ['', [Validators.required, Validators.maxLength(100)]],
-            confirmNewPassword: [''],
-        }, {
-            validator: PasswordValidator
-        })
-    })
-
-    // #endregion
+    confirmValidParentMatcher = new ConfirmValidParentMatcher();
 
     constructor(private userService: UserService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) {
         this.activatedRoute.params.subscribe(p => {
-            this.id = p['id']
-            if (this.id) {
-                this.getRecord()
-            }
+            if (p.id) { this.getRecord(p.id) }
         });
     }
 
     ngOnInit() {
+        this.initForm()
         this.addShortcuts()
     }
 
@@ -64,13 +49,6 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
         this.unlisten()
     }
 
-    /**
-     * Caller(s):
-     *  Service - CanDeactivateGuard()
-     *
-     * Description:
-     *  Desides which action to perform when a route change is requested
-     */
     canDeactivate() {
         if (this.form.dirty) {
             this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.', ['cancel', 'ok']).subscribe(response => {
@@ -85,32 +63,17 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
         }
     }
 
-    /**
-     * Caller(s):
-     *  Template - saveRecord()
-     *
-     * Description:
-     *  Changes the current password for the logged in user
-     */
     onSubmit() {
-        if (!this.form.valid) { return }
         this.flattenFormFields();
-        this.userService.updatePassword(this.form.value.id, this.flatForm).subscribe(() => {
-            this.showSnackbar('Record updated', 'info')
+        this.userService.updatePassword(this.form.value.id, this.flatForm).subscribe((response) => {
+            this.showSnackbar(response.response, 'info')
             this.resetForm()
             this.goBack()
         }, error => {
-            this.showSnackbar('Record not updated', 'danger')
+            this.showSnackbar(error.error.response, 'error')
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Self-explanatory
-     */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
@@ -146,37 +109,19 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
         this.flatForm = {
             id: this.form.value.id,
             currentPassword: this.form.value.currentPassword,
-            newPassword: this.form.value.passwords.newPassword,
-            confirmNewPassword: this.form.value.passwords.confirmNewPassword
+            password: this.form.value.passwords.password,
+            confirmPassword: this.form.value.passwords.confirmPassword
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     * Description:
-     *  Calls the public method()
-     *
-     * @param field
-     */
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
-    /**
- * Caller(s):
- *  Class - constructor()
- *
- * Description:
- *  Gets the selected record from the api
- */
-    private getRecord() {
-        if (this.id) {
-            this.userService.getSingle(this.id).then(result => {
-                this.user = result
-                this.populateFields()
-            })
-        }
+    private getRecord(id: string) {
+        this.userService.getSingle(id).then(result => {
+            this.populateFields(result)
+        })
     }
 
     /**
@@ -190,57 +135,52 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
         this.router.navigate([this.url])
     }
 
-    /**
-     * Caller(s):
-     *  Class - getRecord()
-     *
-     * Description:
-     *  Populates the form with record values
-     *
-     * @param result
-     */
-    private populateFields() {
+    private initForm() {
+        this.form = this.formBuilder.group({
+            id: '',
+            currentPassword: ['', [Validators.required]],
+            passwords: this.formBuilder.group({
+                password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(128), ValidationService.containsSpace]],
+                confirmPassword: ['', [Validators.required]]
+            }, { validator: ValidationService.childrenEqual })
+        })
+
+    }
+
+    private populateFields(result: any) {
         this.form.patchValue({
-            id: this.user.id
+            id: result.id
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - canDeactivate() - saveRecord()
-     *
-     * Description:
-     *  Resets the form with default values
-     */
     private resetForm() {
-        this.form.reset({
-            id: 0,
-            username: '',
-            displayName: '',
-            email: ''
-        })
+        this.form.reset()
     }
 
-    /**
-     * Caller(s):
-     *  Class - saveRecord()
-     */
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
 
     // #region Helper properties
 
-    get currentPassword() {
+    get CurrentPassword() {
         return this.form.get('currentPassword')
     }
 
-    get newPassword() {
-        return this.form.get('newPassword')
+    get Passwords() {
+        return this.form.get('passwords')
     }
 
-    get confirmNewPassword() {
-        return this.form.get('confirmNewPassword')
+    get Password() {
+        return this.form.get('passwords.password')
+    }
+
+    get ConfirmPassword() {
+        return this.form.get('passwords.confirmPassword')
+    }
+
+    get MatchingPasswords() {
+        return this.form.get('passwords.password').value === this.form.get('passwords.confirmPassword').value
     }
 
     // #endregion

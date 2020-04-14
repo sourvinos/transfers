@@ -6,7 +6,6 @@ import { AccountService } from 'src/app/shared/services/account.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { RegisterUser } from '../../account/classes/register-user';
-import { User } from '../../account/classes/user';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { ConfirmValidParentMatcher, ValidationService } from '../../shared/services/validation.service';
@@ -19,10 +18,10 @@ import { ConfirmValidParentMatcher, ValidationService } from '../../shared/servi
 
 export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    usersUrl = '/users'
-    hidePassword = true
-    form: FormGroup
     flatForm: RegisterUser
+    form: FormGroup
+    hidePassword = true
+    usersUrl = '/users'
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
     confirmValidParentMatcher = new ConfirmValidParentMatcher();
