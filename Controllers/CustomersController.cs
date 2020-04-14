@@ -10,27 +10,18 @@ namespace Transfers {
 
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLoggedIn")]
-
     public class CustomersController : ControllerBase {
 
-        // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
-        // Constructor
-        public CustomersController(IMapper mapper, ApplicationDbContext context) {
-
-            this.mapper = mapper;
-            this.context = context;
-
-        }
+        public CustomersController(IMapper mapper, ApplicationDbContext context) =>
+            (this.mapper, this.context) = (mapper, context);
 
         // GET: api/customers
         [HttpGet]
         public async Task<IEnumerable<Customer>> Get() {
-
             return await context.Customers.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
-
         }
 
         // GET: api/customers/5

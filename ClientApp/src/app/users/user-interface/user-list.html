@@ -4,7 +4,7 @@
     </div>
     <div id="search-box">
         <mat-form-field>
-            <input type="text" matInput placeholder="Search" id="searchField" #query (keyup)="filter(query.value)" autocomplete="off">
+            <input type="text" matInput placeholder="Search" id="searchField" #query (keyup)="onFilter(query.value)" autocomplete="off">
             <mat-hint>Search by username</mat-hint>
         </mat-form-field>
     </div>
@@ -17,6 +17,6 @@
 <div id="footer">
     <mat-divider></mat-divider>
     <div id="buttons">
-        <button mat-flat-button class="primary" id="new" (click)="newRecord()">New</button>
+        <button mat-flat-button class="primary" id="new" (click)="onNewRecord()">New</button>
     </div>
 </div>

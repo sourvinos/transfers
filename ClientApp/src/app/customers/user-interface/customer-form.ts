@@ -18,11 +18,8 @@ import { CustomerService } from '../classes/customer.service'
 
 export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
-
     id: number
     url = '/customers'
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 

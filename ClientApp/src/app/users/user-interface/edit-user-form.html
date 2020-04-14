@@ -15,14 +15,20 @@
         <div id="section-one">
             <mat-form-field>
                 <input type="text" matInput placeholder="Username" formControlName="username" tabindex="1" id="username" [inputTabStop]="input">
+                <mat-error *ngIf="Username.errors?.required">This field is required</mat-error>
+                <mat-error *ngIf="Username.errors?.maxlength">This field can be up to {{ Username.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Display name" formControlName="displayName" tabindex="2" id="displayName" [inputTabStop]="input">
+                <input type="text" matInput placeholder="Display name" formControlName="displayname" tabindex="2" id="displayname" [inputTabStop]="input">
+                <mat-error *ngIf="Displayname.errors?.required">This field is required</mat-error>
+                <mat-error *ngIf="Displayname.errors?.maxlength">This field can be up to {{ Displayname.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <input type="email" matInput placeholder="Email" formControlName="email" tabindex="3" id="email" [inputTabStop]="input">
+                <mat-error *ngIf="Email?.hasError('required')">This is a required field!</mat-error>
+                <mat-error *ngIf="Email?.hasError('email')">This field seems to be invalid!</mat-error>
             </mat-form-field>
-            <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
+            <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
         </div>
     </form>
 </div>
@@ -30,8 +36,8 @@
 <div id="footer">
     <mat-divider></mat-divider>
     <div id="buttons">
-        <button mat-flat-button class="delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
-        <button mat-flat-button class="primary" id="save" (click)="changePassword()">Change password</button>
-        <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>
+        <button mat-flat-button class="delete" (click)="onDelete()">Delete</button>
+        <button mat-flat-button class="primary" (click)="onChangePassword()">Change password</button>
+        <button mat-flat-button class="primary" (click)="onSave()" [disabled]="!form.valid">Save</button>
     </div>
 </div>

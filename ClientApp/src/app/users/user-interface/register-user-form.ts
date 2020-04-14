@@ -5,11 +5,11 @@ import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { RegisterUser } from '../../account/classes/register-user';
+import { User } from '../../account/classes/user';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { ConfirmValidParentMatcher, ValidationService } from '../../shared/services/validation.service';
-import { User } from '../../account/classes/user';
-import { RegisterUser } from '../../account/classes/register-user';
 
 @Component({
     selector: 'register-user-form',
@@ -19,9 +19,6 @@ import { RegisterUser } from '../../account/classes/register-user';
 
 export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
-
-    user: User
     usersUrl = '/users'
     hidePassword = true
     form: FormGroup
