@@ -10,11 +10,12 @@ namespace Transfers {
 
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "New password is required")]
-        [MaxLength(128, ErrorMessage = "New password can not be longer than 128 characters")]
+        [MinLength(10, ErrorMessage = "Password can not be less than 10 characters")]
+        [MaxLength(128, ErrorMessage = "Password can not be longer than 128 characters")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "New password and confirm new password do not match")]
+        [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
 
     }

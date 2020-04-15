@@ -1,8 +1,7 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http'
-import { Injectable } from '@angular/core'
-import { Observable, throwError } from 'rxjs'
-import { DataService } from 'src/app/shared/services/data.service'
-import { catchError, retry } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { DataService } from 'src/app/shared/services/data.service';
 
 @Injectable({ providedIn: 'root' })
 
@@ -15,11 +14,15 @@ export class UserService extends DataService {
     }
 
     updatePassword(id: string | number, formData: any): Observable<any> {
-        return this.http.post<any>(this.url + '/' + id, formData)
+        return this.http.post<any>('/api/account/changePassword/', formData)
     }
 
     confirmEmail(userId: string, token: string): Observable<any> {
         return this.http.get<any>(this.confirmEmailUrl + '/' + userId + '/' + token)
+    }
+
+    messages() {
+        const ok = 'Record saved'
     }
 
 }

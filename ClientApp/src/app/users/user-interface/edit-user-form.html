@@ -15,7 +15,7 @@
         <div id="section-one">
             <mat-form-field>
                 <input type="text" matInput placeholder="Username" formControlName="username" tabindex="1" id="username" [inputTabStop]="input">
-                <mat-error *ngIf="Username.errors?.required">This field is required</mat-error>
+                <mat-error *ngIf="Username.errors?.required" value="This field is required"></mat-error>
                 <mat-error *ngIf="Username.errors?.maxlength">This field can be up to {{ Username.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
@@ -29,6 +29,8 @@
                 <mat-error *ngIf="Email?.hasError('email')">This field seems to be invalid!</mat-error>
             </mat-form-field>
             <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
+            <p class="instructions" [class.hidden]=false>Valid {{ form.valid }}</p>
+            <p class="instructions" [class.hidden]=false>Dirty {{ form.dirty }}</p>
         </div>
     </form>
 </div>
@@ -38,6 +40,6 @@
     <div id="buttons">
         <button mat-flat-button class="delete" (click)="onDelete()">Delete</button>
         <button mat-flat-button class="primary" (click)="onChangePassword()">Change password</button>
-        <button mat-flat-button class="primary" (click)="onSave()" [disabled]="!form.valid">Save</button>
+        <button mat-flat-button class="primary" (click)="onSubmit()" [disabled]="!form.valid">Save</button>
     </div>
 </div>

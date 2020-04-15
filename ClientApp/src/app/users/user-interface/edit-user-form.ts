@@ -22,7 +22,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private userService: UserService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private location: Location) {
+    constructor(private userService: UserService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) { this.getRecord(p.id) }
         })
@@ -58,25 +58,33 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onChangePassword() {
-        // const link: any = this.location.path() + '/changePassword'
-        // this.router.navigate(link)
-        // this.router.navigate(['/users/' + this.form.value.id + '/changePassword'])
-        this.router.navigate(['/users/changePassword/' + this.form.value.id])
+        if (this.form.dirty) {
+            this.userService.update(this.form.value.id, this.form.value).subscribe(() => {
+                this.router.navigate(['/users/changePassword/' + this.form.value.id])
+                this.resetForm()
+            }, error => {
+                this.showSnackbar(error.error.response, 'error')
+            })
+        } else {
+            this.router.navigate(['/users/changePassword/' + this.form.value.id])
+        }
     }
 
     onDelete() {
-        this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.', ['ok', 'cancel']).subscribe(question => {
-            if (question) {
+        this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.', ['ok', 'cancel']).subscribe(answer => {
+            if (answer) {
                 this.userService.delete(this.form.value.id).subscribe((response) => {
                     this.showSnackbar(response.response, 'info')
                     this.resetForm()
                     this.goBack()
+                }, error => {
+                    this.showSnackbar(error.error.response, 'error')
                 })
             }
         })
     }
 
-    onSave() {
+    onSubmit() {
         this.userService.update(this.form.value.id, this.form.value).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
             this.resetForm()

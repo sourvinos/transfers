@@ -19,14 +19,13 @@ import { ChangePassword } from './../classes/change-password';
 
 export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    user: User
-    url = '/users'
     form: FormGroup
+    url = '/users'
     hidePassword = true
     flatForm: ChangePassword
+    confirmValidParentMatcher = new ConfirmValidParentMatcher();
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
-    confirmValidParentMatcher = new ConfirmValidParentMatcher();
 
     constructor(private userService: UserService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) {
         this.activatedRoute.params.subscribe(p => {
@@ -124,13 +123,6 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - canDeactive(), deleteRecord(), saveRecord()
-     *
-     * Description:
-     *  On escape navigates to the list
-     */
     private goBack() {
         this.router.navigate([this.url])
     }
