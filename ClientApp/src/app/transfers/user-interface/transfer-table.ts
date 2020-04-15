@@ -9,16 +9,12 @@ import { BaseInteractionService } from 'src/app/shared/services/base-interaction
 
 export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
 
-    // #region Variables
-
     @Input() records: any[]
-
     @Input() headers: any
     @Input() widths: any
     @Input() visibility: any
     @Input() justify: any
     @Input() fields: any
-
     currentRow = 0
     tableContainer: any
     table: any
@@ -27,10 +23,7 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
     checked = false
     checkedIds: string[] = []
     totalPersons = 0
-
     differences: IterableDiffer<any>;
-
-    // #endregion
 
     constructor(private interactionService: BaseInteractionService, private iterableDiffers: IterableDiffers) { }
 
@@ -54,15 +47,6 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Template - table
-     *
-     * Description:
-     *  Toggles the checkbox and counts the persons for the selected checkboxes
-     *
-     * @param row
-     */
     toggleCheckBox(row: number) {
         this.checkedIds = []
         this.totalPersons = 0
@@ -75,15 +59,6 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
         this.interactionService.setCheckedTotalPersons(this.totalPersons)
     }
 
-    /**
-     * Caller(s):
-     *  Template - table
-     *
-     * Description:
-     *  If the first column is clicked, toggle the checkboxes and counts the persons for the selected checkboxes
-     *
-     * @param column
-     */
     onHeaderClick(column: any) {
         if (column.toElement.cellIndex === 0) {
             this.checked = !this.checked
@@ -103,31 +78,11 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Template - table
-     *
-     * Description:
-     *  Uses the DomChangeDirective to listen for DOM changes
-     *
-     * @param $event
-     */
     onDomChange($event: Event) {
         document.getElementById('table-transfer-input').focus()
         this.gotoRow(1)
     }
 
-    /**
-     * Caller(s):
-     *  Class - HostListener()
-     *  Class - onDomChange()
-     *  Template - gotoRow()
-     *
-     * Description:
-     *  Highlights the next / previous row according to the arrow keys or highlights the clicked row
-     *
-     * @param key // The pressed key code or the line number to goto directly
-     */
     private gotoRow(key: any) {
         if (!isNaN(key)) {
             this.unselectAllRows()
@@ -149,13 +104,6 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     *
-     * Description:
-     *  Initializes local variables
-     */
     private initVariables() {
         this.table = document.getElementById('table-transfer')
         this.tableContainer = this.table.parentNode.parentNode
@@ -163,16 +111,6 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
         this.rowCount = this.table.rows.length - 1
     }
 
-    /**
-     * Caller(s):
-     *  Class - gotoRow()
-     *
-     * Description:
-     *  Checks if the selected row is fully visible
-     *
-     * @param row
-     * @param direction
-     */
     private isRowIntoView(row: HTMLTableRowElement, direction: string) {
         const rowOffsetTop = row.offsetTop
         const scrollTop = this.tableContainer.scrollTop
@@ -194,16 +132,6 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - gotoRow()
-     *
-     * Description:
-     *  Updates the currentRow variable and highlights
-     *
-     * @param table
-     * @param direction
-     */
     private selectRow(table: HTMLTableElement, direction: any) {
         if (!isNaN(direction)) {
             this.currentRow = parseInt(direction, 10)
@@ -215,37 +143,16 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
         table.rows[this.currentRow].classList.add('selected')
     }
 
-    /**
-     * Caller(s):
-     *  Class - HostListener()
-     *
-     * Description:
-     *  Sends the selected row to the service so that the parent (list-transfer) can call the editRecord method
-     */
     private sendRowToService() {
         this.interactionService.sendObject(this.records[this.currentRow - 1])
     }
 
-    /**
-     * Caller(s):
-     *  Class - gotoRow()
-     *
-     * Description:
-     *  Removes the 'selected' class from all rows
-     */
     private unselectAllRows() {
         this.table.querySelectorAll('tr').forEach((element: { classList: { remove: (arg0: string) => void } }) => {
             element.classList.remove('selected')
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - gotoRow()
-     *
-     * Description:
-     *  Removes the 'selected' class from the current row
-     */
     private unselectRow() {
         this.table.rows[this.currentRow].classList.remove('selected')
     }

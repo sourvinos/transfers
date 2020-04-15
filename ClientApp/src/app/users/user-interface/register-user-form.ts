@@ -9,6 +9,7 @@ import { RegisterUser } from '../../account/classes/register-user';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { ConfirmValidParentMatcher, ValidationService } from '../../shared/services/validation.service';
+import { MessageService } from 'src/app/shared/services/message.service';
 
 @Component({
     selector: 'register-user-form',
@@ -26,9 +27,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     ngUnsubscribe = new Subject<void>();
     confirmValidParentMatcher = new ConfirmValidParentMatcher();
 
-    // #endregion
-
-    constructor(private accountService: AccountService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) { }
+    constructor(private accountService: AccountService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) { }
 
     ngOnInit() {
         this.initForm()
@@ -47,7 +46,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
 
     canDeactivate() {
         if (this.form.dirty) {
-            this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.', ['cancel', 'ok']).subscribe(response => {
+            this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
                     this.goBack()

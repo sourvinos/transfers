@@ -16,16 +16,12 @@ import { SnackbarService } from './../../shared/services/snackbar.service';
 
 export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Init
-
     countdown = 0
     returnUrl: string
     form: FormGroup
     hidePassword = true
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
-
-    // #endregion
 
     constructor(private accountService: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService) { }
 
@@ -75,6 +71,13 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
         Utils.setFocus(field)
     }
 
+    private initForm() {
+        this.form = this.formBuilder.group({
+            username: ['sourvinos', Validators.required],
+            password: ['1234567890', Validators.required]
+        })
+    }
+
     private showSnackbar(message: string | string[], type: string): void {
         this.snackbarService.open(message, type)
     }
@@ -91,11 +94,4 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #endregion
 
-    private initForm() {
-        this.form = this.formBuilder.group({
-            username: ['sourvinos', Validators.required],
-            password: ['1234567890', Validators.required]
-        })
-
-    }
 }

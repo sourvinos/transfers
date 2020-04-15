@@ -17,8 +17,6 @@ import { ValidationService } from 'src/app/shared/services/validation.service';
 
 export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
-
     email: string
     token: string
     loginUrl = '/login'
@@ -26,8 +24,6 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
     form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
-
-    // #endregion
 
     constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private activatedRoute: ActivatedRoute) {
         this.activatedRoute.params.subscribe(p => {

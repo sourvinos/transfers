@@ -19,19 +19,13 @@ import { Route } from 'src/app/routes/classes/route';
 
 export class PickupPointWrapperComponent implements OnInit, OnDestroy {
 
-    // #region Variables
-
     id = ''
     routeDescription = new FormControl()
     routes: Route[] = []
     filteredRoutes: Observable<Route[]>
-
     recordStatus = 'empty'
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
-
-    // #endregion
 
     constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionPickupPointService: BaseInteractionService, public dialog: MatDialog, private routeService: RouteService) { }
 
@@ -49,80 +43,30 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         this.unlisten()
     }
 
-    /**
-     * Caller(s):
-     *  Template - deleteRecord()
-     * Description:
-     *  Executes the delete method on the form through the interaction service
-     */
     deleteRecord(): void {
         this.interactionPickupPointService.performAction('deleteRecord')
     }
 
-    /**
-     * Caller(s):
-     *  Template - loadPickupPoints()
-     *
-     * Description:
-     *  Loads from the api the records for the given route
-     */
     loadPickupPoints(): void {
         this.navigateToList()
     }
 
-    /**
-     * Caller(s):
-     *  Template - newRecord()
-     *
-     * Description:
-     *  Navigates to the form so that new records can be appended
-     */
     newRecord(): void {
         this.router.navigate([this.location.path() + '/pickupPoint/new'])
     }
 
-    /**
-     * Caller(s):
-     *  Template - Autocomplete
-     *
-     * Description:
-     *  Updates the id which is used to find the relative pickup points
-     *
-     * @param event
-     */
     onSelectionChanged(event: { option: { id: string; }; }) {
         this.id = event.option.id
     }
 
-    /**
-     * Caller(s):
-     *  Template - saveRecord()
-     *
-     * Description:
-     *  Executes the save method on the form through the interaction service
-     */
     saveRecord(): void {
         this.interactionPickupPointService.performAction('saveRecord')
     }
 
-    /**
-     * Caller(s):
-     *  Template - inList()
-     *
-     * Description:
-     *  Returns true if we are list route in order to enable the 'new' button
-     */
     inList(): boolean {
         return this.router.url.split('/').length === 4
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Adds keyboard functionality
-     */
     private addShortcuts(): void {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
@@ -144,87 +88,33 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - trackChangesInAutoComplete
-     *
-     * Description:
-     *  Filters the array according to the given characters
-     *
-     * @param abbreviation
-     */
     private filter(abbreviation: string) {
         const filterValue = abbreviation.toLowerCase()
         return this.routes.filter(o => o.abbreviation.toLowerCase().indexOf(filterValue) === 0)
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Calls the public method
-     *
-     * @param field
-     *
-     */
     private focus(field: string): void {
         Utils.setFocus(field)
     }
 
-    /**
-     * Caller(s):
-     *  Class - addShortcuts()
-     *
-     * Description:
-     *  On escape navigates to the home route
-     */
     private goBack(): void {
         this.router.navigate(['/'])
     }
 
-    /**
-     * Caller(s):
-     *  Class - loadPickupPoints()
-     *
-     * Description:
-     *  Self-explanatory
-     */
     private navigateToList(): void {
         this.router.navigate(['routeId/', this.id], { relativeTo: this.activatedRoute })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Self-explanatory
-     */
     private populateDropDowns() {
         this.routeService.getAll().subscribe((result: any) => {
             this.routes = result
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Gets the record status from the form through the interaction service
-         */
     private subscribeTointeractionService(): void {
         this.updateRecordStatus()
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Keeps track of what is given in the dropdown and filters the array
-     */
     private trackChangesInAutoComplete() {
         this.filteredRoutes = this.routeDescription.valueChanges
             .pipe(
@@ -234,14 +124,6 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
             )
     }
 
-    /**
-     * Caller(s):
-     *  Class - subscribeTointeractionService()
-     *
-     * Description:
-     *  Gets the record status from the form through the interaction service
-     *  The variable 'recordStatus' will be checked by the template which decides which buttons to display
-     */
     private updateRecordStatus(): void {
         this.interactionPickupPointService.recordStatus.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.recordStatus = response

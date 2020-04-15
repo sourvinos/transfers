@@ -11,8 +11,6 @@ import { IndexInteractionService } from '../../services/index-interaction.servic
 
 export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
-
     @Input() records: any[]
 
     @Input() headers: any
@@ -20,7 +18,6 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() visibility: any
     @Input() justify: any
     @Input() fields: any
-
     currentRow = 0
     tableContainer: any
     customTable: any
@@ -31,8 +28,6 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
     differences: IterableDiffer<any>;
 
     unlisten: Unlisten
-
-    // #endregion
 
     constructor(private baseInteractionService: BaseInteractionService, private indexInteractionService: IndexInteractionService, private iterableDiffers: IterableDiffers, private keyboardShortcutsService: KeyboardShortcuts) { }
 
@@ -50,34 +45,15 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten()
     }
 
-    /**
-     * Caller(s):
-     *  Template - table
-     *
-     * Description:
-     *  Uses the DomChangeDirective to listen for DOM changes
-     *
-     * @param $event
-     */
     onDomChange($event: Event) {
         this.gotoRow(1)
     }
 
-    /**
-     * Caller(s):
-     *  Template - table header
-     * @param columnName
-     * @param sortOrder
-     */
     sortMe(columnName: string, sortOrder: string) {
         this.records.sort(this.compareValues(columnName, sortOrder))
         this.sortOrder = this.sortOrder === 'asc' ? this.sortOrder = 'desc' : this.sortOrder = 'asc'
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Enter': (event: KeyboardEvent): void => {
@@ -98,17 +74,6 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     *  Class - onDomChange()
-     *  Class - addShortcuts()
-     *
-     * Description:
-     *  Highlights the next / previous row according to the arrow keys or highlights the clicked row
-     *
-     * @param key // The pressed key code or the line number to go to directly
-     */
     private gotoRow(key: any) {
         if (!isNaN(key)) {
             this.unselectAllRows().then(() => {
@@ -134,13 +99,6 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     *
-     * Description:
-     *  Initializes local variables
-     */
     private initVariables() {
         this.customTable = document.getElementById('custom-table')
         this.tableContainer = this.customTable.parentNode.parentNode
@@ -148,16 +106,6 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
         this.rowCount = this.customTable.rows.length - 1
     }
 
-    /**
-     * Caller(s):
-     *  Class - gotoRow()
-     *
-     * Description:
-     *  Checks if the selected row is fully visible
-     *
-     * @param row
-     * @param direction
-     */
     private isRowIntoView(row: HTMLTableRowElement, direction: string) {
         const rowOffsetTop = row.offsetTop
         const scrollTop = this.tableContainer.scrollTop
@@ -179,16 +127,6 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - gotoRow()
-     *
-     * Description:
-     *  Updates the currentRow variable and highlights
-     *
-     * @param table
-     * @param direction
-     */
     private selectRow(table: HTMLTableElement, direction: any) {
         if (!isNaN(direction)) {
             this.currentRow = parseInt(direction, 10)
@@ -200,14 +138,6 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
         table.rows[this.currentRow].classList.add('selected')
     }
 
-    /**
-     * Caller(s):
-     *  Class - addShortcuts()
-     *
-     * Description:
-     *  If the dialog exists, close it
-     *  If the dialog does not exist, send the row to the service
-     */
     private sendRowToService() {
         if (document.getElementsByClassName('mat-dialog-container').length === 0) {
             this.sendRowToBaseService()
@@ -216,58 +146,24 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - sendRowToService()
-     *
-     * Description:
-     *  Sends the selected row to the service so that the parent (list) can call the editRecord method
-     */
     private sendRowToBaseService() {
         this.baseInteractionService.sendObject(this.records[this.currentRow - 1])
     }
 
-    /**
-     * Caller(s):
-     *  Class - gotoRow()
-     *
-     * Description:
-     *  On every arrow press, send the row to the service
-     */
     private sendRowToIndexService() {
         this.indexInteractionService.sendObject(this.records[this.currentRow - 1])
     }
 
-    /**
-     * Caller(s):
-     *  Class - gotoRow()
-     *
-     * Description:
-     *  Removes the 'selected' class from all rows
-     */
     private async unselectAllRows() {
         await this.customTable.querySelectorAll('tr').forEach((element: { classList: { remove: (arg0: string) => void } }) => {
             element.classList.remove('selected')
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - gotoRow()
-     *
-     * Description:
-     *  Removes the 'selected' class from the current row
-     */
     private unselectRow() {
         this.customTable.rows[this.currentRow].classList.remove('selected')
     }
 
-    /**
-     * Caller(s)
-     *  Class - sortMe()
-     * @param key
-     * @param order
-     */
     private compareValues(key: string, order = 'asc') {
         return function innerSort(a: { [x: string]: any; hasOwnProperty: (arg0: string) => any }, b: { [x: string]: any; hasOwnProperty: (arg0: string) => any }) {
             if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) { return 0 }

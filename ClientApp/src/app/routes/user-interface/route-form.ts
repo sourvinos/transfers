@@ -1,3 +1,4 @@
+import { MessageService } from 'src/app/shared/services/message.service';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { MatDialog, MatSnackBar } from '@angular/material'
@@ -22,16 +23,11 @@ import { RouteService } from '../classes/route.service'
 
 export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
-
     id: number
     url = '/routes'
-
     ports: any[]
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
-
     form = this.formBuilder.group({
         id: 0,
         abbreviation: ['', [Validators.required, Validators.maxLength(10)]],
@@ -40,9 +36,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: ''
     })
 
-    // #endregion
-
-    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService) {
+    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['id']
             if (this.id) {
@@ -69,15 +63,9 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten()
     }
 
-    /**
-     * Caller(s):
-     *  Service - CanDeactivateGuard()
-     * Description:
-     *  Desides which action to perform when a route change is requested
-     */
     canDeactivate() {
         if (this.form.dirty) {
-            this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.', ['cancel', 'ok']).subscribe(response => {
+            this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
                     this.goBack()
@@ -89,38 +77,17 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - subscribeTointeractionService()
-     * Description:
-     *  Deletes the current record
-     */
     deleteRecord() {
-        this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.', ['cancel', 'ok']).subscribe(response => {
+        this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.routeService.delete(this.form.value.id).subscribe(() => {
-                    this.showSnackbar('Record deleted', 'info')
+                    this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
                     this.goBack()
                 })
             }
         })
     }
 
-    /**
-     * Caller(s):
-     *  Template - lookupIndex()
-     * Description:
-     *  Filters the given array according to the user input and displays a table to select a record
-     * @param lookupArray
-     * @param title
-     * @param formFields
-     * @param fields
-     * @param headers
-     * @param widths
-     * @param visibility
-     * @param justify
-     * @param value
-     */
     lookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
@@ -138,12 +105,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     * Description:
-     *  Self-explanatory
-     */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
@@ -174,52 +135,19 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - lookupIndex(), showModalIndex()
-     * Description:
-     *  Populates the form fields with empty values from the lookupIndex() or response values from the showModalIndex()
-     *
-     * @param result
-     * @param id
-     * @param description
-     */
     private clearFields(result: any, id: any, description: any) {
         this.form.patchValue({ [id]: result ? result.id : '' })
         this.form.patchValue({ [description]: result ? result.description : '' })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     * Description:
-     *  Calls the public method()
-     *
-     * @param field
-     */
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
-    /**
-     * Caller(s):
-     *  Class - canDeactive(), deleteRecord(), saveRecord()
-     * Description:
-     *  Send 'empty' to the 'setRecordStatus', so that the wrapper will display the 'new' button
-     *  On escape navigates to the list
-     */
     private goBack() {
         this.router.navigate([this.url])
     }
 
-    /**
-     * Caller(s):
-     *  Class - getRecord()
-     * Description:
-     *  Populates the form with record values
-     *
-     * @param result
-     */
     private populateFields(result: Route) {
         this.form.setValue({
             id: result.id,
@@ -230,24 +158,12 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     * Description:
-     *  Populates the form with initial values
-     */
     private populateFormWithDefaultData() {
         this.form.patchValue({
             userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - saveRecord()
-     * Description:
-     *  Resets the form with default values
-     */
     private resetForm() {
         this.form.reset({
             id: 0,
@@ -258,47 +174,29 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - saveRecord()
-     * Description:
-     *  Self-explanatory
-     */
     private showSnackbar(message: string, type: string): void {
         this.snackBar.open(message, 'Close', {
             panelClass: [type]
         })
     }
 
-    /**
-     * Caller(s):
-     *  Template - saveRecord()
-     * Description:
-     *  Adds or updates an existing record
-     */
     saveRecord() {
         if (!this.form.valid) { return }
         if (this.form.value.id === 0) {
             this.routeService.add(this.form.value).subscribe(() => {
-                this.showSnackbar('Record saved', 'info')
+                this.showSnackbar(this.messageService.showAddedRecord(), 'info')
                 this.resetForm()
                 this.goBack()
             })
         } else {
             this.routeService.update(this.form.value.id, this.form.value).subscribe(() => {
-                this.showSnackbar('Record updated', 'info')
+                this.showSnackbar(this.messageService.showUpdatedRecord(), 'info')
                 this.resetForm()
                 this.goBack()
             })
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     * Description:
-     *  Gets the selected record from the api
-     */
     private getRecord() {
         if (this.id) {
             this.routeService.getSingle(this.id).then(result => {
@@ -307,14 +205,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - showModalIndex()
-     * Description:
-     *  Assigns the key-value pair from the selected item in the modal to the form fields
-     *
-     * @param result
-     */
     private patchFields(result: any, fields: any[]) {
         if (result) {
             Object.entries(result).forEach(([key, value]) => {
@@ -338,16 +228,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         )
     }
 
-    /**
-     * Caller(s):
-     *  Class - renameObjects()
-     * Description:
-     *  Renames the selected in memory object
-     *
-     * @param obj
-     * @param oldKey
-     * @param newKey
-     */
     private renameKey(obj: Object, oldKey: string, newKey: string) {
         if (oldKey !== newKey) {
             Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey))
@@ -355,32 +235,12 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - populateDropDowns()
-     * Description:
-     *  Renames the objects in memory for use in the template
-     */
     private renameObjects() {
         this.ports.forEach(obj => {
             this.renameKey(obj, 'id', 'portId'); this.renameKey(obj, 'description', 'portDescription')
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - lookupIndex()
-     * Description:
-     *  Displays a modal window with a table so a record can be selected
-     * @param elements
-     * @param title
-     * @param formFields
-     * @param fields
-     * @param headers
-     * @param widths
-     * @param visibility
-     * @param justify
-     */
     private showModalIndex(elements: any, title: string, fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {
         const dialog = this.dialog.open(DialogIndexComponent, {
             height: '685px',
@@ -399,12 +259,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     * Description:
-     *  Accepts data from the wrapper through the interaction service and decides which action to perform
-     */
     private subscribeToInteractionService() {
         this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             if (response === 'saveRecord') { this.saveRecord() }

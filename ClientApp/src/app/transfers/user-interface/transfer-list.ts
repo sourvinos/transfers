@@ -17,41 +17,29 @@ import { TransferPdfService } from '../classes/transfer-pdf.service';
 
 export class TransferListComponent implements OnInit, AfterViewInit, AfterViewChecked, DoCheck, OnDestroy {
 
-    // #region Variables
-
     dateIn: string
-
     queryResult: any = {}
     queryResultClone: any = {}
-
     totals: any[] = []
-
     selectedDestinations: string[] = []
     selectedCustomers: string[] = []
     selectedRoutes: string[] = []
     selectedDrivers: string[] = []
     selectedPorts: string[] = []
-
     checkedDestinations = true
     checkedCustomers = true
     checkedRoutes = true
     checkedDrivers = true
     checkedPorts = true
-
     transfersFlat: TransferFlat[] = []
-
     headers = ['S', 'Id', 'Dest', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
     widths = ['40px', '100px', '50px', '100px', '200px', '200px', '60px', '40px', '40px', '40px', '40px', '100px', '100px']
     visibility = ['', 'none', '', '', '', '', '', '', '', '', '', '', '']
     justify = ['center', 'center', 'center', 'center', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
     fields = ['', 'id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
-
     mustRefresh = true
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
-
-    // #endregion
 
     constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: TransferPdfService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
@@ -101,19 +89,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         // this.unlisten()
     }
 
-    /**
-     * Caller(s):
-     *  Template - toggleItem()
-     *
-     * Description:
-     *  Adds / removes the class 'activeItem' to / from the clicked item
-     *  Adds / removes the item to / from the lookupArray
-     *  Filters the list according to the selected items
-     *  Updates the transfersFlat array
-     *
-     * @param item // The element that was clicked
-     * @param lookupArray // The array that the element belongs to
-     */
     toggleItem(item: any, lookupArray: string[]) {
         this.toggleActiveItem(item, lookupArray)
         this.initCheckedPersons()
@@ -123,19 +98,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.saveToLocalStorage()
     }
 
-    /**
-     * Caller(s):
-     *  Template - toggleItems()
-     *
-     * Description:
-     *  It stops the panel's default behavior to expand or collapse
-     *  Clears all items from the lookupArray
-     *  Calls 'selectItems' method to either select or deselect all items
-     *  Calls 'filterByCriteria()'
-     *  Calls 'flattenResults()'
-     *
-     * @param lookupArray // The array that must fill or empty
-     */
     toggleItems(className: string, lookupArray: { splice: (arg0: number) => void; }, checkedArray: any) {
         event.stopPropagation()
         lookupArray.splice(0)
@@ -146,16 +108,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.flattenResults()
     }
 
-    /**
-     * Caller(s):
-     *  Class - addActiveClassToSelectedArrays()
-     *
-     * Description:
-     *  Adds the class 'activeItem' to the element if it's part of the lookupArray
-     *
-     * @param className // The items with this class
-     * @param lookupArray // The array with the selected items
-     */
     private addActiveClassToElements(className: string, lookupArray: string[]) {
         const elements = document.querySelectorAll(className)
         elements.forEach((element) => {
@@ -166,13 +118,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     *
-     * Description:
-     *  Calls the 'addActiveClassToElements()' for every summary group
-     */
     private addActiveClassToSelectedArrays() {
         setTimeout(() => {
             this.addActiveClassToElements('.item.destination', this.selectedDestinations)
@@ -183,27 +128,10 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         }, 100);
     }
 
-    /**
-     * Caller(s):
-     *  Class - subscribeTointeractionService()
-     *
-     * Description:
-     *  Self-explanatory
-     *
-     * @param id
-     */
     private editRecord(id: number) {
         this.navigateToEditRoute(id)
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit(), toggleItem(), toggleItems()
-     *
-     * Description:
-     *  Stores the data from the initial read to the queryResultClone array
-     *  Filters the queryResultClone array according to the selected items
-     */
     private filterByCriteria() {
         this.queryResultClone.transfers = this.queryResult.transfers
             .filter((destination: { destination: { description: string } }) => this.selectedDestinations.indexOf(destination.destination.description) !== -1)
@@ -213,16 +141,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
             .filter((port: { pickupPoint: { route: { port: { description: string } } } }) => this.selectedPorts.indexOf(port.pickupPoint.route.port.description) !== -1)
     }
 
-    /**
-     * Caller(s):
-     *  Class - loadTransfers()
-     *  Class - toggleItem()
-     *  Class - toggleItems()
-     *
-     * Description:
-     *  Flattens the queryResultClone array and populates the transfersFlat array with its output.
-     *  The transfersFlat array will be the input for the table on the template
-     */
     private flattenResults() {
         this.transfersFlat.splice(0)
         for (const {
@@ -243,48 +161,18 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     *
-     * Description:
-     *  Checks if localStorage has any data
-     */
     private isDataInLocalStorage() {
         return localStorage.getItem('transfers')
     }
 
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     *
-     * Description:
-     *  Loads the records from the api for the given date
-     */
     private loadTransfers() {
         this.queryResult = this.activatedRoute.snapshot.data['transferList']
     }
 
-    /**
-     * Caller(s):
-     *  Class - editRecord()
-     *
-     * Description:
-     *  Navigates to the edit route
-     *
-     * @param id
-     */
     private navigateToEditRoute(id: number) {
         this.router.navigate(['transfer/', id], { relativeTo: this.activatedRoute })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit(), toggleItems()
-     *
-     * Description:
-     *  Saves the selected items in the localStorage
-     */
     private saveToLocalStorage() {
         const summaryItems = {
             'destinations': JSON.stringify(this.selectedDestinations),
@@ -297,20 +185,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         localStorage.removeItem('selectedIds')
     }
 
-    /**
-     * Caller(s):
-     *  Class - toggleItems()
-     *  Template - toggleItems()
-     *
-     * Description:
-     *  According to the checked = true / false
-     *  Toggles the class 'activeItem' for every item in the given className
-     *  Adds / removes all items to / from the lookupArray
-     *
-     * @param className
-     * @param lookupArray
-     * @param checked
-     */
     private selectItems(className: string, lookupArray: any, checked: boolean) {
         const elements = document.getElementsByClassName('item ' + className)
         for (let index = 0; index < elements.length; index++) {
@@ -324,14 +198,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Gets the selected record from the table through the service and executes the editRecord method
-     *  Refreshes the list after a new record has been added
-     */
     private subscribeToInteractionService() {
         this.interactionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
@@ -342,20 +208,8 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
                 this.ngAfterViewInit()
             })
         })
-        // this.interactionService.transfers.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
-
-
-        // })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     *
-     * Description:
-     *  Stores the data from the initial result to the arrays
-     *
-     */
     private updateSelectedArraysFromInitialResults() {
         this.queryResult.personsPerDestination.forEach((element: { description: string; }) => { this.selectedDestinations.push(element.description) })
         this.queryResult.personsPerCustomer.forEach((element: { description: string; }) => { this.selectedCustomers.push(element.description) })
@@ -364,13 +218,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.queryResult.personsPerPort.forEach((element: { description: string; }) => { this.selectedPorts.push(element.description) })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     *
-     * Description:
-     *  Stores the data from the localStorage to the arrays
-     */
     private updateSelectedArraysFromLocalStorage() {
         const localStorageData = JSON.parse(localStorage.getItem('transfers'))
         this.selectedDestinations = JSON.parse(localStorageData.destinations)
@@ -380,26 +227,10 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.selectedPorts = JSON.parse(localStorageData.ports)
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     *
-     * Description:
-     *  Sends true or false to the service so that the wrapper can decide whether to display the 'Assing driver' button or not
-     */
     private setTableStatus() {
         this.interactionService.setTableStatus(!!this.queryResult.persons)
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     *  Class - toggleItem()
-     *  Class - toggleItems()
-     *
-     * Description:
-     *  Populates the array with the total persons displayed in the template
-     */
     private updateTotals() {
         this.totals[0].sum = this.queryResult.persons
         this.totals[1].sum = this.queryResultClone.transfers.reduce((sum: any, array: { totalPersons: any; }) => sum + array.totalPersons, 0);
@@ -408,26 +239,10 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     *  Class - toggleItem()
-     *  Class - toggleItems()
-     *
-     * Description:
-     *  Sets checked persons to zero
-     */
     private initCheckedPersons() {
         this.interactionService.setCheckedTotalPersons(0)
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Prepare the array of totals
-     */
     private initPersonsSumArray() {
         this.totals.push(
             { description: 'ALL', sum: 0 },
@@ -440,16 +255,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.interactionService.sendRecords(this.transfersFlat)
     }
 
-    /**
-     * Caller(s):
-     *  Class - toggleItem()
-     *
-     * Description:
-     *  Toggles activeItem class to the clicked item and updates the array with all the selected
-     *
-     * @param item
-     * @param lookupArray
-     */
     private toggleActiveItem(item: { description: string; }, lookupArray: string[]) {
         const element = document.getElementById(item.description)
         if (element.classList.contains('activeItem')) {

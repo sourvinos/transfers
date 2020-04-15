@@ -9,6 +9,7 @@ import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { DestinationService } from '../classes/destination.service';
+import { MessageService } from 'src/app/shared/services/message.service';
 
 @Component({
     selector: 'destination-form',
@@ -18,11 +19,8 @@ import { DestinationService } from '../classes/destination.service';
 
 export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
-
     id: number
     url = '/destinations'
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
@@ -35,7 +33,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
 
     // #endregion
 
-    constructor(private destinationService: DestinationService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) {
+    constructor(private destinationService: DestinationService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['id']
             if (this.id) {
@@ -68,7 +66,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
      */
     canDeactivate() {
         if (this.form.dirty) {
-            this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.', ['cancel', 'ok']).subscribe(response => {
+            this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
                     this.goBack()
@@ -87,10 +85,10 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
      *  Deletes the current record
      */
     deleteRecord() {
-        this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.', ['cancel', 'ok']).subscribe(response => {
+        this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.destinationService.delete(this.form.value.id).subscribe(() => {
-                    this.showSnackbar('Record deleted', 'info')
+                    this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
                     this.resetForm()
                     this.goBack()
                 })
@@ -108,13 +106,13 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         if (!this.form.valid) { return }
         if (this.form.value.id === 0) {
             this.destinationService.add(this.form.value).subscribe(() => {
-                this.showSnackbar('Record saved', 'info')
+                this.showSnackbar(this.messageService.showAddedRecord(), 'info')
                 this.resetForm()
                 this.goBack()
             })
         } else {
             this.destinationService.update(this.form.value.id, this.form.value).subscribe(() => {
-                this.showSnackbar('Record updated', 'info')
+                this.showSnackbar(this.messageService.showUpdatedRecord(), 'info')
                 this.resetForm()
                 this.goBack()
             })

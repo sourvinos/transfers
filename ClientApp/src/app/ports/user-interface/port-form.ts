@@ -1,3 +1,4 @@
+import { MessageService } from 'src/app/shared/services/message.service';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material'
@@ -18,24 +19,17 @@ import { PortService } from '../classes/port.service'
 
 export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
-
     id: number
     url = '/ports'
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
-
     form = this.formBuilder.group({
         id: 0,
-
         description: ['', [Validators.required, Validators.maxLength(100)]],
         userName: ''
     })
 
-    // #endregion
-
-    constructor(private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService) {
+    constructor(private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['id']
             if (this.id) {
@@ -60,15 +54,9 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten()
     }
 
-    /**
-     * Caller(s):
-     *  Service - CanDeactivateGuard()
-     * Description:
-     *  Desides which action to perform when a route change is requested
-     */
     canDeactivate() {
         if (this.form.dirty) {
-            this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.', ['cancel', 'ok']).subscribe(response => {
+            this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
                     this.goBack()
@@ -80,17 +68,11 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Template - deleteRecord()
-     * Description:
-     *  Deletes the current record
-     */
     deleteRecord() {
-        this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.', ['cancel', 'ok']).subscribe(response => {
+        this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.portService.delete(this.form.value.id).subscribe(() => {
-                    this.showSnackbar('Record deleted', 'info')
+                    this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
                     this.resetForm()
                     this.goBack()
                 })
@@ -98,35 +80,23 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Template - saveRecord()
-     * Description:
-     *  Adds or updates an existing record
-     */
     saveRecord() {
         if (!this.form.valid) { return }
         if (this.form.value.id === 0) {
             this.portService.add(this.form.value).subscribe(() => {
-                this.showSnackbar('Record saved', 'info')
+                this.showSnackbar(this.messageService.showAddedRecord(), 'info')
                 this.resetForm()
                 this.goBack()
             })
         } else {
             this.portService.update(this.form.value.id, this.form.value).subscribe(() => {
-                this.showSnackbar('Record updated', 'info')
+                this.showSnackbar(this.messageService.showUpdatedRecord(), 'info')
                 this.resetForm()
                 this.goBack()
             })
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     * Description:
-     *  Self-explanatory
-     */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
@@ -162,23 +132,10 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     * Description:
-     *  Calls the public method()
-     * @param field
-     */
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     * Description:
-     *  Gets the selected record from the api
-     */
     private getRecord() {
         if (this.id) {
             this.portService.getSingle(this.id).then(result => {
@@ -187,24 +144,10 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - canDeactive(), deleteRecord(), saveRecord()
-     * Description:
-     *  On escape navigates to the list
-     */
     private goBack() {
         this.router.navigate([this.url])
     }
 
-    /**
-     * Caller(s):
-     *  Class - getRecord()
-     * Description:
-     *  Populates the form with record values
-     *
-     * @param result
-     */
     private populateFields(result: any) {
         this.form.setValue({
             id: result.id,
@@ -214,24 +157,12 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     * Description:
-     *  Populates the form with initial values
-     */
     private populateFormWithDefaultData() {
         this.form.patchValue({
             userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - canDeactivate() - saveRecord()
-     * Description:
-     *  Resets the form with default values
-     */
     private resetForm() {
         this.form.reset({
             id: 0,
@@ -240,12 +171,6 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - saveRecord() - deleteRecord()
-     * Description:
-     *  Self-explanatory
-     */
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }

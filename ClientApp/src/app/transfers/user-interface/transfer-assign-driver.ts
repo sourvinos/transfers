@@ -29,53 +29,21 @@ export class TransferAssignDriverComponent implements OnInit {
         this.dialogRef.close()
     }
 
-    /**
-     * Caller(s):
-     *  Template - Autocomplete
-     *
-     * Description:
-     *  Updates the id of the driver
-     *
-     * @param event
-     */
     onSelectionChanged(event: { option: { id: string; }; }) {
         this.id = event.option.id
     }
 
-    /**
-     * Caller(s):
-     *  Class - trackChangesInAutoComplete
-     *
-     * Description:
-     *  Filters the array according to the given characters
-     *
-     * @param description
-     */
     private filter(description: string): Driver[] {
         const filterValue = description.toLowerCase()
         return this.drivers.filter(option => option.description.toLowerCase().indexOf(filterValue) === 0)
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Self-explanatory
-     */
     private populateDropDowns() {
         this.data.drivers.subscribe((result: any) => {
             this.drivers = result
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Keeps track of what is given in the dropdown and filters the array
-     */
     private trackChangesInAutoComplete() {
         this.filteredDrivers = this.driverDescription.valueChanges
             .pipe(

@@ -12,8 +12,6 @@ import { IndexInteractionService } from '../../services/index-interaction.servic
 
 export class DialogIndexComponent implements OnInit, OnDestroy {
 
-    // #region Variables
-
     title: string
 
     fields: any[]
@@ -21,13 +19,9 @@ export class DialogIndexComponent implements OnInit, OnDestroy {
     justify: any[]
     visibility: any[]
     widths: any[]
-
     records: any[]
     selectedRecord: any
-
     ngUnsubscribe = new Subject<void>();
-
-    // #endregion
 
     constructor(public dialogRef: MatDialogRef<DialogIndexComponent>, private indexInteractionService: IndexInteractionService, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.title = data.title

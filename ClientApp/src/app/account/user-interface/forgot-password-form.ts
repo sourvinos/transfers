@@ -15,8 +15,6 @@ import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shor
 
 export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
-
     loginUrl = '/login'
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
@@ -24,8 +22,6 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
     form = this.formBuilder.group({
         email: ['johnsourvinos@hotmail.com', [Validators.required, Validators.email, Validators.maxLength(100)]],
     })
-
-    // #endregion
 
     constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService) { }
 

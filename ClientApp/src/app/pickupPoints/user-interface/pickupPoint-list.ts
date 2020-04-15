@@ -18,25 +18,17 @@ import { RouteService } from 'src/app/routes/classes/route.service';
 
 export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
 
-    // #region Variables
-
     routeId: string
-
     routes: Route[] = []
     pickupPoints: PickupPoint[] = []
-
     headers = ['Id', 'Description', 'Exact point', 'Time']
     widths = ['0', '45%', '45%', '10%']
     visibility = ['none', '', '', '']
     justify = ['center', 'left', 'left', 'center']
     fields = ['id', 'description', 'exactPoint', 'time']
-
     mustRefresh = true
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
-
-    // #endregion
 
     constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, public dialog: MatDialog, private formBuilder: FormBuilder, private routeService: RouteService, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService) {
         this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
@@ -61,26 +53,13 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
     ngOnDestroy(): void {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
-        // this.unlisten()
+        this.unlisten()
     }
 
-    /**
-     * Caller(s):
-     *  Class - constructor
-     * Description:
-     *  Self-explanatory
-     */
     private loadRecords() {
         this.pickupPoints = this.activatedRoute.snapshot.data['pickupPointList']
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     * Description:
-     *  Gets the selected record from the table through the service and executes the editRecord method
-     *  Refreshes the list after a new record has been added
-     */
     private subscribeToInteractionService() {
         this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
@@ -92,24 +71,10 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - subscribeTointeractionService()
-     * Description:
-     *  Self-explanatory
-     * @param id
-     */
     private editRecord(id: number) {
         this.navigateToEditRoute(id)
     }
 
-    /**
-     * Caller(s):
-     *  Class - editRecord()
-     * Description:
-     *  Self-explanatory
-     * @param id
-     */
     private navigateToEditRoute(id: number) {
         this.router.navigate(['pickupPoint/', id], { relativeTo: this.activatedRoute })
     }

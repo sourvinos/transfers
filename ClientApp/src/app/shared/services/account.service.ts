@@ -8,8 +8,6 @@ import { map } from 'rxjs/operators'
 
 export class AccountService {
 
-    // #region Init
-
     private urlRegister = '/api/account/register'
     private urlForgotPassword = '/api/account/forgotPassword'
     private urlResetPassword = '/api/account/resetPassword'
@@ -19,8 +17,6 @@ export class AccountService {
     private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus())
     private displayName = new BehaviorSubject<string>(localStorage.getItem('displayName'))
     private userRole = new BehaviorSubject<string>(localStorage.getItem('userRole'))
-
-    // #endregion
 
     constructor(private httpClient: HttpClient, private router: Router) { }
 

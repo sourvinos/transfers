@@ -18,6 +18,7 @@ import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { Transfer } from '../classes/transfer';
 import { TransferService } from '../classes/transfer.service';
+import { MessageService } from 'src/app/shared/services/message.service';
 
 @Component({
     selector: 'transfer-form',
@@ -27,24 +28,18 @@ import { TransferService } from '../classes/transfer.service';
 
 export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    // #region Variables
-
     id: number
     transfer: Transfer
     url = '/transfers'
-
     destinations: any[]
     customers: any[]
     pickupPoints: any[]
     pickupPointsFlat: any[]
     drivers: any[]
     ports: any[]
-
     defaultDriver: Driver
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
-
     form = this.formBuilder.group({
         id: 0,
         dateIn: '',
@@ -61,9 +56,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         userName: ''
     })
 
-    // #endregion
-
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService) {
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['transferId']
             if (this.id) {
@@ -97,16 +90,9 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten()
     }
 
-    /**
-     * Caller(s):
-     *  Service - CanDeactivateGuard()
-     *
-     * Description:
-     *  Desides which action to perform when a route change is requested
-     */
     canDeactivate() {
         if (this.form.dirty) {
-            this.dialogService.open('Warning', '#FE9F36', 'If you continue, changes in this record will be lost.', ['cancel', 'ok']).subscribe(response => {
+            this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
                     this.scrollToList()
@@ -120,53 +106,22 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Template - calculateTotalPersons()
-     *
-     * Description:
-     *  Calculates the total persons for the transfer
-     */
     calculateTotalPersons() {
         const totalPersons = parseInt(this.form.value.adults, 10) + parseInt(this.form.value.kids, 10) + parseInt(this.form.value.free, 10)
         this.form.patchValue({ totalPersons: !!Number(totalPersons) ? totalPersons : 0 })
     }
 
-    /**
-     * Caller(s):
-     *  Class - subscribeTointeractionService()
-     *
-     * Description:
-     *  Deletes the current record
-     */
     deleteRecord() {
-        this.dialogService.open('Warning', '#FE9F36', 'If you continue, this record will be permanently deleted.', ['cancel', 'ok']).subscribe(response => {
+        this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.transferService.delete(this.form.value.id).subscribe(() => {
-                    this.showSnackbar('Record deleted', 'info')
+                    this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
                     this.goBack()
                 })
             }
         })
     }
 
-    /**
-     * Caller(s):
-     *  Template - lookupIndex()
-     *
-     * Description:
-     *  Filters the given array according to the user input and displays a table to select a record
-     *
-     * @param lookupArray
-     * @param title
-     * @param formFields
-     * @param fields
-     * @param headers
-     * @param widths
-     * @param visibility
-     * @param justify
-     * @param value
-     */
     lookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
@@ -184,18 +139,11 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - subscribeTointeractionService()
-     *
-     * Description:
-     *  Adds or updates an existing record
-     */
     saveRecord() {
         if (!this.form.valid) { return }
         if (this.form.value.id === 0) {
             this.transferService.add(this.form.value).subscribe(() => {
-                this.showSnackbar('Record saved', 'info')
+                this.showSnackbar(this.messageService.showAddedRecord(), 'info')
                 this.resetForm()
                 this.populateFormWithDefaultData(this.defaultDriver)
                 this.focus('destinationDescription')
@@ -203,20 +151,13 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             })
         } else {
             this.transferService.update(this.form.value.id, this.form.value).subscribe(() => {
-                this.showSnackbar('Record updated', 'info')
+                this.showSnackbar(this.messageService.showUpdatedRecord(), 'info')
                 this.resetForm()
                 this.goBack()
             })
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Adds keyboard shortcuts
-     */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
@@ -247,29 +188,11 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - lookupIndex(), showModalIndex()
-     *
-     * Description:
-     *  Populates the form fields with empty values from the lookupIndex() or response values from the showModalIndex()
-     *
-     * @param result
-     * @param id
-     * @param description
-     */
     private clearFields(result: any, id: any, description: any) {
         this.form.patchValue({ [id]: result ? result.id : '' })
         this.form.patchValue({ [description]: result ? result.description : '' })
     }
 
-    /**
-     * Caller(s):
-     *  Class - populateDropDowns()
-     *
-     * Description:
-     *  Creates a new object used in the template
-     */
     private flattenPickupPoints(): any[] {
         this.pickupPointsFlat = []
         for (const {
@@ -284,26 +207,10 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.pickupPointsFlat
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-
-     * Description:
-     *  Calls the public method()
-     *
-     * @param field
-     */
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     *
-     * Description:
-     *  Gets the selected record from the api
-     */
     private getRecord() {
         if (this.id) {
             this.transferService.getSingle(this.id).then(response => {
@@ -313,28 +220,11 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - canDeactive(), deleteRecord(), saveRecord()
-     *
-     * Description:
-     *  Send 'empty' to the 'setRecordStatus', so that the wrapper will display the 'new' button
-     *  On escape navigates to the list
-     */
     private goBack() {
         this.setStatus('empty')
         this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
-    /**
-     * Caller(s):
-     *  Class - showModalIndex()
-     *
-     * Description:
-     *  Assigns the key-value pair from the selected item in the modal to the form fields
-     *
-     * @param result
-     */
     private patchFields(result: any, fields: any[]) {
         if (result) {
             Object.entries(result).forEach(([key, value]) => {
@@ -347,13 +237,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Populates the dropdowns
-     */
     private populateDropDowns() {
         const sources = []
         sources.push(this.destinationService.getAll())
@@ -373,15 +256,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             })
     }
 
-    /**
-     * Caller(s):
-     *  Class - getTransfer()
-     *
-     * Description:
-     *  Populates the form with record values
-     *
-     * @param result
-     */
     private populateFields(result: Transfer) {
         this.form.setValue({
             id: result.id,
@@ -400,13 +274,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     *
-     * Description:
-     *  Populates the form with initial values
-     */
     private populateFormWithDefaultData(driver: Driver) {
         this.form.patchValue({
             dateIn: this.helperService.getDateFromLocalStorage(),
@@ -416,28 +283,10 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - saveRecord()
-     *
-     * Description:
-     *  Tells the list to refresh the summaries
-     */
     private refreshSummaries() {
         this.interactionService.mustRefreshList()
     }
 
-    /**
-     * Caller(s):
-     *  Class - renameObjects()
-     *
-     * Description:
-     *  Renames the selected in memory object
-     *
-     * @param obj
-     * @param oldKey
-     * @param newKey
-     */
     private renameKey(obj: Object, oldKey: string, newKey: string) {
         if (oldKey !== newKey) {
             Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey))
@@ -445,13 +294,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - populateDropDowns()
-     *
-     * Description:
-     *  Renames the objects in memory for use in the template
-     */
     private renameObjects() {
         this.destinations.forEach(obj => {
             this.renameKey(obj, 'id', 'destinationId'); this.renameKey(obj, 'description', 'destinationDescription')
@@ -467,13 +309,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - saveRecord()
-     *
-     * Description:
-     *  Resets the form with default values
-     */
     private resetForm() {
         this.form.reset({
             id: 0,
@@ -492,24 +327,10 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Hides the list and shows the form
-     */
     private scrollToForm() {
         document.getElementById('transfersList').style.height = '0'
     }
 
-    /**
-     * Caller(s):
-     *  Class - canDeactivate()
-     *
-     * Description:
-     *  Hides the form, shows the list and focuses on the table
-     */
     private scrollToList() {
         document.getElementById('form').style.height = '0'
         document.getElementById('transfersList').style.height = '100%'
@@ -517,49 +338,16 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.interactionService.performAction('')
     }
 
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     *  Class - goBack()
-     *
-     * Desciption:
-     *  Tells the wrapper which buttons to display
-     *
-     * @param status
-     */
     private setStatus(status: string) {
         this.interactionService.setRecordStatus(status)
     }
 
-    /**
-     * Caller(s):
-     *  Class - saveRecord()
-     *
-     * Description:
-     *  Self-explanatory
-     */
     private showSnackbar(message: string, type: string): void {
         this.snackBar.open(message, 'Close', {
             panelClass: [type]
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - lookupIndex()
-     *
-     * Description:
-     *  Displays a modal window with a table so a record can be selected
-     *
-     * @param elements
-     * @param title
-     * @param formFields
-     * @param fields
-     * @param headers
-     * @param widths
-     * @param visibility
-     * @param justify
-     */
     private showModalIndex(elements: any, title: string, fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {
         const dialog = this.dialog.open(DialogIndexComponent, {
             height: '685px',
@@ -578,13 +366,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     *
-     * Description:
-     *  Accepts data from the wrapper through the interaction service and decides which action to perform
-     */
     private subscribeToInteractionService() {
         this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             if (response === 'saveRecord') { this.saveRecord() }
@@ -592,7 +373,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    // #region Get field values - called from the template
+    // #region Getters
 
     get destinationId() {
         return this.form.get('destinationId')
