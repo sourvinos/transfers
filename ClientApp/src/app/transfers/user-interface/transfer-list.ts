@@ -1,13 +1,12 @@
-import { AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit, DoCheck } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
-import { Utils } from 'src/app/shared/classes/utils';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
-import { TransferFlat } from '../classes/transferFlat';
-import { TransferService } from '../classes/transfer.service';
+import { Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { TransferPdfService } from '../classes/transfer-pdf.service';
+import { TransferService } from '../classes/transfer.service';
+import { TransferFlat } from '../classes/transferFlat';
 
 @Component({
     selector: 'transfer-list',
@@ -34,7 +33,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     transfersFlat: TransferFlat[] = []
     headers = ['S', 'Id', 'Dest', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
     widths = ['40px', '100px', '50px', '100px', '200px', '200px', '60px', '40px', '40px', '40px', '40px', '100px', '100px']
-    visibility = ['', 'none', '', '', '', '', '', '', '', '', '', '', '']
+    visibility = ['', '', '', '', '', '', '', '', '', '', '', '', '']
     justify = ['center', 'center', 'center', 'center', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
     fields = ['', 'id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
     mustRefresh = true

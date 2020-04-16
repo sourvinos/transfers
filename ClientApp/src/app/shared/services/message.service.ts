@@ -9,5 +9,6 @@ export class MessageService {
     public showAddedRecord() { return 'Record saved.' }
     public showUpdatedRecord() { return 'Record updated.' }
     public showDeletedRecord() { return 'Record deleted.' }
+    public showNotFoundRecord() { return 'This record was not found.' }
 
 }

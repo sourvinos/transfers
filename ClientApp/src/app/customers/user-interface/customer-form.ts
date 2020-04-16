@@ -42,8 +42,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.id = p['id']
             if (this.id) {
                 this.getRecord()
-            } else {
-                this.populateFormWithDefaultData()
             }
         })
     }
@@ -89,7 +87,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     saveRecord() {
-        if (!this.form.valid) { return }
         if (this.form.value.id === 0) {
             this.customerService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
@@ -145,11 +142,12 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private getRecord() {
-        if (this.id) {
-            this.customerService.getSingle(this.id).then(result => {
-                this.populateFields(result)
-            })
-        }
+        this.customerService.getSingle(this.id).then(result => {
+            this.populateFields(result)
+        }, () => {
+            this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
+            this.goBack()
+        })
     }
 
     private goBack() {

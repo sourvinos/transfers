@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core'
 import { BehaviorSubject, Observable, throwError } from 'rxjs'
 import { catchError, filter, finalize, switchMap, take, tap } from 'rxjs/operators'
 import { AccountService } from './account.service'
-import { stringify } from 'querystring'
 
 @Injectable({ providedIn: 'root' })
 
@@ -26,6 +25,13 @@ export class JwtInterceptor implements HttpInterceptor {
                         console.log('User is logged in, catching error')
                         if (err instanceof HttpErrorResponse) {
                             switch ((<HttpErrorResponse>err).status) {
+                                case 404:
+                                    console.log('404 catch')
+                                    return throwError(this.handleError)
+                                // return next.handle(request) // Returns 401 and goes back to the calling function to execute .catch(...)
+                                // return this.handleHttpErrorResponse(request, next) // Logs the user out
+                                // return throwError('')
+                                // return next.handle(request)
                                 case 401:
                                     console.log('Token expired, attempting refresh')
                                     return this.handleHttpErrorResponse(request, next)

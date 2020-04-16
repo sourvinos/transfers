@@ -1,24 +1,25 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog, MatSnackBar } from '@angular/material';
-import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { CustomerService } from 'src/app/customers/classes/customer.service';
-import { DestinationService } from 'src/app/destinations/classes/destination.service';
-import { Driver } from 'src/app/drivers/classes/driver';
-import { DriverService } from 'src/app/drivers/classes/driver.service';
-import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.service';
-import { PortService } from 'src/app/ports/classes/port.service';
-import { Utils } from 'src/app/shared/classes/utils';
-import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
-import { DialogService } from 'src/app/shared/services/dialog.service';
-import { HelperService } from 'src/app/shared/services/helper.service';
-import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
-import { Transfer } from '../classes/transfer';
-import { TransferService } from '../classes/transfer.service';
-import { MessageService } from 'src/app/shared/services/message.service';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { MatDialog } from '@angular/material'
+import { ActivatedRoute, Router } from '@angular/router'
+import { forkJoin, Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators'
+import { CustomerService } from 'src/app/customers/classes/customer.service'
+import { DestinationService } from 'src/app/destinations/classes/destination.service'
+import { Driver } from 'src/app/drivers/classes/driver'
+import { DriverService } from 'src/app/drivers/classes/driver.service'
+import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.service'
+import { PortService } from 'src/app/ports/classes/port.service'
+import { Utils } from 'src/app/shared/classes/utils'
+import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component'
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { DialogService } from 'src/app/shared/services/dialog.service'
+import { HelperService } from 'src/app/shared/services/helper.service'
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
+import { MessageService } from 'src/app/shared/services/message.service'
+import { SnackbarService } from 'src/app/shared/services/snackbar.service'
+import { Transfer } from '../classes/transfer'
+import { TransferService } from '../classes/transfer.service'
 
 @Component({
     selector: 'transfer-form',
@@ -28,39 +29,23 @@ import { MessageService } from 'src/app/shared/services/message.service';
 
 export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    id: number
-    transfer: Transfer
-    url = '/transfers'
+    form: FormGroup
+    defaultDriver: Driver
+
     destinations: any[]
     customers: any[]
     pickupPoints: any[]
     pickupPointsFlat: any[]
     drivers: any[]
     ports: any[]
-    defaultDriver: Driver
+
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
-    form = this.formBuilder.group({
-        id: 0,
-        dateIn: '',
-        destinationId: [0, Validators.required], destinationDescription: ['', Validators.required],
-        customerId: [0, Validators.required], customerDescription: ['', Validators.required],
-        pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
-        driverId: [0, Validators.required], driverDescription: [{ value: '', disabled: true }, Validators.required],
-        portId: [0, Validators.required], portDescription: [{ value: '', disabled: true }, Validators.required],
-        adults: [0, Validators.required],
-        kids: [0, Validators.required],
-        free: [0, Validators.required],
-        totalPersons: [{ value: 0, disabled: true }],
-        remarks: ['', Validators.maxLength(100)],
-        userName: ''
-    })
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService, private messageService: MessageService) {
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
-            this.id = p['transferId']
-            if (this.id) {
-                this.getRecord()
+            if (p.id) {
+                this.getRecord(p.id)
                 this.setStatus('editRecord')
             } else {
                 this.driverService.getDefaultDriver()
@@ -74,6 +59,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.initForm()
         this.scrollToForm()
         this.addShortcuts()
         this.populateDropDowns()
@@ -140,7 +126,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     saveRecord() {
-        if (!this.form.valid) { return }
         if (this.form.value.id === 0) {
             this.transferService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
@@ -211,18 +196,36 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         Utils.setFocus(field)
     }
 
-    private getRecord() {
-        if (this.id) {
-            this.transferService.getSingle(this.id).then(response => {
-                this.transfer = response
-                this.populateFields(this.transfer)
-            })
-        }
+    private getRecord(id: number) {
+        this.transferService.getSingle(id).then(result => {
+            this.populateFields(result)
+        }, () => {
+            this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
+            this.goBack()
+        })
     }
 
     private goBack() {
         this.setStatus('empty')
         this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
+    }
+
+    private initForm() {
+        this.form = this.formBuilder.group({
+            id: 0,
+            dateIn: '',
+            destinationId: [0, Validators.required], destinationDescription: ['', Validators.required],
+            customerId: [0, Validators.required], customerDescription: ['', Validators.required],
+            pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
+            driverId: [0, Validators.required], driverDescription: [{ value: '', disabled: true }, Validators.required],
+            portId: [0, Validators.required], portDescription: [{ value: '', disabled: true }, Validators.required],
+            adults: [0, Validators.required, Validators.min(0), Validators.max(999)],
+            kids: [0, Validators.required, Validators.min(0), Validators.max(999)],
+            free: [0, Validators.required, Validators.min(0), Validators.max(999)],
+            totalPersons: [{ value: 0, disabled: true }],
+            remarks: ['', Validators.maxLength(100)],
+            userName: ''
+        })
     }
 
     private patchFields(result: any, fields: any[]) {
@@ -296,35 +299,21 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private renameObjects() {
         this.destinations.forEach(obj => {
-            this.renameKey(obj, 'id', 'destinationId'); this.renameKey(obj, 'description', 'destinationDescription')
+            this.renameKey(obj, 'id', 'destinationId') this.renameKey(obj, 'description', 'destinationDescription')
         })
         this.customers.forEach(obj => {
-            this.renameKey(obj, 'id', 'customerId'); this.renameKey(obj, 'description', 'customerDescription')
+            this.renameKey(obj, 'id', 'customerId') this.renameKey(obj, 'description', 'customerDescription')
         })
         this.drivers.forEach(obj => {
-            this.renameKey(obj, 'id', 'driverId'); this.renameKey(obj, 'description', 'driverDescription')
+            this.renameKey(obj, 'id', 'driverId') this.renameKey(obj, 'description', 'driverDescription')
         })
         this.ports.forEach(obj => {
-            this.renameKey(obj, 'id', 'portId'); this.renameKey(obj, 'description', 'portDescription')
+            this.renameKey(obj, 'id', 'portId') this.renameKey(obj, 'description', 'portDescription')
         })
     }
 
     private resetForm() {
-        this.form.reset({
-            id: 0,
-            dateIn: '',
-            destinationId: this.form.value.destinationId, destinationDescription: this.form.value.destinationDescription,
-            customerId: 0, customerDescription: '',
-            pickupPointId: 0, pickupPointDescription: '',
-            driverId: 0, driverDescription: '',
-            portId: 0, portDescription: '',
-            adults: 0,
-            kids: 0,
-            free: 0,
-            totalPersons: 0,
-            remarks: '',
-            userName: ''
-        })
+        this.form.reset()
     }
 
     private scrollToForm() {
@@ -343,9 +332,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private showSnackbar(message: string, type: string): void {
-        this.snackBar.open(message, 'Close', {
-            panelClass: [type]
-        })
+        this.snackbarService.open(message, type)
     }
 
     private showModalIndex(elements: any, title: string, fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {
@@ -435,6 +422,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.form.get('remarks')
     }
 
-    // #endregion
+    // #endregion Getters
 
 }

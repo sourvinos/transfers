@@ -10,7 +10,7 @@ export class TransferFormResolver implements Resolve<Transfer> {
     constructor(private transferService: TransferService) { }
 
     resolve(route: ActivatedRouteSnapshot): Promise<Transfer> {
-        return this.transferService.getSingle(route.params.transferId)
+        return this.transferService.getSingle(route.params.id)
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -18,74 +19,54 @@ namespace Transfers {
         public CustomersController(IMapper mapper, ApplicationDbContext context) =>
             (this.mapper, this.context) = (mapper, context);
 
-        // GET: api/customers
         [HttpGet]
         public async Task<IEnumerable<Customer>> Get() {
             return await context.Customers.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
         }
 
-        // GET: api/customers/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomer(int id) {
-
             Customer customer = await context.Customers.SingleOrDefaultAsync(m => m.Id == id);
-
             if (customer == null) return NotFound();
-
             return Ok(customer);
-
         }
 
-        // POST: api/customers
         [HttpPost]
         public async Task<IActionResult> PostCustomer([FromBody] Customer customer) {
-
-            if (!ModelState.IsValid) return BadRequest();
-
-            context.Customers.Add(customer);
-
-            await context.SaveChangesAsync();
-
-            return Ok(customer);
-
+            if (ModelState.IsValid) {
+                context.Customers.Add(customer);
+                await context.SaveChangesAsync();
+                return Ok(customer);
+            }
+            return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
         }
 
-        // PUT: api/customers/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer([FromRoute] int id, [FromBody] Customer customer) {
-
-            if (!ModelState.IsValid) return BadRequest();
-            if (id != customer.Id) return BadRequest();
-
-            context.Entry(customer).State = EntityState.Modified;
-
-            try {
-                await context.SaveChangesAsync();
-            } catch (DbUpdateConcurrencyException) {
-                customer = await context.Customers.SingleOrDefaultAsync(m => m.Id == id);
-                if (customer == null) return NotFound();
-                else throw;
+            if (id != customer.Id) return BadRequest(new { response = "Unexpected Id" });
+            if (ModelState.IsValid) {
+                try {
+                    context.Entry(customer).State = EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    return Ok(customer);
+                } catch (DbUpdateConcurrencyException) {
+                    if (await context.Customers.SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound();
+                }
             }
-
-            return Ok(customer);
-
+            return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
         }
 
-        // DELETE: api/customers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer([FromRoute] int id) {
-
-            Customer customer = await context.Customers.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (customer == null) { return NotFound(); }
-
-            context.Customers.Remove(customer);
-
-            await context.SaveChangesAsync();
-
-            return NoContent();
-
+            try {
+                context.Customers.Remove(await context.Customers.SingleOrDefaultAsync(m => m.Id == id));
+                await context.SaveChangesAsync();
+                return Ok(new { response = "Record deleted" });
+            } catch (Exception) {
+                return BadRequest(new { response = "Unable to delete this record" });
+            }
         }
 
     }
+
 }

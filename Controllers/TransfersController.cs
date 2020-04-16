@@ -35,6 +35,7 @@ namespace Transfers {
                 .Include(x => x.Destination)
                 .Include(x => x.Driver)
                 .Where(x => x.DateIn == dateIn);
+
             var totalPersonsPerCustomer = context.Transfers.Include(x => x.Customer).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.Customer.Description }).Select(x => new TotalPersonsPerCustomer { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
             var totalPersonsPerDestination = context.Transfers.Include(x => x.Destination).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.Destination.Description }).Select(x => new TotalPersonsPerDestination { Description = x.Key.Description, Persons = x.Sum(s => s.TotalPersons) });
             var totalPersonsPerRoute = context.Transfers.Include(x => x.PickupPoint.Route).Where(x => x.DateIn == dateIn).GroupBy(x => new { x.PickupPoint.Route.Abbreviation }).Select(x => new TotalPersonsPerRoute { Description = x.Key.Abbreviation, Persons = x.Sum(s => s.TotalPersons) });
@@ -52,11 +53,12 @@ namespace Transfers {
             };
 
             return mapper.Map<TransferGroupResult<Transfer>, TransferGroupResultResource<TransferResource>>(groupResult);
+
         }
 
         // GET: api/transfers/5
         [HttpGet("{id}")]
-        public async Task<TransferResource> GetTransfer(int id) {
+        public async Task<IActionResult> GetTransfer(int id) {
 
             Transfer transfer = await context.Transfers
                 .Include(x => x.Customer)
@@ -65,7 +67,9 @@ namespace Transfers {
                 .Include(x => x.Driver)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
-            return mapper.Map<Transfer, TransferResource>(transfer);
+            if (transfer == null) return NotFound();
+
+            return Ok(mapper.Map<Transfer, TransferResource>(transfer));
 
         }
 

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Observable } from 'rxjs'
+import { Observable, throwError } from 'rxjs'
 
 @Injectable({ providedIn: 'root' })
 
@@ -26,6 +26,12 @@ export class DataService {
 
     delete(id: string | number): Observable<any> {
         return this.http.delete<any>(this.url + '/' + id)
+    }
+
+    private handleError(error: Response) {
+        if (error.status === 404) {
+            return ('Error 404')
+        }
     }
 
 }

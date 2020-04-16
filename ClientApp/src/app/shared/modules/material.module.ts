@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCheckboxModule, MatDialogModule, MatExpansionModule, MatFormFieldModule, MatIconModule, MatInputModule, MatListModule, MatProgressBarModule, MatProgressSpinnerModule, MatSnackBarModule, MAT_LABEL_GLOBAL_OPTIONS, MAT_SNACK_BAR_DEFAULT_OPTIONS, MatAutocompleteModule, MatDivider, MatDividerModule, MatHint } from '@angular/material';
+import { NgModule } from '@angular/core'
+import { MatButtonModule, MatCheckboxModule, MatDialogModule, MatExpansionModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSnackBarModule, MatAutocompleteModule, MatDividerModule, MAT_LABEL_GLOBAL_OPTIONS, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material'
 
 @NgModule({
     exports: [
