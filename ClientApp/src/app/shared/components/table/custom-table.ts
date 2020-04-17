@@ -9,10 +9,9 @@ import { IndexInteractionService } from '../../services/index-interaction.servic
     styleUrls: ['./custom-table.css']
 })
 
-export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CustomTableComponent implements OnInit, AfterViewInit {
 
     @Input() records: any[]
-
     @Input() headers: any
     @Input() widths: any
     @Input() visibility: any
@@ -36,42 +35,25 @@ export class CustomTableComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        this.addShortcuts()
         this.initVariables()
         this.gotoRow(1)
-    }
-
-    ngOnDestroy() {
-        this.unlisten()
     }
 
     onDomChange($event: Event) {
         this.gotoRow(1)
     }
+    checkKeyboard(event: any) {
+        switch (event.keyCode) {
+            case 38: this.gotoRow('Up'); break;
+            case 40: this.gotoRow('Down'); break;
+            case 13: this.sendRowToService(); break;
+            default: break;
+        }
+    }
 
     sortMe(columnName: string, sortOrder: string) {
         this.records.sort(this.compareValues(columnName, sortOrder))
         this.sortOrder = this.sortOrder === 'asc' ? this.sortOrder = 'desc' : this.sortOrder = 'asc'
-    }
-
-    private addShortcuts() {
-        this.unlisten = this.keyboardShortcutsService.listen({
-            'Enter': (event: KeyboardEvent): void => {
-                event.preventDefault()
-                this.sendRowToService()
-            },
-            'Up': (event: KeyboardEvent): void => {
-                event.preventDefault()
-                this.gotoRow('Up')
-            },
-            'Down': (event: KeyboardEvent): void => {
-                event.preventDefault()
-                this.gotoRow('Down')
-            }
-        }, {
-            priority: 3,
-            inputs: true
-        })
     }
 
     private gotoRow(key: any) {

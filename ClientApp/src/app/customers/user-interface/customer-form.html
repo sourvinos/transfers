@@ -34,8 +34,8 @@
             <mat-form-field>
                 <input type="text" matInput placeholder="Email" formControlName="email" tabindex="6" id="email" [inputTabStop]="input">
             </mat-form-field>
-            <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
         </div>
+        <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
     </form>
 </div>
 

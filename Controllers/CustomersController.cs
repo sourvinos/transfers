@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -26,45 +25,35 @@ namespace Transfers {
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomer(int id) {
-            Customer customer = await context.Customers.SingleOrDefaultAsync(m => m.Id == id);
-            if (customer == null) return NotFound();
+            Customer customer = await context.Customers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
+            if (customer == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
             return Ok(customer);
         }
 
         [HttpPost]
         public async Task<IActionResult> PostCustomer([FromBody] Customer customer) {
-            if (ModelState.IsValid) {
-                context.Customers.Add(customer);
-                await context.SaveChangesAsync();
-                return Ok(customer);
-            }
-            return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
+            if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
+            context.Customers.Add(customer);
+            await context.SaveChangesAsync();
+            return Ok(new { response = ApiMessages.RecordCreated() });
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer([FromRoute] int id, [FromBody] Customer customer) {
-            if (id != customer.Id) return BadRequest(new { response = "Unexpected Id" });
-            if (ModelState.IsValid) {
-                try {
-                    context.Entry(customer).State = EntityState.Modified;
-                    await context.SaveChangesAsync();
-                    return Ok(customer);
-                } catch (DbUpdateConcurrencyException) {
-                    if (await context.Customers.SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound();
-                }
-            }
-            return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
+            if (id != customer.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
+            if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
+            if (await context.Customers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
+            context.Entry(customer).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+            return Ok(new { response = ApiMessages.RecordUpdated() });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer([FromRoute] int id) {
-            try {
-                context.Customers.Remove(await context.Customers.SingleOrDefaultAsync(m => m.Id == id));
-                await context.SaveChangesAsync();
-                return Ok(new { response = "Record deleted" });
-            } catch (Exception) {
-                return BadRequest(new { response = "Unable to delete this record" });
-            }
+            if (await context.Customers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
+            context.Customers.Remove(await context.Customers.SingleOrDefaultAsync(m => m.Id == id));
+            int result = await context.SaveChangesAsync();
+            return Ok(new { Response = ApiMessages.RecordDeleted() });
         }
 
     }

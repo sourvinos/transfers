@@ -299,16 +299,16 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private renameObjects() {
         this.destinations.forEach(obj => {
-            this.renameKey(obj, 'id', 'destinationId') this.renameKey(obj, 'description', 'destinationDescription')
+            this.renameKey(obj, 'id', 'destinationId'); this.renameKey(obj, 'description', 'destinationDescription')
         })
         this.customers.forEach(obj => {
-            this.renameKey(obj, 'id', 'customerId') this.renameKey(obj, 'description', 'customerDescription')
+            this.renameKey(obj, 'id', 'customerId'); this.renameKey(obj, 'description', 'customerDescription')
         })
         this.drivers.forEach(obj => {
-            this.renameKey(obj, 'id', 'driverId') this.renameKey(obj, 'description', 'driverDescription')
+            this.renameKey(obj, 'id', 'driverId'); this.renameKey(obj, 'description', 'driverDescription')
         })
         this.ports.forEach(obj => {
-            this.renameKey(obj, 'id', 'portId') this.renameKey(obj, 'description', 'portDescription')
+            this.renameKey(obj, 'id', 'portId'); this.renameKey(obj, 'description', 'portDescription')
         })
     }
 

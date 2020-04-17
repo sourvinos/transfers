@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,11 +9,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Transfers;
 
 namespace Transfers {
     public static class Extensions {
-        // Cors
+
         public static void AddCors(IServiceCollection services) {
             services.AddCors(options => {
                 options.AddPolicy("EnableCORS", builder => {
@@ -21,7 +21,6 @@ namespace Transfers {
             });
         }
 
-        // Identity
         public static void AddIdentity(IServiceCollection services) {
             services
                 .AddIdentity<ApplicationUser, IdentityRole>(options => {
@@ -39,7 +38,6 @@ namespace Transfers {
                 .AddDefaultTokenProviders();
         }
 
-        // Authentication
         public static void AddAuthentication(IConfiguration configuration, IServiceCollection services) {
             var appSettingsSection = configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -65,7 +63,6 @@ namespace Transfers {
                     configuration.Bind("CookieSettings", options));
         }
 
-        // Authorization
         public static void AddAuthorization(IServiceCollection services) {
             services.AddAuthorization(options => {
                 options.AddPolicy("RequireLoggedIn", policy => policy.RequireRole("User").RequireAuthenticatedUser());
@@ -74,7 +71,6 @@ namespace Transfers {
 
         }
 
-        // Error pages
         public static void ErrorPages(IApplicationBuilder app, IHostingEnvironment env) {
             if (!env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
@@ -82,5 +78,11 @@ namespace Transfers {
                 app.UseExceptionHandler("/Error");
             }
         }
+
+        public static string AddApiMessages() {
+            return "Record not found.";
+        }
+
     }
+
 }

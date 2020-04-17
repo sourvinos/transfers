@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
+import { FormBuilder, Validators, FormGroup } from '@angular/forms'
 import { MatDialog } from '@angular/material'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Subject } from 'rxjs'
@@ -21,23 +21,11 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     id: number
     url = '/customers'
+    form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    form = this.formBuilder.group({
-        id: 0,
-        description: ['', [Validators.required, Validators.maxLength(100)]],
-        profession: ['', [Validators.maxLength(100)]],
-        address: ['', [Validators.maxLength(100)]],
-        phones: ['', [Validators.maxLength(100)]],
-        personInCharge: ['', [Validators.maxLength(100)]],
-        email: ['', [Validators.maxLength(100)]],
-        userName: ''
-    })
-
-    // #endregion
-
-    constructor(private customerService: CustomerService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
+    constructor(private customerService: CustomerService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
             this.id = p['id']
             if (this.id) {
@@ -47,6 +35,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.initForm()
         this.addShortcuts()
     }
 
@@ -154,6 +143,20 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigate([this.url])
     }
 
+    private initForm() {
+        this.form = this.formBuilder.group({
+            id: 0,
+            description: ['', [Validators.required, Validators.maxLength(128)]],
+            profession: ['', [Validators.maxLength(128)]],
+            address: ['', [Validators.maxLength(128)]],
+            phones: ['', [Validators.maxLength(128)]],
+            personInCharge: ['', [Validators.maxLength(128)]],
+            email: ['', [Validators.maxLength(128)]],
+            userName: ''
+        })
+
+    }
+
     private populateFields(result: any) {
         this.form.setValue({
             id: result.id,
@@ -174,23 +177,14 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private resetForm() {
-        this.form.reset({
-            id: 0,
-            description: '',
-            profession: '',
-            address: '',
-            phones: '',
-            personInCharge: '',
-            email: '',
-            userName: ''
-        })
+        this.form.reset()
     }
 
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
 
-    // #region Helper properties
+    // #region Getters
 
     get description() {
         return this.form.get('description')

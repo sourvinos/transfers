@@ -71,7 +71,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
                 document.getElementById('new').click()
             }
         }, {
-            priority: 1,
+            priority: 0,
             inputs: true
         })
     }
