@@ -152,7 +152,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             phones: ['', [Validators.maxLength(128)]],
             personInCharge: ['', [Validators.maxLength(128)]],
             email: ['', [Validators.maxLength(128)]],
-            userName: ''
+            userName: localStorage.getItem('username')
         })
 
     }

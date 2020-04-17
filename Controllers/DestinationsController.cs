@@ -10,89 +10,50 @@ namespace Transfers {
 
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLoggedIn")]
-
     public class DestinationsController : ControllerBase {
 
-        // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
-        // Constructor
-        public DestinationsController(IMapper mapper, ApplicationDbContext context) {
+        public DestinationsController(IMapper mapper, ApplicationDbContext context) =>
+            (this.mapper, this.context) = (mapper, context);
 
-            this.mapper = mapper;
-            this.context = context;
-
-        }
-
-        // GET: api/destinations
         [HttpGet]
         public async Task<IEnumerable<Destination>> Get() {
-
             return await context.Destinations.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
-
         }
 
-        // GET: api/destinations/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDestination(int id) {
-
-            Destination destination = await context.Destinations.SingleOrDefaultAsync(m => m.Id == id);;
-
-            if (destination == null) return NotFound();
-
+            Destination destination = await context.Destinations.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
+            if (destination == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
             return Ok(destination);
-
         }
 
-        // POST: api/destinations
         [HttpPost]
         public async Task<IActionResult> PostDestination([FromBody] Destination destination) {
-
-            if (!ModelState.IsValid) return BadRequest();
-
+            if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
             context.Destinations.Add(destination);
-
             await context.SaveChangesAsync();
-
-            return Ok(destination);
-
+            return Ok(new { response = ApiMessages.RecordCreated() });
         }
 
-        // PUT: api/destinations/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDestination([FromRoute] int id, [FromBody] Destination destination) {
-
-            if (!ModelState.IsValid) return BadRequest();
-            if (id != destination.Id) return BadRequest();
-
+            if (id != destination.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
+            if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
+            if (await context.Destinations.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
             context.Entry(destination).State = EntityState.Modified;
-
-            try {
-                await context.SaveChangesAsync();
-            } catch (DbUpdateConcurrencyException) {
-                destination = await context.Destinations.SingleOrDefaultAsync(m => m.Id == id);
-                if (destination == null) return NotFound();
-            }
-
-            return Ok(destination);
-
+            await context.SaveChangesAsync();
+            return Ok(new { response = ApiMessages.RecordUpdated() });
         }
 
-        // DELETE: api/destinations/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDestination([FromRoute] int id) {
-
-            Destination destination = await context.Destinations.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (destination == null) { return NotFound(); }
-
-            context.Destinations.Remove(destination);
-
-            await context.SaveChangesAsync();
-
-            return NoContent();
-
+            if (await context.Destinations.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
+            context.Destinations.Remove(await context.Destinations.SingleOrDefaultAsync(m => m.Id == id));
+            int result = await context.SaveChangesAsync();
+            return Ok(new { Response = ApiMessages.RecordDeleted() });
         }
 
     }
