@@ -27,7 +27,7 @@ body, h1, h2, h3, p {
 
 #loader {
     align-items: center;
-    background: url(../../../assets/loader.gif) center 60% no-repeat var(--color-background);
+    background: var(--color-background);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -44,11 +44,20 @@ body, h1, h2, h3, p {
     margin: 0;
 }
 
-#loader>:last-child {
+#loader>:nth-child(2) {
     color: var(--color-company-logo-second-child) !important;
     font-size: var(--font-size-logo-second-child) !important;
     font-weight: normal !important;
     margin: -1rem 0 0 0 !important;
+}
+
+#loader>:nth-child(3) {
+    background: url(../../../assets/loader.gif) no-repeat var(--color-background);
+    background-position-x: center;
+    background-position-y: bottom;
+    display: flex;
+    height: 5rem;
+    width: 100%;
 }
 
 #footer {
