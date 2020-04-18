@@ -17,7 +17,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     records: Customer[]
     filteredRecords: Customer[]
-    url: '/customers'
+    url = '/customers'
     resolver = 'customerList'
 
     headers = ['Id', 'Description', 'Phones', 'Email']
@@ -45,7 +45,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     }
 
     editRecord(id: number) {
-        this.navigateToEditRoute(id)
+        this.router.navigate([this.url, id])
     }
 
     filter(query: string) {
@@ -94,10 +94,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
-    }
-
-    private navigateToEditRoute(id: number) {
-        this.router.navigate([this.url, id])
     }
 
 }

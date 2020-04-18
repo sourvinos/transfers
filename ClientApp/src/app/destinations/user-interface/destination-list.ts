@@ -17,7 +17,7 @@ export class DestinationListComponent implements OnInit, OnDestroy {
 
     records: Destination[]
     filteredRecords: Destination[]
-    url: '/destinations'
+    url = '/destinations'
     resolver = 'destinationList'
 
     headers = ['Id', 'Abbreviation', 'Description']
@@ -45,7 +45,7 @@ export class DestinationListComponent implements OnInit, OnDestroy {
     }
 
     editRecord(id: number) {
-        this.navigateToEditRoute(id)
+        this.router.navigate([this.url, id])
     }
 
     filter(query: string) {
@@ -94,10 +94,6 @@ export class DestinationListComponent implements OnInit, OnDestroy {
         this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
-    }
-
-    private navigateToEditRoute(id: number) {
-        this.router.navigate([this.url, id])
     }
 
 }

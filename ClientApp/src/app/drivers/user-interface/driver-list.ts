@@ -17,7 +17,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
 
     records: Driver[]
     filteredRecords: Driver[]
-    url: '/drivers'
+    url = '/drivers'
     resolver = 'driverList'
 
     headers = ['Id', 'Name', 'Phones']
@@ -45,7 +45,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
     }
 
     editRecord(id: number) {
-        this.navigateToEditRoute(id)
+        this.router.navigate([this.url, id])
     }
 
     filter(query: string) {
@@ -88,10 +88,6 @@ export class DriverListComponent implements OnInit, OnDestroy {
     private loadRecords() {
         this.records = this.activatedRoute.snapshot.data[this.resolver]
         this.filteredRecords = this.records
-    }
-
-    private navigateToEditRoute(id: number) {
-        this.router.navigate([this.url, id])
     }
 
     private subscribeToInteractionService() {

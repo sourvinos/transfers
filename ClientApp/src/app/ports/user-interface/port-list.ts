@@ -19,7 +19,7 @@ export class PortListComponent implements OnInit, OnDestroy {
 
     records: Port[]
     filteredRecords: Port[]
-    url: '/ports'
+    url = '/ports'
     resolver = 'portList'
 
     headers = ['Id', 'Description']
@@ -53,7 +53,7 @@ export class PortListComponent implements OnInit, OnDestroy {
     }
 
     editRecord(id: number) {
-        this.navigateToEditRoute(id)
+        this.router.navigate([this.url, id])
     }
 
     filter(query: string) {
@@ -102,10 +102,6 @@ export class PortListComponent implements OnInit, OnDestroy {
         this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
-    }
-
-    private navigateToEditRoute(id: number) {
-        this.router.navigate(['/ports', id])
     }
 
 }

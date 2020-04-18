@@ -21,7 +21,7 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
     routeId: string
     routes: Route[]
     pickupPoints: PickupPoint[]
-    url: '/drivers'
+    url = '/pickupPoints'
     resolver = 'pickupPointList'
     mustRefresh = true
 
@@ -61,15 +61,11 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
     }
 
     private editRecord(id: number) {
-        this.navigateToEditRoute(id)
+        this.router.navigate([this.url, id], { relativeTo: this.activatedRoute })
     }
 
     private loadRecords() {
         this.pickupPoints = this.activatedRoute.snapshot.data[this.resolver]
-    }
-
-    private navigateToEditRoute(id: number) {
-        this.router.navigate(['pickupPoint/', id], { relativeTo: this.activatedRoute })
     }
 
     private subscribeToInteractionService() {
