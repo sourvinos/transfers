@@ -26,7 +26,7 @@ namespace Transfers {
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomer(int id) {
             Customer customer = await context.Customers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
-            if (customer == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
+            if (customer == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             return Ok(customer);
         }
 
@@ -42,7 +42,7 @@ namespace Transfers {
         public async Task<IActionResult> PutCustomer([FromRoute] int id, [FromBody] Customer customer) {
             if (id != customer.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            if (await context.Customers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
+            if (await context.Customers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             context.Entry(customer).State = EntityState.Modified;
             await context.SaveChangesAsync();
             return Ok(new { response = ApiMessages.RecordUpdated() });
@@ -50,10 +50,14 @@ namespace Transfers {
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer([FromRoute] int id) {
-            if (await context.Customers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
+            if (await context.Customers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             context.Customers.Remove(await context.Customers.SingleOrDefaultAsync(m => m.Id == id));
-            int result = await context.SaveChangesAsync();
-            return Ok(new { Response = ApiMessages.RecordDeleted() });
+            try {
+                await context.SaveChangesAsync();
+                return Ok(new { response = ApiMessages.RecordDeleted() });
+            } catch (DbUpdateException) {
+                return BadRequest(new { response = ApiMessages.RecordInUse() });
+            }
         }
 
     }

@@ -4,6 +4,9 @@ namespace Transfers {
 
     public class ChangePasswordViewModel {
 
+        [Required(ErrorMessage = "User Id is required")]
+        public string UserId { get; set; }
+
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Current password is required")]
         public string CurrentPassword { get; set; }

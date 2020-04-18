@@ -10,24 +10,16 @@ namespace Transfers {
 
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLoggedIn")]
-
     public class TransfersController : ControllerBase {
 
-        // Variables
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
-        // Constructor
-        public TransfersController(IMapper mapper, ApplicationDbContext context) {
+        public TransfersController(IMapper mapper, ApplicationDbContext context) =>
+            (this.mapper, this.context) = (mapper, context);
 
-            this.mapper = mapper;
-            this.context = context;
-
-        }
-
-        // GET: api/transfers/date/YYYY-MM-DD
         [HttpGet("date/{dateIn}")]
-        public TransferGroupResultResource<TransferResource> getTransfers(DateTime dateIn) {
+        public TransferGroupResultResource<TransferResource> Get(DateTime dateIn) {
 
             var details = context.Transfers
                 .Include(x => x.Customer)
@@ -56,90 +48,54 @@ namespace Transfers {
 
         }
 
-        // GET: api/transfers/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTransfer(int id) {
-
-            Transfer transfer = await context.Transfers
-                .Include(x => x.Customer)
-                .Include(x => x.PickupPoint).ThenInclude(y => y.Route).ThenInclude(z => z.Port)
-                .Include(x => x.Destination)
-                .Include(x => x.Driver)
-                .SingleOrDefaultAsync(m => m.Id == id);
-
-            if (transfer == null) return NotFound();
-
+            Transfer transfer = await context.Transfers.Include(x => x.Customer).Include(x => x.PickupPoint).ThenInclude(y => y.Route).ThenInclude(z => z.Port).Include(x => x.Destination).Include(x => x.Driver).SingleOrDefaultAsync(m => m.Id == id);
+            if (transfer == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             return Ok(mapper.Map<Transfer, TransferResource>(transfer));
-
         }
 
-        // POST: api/transfers
         [HttpPost]
         public async Task<IActionResult> PostTransfer([FromBody] Transfer transfer) {
-
-            if (!ModelState.IsValid) return BadRequest();
-
+            if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
             context.Transfers.Add(transfer);
-
             await context.SaveChangesAsync();
-
-            return Ok(transfer);
-
+            return Ok(new { response = ApiMessages.RecordCreated() });
         }
 
-        // PUT: api/transfers/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTransfer([FromRoute] int id, [FromBody] SaveTransferResource transferResource) {
-
-            if (!ModelState.IsValid) return BadRequest();
-            if (id != transferResource.Id) return BadRequest();
-
+            if (id != transferResource.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
+            if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
             var transfer = await context.Transfers.SingleOrDefaultAsync(m => m.Id == id);
+            if (transfer != null) {
+                mapper.Map<SaveTransferResource, Transfer>(transferResource, transfer);
+                context.Entry(transfer).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+                return Ok(new { response = ApiMessages.RecordUpdated() });
+            }
+            return NotFound(new { response = ApiMessages.RecordNotFound() });
+        }
 
-            mapper.Map<SaveTransferResource, Transfer>(transferResource, transfer);
-
-            context.Entry(transfer).State = EntityState.Modified;
-
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTransfer([FromRoute] int id) {
+            if (await context.Transfers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
+            context.Transfers.Remove(await context.Transfers.SingleOrDefaultAsync(m => m.Id == id));
             try {
                 await context.SaveChangesAsync();
-            } catch (DbUpdateConcurrencyException) {
-                transfer = await context.Transfers.SingleOrDefaultAsync(m => m.Id == id);
-
-                if (transfer == null) return NotFound();
+                return Ok(new { response = ApiMessages.RecordDeleted() });
+            } catch (DbUpdateException) {
+                return BadRequest(new { response = ApiMessages.RecordInUse() });
             }
-
-            return Ok();
-
         }
 
         // PATCH: api/transfers/assignDriver?driverId=7&id=77905&id=77910
         [HttpPatch("assignDriver")]
         public async Task<IActionResult> AssignDriver(int driverId, [FromQuery(Name = "id")] int[] ids) {
-
             var transfers = await context.Transfers.Where(x => ids.Contains(x.Id)).ToListAsync();
-
             transfers.ForEach(a => a.DriverId = driverId);
-
             await context.SaveChangesAsync();
-
-            return Ok(transfers);
-
-        }
-
-        // DELETE: api/transfers/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTransfer([FromRoute] int id) {
-
-            Transfer transfer = await context.Transfers.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (transfer == null) return NotFound();
-
-            context.Transfers.Remove(transfer);
-
-            await context.SaveChangesAsync();
-
-            return NoContent();
-
+            return Ok(new { response = ApiMessages.RecordUpdated() });
         }
 
     }

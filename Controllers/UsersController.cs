@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Transfers {
 
     [Route("api/[controller]")]
-    // [Authorize(Policy = "RequireLoggedIn")]
+    [Authorize(Policy = "RequireLoggedIn")]
     public class UsersController : ControllerBase {
 
         private readonly UserManager<ApplicationUser> userManager;
@@ -18,7 +18,6 @@ namespace Transfers {
         public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) =>
             (this.userManager, this.signManager) = (userManager, signInManager);
 
-        // GET: api/users
         [HttpGet]
         public async Task<IEnumerable<UserListViewModel>> Get() {
             return await userManager.Users.Select(u => new UserListViewModel {
@@ -29,7 +28,6 @@ namespace Transfers {
             }).OrderBy(o => o.Username).AsNoTracking().ToListAsync();
         }
 
-        // GET: api/users/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(string id) {
             UserViewModel vm = new UserViewModel { };
@@ -41,14 +39,13 @@ namespace Transfers {
                 vm.Email = user.Email;
                 return Ok(vm);
             }
-            return NotFound(new { response = "Record not found" });
+            return NotFound(new { response = ApiMessages.RecordNotFound() });
         }
 
-        // PUT: api/users/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser([FromRoute] string id, [FromBody] UserViewModel vm) {
             if (ModelState.IsValid) {
-                if (id != vm.Id) return BadRequest(new { response = "Unexpected user id" });
+                if (id != vm.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
                 ApplicationUser user = await userManager.FindByIdAsync(id);
                 if (user != null) {
                     user.UserName = vm.Username;
@@ -56,26 +53,25 @@ namespace Transfers {
                     user.Email = vm.Email;
                     IdentityResult result = await userManager.UpdateAsync(user);
                     if (result.Succeeded) {
-                        return Ok(new { response = "Record updated" });
+                        return Ok(new { response = ApiMessages.RecordUpdated() });
                     }
                     return BadRequest(new { response = result.Errors.Select(x => x.Description) });
                 }
-                return NotFound(new { response = "Record not found" });
+                return NotFound(new { response = ApiMessages.RecordNotFound() });
             }
             return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
         }
 
-        // DELETE: api/users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id) {
             ApplicationUser user = await userManager.FindByIdAsync(id);
             if (user != null) {
                 IdentityResult result = await userManager.DeleteAsync(user);
                 if (result.Succeeded) {
-                    return Ok(new { response = "Record deleted" });
+                    return Ok(new { response = ApiMessages.RecordDeleted() });
                 }
             }
-            return NotFound(new { response = "Record not found" });
+            return NotFound(new { response = ApiMessages.RecordNotFound() });
         }
 
     }

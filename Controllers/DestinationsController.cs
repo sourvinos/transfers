@@ -50,10 +50,14 @@ namespace Transfers {
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDestination([FromRoute] int id) {
-            if (await context.Destinations.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
+            if (await context.Destinations.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             context.Destinations.Remove(await context.Destinations.SingleOrDefaultAsync(m => m.Id == id));
-            int result = await context.SaveChangesAsync();
-            return Ok(new { Response = ApiMessages.RecordDeleted() });
+            try {
+                await context.SaveChangesAsync();
+                return Ok(new { response = ApiMessages.RecordDeleted() });
+            } catch (DbUpdateException) {
+                return BadRequest(new { response = ApiMessages.RecordInUse() });
+            }
         }
 
     }

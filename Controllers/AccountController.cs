@@ -36,7 +36,7 @@ namespace Transfers {
                     string token = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     string callbackUrl = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, Token = token }, protocol : HttpContext.Request.Scheme);
                     emailSender.SendRegistrationEmail(user.Email, user.DisplayName, callbackUrl);
-                    return Ok(new { response = $"An email was sent to '{formData.Email}' with instructions." });
+                    return Ok(new { response = ApiMessages.EmailInstructions(formData.Email) });
                 } else {
                     return BadRequest(new { response = result.Errors.Select(x => x.Description) });
                 }
@@ -67,7 +67,7 @@ namespace Transfers {
                     string passwordResetLink = Url.Content($"{baseUrl}/resetPassword/{model.Email}/{tokenEncoded}");
                     emailSender.SendResetPasswordEmail(user.DisplayName, user.Email, passwordResetLink);
                 }
-                return Ok(new { response = $"An email was sent to '{model.Email}' with instructions." });
+                return Ok(new { response = ApiMessages.EmailInstructions(model.Email) });
             }
             return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
         }
@@ -85,11 +85,11 @@ namespace Transfers {
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel model) {
             if (ModelState.IsValid) {
                 var user = await userManager.FindByEmailAsync(model.Email);
-                if (user == null) { return BadRequest(new { response = $"Email '{model.Email}' does not exist." }); }
+                if (user == null) { return BadRequest(new { response = ApiMessages.EmailNotFound(model.Email) }); }
                 var tokenDecoded = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Token));
                 var result = await userManager.ResetPasswordAsync(user, tokenDecoded, model.Password);
                 if (result.Succeeded) {
-                    return Ok(new { response = "Password was reset successfully." });
+                    return Ok(new { response = ApiMessages.EmailReset() });
                 }
                 return BadRequest(new { response = result.Errors.Select(x => x.Description) });
             }
@@ -99,12 +99,12 @@ namespace Transfers {
         [HttpPost("[action]")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordViewModel vm) {
             if (ModelState.IsValid) {
-                var user = await userManager.FindByNameAsync("sourvinos");
-                if (user == null) { return Unauthorized(new { response = "Authentication failed." }); }
+                var user = await userManager.FindByIdAsync(vm.UserId);
+                if (user == null) { return NotFound(new { response = ApiMessages.UserNotFound() }); }
                 var result = await userManager.ChangePasswordAsync(user, vm.CurrentPassword, vm.Password);
                 if (result.Succeeded) {
                     await signInManager.RefreshSignInAsync(user);
-                    return Ok(new { response = "Password was changed successfully." });
+                    return Ok(new { response = ApiMessages.PasswordChanged() });
                 }
                 return BadRequest(new { response = result.Errors.Select(x => x.Description) });
             }

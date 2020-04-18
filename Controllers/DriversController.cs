@@ -15,8 +15,8 @@ namespace Transfers {
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
 
-        public DriversController(IMapper mapper, ApplicationDbContext context) => (
-            this.mapper, this.context) = (mapper, context);
+        public DriversController(IMapper mapper, ApplicationDbContext context) =>
+            (this.mapper, this.context) = (mapper, context);
 
         [HttpGet]
         public async Task<IEnumerable<Driver>> Get() {
@@ -50,10 +50,14 @@ namespace Transfers {
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDriver([FromRoute] int id) {
-            if (await context.Drivers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
-            context.Drivers.Remove(await context.Drivers.SingleOrDefaultAsync(m => m.Id == id));
-            int result = await context.SaveChangesAsync();
-            return Ok(new { Response = ApiMessages.RecordDeleted() });
+            if (await context.Customers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
+            context.Customers.Remove(await context.Customers.SingleOrDefaultAsync(m => m.Id == id));
+            try {
+                await context.SaveChangesAsync();
+                return Ok(new { response = ApiMessages.RecordDeleted() });
+            } catch (DbUpdateException) {
+                return BadRequest(new { response = ApiMessages.RecordInUse() });
+            }
         }
 
         [HttpGet("getDefault")]

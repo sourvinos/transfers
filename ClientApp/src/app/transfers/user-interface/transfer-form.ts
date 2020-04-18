@@ -219,9 +219,9 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
             driverId: [0, Validators.required], driverDescription: [{ value: '', disabled: true }, Validators.required],
             portId: [0, Validators.required], portDescription: [{ value: '', disabled: true }, Validators.required],
-            adults: [0, Validators.required, Validators.min(0), Validators.max(999)],
-            kids: [0, Validators.required, Validators.min(0), Validators.max(999)],
-            free: [0, Validators.required, Validators.min(0), Validators.max(999)],
+            adults: [0, Validators.required],
+            kids: [0, Validators.required],
+            free: [0, Validators.required],
             totalPersons: [{ value: 0, disabled: true }],
             remarks: ['', Validators.maxLength(100)],
             userName: ''

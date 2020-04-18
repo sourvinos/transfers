@@ -70,6 +70,8 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
                     this.resetForm()
                     this.goBack()
+                }, () => {
+                    this.showSnackbar(this.messageService.recordIsInUse(), 'error')
                 })
             }
         })
