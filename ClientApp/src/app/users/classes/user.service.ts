@@ -13,7 +13,7 @@ export class UserService extends DataService {
         super(httpClient, '/api/users')
     }
 
-    updatePassword(id: string | number, formData: any): Observable<any> {
+    updatePassword(formData: any): Observable<any> {
         return this.http.post<any>('/api/account/changePassword/', formData)
     }
 

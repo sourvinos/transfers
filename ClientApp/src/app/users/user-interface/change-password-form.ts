@@ -64,7 +64,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
 
     onSubmit() {
         this.flattenFormFields();
-        this.userService.updatePassword(this.form.value.id, this.flatForm).subscribe((response) => {
+        this.userService.updatePassword(this.flatForm).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
             this.resetForm()
             this.goBack()
@@ -106,7 +106,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
 
     private flattenFormFields() {
         this.flatForm = {
-            id: this.form.value.id,
+            userId: this.form.value.userId,
             currentPassword: this.form.value.currentPassword,
             password: this.form.value.passwords.password,
             confirmPassword: this.form.value.passwords.confirmPassword
@@ -129,7 +129,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
 
     private initForm() {
         this.form = this.formBuilder.group({
-            id: '',
+            userId: '',
             currentPassword: ['', [Validators.required]],
             passwords: this.formBuilder.group({
                 password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(128), ValidationService.containsSpace]],
@@ -141,7 +141,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
 
     private populateFields(result: any) {
         this.form.patchValue({
-            id: result.id
+            userId: result.id
         })
     }
 

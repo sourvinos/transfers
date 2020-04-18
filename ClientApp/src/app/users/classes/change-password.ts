@@ -1,5 +1,5 @@
 export class ChangePassword {
-    id: string
+    userId: string
     currentPassword: string
     password: string
     confirmPassword: string
