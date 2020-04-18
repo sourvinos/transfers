@@ -51,7 +51,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.filteredRecords = query ? this.records.filter(p => p.username.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
-    onNewRecord() {
+    ononNewRecord() {
         this.router.navigate(['/users/new'])
     }
 
@@ -59,7 +59,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.F': (event: KeyboardEvent): void => {
@@ -76,7 +76,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         })
     }
 
-    private goBack(): void {
+    private onGoBack(): void {
         this.router.navigate(['/'])
     }
 

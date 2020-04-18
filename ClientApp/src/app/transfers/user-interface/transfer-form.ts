@@ -82,7 +82,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (response) {
                     this.resetForm()
                     this.scrollToList()
-                    this.goBack()
+                    this.onGoBack()
                     return true
                 }
             })
@@ -97,12 +97,12 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.form.patchValue({ totalPersons: !!Number(totalPersons) ? totalPersons : 0 })
     }
 
-    deleteRecord() {
+    onDeleteRecord() {
         this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.transferService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
-                    this.goBack()
+                    this.onGoBack()
                 })
             }
         })
@@ -125,7 +125,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    saveRecord() {
+    onSaveRecord() {
         if (this.form.value.id === 0) {
             this.transferService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
@@ -138,7 +138,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.transferService.update(this.form.value.id, this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showUpdatedRecord(), 'info')
                 this.resetForm()
-                this.goBack()
+                this.onGoBack()
             })
         }
     }
@@ -147,15 +147,15 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.D': (event: KeyboardEvent): void => {
                 event.preventDefault()
-                this.deleteRecord()
+                this.onDeleteRecord()
             },
             'Alt.S': (event: KeyboardEvent): void => {
-                this.saveRecord()
+                this.onSaveRecord()
             },
             'Alt.C': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
@@ -201,11 +201,11 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.populateFields(result)
         }, () => {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
-            this.goBack()
+            this.onGoBack()
         })
     }
 
-    private goBack() {
+    private onGoBack() {
         this.setStatus('empty')
         this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
@@ -355,8 +355,8 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private subscribeToInteractionService() {
         this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            if (response === 'saveRecord') { this.saveRecord() }
-            if (response === 'deleteRecord') { this.deleteRecord() }
+            if (response === 'saveRecord') { this.onSaveRecord() }
+            if (response === 'deleteRecord') { this.onDeleteRecord() }
         })
     }
 

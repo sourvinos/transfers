@@ -43,11 +43,11 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
         const form = this.form.value;
         this.accountService.forgotPassword(form.email).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
-            this.goBack()
+            this.onGoBack()
         });
     }
 
-    goBack() {
+    onGoBack() {
         this.router.navigate([this.loginUrl])
     }
 
@@ -55,7 +55,7 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.S': (event: KeyboardEvent) => {

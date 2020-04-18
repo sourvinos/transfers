@@ -52,7 +52,7 @@ export class DestinationListComponent implements OnInit, OnDestroy {
         this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
-    newRecord() {
+    onNewRecord() {
         this.router.navigate([this.url + '/new'])
     }
 
@@ -60,7 +60,7 @@ export class DestinationListComponent implements OnInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.F': (event: KeyboardEvent): void => {
@@ -77,7 +77,7 @@ export class DestinationListComponent implements OnInit, OnDestroy {
         })
     }
 
-    private goBack(): void {
+    private onGoBack(): void {
         this.router.navigate(['/'])
     }
 

@@ -19,18 +19,22 @@ import { RouteService } from 'src/app/routes/classes/route.service';
 export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
 
     routeId: string
-    routes: Route[] = []
-    pickupPoints: PickupPoint[] = []
+    routes: Route[]
+    pickupPoints: PickupPoint[]
+    url: '/drivers'
+    resolver = 'pickupPointList'
+    mustRefresh = true
+
     headers = ['Id', 'Description', 'Exact point', 'Time']
     widths = ['0', '45%', '45%', '10%']
     visibility = ['none', '', '', '']
     justify = ['center', 'left', 'left', 'center']
     fields = ['id', 'description', 'exactPoint', 'time']
-    mustRefresh = true
+
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, public dialog: MatDialog, private formBuilder: FormBuilder, private routeService: RouteService, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService) {
         this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.routeId !== '' && this.router.url.split('/').length === 4) {
@@ -50,14 +54,22 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
         }
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
         this.unlisten()
     }
 
+    private editRecord(id: number) {
+        this.navigateToEditRoute(id)
+    }
+
     private loadRecords() {
-        this.pickupPoints = this.activatedRoute.snapshot.data['pickupPointList']
+        this.pickupPoints = this.activatedRoute.snapshot.data[this.resolver]
+    }
+
+    private navigateToEditRoute(id: number) {
+        this.router.navigate(['pickupPoint/', id], { relativeTo: this.activatedRoute })
     }
 
     private subscribeToInteractionService() {
@@ -69,14 +81,6 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
                 this.pickupPoints = result
             })
         })
-    }
-
-    private editRecord(id: number) {
-        this.navigateToEditRoute(id)
-    }
-
-    private navigateToEditRoute(id: number) {
-        this.router.navigate(['pickupPoint/', id], { relativeTo: this.activatedRoute })
     }
 
 }

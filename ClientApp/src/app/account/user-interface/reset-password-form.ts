@@ -57,7 +57,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         })
     }
 
-    goBack() {
+    onGoBack() {
         this.router.navigate([this.loginUrl])
     }
 
@@ -65,7 +65,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.S': (event: KeyboardEvent) => {

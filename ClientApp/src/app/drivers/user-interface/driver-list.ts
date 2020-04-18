@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
-import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { Utils } from 'src/app/shared/classes/utils'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { Driver } from '../classes/driver'
 
 @Component({
@@ -17,11 +17,15 @@ export class DriverListComponent implements OnInit, OnDestroy {
 
     records: Driver[]
     filteredRecords: Driver[]
+    url: '/drivers'
+    resolver = 'driverList'
+
     headers = ['Id', 'Name', 'Phones']
     widths = ['0px', '50%', '50%']
     visibility = ['none', '', '']
     justify = ['center', 'left', 'left']
     fields = ['id', 'description', 'phones']
+
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
@@ -31,7 +35,6 @@ export class DriverListComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.addShortcuts()
-        this.focus('searchField')
         this.subscribeToInteractionService()
     }
 
@@ -49,15 +52,15 @@ export class DriverListComponent implements OnInit, OnDestroy {
         this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
-    newRecord() {
-        this.router.navigate(['/drivers/new'])
+    onNewRecord() {
+        this.router.navigate([this.url + '/new'])
     }
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.F': (event: KeyboardEvent): void => {
@@ -69,32 +72,32 @@ export class DriverListComponent implements OnInit, OnDestroy {
                 document.getElementById('new').click()
             }
         }, {
-            priority: 2,
+            priority: 0,
             inputs: true
         })
-    }
-
-    private goBack(): void {
-        this.router.navigate(['/'])
-    }
-
-    private loadRecords() {
-        this.records = this.activatedRoute.snapshot.data['driverList']
-        this.filteredRecords = this.records
     }
 
     private focus(element: string) {
         Utils.setFocus(element)
     }
 
+    private onGoBack() {
+        this.router.navigate(['/'])
+    }
+
+    private loadRecords() {
+        this.records = this.activatedRoute.snapshot.data[this.resolver]
+        this.filteredRecords = this.records
+    }
+
+    private navigateToEditRoute(id: number) {
+        this.router.navigate([this.url, id])
+    }
+
     private subscribeToInteractionService() {
         this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
-    }
-
-    private navigateToEditRoute(id: number) {
-        this.router.navigate(['/drivers', id])
     }
 
 }

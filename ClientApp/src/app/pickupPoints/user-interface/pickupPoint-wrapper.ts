@@ -43,7 +43,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         this.unlisten()
     }
 
-    deleteRecord(): void {
+    onDeleteRecord(): void {
         this.interactionPickupPointService.performAction('deleteRecord')
     }
 
@@ -51,7 +51,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         this.navigateToList()
     }
 
-    newRecord(): void {
+    onNewRecord(): void {
         this.router.navigate([this.location.path() + '/pickupPoint/new'])
     }
 
@@ -59,7 +59,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         this.id = event.option.id
     }
 
-    saveRecord(): void {
+    onSaveRecord(): void {
         this.interactionPickupPointService.performAction('saveRecord')
     }
 
@@ -71,7 +71,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.S': (event: KeyboardEvent): void => {
@@ -97,7 +97,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         Utils.setFocus(field)
     }
 
-    private goBack(): void {
+    private onGoBack(): void {
         this.router.navigate(['/'])
     }
 

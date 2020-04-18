@@ -17,11 +17,15 @@ export class RouteListComponent implements OnInit, OnDestroy {
 
     records: Route[]
     filteredRecords: Route[]
+    url: '/routes'
+    resolver = 'routeList'
+
     headers = ['Id', 'Abbreviation', 'Description']
     widths = ['0px', '5%', '50%']
     visibility = ['none', '', '']
     justify = ['center', 'center', 'left']
     fields = ['id', 'abbreviation', 'description']
+
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
@@ -31,7 +35,6 @@ export class RouteListComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.addShortcuts()
-        this.focus('searchField')
         this.subscribeToInteractionService()
     }
 
@@ -49,15 +52,15 @@ export class RouteListComponent implements OnInit, OnDestroy {
         this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
-    newRecord() {
-        this.router.navigate(['/routes/new'])
+    onNewRecord() {
+        this.router.navigate([this.url + '/new'])
     }
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.F': (event: KeyboardEvent): void => {
@@ -69,17 +72,17 @@ export class RouteListComponent implements OnInit, OnDestroy {
                 document.getElementById('new').click()
             }
         }, {
-            priority: 1,
+            priority: 0,
             inputs: true
         })
     }
 
-    private goBack(): void {
+    private onGoBack(): void {
         this.router.navigate(['/'])
     }
 
     private loadRecords() {
-        this.records = this.activatedRoute.snapshot.data['routeList']
+        this.records = this.activatedRoute.snapshot.data[this.resolver]
         this.filteredRecords = this.records
     }
 
@@ -94,13 +97,7 @@ export class RouteListComponent implements OnInit, OnDestroy {
     }
 
     private navigateToEditRoute(id: number) {
-        this.router.navigate(['/routes', id])
+        this.router.navigate([this.url, id])
     }
-
-    // createPDF() {
-    //     this.portService.createPDF().subscribe((file: HttpResponse<Blob>) => {
-    //         window.location.href = file.url
-    //     })
-    // }
 
 }

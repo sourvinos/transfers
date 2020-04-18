@@ -53,7 +53,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
             this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
-                    this.goBack()
+                    this.onGoBack()
                     return true
                 }
             })
@@ -67,7 +67,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
         this.userService.updatePassword(this.flatForm).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
             this.resetForm()
-            this.goBack()
+            this.onGoBack()
         }, error => {
             this.showSnackbar(error.error.response, 'error')
         })
@@ -77,7 +77,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.S': (event: KeyboardEvent) => {
@@ -123,7 +123,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
         })
     }
 
-    private goBack() {
+    private onGoBack() {
         this.router.navigate([this.url])
     }
 

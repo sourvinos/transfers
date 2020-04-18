@@ -98,12 +98,12 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Template - deleteRecord()
+     *  Template - onDeleteRecord()
      *
      * Description:
      *  Executes the delete method on the form through the interaction service
      */
-    deleteRecord(): void {
+    onDeleteRecord(): void {
         this.interactionService.performAction('deleteRecord')
     }
 
@@ -124,12 +124,12 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Template - newRecord()
+     *  Template - onNewRecord()
      *
      * Description:
      *  Check for the default driver and if found, avigates to the form so that new records can be appended
      */
-    newRecord(): void {
+    onNewRecord(): void {
         this.driverService.getDefaultDriver().then(response => {
             if (response) {
                 this.router.navigate([this.location.path() + '/transfer/new'])
@@ -141,12 +141,12 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Template - saveRecord()
+     *  Template - onSaveRecord()
      *
      * Description:
      *  Executes the save method on the form through the interaction service
      */
-    saveRecord(): void {
+    onSaveRecord(): void {
         this.interactionService.performAction('saveRecord')
     }
 
@@ -183,7 +183,7 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.A': (event: KeyboardEvent): void => {
@@ -236,7 +236,7 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
      * Description:
      *  On escape navigates to the home route
      */
-    private goBack(): void {
+    private onGoBack(): void {
         this.router.navigate(['/'])
     }
 

@@ -72,7 +72,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
                 if (response) {
                     this.resetForm()
                     this.scrollToList()
-                    this.goBack()
+                    this.onGoBack()
                     return true
                 }
             })
@@ -82,19 +82,19 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         }
     }
 
-    deleteRecord() {
+    onDeleteRecord() {
         this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.pickupPointService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
                     this.resetForm()
-                    this.goBack()
+                    this.onGoBack()
                 })
             }
         })
     }
 
-    saveRecord() {
+    onSaveRecord() {
         if (!this.form.valid) { return }
         if (this.form.value.id === 0) {
             this.pickupPointService.add(this.form.value).subscribe(() => {
@@ -107,7 +107,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
             this.pickupPointService.update(this.form.value.id, this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showUpdatedRecord(), 'info')
                 this.resetForm()
-                this.goBack()
+                this.onGoBack()
             })
         }
     }
@@ -116,15 +116,15 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.D': (event: KeyboardEvent): void => {
                 event.preventDefault()
-                this.deleteRecord()
+                this.onDeleteRecord()
             },
             'Alt.S': (event: KeyboardEvent): void => {
-                this.saveRecord()
+                this.onSaveRecord()
             },
             'Alt.C': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
@@ -155,7 +155,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         }
     }
 
-    private goBack() {
+    private onGoBack() {
         this.setStatus('empty')
         this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
@@ -207,8 +207,8 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
 
     private subscribeTointeractionService() {
         this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            if (response === 'saveRecord') { this.saveRecord() }
-            if (response === 'deleteRecord') { this.deleteRecord() }
+            if (response === 'saveRecord') { this.onSaveRecord() }
+            if (response === 'deleteRecord') { this.onDeleteRecord() }
         })
     }
 

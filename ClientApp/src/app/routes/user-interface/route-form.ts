@@ -1,19 +1,20 @@
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatSnackBar } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { PortService } from 'src/app/ports/classes/port.service';
+import { Utils } from 'src/app/shared/classes/utils';
+import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { DialogService } from 'src/app/shared/services/dialog.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { MessageService } from 'src/app/shared/services/message.service';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
-import { MatDialog, MatSnackBar } from '@angular/material'
-import { ActivatedRoute, Router } from '@angular/router'
-import { forkJoin, Subject } from 'rxjs'
-import { takeUntil } from 'rxjs/operators'
-import { PortService } from 'src/app/ports/classes/port.service'
-import { DialogService } from 'src/app/shared/services/dialog.service'
-import { HelperService } from 'src/app/shared/services/helper.service'
-import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
-import { Utils } from 'src/app/shared/classes/utils'
-import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component'
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
-import { Route } from '../classes/route'
-import { RouteService } from '../classes/route.service'
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { Route } from '../classes/route';
+import { RouteService } from '../classes/route.service';
 
 @Component({
     selector: 'route-form',
@@ -23,31 +24,20 @@ import { RouteService } from '../classes/route.service'
 
 export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    id: number
     url = '/routes'
+    form: FormGroup
     ports: any[]
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
-    form = this.formBuilder.group({
-        id: 0,
-        abbreviation: ['', [Validators.required, Validators.maxLength(10)]],
-        description: ['', [Validators.required, Validators.maxLength(100)]],
-        portId: ['', Validators.required], portDescription: ['', Validators.required],
-        userName: ''
-    })
 
-    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService, private messageService: MessageService) {
+    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService, private messageService: MessageService, private snackbarService: SnackbarService) {
         this.activatedRoute.params.subscribe(p => {
-            this.id = p['id']
-            if (this.id) {
-                this.getRecord()
-            } else {
-                this.populateFormWithDefaultData()
-            }
+            if (p['id']) { this.getRecord(p['id']) }
         })
     }
 
     ngOnInit() {
+        this.initForm()
         this.addShortcuts()
         this.populateDropDowns()
         this.subscribeToInteractionService()
@@ -68,7 +58,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
-                    this.goBack()
+                    this.onGoBack()
                     return true
                 }
             })
@@ -77,12 +67,14 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    deleteRecord() {
+    onDeleteRecord() {
         this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.routeService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
-                    this.goBack()
+                    this.onGoBack()
+                }, () => {
+                    this.showSnackbar(this.messageService.recordIsInUse(), 'error')
                 })
             }
         })
@@ -105,19 +97,35 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    onSaveRecord() {
+        if (this.form.value.id === 0) {
+            this.routeService.add(this.form.value).subscribe(() => {
+                this.showSnackbar(this.messageService.showAddedRecord(), 'info')
+                this.resetForm()
+                this.onGoBack()
+            })
+        } else {
+            this.routeService.update(this.form.value.id, this.form.value).subscribe(() => {
+                this.showSnackbar(this.messageService.showUpdatedRecord(), 'info')
+                this.resetForm()
+                this.onGoBack()
+            })
+        }
+    }
+
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.D': (event: KeyboardEvent) => {
                 event.preventDefault()
-                this.deleteRecord()
+                this.onDeleteRecord()
             },
             'Alt.S': (event: KeyboardEvent) => {
-                this.saveRecord()
+                this.onSaveRecord()
             },
             'Alt.C': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
@@ -130,7 +138,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
         }, {
-            priority: 2,
+            priority: 1,
             inputs: true
         })
     }
@@ -144,8 +152,28 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         Utils.setFocus(field)
     }
 
-    private goBack() {
+    private getRecord(id: string | number) {
+        this.routeService.getSingle(id).then(result => {
+            this.populateFields(result)
+        }, () => {
+            this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
+            this.onGoBack()
+        })
+    }
+
+    private onGoBack() {
         this.router.navigate([this.url])
+    }
+
+    private initForm() {
+        this.form = this.formBuilder.group({
+            id: 0,
+            abbreviation: ['', [Validators.required, Validators.maxLength(10)]],
+            description: ['', [Validators.required, Validators.maxLength(128)]],
+            portId: ['', Validators.required], portDescription: ['', Validators.required],
+            userName: this.helperService.getUsernameFromLocalStorage()
+        })
+
     }
 
     private populateFields(result: Route) {
@@ -158,51 +186,12 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private populateFormWithDefaultData() {
-        this.form.patchValue({
-            userName: this.helperService.getUsernameFromLocalStorage()
-        })
-    }
-
     private resetForm() {
-        this.form.reset({
-            id: 0,
-            abbreviation: '',
-            desciption: '',
-            routeId: 0, routeDescription: '',
-            userName: ''
-        })
+        this.form.reset()
     }
 
     private showSnackbar(message: string, type: string): void {
-        this.snackBar.open(message, 'Close', {
-            panelClass: [type]
-        })
-    }
-
-    saveRecord() {
-        if (!this.form.valid) { return }
-        if (this.form.value.id === 0) {
-            this.routeService.add(this.form.value).subscribe(() => {
-                this.showSnackbar(this.messageService.showAddedRecord(), 'info')
-                this.resetForm()
-                this.goBack()
-            })
-        } else {
-            this.routeService.update(this.form.value.id, this.form.value).subscribe(() => {
-                this.showSnackbar(this.messageService.showUpdatedRecord(), 'info')
-                this.resetForm()
-                this.goBack()
-            })
-        }
-    }
-
-    private getRecord() {
-        if (this.id) {
-            this.routeService.getSingle(this.id).then(result => {
-                this.populateFields(result)
-            })
-        }
+        this.snackbarService.open(message, type)
     }
 
     private patchFields(result: any, fields: any[]) {
@@ -261,12 +250,12 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private subscribeToInteractionService() {
         this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            if (response === 'saveRecord') { this.saveRecord() }
-            if (response === 'deleteRecord') { this.deleteRecord() }
+            if (response === 'saveRecord') { this.onSaveRecord() }
+            if (response === 'deleteRecord') { this.onDeleteRecord() }
         })
     }
 
-    // #region Helper properties
+    // #region Getters
 
     get abbreviation() {
         return this.form.get('abbreviation')
@@ -275,7 +264,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     get description() {
         return this.form.get('description')
     }
-
     get portId() {
         return this.form.get('portId')
     }

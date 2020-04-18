@@ -19,11 +19,15 @@ export class PortListComponent implements OnInit, OnDestroy {
 
     records: Port[]
     filteredRecords: Port[]
+    url: '/ports'
+    resolver = 'portList'
+
     headers = ['Id', 'Description']
     widths = ['0px', '100%']
     visibility = ['none', '']
     justify = ['center', 'left']
     fields = ['id', 'description']
+
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
@@ -33,7 +37,6 @@ export class PortListComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.addShortcuts()
-        this.focus('searchField')
         this.subscribeToInteractionService()
     }
 
@@ -41,6 +44,12 @@ export class PortListComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
         this.unlisten()
+    }
+
+    createPdf() {
+        this.portService.createPDF().subscribe((file: HttpResponse<Blob>) => {
+            window.location.href = file.url
+        })
     }
 
     editRecord(id: number) {
@@ -51,15 +60,15 @@ export class PortListComponent implements OnInit, OnDestroy {
         this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
-    newRecord() {
-        this.router.navigate(['/ports/new'])
+    onNewRecord() {
+        this.router.navigate([this.url + '/new'])
     }
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.F': (event: KeyboardEvent): void => {
@@ -71,17 +80,17 @@ export class PortListComponent implements OnInit, OnDestroy {
                 document.getElementById('new').click()
             }
         }, {
-            priority: 1,
+            priority: 0,
             inputs: true
         })
     }
 
-    private goBack(): void {
+    private onGoBack(): void {
         this.router.navigate(['/'])
     }
 
     private loadRecords() {
-        this.records = this.activatedRoute.snapshot.data['portList']
+        this.records = this.activatedRoute.snapshot.data[this.resolver]
         this.filteredRecords = this.records
     }
 
@@ -97,12 +106,6 @@ export class PortListComponent implements OnInit, OnDestroy {
 
     private navigateToEditRoute(id: number) {
         this.router.navigate(['/ports', id])
-    }
-
-    createPdf() {
-        this.portService.createPDF().subscribe((file: HttpResponse<Blob>) => {
-            window.location.href = file.url
-        })
     }
 
 }

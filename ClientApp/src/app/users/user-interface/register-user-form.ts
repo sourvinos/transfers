@@ -49,7 +49,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
             this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
-                    this.goBack()
+                    this.onGoBack()
                     return true
                 }
             })
@@ -67,7 +67,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         this.accountService.register(this.flatForm).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
             this.resetForm()
-            this.goBack()
+            this.onGoBack()
         }, error => {
             this.showSnackbar(error.error.response, 'error')
         })
@@ -77,7 +77,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.S': (event: KeyboardEvent) => {
@@ -130,7 +130,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         })
     }
 
-    private goBack() {
+    private onGoBack() {
         this.router.navigate([this.usersUrl])
     }
 

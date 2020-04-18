@@ -49,7 +49,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
-                    this.goBack()
+                    this.onGoBack()
                     return true
                 }
             })
@@ -77,7 +77,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.userService.delete(this.form.value.id).subscribe((response) => {
                     this.showSnackbar(response.response, 'info')
                     this.resetForm()
-                    this.goBack()
+                    this.onGoBack()
                 }, error => {
                     this.showSnackbar(error.error.response, 'error')
                 })
@@ -89,7 +89,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userService.update(this.form.value.id, this.form.value).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
             this.resetForm()
-            this.goBack()
+            this.onGoBack()
         }, error => {
             this.showSnackbar(error.error.response, 'error')
         })
@@ -99,7 +99,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.D': (event: KeyboardEvent) => {
@@ -150,7 +150,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private goBack() {
+    private onGoBack() {
         this.router.navigate([this.url])
     }
 

@@ -49,7 +49,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
             this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
-                    this.goBack()
+                    this.onGoBack()
                     return true
                 }
             })
@@ -58,13 +58,13 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         }
     }
 
-    deleteRecord() {
+    onDeleteRecord() {
         this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.destinationService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
                     this.resetForm()
-                    this.goBack()
+                    this.onGoBack()
                 }, () => {
                     this.showSnackbar(this.messageService.recordIsInUse(), 'error')
                 })
@@ -72,18 +72,18 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         })
     }
 
-    saveRecord() {
+    onSaveRecord() {
         if (this.form.value.id === 0) {
             this.destinationService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
                 this.resetForm()
-                this.goBack()
+                this.onGoBack()
             })
         } else {
             this.destinationService.update(this.form.value.id, this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showUpdatedRecord(), 'info')
                 this.resetForm()
-                this.goBack()
+                this.onGoBack()
             })
         }
     }
@@ -92,17 +92,17 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.D': (event: KeyboardEvent) => {
                 event.preventDefault()
-                this.deleteRecord()
+                this.onDeleteRecord()
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     event.preventDefault()
-                    this.saveRecord()
+                    this.onSaveRecord()
                 }
             },
             'Alt.C': (event: KeyboardEvent) => {
@@ -118,7 +118,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
                 }
             }
         }, {
-            priority: 2,
+            priority: 1,
             inputs: true
         })
     }
@@ -132,11 +132,11 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
             this.populateFields(result)
         }, () => {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
-            this.goBack()
+            this.onGoBack()
         })
     }
 
-    private goBack() {
+    private onGoBack() {
         this.router.navigate([this.url])
     }
 

@@ -50,8 +50,8 @@ namespace Transfers {
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDriver([FromRoute] int id) {
-            if (await context.Customers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
-            context.Customers.Remove(await context.Customers.SingleOrDefaultAsync(m => m.Id == id));
+            if (await context.Drivers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
+            context.Drivers.Remove(await context.Drivers.SingleOrDefaultAsync(m => m.Id == id));
             try {
                 await context.SaveChangesAsync();
                 return Ok(new { response = ApiMessages.RecordDeleted() });

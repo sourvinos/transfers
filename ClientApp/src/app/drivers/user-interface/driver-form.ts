@@ -1,15 +1,14 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { Utils } from 'src/app/shared/classes/utils';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
+import { MessageService } from 'src/app/shared/services/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { DriverService } from '../classes/driver.service';
-import { MessageService } from 'src/app/shared/services/message.service';
 
 @Component({
     selector: 'driver-form',
@@ -19,29 +18,19 @@ import { MessageService } from 'src/app/shared/services/message.service';
 
 export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    id: number
-    url = '/drivers'
+    url = '/customers'
+    form: FormGroup
     unlisten: Unlisten
-    ngUnsubscribe = new Subject<void>();
-    form = this.formBuilder.group({
-        id: 0,
-        description: ['', [Validators.required, Validators.maxLength(100)]],
-        phones: ['', [Validators.maxLength(100)]],
-        userName: ''
-    })
+    ngUnsubscribe = new Subject<void>()
 
-    constructor(private driverService: DriverService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
+    constructor(private driverService: DriverService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
-            this.id = p['id']
-            if (this.id) {
-                this.getRecord()
-            } else {
-                this.populateFormWithDefaultData()
-            }
+            if (p['id']) { this.getRecord(p['id']) }
         })
     }
 
     ngOnInit() {
+        this.initForm()
         this.addShortcuts()
     }
 
@@ -60,7 +49,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
-                    this.goBack()
+                    this.onGoBack()
                     return true
                 }
             })
@@ -69,31 +58,32 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    deleteRecord() {
+    onDeleteRecord() {
         this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.driverService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
                     this.resetForm()
-                    this.goBack()
+                    this.onGoBack()
+                }, () => {
+                    this.showSnackbar(this.messageService.recordIsInUse(), 'error')
                 })
             }
         })
     }
 
-    saveRecord() {
-        if (!this.form.valid) { return }
+    onSaveRecord() {
         if (this.form.value.id === 0) {
             this.driverService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
                 this.resetForm()
-                this.goBack()
+                this.onGoBack()
             })
         } else {
             this.driverService.update(this.form.value.id, this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showUpdatedRecord(), 'info')
                 this.resetForm()
-                this.goBack()
+                this.onGoBack()
             })
         }
     }
@@ -102,17 +92,17 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.goBack()
+                    this.onGoBack()
                 }
             },
             'Alt.D': (event: KeyboardEvent) => {
                 event.preventDefault()
-                this.deleteRecord()
+                this.onDeleteRecord()
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     event.preventDefault()
-                    this.saveRecord()
+                    this.onSaveRecord()
                 }
             },
             'Alt.C': (event: KeyboardEvent) => {
@@ -128,7 +118,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
         }, {
-            priority: 2,
+            priority: 1,
             inputs: true
         })
     }
@@ -137,16 +127,26 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
         Utils.setFocus(field)
     }
 
-    private getRecord() {
-        if (this.id) {
-            this.driverService.getSingle(this.id).then(result => {
-                this.populateFields(result)
-            })
-        }
+    private getRecord(id: string | number) {
+        this.driverService.getSingle(id).then(result => {
+            this.populateFields(result)
+        }, () => {
+            this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
+            this.onGoBack()
+        })
     }
 
-    private goBack() {
+    private onGoBack() {
         this.router.navigate([this.url])
+    }
+
+    private initForm() {
+        this.form = this.formBuilder.group({
+            id: 0,
+            description: ['', [Validators.required, Validators.maxLength(128)]],
+            phones: ['', [Validators.maxLength(128)]],
+            userName: this.helperService.getUsernameFromLocalStorage()
+        })
     }
 
     private populateFields(result: any) {
@@ -158,26 +158,15 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private populateFormWithDefaultData() {
-        this.form.patchValue({
-            userName: this.helperService.getUsernameFromLocalStorage()
-        })
-    }
-
     private resetForm() {
-        this.form.reset({
-            id: 0,
-            description: '',
-            phones: '',
-            userName: ''
-        })
+        this.form.reset()
     }
 
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
 
-    // #region Helper properties
+    // #region Getters
 
     get description() {
         return this.form.get('description')

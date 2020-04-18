@@ -23,14 +23,14 @@
             <ng-container *ngIf="recordStatus == 'empty'">
                 <button mat-flat-button class="secondary" id="assignDriver" [class.hidden]="!tableHasData()" (click)="assignDriver()">Assign driver</button>
                 <button mat-flat-button class="secondary" id="createPdf" [class.hidden]="!tableHasData()" (click)="createPdf()">Create PDFs</button>
-                <button mat-flat-button class="primary" id="new" [disabled]="!inList()" (click)="newRecord()">New</button>
+                <button mat-flat-button class="primary" id="new" [disabled]="!inList()" (click)="onNewRecord()">New</button>
             </ng-container>
             <ng-container *ngIf="recordStatus == 'newRecord'">
-                <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>
+                <button mat-flat-button class="primary" id="save" (click)="onSaveRecord()">Save</button>
             </ng-container>
             <ng-container *ngIf="recordStatus != 'empty' && recordStatus != 'newRecord'">
-                <button mat-flat-button class="delete" id="delete" (click)="deleteRecord()">Delete</button>
-                <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>
+                <button mat-flat-button class="delete" id="delete" (click)="onDeleteRecord()">Delete</button>
+                <button mat-flat-button class="primary" id="save" (click)="onSaveRecord()">Save</button>
             </ng-container>
         </div>
     </div>
