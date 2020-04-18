@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
+import { Utils } from 'src/app/shared/classes/utils'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
-import { Utils } from '../../shared/classes/utils'
-import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service'
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { Customer } from '../classes/customer'
 
 @Component({
@@ -17,6 +17,8 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     records: Customer[]
     filteredRecords: Customer[]
+    url: '/customers'
+    resolver = 'customerList'
 
     headers = ['Id', 'Description', 'Phones', 'Email']
     widths = ['0px', '50%', '25%', '25%']
@@ -33,7 +35,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.addShortcuts()
-        // this.focus('searchField')
         this.subscribeToInteractionService()
     }
 
@@ -52,7 +53,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     }
 
     newRecord() {
-        this.router.navigate(['/customers/new'])
+        this.router.navigate([this.url + '/new'])
     }
 
     private addShortcuts() {
@@ -81,7 +82,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     }
 
     private loadRecords() {
-        this.records = this.activatedRoute.snapshot.data['customerList']
+        this.records = this.activatedRoute.snapshot.data[this.resolver]
         this.filteredRecords = this.records
     }
 
@@ -96,7 +97,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     }
 
     private navigateToEditRoute(id: number) {
-        this.router.navigate(['/customers', id])
+        this.router.navigate([this.url, id])
     }
 
 }

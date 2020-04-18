@@ -1,15 +1,14 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
-import { FormBuilder, Validators, FormGroup } from '@angular/forms'
-import { MatDialog } from '@angular/material'
-import { ActivatedRoute, Router } from '@angular/router'
-import { Subject } from 'rxjs'
-import { DialogService } from 'src/app/shared/services/dialog.service'
-import { SnackbarService } from 'src/app/shared/services/snackbar.service'
-import { Utils } from '../../shared/classes/utils'
-import { HelperService } from '../../shared/services/helper.service'
-import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service'
-import { CustomerService } from '../classes/customer.service'
-import { MessageService } from 'src/app/shared/services/message.service'
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { CustomerService } from 'src/app/customers/classes/customer.service';
+import { Utils } from 'src/app/shared/classes/utils';
+import { DialogService } from 'src/app/shared/services/dialog.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
+import { MessageService } from 'src/app/shared/services/message.service';
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 
 @Component({
     selector: 'customer-form',
@@ -19,7 +18,6 @@ import { MessageService } from 'src/app/shared/services/message.service'
 
 export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    id: number
     url = '/customers'
     form: FormGroup
     unlisten: Unlisten
@@ -27,10 +25,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(private customerService: CustomerService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
-            this.id = p['id']
-            if (this.id) {
-                this.getRecord()
-            }
+            if (p['id']) { this.getRecord(p['id']) }
         })
     }
 
@@ -132,8 +127,8 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         Utils.setFocus(field)
     }
 
-    private getRecord() {
-        this.customerService.getSingle(this.id).then(result => {
+    private getRecord(id: string | number) {
+        this.customerService.getSingle(id).then(result => {
             this.populateFields(result)
         }, () => {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
@@ -154,7 +149,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             phones: ['', [Validators.maxLength(128)]],
             personInCharge: ['', [Validators.maxLength(128)]],
             email: ['', [Validators.maxLength(128)]],
-            userName: localStorage.getItem('username')
+            userName: this.helperService.getUsernameFromLocalStorage()
         })
 
     }
@@ -169,12 +164,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             personInCharge: result.personInCharge,
             email: result.email,
             userName: result.userName
-        })
-    }
-
-    private populateFormWithDefaultData() {
-        this.form.patchValue({
-            userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
 

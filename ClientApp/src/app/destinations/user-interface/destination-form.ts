@@ -1,15 +1,14 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { DestinationService } from 'src/app/destinations/classes/destination.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
-import { SnackbarService } from 'src/app/shared/services/snackbar.service';
-import { DestinationService } from '../classes/destination.service';
 import { MessageService } from 'src/app/shared/services/message.service';
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 
 @Component({
     selector: 'destination-form',
@@ -19,32 +18,19 @@ import { MessageService } from 'src/app/shared/services/message.service';
 
 export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    id: number
     url = '/destinations'
+    form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    form = this.formBuilder.group({
-        id: 0,
-        abbreviation: ['', [Validators.maxLength(5)]],
-        description: ['', [Validators.required, Validators.maxLength(100)]],
-        userName: ''
-    })
-
-    // #endregion
-
-    constructor(private destinationService: DestinationService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
+    constructor(private destinationService: DestinationService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
-            this.id = p['id']
-            if (this.id) {
-                this.getRecord()
-            } else {
-                this.populateFormWithDefaultData()
-            }
+            if (p['id']) { this.getRecord(p['id']) }
         })
     }
 
     ngOnInit() {
+        this.initForm()
         this.addShortcuts()
     }
 
@@ -58,12 +44,6 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         this.unlisten()
     }
 
-    /**
-     * Caller(s):
-     *  Service - CanDeactivateGuard()
-     * Description:
-     *  Desides which action to perform when a route change is requested
-     */
     canDeactivate() {
         if (this.form.dirty) {
             this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
@@ -78,12 +58,6 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         }
     }
 
-    /**
-     * Caller(s):
-     *  Template - deleteRecord()
-     * Description:
-     *  Deletes the current record
-     */
     deleteRecord() {
         this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
@@ -91,19 +65,14 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
                     this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
                     this.resetForm()
                     this.goBack()
+                }, () => {
+                    this.showSnackbar(this.messageService.recordIsInUse(), 'error')
                 })
             }
         })
     }
 
-    /**
-     * Caller(s):
-     *  Template - saveRecord()
-     * Description:
-     *  Adds or updates an existing record
-     */
     saveRecord() {
-        if (!this.form.valid) { return }
         if (this.form.value.id === 0) {
             this.destinationService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
@@ -119,12 +88,6 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         }
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngOnInit()
-     * Description:
-     *  Self-explanatory
-     */
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
@@ -160,48 +123,33 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - ngAfterViewInit()
-     * Description:
-     *  Calls the public method()
-     * @param field
-     */
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     * Description:
-     *  Gets the selected record from the api
-     */
-    private getRecord() {
-        if (this.id) {
-            this.destinationService.getSingle(this.id).then(result => {
-                this.populateFields(result)
-            })
-        }
+    private getRecord(id: string | number) {
+        this.destinationService.getSingle(id).then(result => {
+            this.populateFields(result)
+        }, () => {
+            this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
+            this.goBack()
+        })
     }
 
-    /**
-     * Caller(s):
-     *  Class - canDeactive(), deleteRecord(), saveRecord()
-     * Description:
-     *  On escape navigates to the list
-     */
     private goBack() {
         this.router.navigate([this.url])
     }
 
-    /**
-     * Caller(s):
-     *  Class - getDestination()
-     * Description:
-     *  Populates the form with record values
-     * @param result
-     */
+    private initForm() {
+        this.form = this.formBuilder.group({
+            id: 0,
+            abbreviation: ['', [Validators.maxLength(5)]],
+            description: ['', [Validators.required, Validators.maxLength(128)]],
+            userName: this.helperService.getUsernameFromLocalStorage()
+        })
+
+    }
+
     private populateFields(result: any) {
         this.form.setValue({
             id: result.id,
@@ -211,44 +159,15 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         })
     }
 
-    /**
-     * Caller(s):
-     *  Class - constructor()
-     * Description:
-     *  Populates the form with initial values
-     */
-    private populateFormWithDefaultData() {
-        this.form.patchValue({
-            userName: this.helperService.getUsernameFromLocalStorage()
-        })
-    }
-
-    /**
-     * Caller(s):
-     *  Class - canDeactivate() - saveRecord()
-     * Description:
-     *  Resets the form with default values
-     */
     private resetForm() {
-        this.form.reset({
-            id: 0,
-            abbreviation: '',
-            description: '',
-            userName: ''
-        })
+        this.form.reset()
     }
 
-    /**
-     * Caller(s):
-     *  Class - saveRecord() - deleteRecord()
-     * Description:
-     *  Self-explanatory
-     */
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
 
-    // #region Helper properties
+    // #region Getters
 
     get abbreviation() {
         return this.form.get('abbreviation')

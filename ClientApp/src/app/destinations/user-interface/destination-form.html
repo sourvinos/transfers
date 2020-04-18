@@ -15,11 +15,14 @@
         <div id="section-one">
             <mat-form-field>
                 <input type="text" matInput placeholder="Abbreviation" formControlName="abbreviation" tabindex="1" id="abbreviation" [inputTabStop]="input">
+                <mat-error *ngIf="abbreviation.errors?.maxlength">This field can be up to {{ abbreviation.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <input type="text" matInput placeholder="Description" formControlName="description" tabindex="2" id="description" [inputTabStop]="input">
+                <mat-error *ngIf="description.hasError('required')">This is a required field!</mat-error>
+                <mat-error *ngIf="description.errors?.maxlength">This field can be up to {{ description.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
-            <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
+            <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
         </div>
     </form>
 </div>
@@ -28,6 +31,6 @@
     <mat-divider></mat-divider>
     <div id="buttons">
         <button mat-flat-button class="delete" [class.hidden]="!id" id="delete" (click)="deleteRecord()">Delete</button>
-        <button mat-flat-button class="primary" id="save" (click)="saveRecord()">Save</button>
+        <button mat-flat-button class="primary" [disabled]="!form.valid" id="save" (click)="saveRecord()">Save</button>
     </div>
 </div>
