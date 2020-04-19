@@ -18,8 +18,8 @@ import { MessageService } from 'src/app/shared/services/message.service'
 
 export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    form: FormGroup
     url = '/users'
+    form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
@@ -71,7 +71,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onDelete() {
+    onDeleteRecord() {
         this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['ok', 'cancel']).subscribe(answer => {
             if (answer) {
                 this.userService.delete(this.form.value.id).subscribe((response) => {
@@ -85,7 +85,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    onSubmit() {
+    onSaveRecord() {
         this.userService.update(this.form.value.id, this.form.value).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
             this.resetForm()
@@ -104,12 +104,12 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
             },
             'Alt.D': (event: KeyboardEvent) => {
                 event.preventDefault()
-                this.onDelete()
+                this.onDeleteRecord()
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0 && this.form.valid) {
                     event.preventDefault()
-                    this.onSubmit()
+                    this.onSaveRecord()
                 }
             },
             'Alt.C': (event: KeyboardEvent) => {
@@ -125,23 +125,13 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
         }, {
-            priority: 2,
+            priority: 1,
             inputs: true
         })
     }
 
     private focus(field: string) {
         Utils.setFocus(field)
-    }
-
-    private initForm() {
-        this.form = this.formBuilder.group({
-            id: '',
-            username: ['', [Validators.required, Validators.maxLength(32)]],
-            displayname: ['', [Validators.required, Validators.maxLength(32)]],
-            email: ['', [Validators.required, Validators.email, Validators.maxLength(128)]],
-        })
-
     }
 
     private getRecord(id: string) {
@@ -152,6 +142,15 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private onGoBack() {
         this.router.navigate([this.url])
+    }
+
+    private initForm() {
+        this.form = this.formBuilder.group({
+            id: '',
+            username: ['', [Validators.required, Validators.maxLength(32)]],
+            displayname: ['', [Validators.required, Validators.maxLength(32)]],
+            email: ['', [Validators.required, Validators.email, Validators.maxLength(128)]],
+        })
     }
 
     private populateFields(result: any) {
@@ -171,7 +170,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.snackbarService.open(message, type)
     }
 
-    // #region Helper properties
+    // #region Getters
     get Username() {
         return this.form.get('username')
     }

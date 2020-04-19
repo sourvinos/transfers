@@ -1,19 +1,16 @@
-import { Component, OnDestroy, OnInit, DoCheck } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material';
-import { ActivatedRoute, NavigationEnd, Params, Router, Route } from '@angular/router';
+import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Params, Route, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.service';
-import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
-import { PickupPoint } from '../classes/pickupPoint';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
-import { RouteService } from 'src/app/routes/classes/route.service';
+import { KeyboardShortcuts } from 'src/app/shared/services/keyboard-shortcuts.service';
+import { PickupPoint } from '../classes/pickupPoint';
 
 @Component({
     selector: 'pickuppoint-list',
     templateUrl: './pickupPoint-list.html',
-    styleUrls: ['./pickupPoint-list.css']
+    styleUrls: ['../../shared/styles/lists.css', './pickupPoint-list.css']
 })
 
 export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
@@ -31,10 +28,9 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
     justify = ['center', 'left', 'left', 'center']
     fields = ['id', 'description', 'exactPoint', 'time']
 
-    unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService, private keyboardShortcutsService: KeyboardShortcuts) {
         this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.routeId !== '' && this.router.url.split('/').length === 4) {
@@ -57,11 +53,10 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
     ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
-        this.unlisten()
     }
 
     private editRecord(id: number) {
-        this.router.navigate([this.url, id], { relativeTo: this.activatedRoute })
+        this.router.navigate(['pickupPoint/', id], { relativeTo: this.activatedRoute })
     }
 
     private loadRecords() {

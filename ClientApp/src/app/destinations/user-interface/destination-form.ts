@@ -25,7 +25,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
 
     constructor(private destinationService: DestinationService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
-            if (p['id']) { this.getRecord(p['id']) }
+            if (p.id) { this.getRecord(p.id) }
         })
     }
 

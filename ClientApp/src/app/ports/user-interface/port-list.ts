@@ -56,7 +56,7 @@ export class PortListComponent implements OnInit, OnDestroy {
         this.router.navigate([this.url, id])
     }
 
-    filter(query: string) {
+    onFilter(query: string) {
         this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 

@@ -32,7 +32,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService, private messageService: MessageService, private snackbarService: SnackbarService) {
         this.activatedRoute.params.subscribe(p => {
-            if (p['id']) { this.getRecord(p['id']) }
+            if (p.id) { this.getRecord(p.id) }
         })
     }
 

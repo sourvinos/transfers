@@ -17,6 +17,8 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     records: User[]
     filteredRecords: User[]
+    url = '/users'
+    resolver = 'userList'
 
     headers = ['Id', 'Display name', 'Username', 'Email']
     widths = ['0px', '40%', '30%', '30%']
@@ -33,7 +35,6 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.addShortcuts()
-        this.focus('searchField')
         this.subscribeToInteractionService()
     }
 
@@ -44,15 +45,15 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
 
     editRecord(id: number) {
-        this.navigateToEditRoute(id)
+        this.router.navigate([this.url, id])
     }
 
     onFilter(query: string) {
         this.filteredRecords = query ? this.records.filter(p => p.username.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
-    ononNewRecord() {
-        this.router.navigate(['/users/new'])
+    onNewRecord() {
+        this.router.navigate([this.url + '/new'])
     }
 
     private addShortcuts() {
@@ -71,7 +72,7 @@ export class UserListComponent implements OnInit, OnDestroy {
                 document.getElementById('new').click()
             }
         }, {
-            priority: 1,
+            priority: 0,
             inputs: true
         })
     }
@@ -81,7 +82,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
 
     private loadRecords() {
-        this.records = this.activatedRoute.snapshot.data['userList']
+        this.records = this.activatedRoute.snapshot.data[this.resolver]
         this.filteredRecords = this.records
     }
 
@@ -93,10 +94,6 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
-    }
-
-    private navigateToEditRoute(id: number) {
-        this.router.navigate(['/users', id])
     }
 
 }

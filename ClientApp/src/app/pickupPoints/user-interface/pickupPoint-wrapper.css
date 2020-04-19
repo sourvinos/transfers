@@ -13,6 +13,7 @@
     grid-area: list;
     margin: 0 2rem;
     overflow: hidden;
+    padding-top: 3px;
 }
 
 #footer {

@@ -25,7 +25,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
-            if (p['id']) { this.getRecord(p['id']) }
+            if (p.id) { this.getRecord(p.id) }
         })
     }
 

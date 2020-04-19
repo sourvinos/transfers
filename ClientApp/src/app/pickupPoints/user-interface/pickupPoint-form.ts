@@ -1,56 +1,46 @@
-import { MessageService } from 'src/app/shared/services/message.service';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
+import { MessageService } from 'src/app/shared/services/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
-import { PickupPointService } from '../classes/pickupPoint.service';
-import { DialogService } from '../../shared/services/dialog.service';
 import { Utils } from '../../shared/classes/utils';
+import { DialogService } from '../../shared/services/dialog.service';
 import { PickupPoint } from '../classes/pickupPoint';
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { PickupPointService } from '../classes/pickupPoint.service';
 
 @Component({
     selector: 'pickuppoint-form',
     templateUrl: './pickupPoint-form.html',
-    styleUrls: ['./pickupPoint-form.css']
+    styleUrls: ['../../shared/styles/forms.css']
+    // styleUrls: ['./pickupPoint-form.css']
 })
 
 export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    id: number
-    pickupPoint: PickupPoint
     url = '/pickupPoints'
+    form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
-    form = this.formBuilder.group({
-        id: 0,
-        routeId: [0, Validators.required],
-        description: ['', [Validators.required, Validators.maxLength(100)]],
-        exactPoint: ['', [Validators.required, Validators.maxLength(100)]],
-        time: ['', [Validators.required, Validators.pattern('[0-9][0-9]:[0-9][0-9]')]],
-        userName: ''
-    })
 
-    constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, public dialog: MatDialog, private interactionService: BaseInteractionService, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService) {
+    constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
-            this.id = p['pickupPointId']
-            if (this.id) {
-                this.getPickupPoint()
+            if (p.pickupPointId) {
+                this.getRecord(p.pickupPointId)
                 this.setStatus('editRecord')
             } else {
                 this.form.patchValue({ routeId: this.router.url.split('/')[3] })
-                this.populateFormWithDefaultData()
                 this.setStatus('newRecord')
             }
         })
     }
 
     ngOnInit() {
+        this.initForm()
         this.scrollToForm()
         this.addShortcuts()
         this.subscribeTointeractionService()
@@ -100,7 +90,6 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
             this.pickupPointService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
                 this.resetForm()
-                this.populateFormWithDefaultData()
                 this.focus('description')
             })
         } else {
@@ -146,13 +135,24 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         Utils.setFocus(field)
     }
 
-    private getPickupPoint() {
-        if (this.id) {
-            this.pickupPointService.getSingle(this.id).then(result => {
-                this.pickupPoint = result
-                this.populateFields(this.pickupPoint)
-            })
-        }
+    private getRecord(id: string | number) {
+        this.pickupPointService.getSingle(id).then(result => {
+            this.populateFields(result)
+        }, () => {
+            this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
+            this.onGoBack()
+        })
+    }
+
+    private initForm() {
+        this.form = this.formBuilder.group({
+            id: 0,
+            routeId: [0, Validators.required],
+            description: ['', [Validators.required, Validators.maxLength(100)]],
+            exactPoint: ['', [Validators.required, Validators.maxLength(100)]],
+            time: ['', [Validators.required, Validators.pattern('[0-9][0-9]:[0-9][0-9]')]],
+            userName: this.helperService.getUsernameFromLocalStorage()
+        })
     }
 
     private onGoBack() {
@@ -171,12 +171,6 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         })
     }
 
-    private populateFormWithDefaultData() {
-        this.form.patchValue({
-            userName: this.helperService.getUsernameFromLocalStorage()
-        })
-    }
-
     private resetForm() {
         this.form.reset({
             id: 0,
@@ -192,7 +186,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     private scrollToList() {
-        document.getElementById('form').style.height = '0'
+        document.getElementById('content').style.height = '0'
         document.getElementById('pickupPointsList').style.height = '100%'
         this.interactionService.performAction('')
     }
@@ -212,7 +206,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         })
     }
 
-    // #region Helper properties
+    // #region Getters
 
     get description() {
         return this.form.get('description')

@@ -25,7 +25,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(private customerService: CustomerService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
-            if (p['id']) { this.getRecord(p['id']) }
+            if (p.id) { this.getRecord(p.id) }
         })
     }
 
@@ -136,10 +136,6 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private onGoBack() {
-        this.router.navigate([this.url])
-    }
-
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
@@ -152,6 +148,10 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             userName: this.helperService.getUsernameFromLocalStorage()
         })
 
+    }
+
+    private onGoBack() {
+        this.router.navigate([this.url])
     }
 
     private populateFields(result: any) {

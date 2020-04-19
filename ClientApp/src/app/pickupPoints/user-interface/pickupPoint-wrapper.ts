@@ -27,9 +27,9 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionPickupPointService: BaseInteractionService, public dialog: MatDialog, private routeService: RouteService) { }
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionPickupPointService: BaseInteractionService, private routeService: RouteService) { }
 
-    ngOnInit(): void {
+    ngOnInit() {
         this.addShortcuts()
         this.subscribeTointeractionService()
         this.populateDropDowns()
@@ -37,21 +37,21 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         this.focus('routeDescription')
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.unsubscribe();
         this.unlisten()
     }
 
-    onDeleteRecord(): void {
+    onDeleteRecord() {
         this.interactionPickupPointService.performAction('deleteRecord')
     }
 
-    loadPickupPoints(): void {
+    onLoadPickupPoints() {
         this.navigateToList()
     }
 
-    onNewRecord(): void {
+    onNewRecord() {
         this.router.navigate([this.location.path() + '/pickupPoint/new'])
     }
 
@@ -59,7 +59,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         this.id = event.option.id
     }
 
-    onSaveRecord(): void {
+    onSaveRecord() {
         this.interactionPickupPointService.performAction('saveRecord')
     }
 
@@ -67,7 +67,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         return this.router.url.split('/').length === 4
     }
 
-    private addShortcuts(): void {
+    private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
@@ -83,7 +83,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
                 document.getElementById('new').click()
             }
         }, {
-            priority: 1,
+            priority: 0,
             inputs: true
         })
     }
@@ -93,15 +93,15 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         return this.routes.filter(o => o.abbreviation.toLowerCase().indexOf(filterValue) === 0)
     }
 
-    private focus(field: string): void {
+    private focus(field: string) {
         Utils.setFocus(field)
     }
 
-    private onGoBack(): void {
+    private onGoBack() {
         this.router.navigate(['/'])
     }
 
-    private navigateToList(): void {
+    private navigateToList() {
         this.router.navigate(['routeId/', this.id], { relativeTo: this.activatedRoute })
     }
 
@@ -111,7 +111,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         })
     }
 
-    private subscribeTointeractionService(): void {
+    private subscribeTointeractionService() {
         this.updateRecordStatus()
     }
 
@@ -124,7 +124,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
             )
     }
 
-    private updateRecordStatus(): void {
+    private updateRecordStatus() {
         this.interactionPickupPointService.recordStatus.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.recordStatus = response
         })

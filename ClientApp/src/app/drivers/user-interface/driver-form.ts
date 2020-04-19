@@ -18,14 +18,14 @@ import { DriverService } from '../classes/driver.service';
 
 export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    url = '/customers'
+    url = '/drivers'
     form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
     constructor(private driverService: DriverService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
-            if (p['id']) { this.getRecord(p['id']) }
+            if (p.id) { this.getRecord(p.id) }
         })
     }
 

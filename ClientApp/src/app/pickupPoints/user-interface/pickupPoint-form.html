@@ -1,6 +1,6 @@
-<div id="form">
-    <form id="formFields" [formGroup]="form" autocomplete="off">
-        <div id="sectionOne">
+<div id="content">
+    <form [formGroup]="form" autocomplete="off">
+        <div id="section-one">
             <mat-form-field>
                 <input type="text" matInput placeholder="Description" formControlName="description" tabindex="1" id="description" [inputTabStop]="input">
             </mat-form-field>
@@ -10,7 +10,7 @@
             <mat-form-field>
                 <input type="text" matInput placeholder="Time" formControlName="time" tabindex="3" id="time" [inputTabStop]="input">
             </mat-form-field>
-            <span id="form-values" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</span>
         </div>
+        <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
     </form>
 </div>
