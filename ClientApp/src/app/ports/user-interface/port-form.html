@@ -14,7 +14,7 @@
     <form [formGroup]="form" autocomplete="off">
         <div id="section-one">
             <mat-form-field>
-                <input type="text" matInput placeholder="Description" formControlName="description" tabindex="1" id="description" [inputTabStop]="input">
+                <input type="text" matInput placeholder="Description" formControlName="description" data-tabindex="1" id="description" [inputTabStop]="input">
                 <mat-error *ngIf="description.hasError('required')">This is a required field!</mat-error>
                 <mat-error *ngIf="description.errors?.maxlength">This field can be up to {{ description.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>

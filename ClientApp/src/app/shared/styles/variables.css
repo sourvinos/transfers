@@ -16,8 +16,7 @@
     /* Snackbar*/
     --font-size-snackbar: 0.95rem;
     /* Transfer summary boxes */
-    --font-size-summary-block-header: 1.5rem;
-    --font-size-summary-block-header-total: 1.3rem;
+    --font-size-summary-block-header: 1.4rem;
     --font-size-summary-block-item: 1.0rem;
     /* Sidebar - Menu */
     --font-size-copyright: 0.6rem;
@@ -27,7 +26,7 @@
     --font-size-menu-list-items: 1.4rem;
     --font-size-user-info: 0.9rem;
     /* Tables */
-    --font-size-table-header: 1.2rem;
+    --font-size-table-header: 1.1rem;
     --font-size-table-rows: 0.9rem;
     /* Instructions */
     --font-size-paragraphs: 0.8rem;

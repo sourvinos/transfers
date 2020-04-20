@@ -2,13 +2,13 @@
     <form [formGroup]="form" autocomplete="off">
         <div id="section-one">
             <mat-form-field>
-                <input type="text" matInput placeholder="Description" formControlName="description" tabindex="1" id="description" [inputTabStop]="input">
+                <input type="text" matInput placeholder="Description" formControlName="description" data-tabindex="1" id="description" [inputTabStop]="input">
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="ExactPoint" formControlName="exactPoint" tabindex="2" id="exactPoint" [inputTabStop]="input">
+                <input type="text" matInput placeholder="ExactPoint" formControlName="exactPoint" data-tabindex="2" id="exactPoint" [inputTabStop]="input">
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Time" formControlName="time" tabindex="3" id="time" [inputTabStop]="input">
+                <input type="text" matInput placeholder="Time" formControlName="time" data-tabindex="3" id="time" [inputTabStop]="input">
             </mat-form-field>
         </div>
         <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>

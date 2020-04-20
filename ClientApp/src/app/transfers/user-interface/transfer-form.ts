@@ -51,7 +51,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.driverService.getDefaultDriver()
                     .then(response => {
                         this.defaultDriver = response
-                        this.populateFormWithDefaultData(this.defaultDriver)
+                        this.populateFormWithDefaultValues(this.defaultDriver)
                         this.setStatus('newRecord')
                     })
             }
@@ -126,11 +126,11 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onSaveRecord() {
-        if (this.form.value.id === 0) {
+        if (this.form.value.id === 0 || this.form.value.id === null) {
             this.transferService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
                 this.resetForm()
-                this.populateFormWithDefaultData(this.defaultDriver)
+                this.populateFormWithDefaultValues(this.defaultDriver)
                 this.focus('destinationDescription')
                 this.refreshSummaries()
             })
@@ -196,6 +196,9 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         Utils.setFocus(field)
     }
 
+    private resetForm() {
+        this.form.reset()
+    }
     private getRecord(id: number) {
         this.transferService.getSingle(id).then(result => {
             this.populateFields(result)
@@ -217,13 +220,13 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             destinationId: [0, Validators.required], destinationDescription: ['', Validators.required],
             customerId: [0, Validators.required], customerDescription: ['', Validators.required],
             pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
-            driverId: [0, Validators.required], driverDescription: [{ value: '', disabled: true }, Validators.required],
-            portId: [0, Validators.required], portDescription: [{ value: '', disabled: true }, Validators.required],
+            driverId: [0, Validators.required], driverDescription: [Validators.required],
+            portId: [0, Validators.required], portDescription: [Validators.required],
             adults: [0, Validators.required],
             kids: [0, Validators.required],
             free: [0, Validators.required],
             totalPersons: [{ value: 0, disabled: true }],
-            remarks: ['', Validators.maxLength(100)],
+            remarks: ['', Validators.maxLength(128)],
             userName: ''
         })
     }
@@ -277,11 +280,21 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private populateFormWithDefaultData(driver: Driver) {
+    private populateFormWithDefaultValues(driver: Driver) {
         this.form.patchValue({
+            id: 0,
             dateIn: this.helperService.getDateFromLocalStorage(),
+            destinationId: 0, destinationDescription: '',
+            customerId: 0, customerDescription: '',
+            pickupPointId: 0, pickupPointDescription: '',
+            adults: 0,
+            kids: 0,
+            free: 0,
+            totalPersons: 0,
             driverId: driver.id,
             driverDescription: driver.description,
+            portId: 0, portDescription: '',
+            remarks: '',
             userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
@@ -310,10 +323,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.ports.forEach(obj => {
             this.renameKey(obj, 'id', 'portId'); this.renameKey(obj, 'description', 'portDescription')
         })
-    }
-
-    private resetForm() {
-        this.form.reset()
     }
 
     private scrollToForm() {

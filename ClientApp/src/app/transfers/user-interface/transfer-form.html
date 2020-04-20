@@ -2,22 +2,28 @@
     <form id="formFields" [formGroup]="form" autocomplete="off">
         <div id="sectionOne">
             <mat-form-field>
-                <input type="text" matInput placeholder="Destination" formControlName="destinationDescription" tabindex="1" id="destinationDescription" [inputTabStop]="input" (change)="lookupIndex(destinations, 'Destinations', ['destinationId', 'destinationDescription'], ['destinationId', 'destinationDescription'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
+                <input type="text" matInput placeholder="Destination" formControlName="destinationDescription" data-tabindex="1" id="destinationDescription" [inputTabStop]="input" (change)="lookupIndex(destinations, 'Destinations', ['destinationId', 'destinationDescription'], ['destinationId', 'destinationDescription'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
+                <mat-error *ngIf="destinationDescription.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Customer" formControlName="customerDescription" tabindex="2" id="customerDescription" [inputTabStop]="input" (change)="lookupIndex(customers, 'Customers', ['customerId', 'customerDescription'], ['customerId', 'customerDescription'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
+                <input type="text" matInput placeholder="Customer" formControlName="customerDescription" data-tabindex="2" id="customerDescription" [inputTabStop]="input" (change)="lookupIndex(customers, 'Customers', ['customerId', 'customerDescription'], ['customerId', 'customerDescription'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
+                <mat-error *ngIf="customerDescription.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="PickupPoint" formControlName="pickupPointDescription" tabindex="3" id="pickupPointDescription" [inputTabStop]="input" (change)="lookupIndex(pickupPointsFlat, 'Pickup points', ['pickupPointId', 'pickupPointDescription', 'portId', 'portDescription'], ['pickupPointId', 'pickupPointDescription', 'exactPoint', 'time', 'portId', 'portDescription'], ['Id', 'Description', 'Exact point', 'Time', 'Port Id', 'Port'], ['100px', '440px', '440px', '100px', '100px', '440px'], ['none', '', '', '', 'none', 'none'], ['center', 'left', 'left', 'center', 'center', 'left'], $event)">
+                <input type="text" matInput placeholder="PickupPoint" formControlName="pickupPointDescription" data-tabindex="3" id="pickupPointDescription" [inputTabStop]="input" (change)="lookupIndex(pickupPointsFlat, 'Pickup points', ['pickupPointId', 'pickupPointDescription', 'portId', 'portDescription'], ['pickupPointId', 'pickupPointDescription', 'exactPoint', 'time', 'portId', 'portDescription'], ['Id', 'Description', 'Exact point', 'Time', 'Port Id', 'Port'], ['100px', '440px', '440px', '100px', '100px', '440px'], ['none', '', '', '', 'none', 'none'], ['center', 'left', 'left', 'center', 'center', 'left'], $event)">
+                <mat-error *ngIf="pickupPointDescription.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Adults" formControlName="adults" tabindex="4" id="adults" [inputTabStop]="input" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
+                <input type="text" matInput placeholder="Adults" formControlName="adults" data-tabindex="4" id="adults" [inputTabStop]="input" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
+                <mat-error *ngIf="adults.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Kids" formControlName="kids" tabindex="5" id="kids" [inputTabStop]="input" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
+                <input type="text" matInput placeholder="Kids" formControlName="kids" data-tabindex="5" id="kids" [inputTabStop]="input" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
+                <mat-error *ngIf="kids.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Free" formControlName="free" tabindex="6" id="free" [inputTabStop]="input" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
+                <input type="text" matInput placeholder="Free" formControlName="free" data-tabindex="6" id="free" [inputTabStop]="input" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
+                <mat-error *ngIf="free.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
         </div>
         <div id="sectionTwo">
@@ -25,13 +31,7 @@
                 <input type="text" matInput placeholder="Total persons" formControlName="totalPersons" id="totalPersons" class="number">
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Driver" formControlName="driverDescription" id="driverDescription" (change)="lookupIndex(drivers, 'Drivers', ['driverId', 'driverDescription'], ['driverId', 'driverDescription'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
-            </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput placeholder="Port" formControlName="portDescription" id="portDescription">
-            </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput placeholder="Remarks" formControlName="remarks" tabindex="7" id="remarks" [inputTabStop]="input">
+                <input type="text" matInput placeholder="Remarks" formControlName="remarks" data-tabindex="7" id="remarks" [inputTabStop]="input">
             </mat-form-field>
             <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
         </div>

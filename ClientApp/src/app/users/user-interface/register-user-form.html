@@ -14,23 +14,23 @@
     <form [formGroup]="form" autocomplete="off">
         <div id="section-one">
             <mat-form-field>
-                <input type="text" matInput placeholder="Username" formControlName="username" tabindex="1" id="username" [inputTabStop]="input">
+                <input type="text" matInput placeholder="Username" formControlName="username" data-tabindex="1" id="username" [inputTabStop]="input">
                 <mat-error *ngIf="Username.errors?.required">This field is required</mat-error>
                 <mat-error *ngIf="Username.errors?.maxlength">This field can be up to {{ Username.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Display name" formControlName="displayName" tabindex="2" id="displayName" [inputTabStop]="input">
+                <input type="text" matInput placeholder="Display name" formControlName="displayName" data-tabindex="2" id="displayName" [inputTabStop]="input">
                 <mat-error *ngIf="DisplayName.errors?.required">This field is required</mat-error>
                 <mat-error *ngIf="DisplayName.errors?.maxlength">This field can be up to {{ DisplayName.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="email" matInput placeholder="Email" formControlName="email" tabindex="3" id="email" [inputTabStop]="input">
+                <input type="email" matInput placeholder="Email" formControlName="email" data-tabindex="3" id="email" [inputTabStop]="input">
                 <mat-error *ngIf="Email?.hasError('required')">This is a required field!</mat-error>
                 <mat-error *ngIf="Email?.hasError('email')">This field seems to be invalid!</mat-error>
             </mat-form-field>
             <div formGroupName="passwords" id="passwords">
                 <mat-form-field>
-                    <input [type]="hidePassword ? 'password' : 'text'" matInput placeholder="Password" formControlName="password" tabindex="4" id="password" [inputTabStop]="input">
+                    <input [type]="hidePassword ? 'password' : 'text'" matInput placeholder="Password" formControlName="password" data-tabindex="4" id="password" [inputTabStop]="input">
                     <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
                         <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                     </button>
@@ -40,7 +40,7 @@
                     <mat-error *ngIf="Password?.hasError('maxlength') && !Password?.hasError('containsSpace')">This field can be up to {{ Password.errors.maxlength.requiredLength }} characters long</mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                    <input [type]="hidePassword ? 'password' : 'text'" matInput placeholder="Confirm password" formControlName="confirmPassword" tabindex="5" id="confirmPassword" [inputTabStop]="input" [errorStateMatcher]="confirmValidParentMatcher">
+                    <input [type]="hidePassword ? 'password' : 'text'" matInput placeholder="Confirm password" formControlName="confirmPassword" data-tabindex="5" id="confirmPassword" [inputTabStop]="input" [errorStateMatcher]="confirmValidParentMatcher">
                     <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
                         <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                     </button>

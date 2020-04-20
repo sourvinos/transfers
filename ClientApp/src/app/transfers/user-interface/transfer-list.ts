@@ -31,7 +31,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     checkedDrivers = true
     checkedPorts = true
     transfersFlat: TransferFlat[] = []
-    headers = ['', 'Id', 'Dest', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
+    headers = ['S', 'Id', 'Dest', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
     widths = ['40px', '100px', '50px', '100px', '200px', '200px', '60px', '40px', '40px', '40px', '40px', '100px', '100px']
     visibility = ['', 'none', '', '', '', '', '', '', '', '', '', '', '']
     justify = ['center', 'center', 'center', 'center', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']

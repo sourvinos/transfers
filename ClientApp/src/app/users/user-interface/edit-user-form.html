@@ -14,17 +14,17 @@
     <form [formGroup]="form" autocomplete="off">
         <div id="section-one">
             <mat-form-field>
-                <input type="text" matInput placeholder="Username" formControlName="username" tabindex="1" id="username" [inputTabStop]="input">
+                <input type="text" matInput placeholder="Username" formControlName="username" data-tabindex="1" id="username" [inputTabStop]="input">
                 <mat-error *ngIf="Username.errors?.required" value="This field is required"></mat-error>
                 <mat-error *ngIf="Username.errors?.maxlength">This field can be up to {{ Username.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Display name" formControlName="displayname" tabindex="2" id="displayname" [inputTabStop]="input">
+                <input type="text" matInput placeholder="Display name" formControlName="displayname" data-tabindex="2" id="displayname" [inputTabStop]="input">
                 <mat-error *ngIf="Displayname.errors?.required">This field is required</mat-error>
                 <mat-error *ngIf="Displayname.errors?.maxlength">This field can be up to {{ Displayname.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="email" matInput placeholder="Email" formControlName="email" tabindex="3" id="email" [inputTabStop]="input">
+                <input type="email" matInput placeholder="Email" formControlName="email" data-tabindex="3" id="email" [inputTabStop]="input">
                 <mat-error *ngIf="Email?.hasError('required')">This is a required field!</mat-error>
                 <mat-error *ngIf="Email?.hasError('email')">This field seems to be invalid!</mat-error>
             </mat-form-field>
