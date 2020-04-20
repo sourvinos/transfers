@@ -24,6 +24,7 @@ import { MainComponent } from './../shared/components/main/main.component';
 import { TransferModule } from './../transfers/classes/transfer.module';
 import { AppRouting } from './app.routing';
 import { RootComponent } from './root.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
     declarations: [
@@ -41,6 +42,7 @@ import { RootComponent } from './root.component';
         FormsModule,
         HttpClientModule,
         ReactiveFormsModule,
+        ScrollingModule,
         MaterialModule,
         AccountModule,
         CustomerModule,

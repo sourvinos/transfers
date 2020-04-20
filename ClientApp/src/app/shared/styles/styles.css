@@ -118,8 +118,8 @@ p.instructions {
 }
 
 .mat-checkbox-inner-container-no-side-margin {
-    height: 20px !important;
-    width: 20px !important;
+    height: 1rem !important;
+    width: 1rem !important;
 }
 
 .mat-expansion-indicator::after {
@@ -164,6 +164,8 @@ p.instructions {
 }
 
 .mat-snack-bar-container {
+    max-width: 100% !important;
+    min-width: 100% !important;
     padding: 10px 16px !important;
 }
 

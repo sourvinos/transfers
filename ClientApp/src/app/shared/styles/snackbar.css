@@ -2,8 +2,8 @@
     align-items: center;
     display: flex;
     min-height: 1.5rem;
+    min-width: 20rem;
     padding: 0 0.5rem;
-    width: 100%;
 }
 
 #customSnackbar div {
@@ -13,4 +13,9 @@
     font-family: var(--font-family-snackbar);
     font-size: var(--font-size-snackbar);
     width: 100%;
+}
+
+#customSnackbar button {
+    background-color: rgba(255, 255, 255, 0.1);
+    width: 5rem !important;
 }

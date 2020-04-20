@@ -84,7 +84,7 @@ export class CustomTableComponent implements OnInit, AfterViewInit {
     private initVariables() {
         this.customTable = document.getElementById('custom-table')
         this.tableContainer = this.customTable.parentNode.parentNode
-        this.rowHeight = 51
+        this.rowHeight = this.customTable.rows[1].offsetHeight
         this.rowCount = this.customTable.rows.length - 1
     }
 

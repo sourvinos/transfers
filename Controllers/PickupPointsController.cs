@@ -18,6 +18,11 @@ namespace Transfers {
         public PickupPointsController(IMapper mapper, ApplicationDbContext context) =>
             (this.mapper, this.context) = (mapper, context);
 
+        [HttpGet]
+        public async Task<IEnumerable<PickupPoint>> GetAll() {
+            return await context.PickupPoints.Include(x => x.Route).ThenInclude(x => x.Port).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+        }
+
         [HttpGet("routeId/{routeId}")]
         public async Task<IEnumerable<PickupPoint>> Get(int routeId) {
             return await context.PickupPoints.Include(x => x.Route).Where(m => m.RouteId == routeId).OrderBy(o => o.Time).ThenBy(o => o.Description).AsNoTracking().ToListAsync();

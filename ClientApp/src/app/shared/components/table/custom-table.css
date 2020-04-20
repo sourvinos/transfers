@@ -44,8 +44,8 @@ tr.selected {
     background-color: var(--color-table-row-selected) !important
 }
 
-tr:hover {
-    background-color: var(--color-table-rows-hover) !important;
+tr:hover td {
+    color: var(--color-table-rows-hover) !important;
     cursor: pointer;
 }
 
@@ -55,7 +55,7 @@ td {
     font-size: var(--font-size-table-rows);
     max-width: 0;
     overflow: hidden;
-    padding: 1rem 0.5rem;
+    padding: 0.7rem 0.5rem;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -63,4 +63,8 @@ td {
 #custom-table-input {
     position: absolute;
     z-index: -1;
+}
+
+.mat-checkbox {
+    padding: 0;
 }

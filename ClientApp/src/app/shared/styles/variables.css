@@ -27,8 +27,8 @@
     --font-size-menu-list-items: 1.4rem;
     --font-size-user-info: 0.9rem;
     /* Tables */
-    --font-size-table-header: 1.3rem;
-    --font-size-table-rows: 1.0rem;
+    --font-size-table-header: 1.2rem;
+    --font-size-table-rows: 0.9rem;
     /* Instructions */
     --font-size-paragraphs: 0.8rem;
 }
@@ -108,7 +108,7 @@
     --color-table-row-odd: #363D44;
     --color-table-row-even: #3c434b;
     --color-table-row-selected: #394D59;
-    --color-table-rows-hover: #394D59;
+    --color-table-rows-hover: #ffc788;
     /* Transfer summary boxes */
     --color-summary-block-background: #373F46;
     --color-summary-block-border: #57617B;

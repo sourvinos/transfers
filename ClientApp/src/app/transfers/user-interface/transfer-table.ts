@@ -38,6 +38,7 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
 
     ngAfterViewInit() {
         this.initVariables()
+        this.gotoRow(1)
     }
 
     ngDoCheck() {
@@ -107,7 +108,7 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
     private initVariables() {
         this.table = document.getElementById('table-transfer')
         this.tableContainer = this.table.parentNode.parentNode
-        this.rowHeight = 51
+        this.rowHeight = this.table.rows[1].offsetHeight
         this.rowCount = this.table.rows.length - 1
     }
 
@@ -135,11 +136,11 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
     private selectRow(table: HTMLTableElement, direction: any) {
         if (!isNaN(direction)) {
             this.currentRow = parseInt(direction, 10)
-            document.getElementById('table-transfer-input').focus()
         } else {
             if (direction === 'up') { this.currentRow-- }
             if (direction === 'down') { ++this.currentRow }
         }
+        document.getElementById('table-transfer-input').focus()
         table.rows[this.currentRow].classList.add('selected')
     }
 
