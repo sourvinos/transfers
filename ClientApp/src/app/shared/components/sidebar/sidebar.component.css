@@ -1,14 +1,7 @@
 #sidebar {
     background-color: var(--color-sidebar-background);
-    display: grid;
-    grid-template-areas:
-        "userInfo"
-        "companyLogo"
-        "image"
-        "menu"
-        "countdown"
-        "copyright";
-    grid-template-rows: min-content min-content min-content auto min-content min-content;
+    display: flex;
+    flex-direction: column;
     height: 100vh;
     overflow: hidden;
     position: sticky;
@@ -21,25 +14,21 @@
     font-family: var(--font-family-user-info);
     font-size: var(--font-size-user-info);
     margin: 1.5rem auto 0;
-    min-height: 1rem;
+    min-height: 2.375rem;
     text-align: center;
 }
 
 #companyLogo {
     cursor: pointer;
-    margin: 0.5rem auto 1.6rem;
+    font-family: var(--font-family-logo);
+    margin: -0.5rem auto 1.4rem;
     outline: 0;
     text-align: center;
-}
-
-#companyLogo {
-    font-family: var(--font-family-logo);
 }
 
 #companyLogo>:first-child {
     color: var(--color-company-logo-first-child) !important;
     font-size: var(--font-size-logo-first-child) !important;
-    margin: 0;
 }
 
 #companyLogo>:last-child {
@@ -91,7 +80,7 @@
 }
 
 #menu ul>li {
-    line-height: 1.5rem;
+    line-height: 2.5rem !important;
     outline: 0;
     transition-duration: 200ms;
     transition: font-size;
@@ -115,29 +104,8 @@
     text-align: center;
 }
 
-#countdown {
-    color: var(--color-headers);
-    font-family: var(--font-family-headers);
-    font-size: 10px;
-    text-align: center;
-}
-
-#menuItems li {
-    line-height: 2.5rem !important;
-}
-
-
 /* Small heights = hide bus circle */
-@media only screen and (max-height: 60rem) {
-    #sidebar {
-        grid-template-areas:
-            "userInfo"
-            "companyLogo"
-            "menu"
-            "copyright";
-        grid-template-rows: min-content min-content auto min-content;
-    }
-
+@media only screen and (max-height: 899px) {
     #image {
         display: none;
     }

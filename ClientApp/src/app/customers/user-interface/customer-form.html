@@ -41,7 +41,7 @@
                 <mat-error *ngIf="email.errors?.maxlength">This field can be up to {{ email.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
         </div>
-        <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
+        <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
     </form>
 </div>
 

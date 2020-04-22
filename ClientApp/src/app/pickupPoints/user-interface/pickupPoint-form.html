@@ -11,6 +11,6 @@
                 <input type="text" matInput placeholder="Time" formControlName="time" data-tabindex="3" id="time" [inputTabStop]="input">
             </mat-form-field>
         </div>
-        <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
+        <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
     </form>
 </div>

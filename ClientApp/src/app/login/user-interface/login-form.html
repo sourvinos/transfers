@@ -22,7 +22,7 @@
             <div id="forgotPassword">
                 <button type="button" mat-button (click)="onForgotPassword()">Forgot password?</button>
             </div>
-            <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
+            <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
         </div>
     </form>
 </div>

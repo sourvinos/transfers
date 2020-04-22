@@ -24,7 +24,10 @@
 }
 
 #listFormCombo {
+    display: flex;
+    flex-direction: column;
     grid-area: listFormCombo;
+    justify-content: center;
     overflow-y: hidden;
     padding-left: 2rem;
 }

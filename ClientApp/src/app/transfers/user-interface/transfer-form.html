@@ -1,6 +1,6 @@
-<div id="form">
-    <form id="formFields" [formGroup]="form" autocomplete="off">
-        <div id="sectionOne">
+<div id="content">
+    <form [formGroup]="form" autocomplete="off">
+        <div id="section-one">
             <mat-form-field>
                 <input type="text" matInput placeholder="Destination" formControlName="destinationDescription" data-tabindex="1" id="destinationDescription" [inputTabStop]="input" (change)="lookupIndex(destinations, 'Destinations', ['destinationId', 'destinationDescription'], ['destinationId', 'destinationDescription'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
                 <mat-error *ngIf="destinationDescription.hasError('required')">This is a required field!</mat-error>
@@ -13,27 +13,36 @@
                 <input type="text" matInput placeholder="PickupPoint" formControlName="pickupPointDescription" data-tabindex="3" id="pickupPointDescription" [inputTabStop]="input" (change)="lookupIndex(pickupPointsFlat, 'Pickup points', ['pickupPointId', 'pickupPointDescription', 'portId', 'portDescription'], ['pickupPointId', 'pickupPointDescription', 'exactPoint', 'time', 'portId', 'portDescription'], ['Id', 'Description', 'Exact point', 'Time', 'Port Id', 'Port'], ['100px', '440px', '440px', '100px', '100px', '440px'], ['none', '', '', '', 'none', 'none'], ['center', 'left', 'left', 'center', 'center', 'left'], $event)">
                 <mat-error *ngIf="pickupPointDescription.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput placeholder="Adults" formControlName="adults" data-tabindex="4" id="adults" [inputTabStop]="input" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
-                <mat-error *ngIf="adults.hasError('required')">This is a required field!</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput placeholder="Kids" formControlName="kids" data-tabindex="5" id="kids" [inputTabStop]="input" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
-                <mat-error *ngIf="kids.hasError('required')">This is a required field!</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput placeholder="Free" formControlName="free" data-tabindex="6" id="free" [inputTabStop]="input" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
-                <mat-error *ngIf="free.hasError('required')">This is a required field!</mat-error>
-            </mat-form-field>
+            <div id="persons-panel">
+                <div id="persons-details">
+                    <mat-form-field>
+                        <input type="text" matInput placeholder="Adults" formControlName="adults" data-tabindex="4" id="adults" [inputTabStop]="input" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
+                        <mat-error *ngIf="adults.hasError('required')">This is a required field!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input type="text" matInput placeholder="Kids" formControlName="kids" data-tabindex="5" id="kids" [inputTabStop]="input" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
+                        <mat-error *ngIf="kids.hasError('required')">This is a required field!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input type="text" matInput placeholder="Free" formControlName="free" data-tabindex="6" id="free" [inputTabStop]="input" class="number" pattern="^[0-9]+[0-9]*$" (change)="calculateTotalPersons()">
+                        <mat-error *ngIf="free.hasError('required')">This is a required field!</mat-error>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="form.value.totalPersons" id="persons-total">
+                    <p>Total persons:</p>
+                    <span>{{ form.value.totalPersons }}</span>
+                </div>
+            </div>
         </div>
-        <div id="sectionTwo">
-            <mat-form-field>
-                <input type="text" matInput placeholder="Total persons" formControlName="totalPersons" id="totalPersons" class="number">
-            </mat-form-field>
+        <div id="section-two">
             <mat-form-field>
                 <input type="text" matInput placeholder="Remarks" formControlName="remarks" data-tabindex="7" id="remarks" [inputTabStop]="input">
+                <mat-error *ngIf="remarks.errors?.maxlength">This field can be up to {{ remarks.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
-            <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
+            <mat-form-field>
+                <input type="text" matInput placeholder="Driver" formControlName="driverDescription" id="driverDescription">
+            </mat-form-field>
         </div>
+        <span id="form-values" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</span>
     </form>
 </div>

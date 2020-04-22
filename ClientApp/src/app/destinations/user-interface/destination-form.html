@@ -22,7 +22,7 @@
                 <mat-error *ngIf="description.hasError('required')">This is a required field!</mat-error>
                 <mat-error *ngIf="description.errors?.maxlength">This field can be up to {{ description.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
-            <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
+            <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
         </div>
     </form>
 </div>

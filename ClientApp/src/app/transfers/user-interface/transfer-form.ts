@@ -219,13 +219,13 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             dateIn: '',
             destinationId: [0, Validators.required], destinationDescription: ['', Validators.required],
             customerId: [0, Validators.required], customerDescription: ['', Validators.required],
-            pickupPointId: ['', Validators.required], pickupPointDescription: ['', Validators.required],
-            driverId: [0, Validators.required], driverDescription: [Validators.required],
+            pickupPointId: [0, Validators.required], pickupPointDescription: ['', Validators.required],
+            driverId: [0, Validators.required], driverDescription: [{ value: '', disabled: true }, Validators.required],
             portId: [0, Validators.required], portDescription: [Validators.required],
             adults: [0, Validators.required],
             kids: [0, Validators.required],
             free: [0, Validators.required],
-            totalPersons: [{ value: 0, disabled: true }],
+            totalPersons: 0,
             remarks: ['', Validators.maxLength(128)],
             userName: ''
         })
@@ -326,11 +326,11 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private scrollToForm() {
-        document.getElementById('transfersList').style.height = '0'
+        document.getElementById('transfersList').style.height = '1px'
     }
 
     private scrollToList() {
-        document.getElementById('form').style.height = '0'
+        document.getElementById('content').style.height = '0'
         document.getElementById('transfersList').style.height = '100%'
         document.getElementById('table-transfer-input').focus()
         this.interactionService.performAction('')

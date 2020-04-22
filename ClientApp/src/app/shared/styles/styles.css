@@ -169,15 +169,14 @@ p.instructions {
     padding: 10px 16px !important;
 }
 
-
-/* ! Wide screen */
+/* Wide screen */
 @media only screen and (min-width: 1367px) {
     .icon {
         margin-left: 0 !important;
     }
 }
 
-/* ! Narrow screen */
+/* Narrow screen */
 @media only screen and (max-width: 1366px) {
     .icon {
         margin-left: 2rem !important;

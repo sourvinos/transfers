@@ -1,5 +1,4 @@
 <div id="wrapper">
-
     <div id="header">
         <div id="title">
             <h1>Transfers</h1>
@@ -12,11 +11,9 @@
             <button mat-flat-button id="search" class="primary" [disabled]="!isValidDate()" (click)="loadTransfers()">Search</button>
         </div>
     </div>
-
     <div id="list">
         <router-outlet></router-outlet>
     </div>
-
     <div id="footer">
         <mat-divider></mat-divider>
         <div id="buttons">
@@ -34,5 +31,4 @@
             </ng-container>
         </div>
     </div>
-
 </div>
