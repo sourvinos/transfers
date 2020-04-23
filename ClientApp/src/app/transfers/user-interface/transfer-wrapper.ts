@@ -18,12 +18,10 @@ import { TransferAssignDriverComponent } from './transfer-assign-driver';
 @Component({
     selector: 'transfer-wrapper',
     templateUrl: './transfer-wrapper.html',
-    styleUrls: ['../../shared/styles/lists.css', './transfer-wrapper.css']
+    styleUrls: ['./transfer-wrapper.css']
 })
 
 export class TransferWrapperComponent implements OnInit, OnDestroy {
-
-    // #region Variables
 
     dateIn = '01/10/2019'
     dateInISO = ''
@@ -36,8 +34,6 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
-
-    // #endregion
 
     constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private location: Location, private interactionService: BaseInteractionService, private transferService: TransferService, public dialog: MatDialog, private driverService: DriverService, private snackbarService: SnackbarService, private pdfService: TransferPdfService) { }
 
@@ -61,29 +57,6 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
      * Description:
      *  Assign a driver to the checked records
      */
-    assignDriver(): void {
-        if (this.isRecordSelected()) {
-            const dialogRef = this.dialog.open(TransferAssignDriverComponent, {
-                height: '350px',
-                width: '550px',
-                data: {
-                    title: 'Assign driver',
-                    drivers: this.driverService.getAll(),
-                    actions: ['cancel', 'ok']
-                },
-                panelClass: 'dialog'
-            })
-            dialogRef.afterClosed().subscribe(result => {
-                if (result !== undefined) {
-                    this.transferService.assignDriver(result, this.records).subscribe(() => {
-                        this.removeSelectedIdsFromLocalStorage()
-                        this.navigateToList()
-                        this.showSnackbar('All records have been processed', 'info')
-                    })
-                }
-            })
-        }
-    }
 
     /**
      * Caller(s):
@@ -92,9 +65,6 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
      * Description:
      *  Sends the records to the service
      */
-    createPdf() {
-        this.pdfService.createReport(this.transfersFlat, this.getDriversFromLocalStorage(), this.dateIn)
-    }
 
     /**
      * Caller(s):
@@ -129,7 +99,7 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
      * Description:
      *  Check for the default driver and if found, avigates to the form so that new records can be appended
      */
-    onNewRecord(): void {
+    onNewRecord() {
         this.driverService.getDefaultDriver().then(response => {
             if (response) {
                 this.router.navigate([this.location.path() + '/transfer/new'])
@@ -137,17 +107,6 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
                 this.showSnackbar('No default driver found', 'error')
             }
         })
-    }
-
-    /**
-     * Caller(s):
-     *  Template - onSaveRecord()
-     *
-     * Description:
-     *  Executes the save method on the form through the interaction service
-     */
-    onSaveRecord(): void {
-        this.interactionService.performAction('saveRecord')
     }
 
     /**
@@ -247,14 +206,6 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
      * Description
      *  Checks user input
      */
-    private isRecordSelected(): boolean {
-        this.records = JSON.parse(localStorage.getItem('selectedIds'))
-        if (this.records == null || this.records.length === 0) {
-            this.showSnackbar('No records have been selected!', 'error')
-            return false
-        }
-        return true
-    }
 
     /**
      * Caller(s):
@@ -319,12 +270,10 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
      *  The variable 'recordStatus' will be checked by the template which decides which buttons to display
      */
     private subscribeToInteractionService(): void {
-        this.updateRecordStatus()
         this.updateTableStatus()
         this.interactionService.transfers.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.transfersFlat = response
         })
-
     }
 
     /**
@@ -340,20 +289,6 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
 
     /**
      * Caller(s):
-     *  Class - subscribeTointeractionService()
-     *
-     * Description:
-     *  Gets the record status from the form through the interaction service
-     *  The variable 'recordStatus' will be checked by the template which decides which buttons to display
-     */
-    private updateRecordStatus(): void {
-        this.interactionService.recordStatus.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            this.recordStatus = response
-        })
-    }
-
-    /**
-     * Caller(s):
      *  Class - subscribeToInteractionService()
      *
      * Description:
@@ -364,11 +299,6 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
         this.interactionService.hasTableData.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.hasTableData = response
         })
-    }
-
-    private getDriversFromLocalStorage() {
-        const localStorageData = JSON.parse(localStorage.getItem('transfers'))
-        return JSON.parse(localStorageData.drivers)
     }
 
 }

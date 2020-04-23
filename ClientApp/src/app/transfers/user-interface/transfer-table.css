@@ -23,7 +23,7 @@ th {
     padding: 1rem 0;
     position: sticky;
     text-align: center;
-    top: 0;
+    top: 0px;
     z-index: 1;
 }
 

@@ -1,3 +1,4 @@
+import { MessageService } from 'src/app/shared/services/message.service';
 import { AfterViewChecked, AfterViewInit, Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -7,6 +8,12 @@ import { Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { TransferPdfService } from '../classes/transfer-pdf.service';
 import { TransferService } from '../classes/transfer.service';
 import { TransferFlat } from '../classes/transferFlat';
+import { DriverService } from 'src/app/drivers/classes/driver.service';
+import { Location } from '@angular/common';
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { MatDialog } from '@angular/material';
+import { TransferAssignDriverComponent } from './transfer-assign-driver';
+import { HelperService } from 'src/app/shared/services/helper.service';
 
 @Component({
     selector: 'transfer-list',
@@ -19,6 +26,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     dateIn: string
     queryResult: any = {}
     queryResultClone: any = {}
+    records: string[] = []
     totals: any[] = []
     selectedDestinations: string[] = []
     selectedCustomers: string[] = []
@@ -40,7 +48,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: TransferPdfService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: TransferPdfService, private driverService: DriverService, private location: Location, private snackbarService: SnackbarService, public dialog: MatDialog, private transferService: TransferService, private helperService: HelperService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn !== '' && this.router.url.split('/').length === 4) {
@@ -86,6 +94,44 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
         // this.unlisten()
+    }
+
+    onAssignDriver(): void {
+        if (this.isRecordSelected()) {
+            const dialogRef = this.dialog.open(TransferAssignDriverComponent, {
+                height: '350px',
+                width: '550px',
+                data: {
+                    title: 'Assign driver',
+                    drivers: this.driverService.getAll(),
+                    actions: ['cancel', 'ok']
+                },
+                panelClass: 'dialog'
+            })
+            dialogRef.afterClosed().subscribe(result => {
+                if (result !== undefined) {
+                    this.transferService.assignDriver(result, this.records).subscribe(() => {
+                        this.removeSelectedIdsFromLocalStorage()
+                        this.navigateToList()
+                        this.showSnackbar(this.messageService.recordsHaveBeenProcessed(), 'info')
+                    })
+                }
+            })
+        }
+    }
+
+    onCreatePdf() {
+        this.pdfService.createReport(this.transfersFlat, this.getDriversFromLocalStorage(), this.dateIn)
+    }
+
+    onNewRecord() {
+        this.driverService.getDefaultDriver().then(response => {
+            if (response) {
+                this.router.navigate([this.location.path() + '/transfer/new'])
+            } else {
+                this.showSnackbar(this.messageService.noDefaultDriverFound(), 'error')
+            }
+        })
     }
 
     toggleItem(item: any, lookupArray: string[]) {
@@ -160,8 +206,22 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         }
     }
 
+    private getDriversFromLocalStorage() {
+        const localStorageData = JSON.parse(localStorage.getItem('transfers'))
+        return JSON.parse(localStorageData.drivers)
+    }
+
     private isDataInLocalStorage() {
         return localStorage.getItem('transfers')
+    }
+
+    private isRecordSelected(): boolean {
+        this.records = JSON.parse(localStorage.getItem('selectedIds'))
+        if (this.records == null || this.records.length === 0) {
+            this.showSnackbar(this.messageService.noRecordsSelected(), 'error')
+            return false
+        }
+        return true
     }
 
     private loadTransfers() {
@@ -170,6 +230,10 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
 
     private navigateToEditRoute(id: number) {
         this.router.navigate(['transfer/', id], { relativeTo: this.activatedRoute })
+    }
+
+    private navigateToList() {
+        this.router.navigate(['transfers/dateIn/', this.helperService.getDateFromLocalStorage()])
     }
 
     private saveToLocalStorage() {
@@ -226,6 +290,10 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.selectedPorts = JSON.parse(localStorageData.ports)
     }
 
+    private removeSelectedIdsFromLocalStorage(): void {
+        localStorage.removeItem('selectedIds')
+    }
+
     private setTableStatus() {
         this.interactionService.setTableStatus(!!this.queryResult.persons)
     }
@@ -252,6 +320,10 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
 
     private sendRecordsToService() {
         this.interactionService.sendRecords(this.transfersFlat)
+    }
+
+    private showSnackbar(message: string, type: string): void {
+        this.snackbarService.open(message, type)
     }
 
     private toggleActiveItem(item: { description: string; }, lookupArray: string[]) {

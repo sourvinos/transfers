@@ -3,11 +3,7 @@
     width: 100%;
 }
 
-* {
-    box-sizing: border-box !important;
-}
-
-#custom-table {
+#custom-table, #table-transfer {
     table-layout: fixed;
     -webkit-border-horizontal-spacing: 2px;
     -webkit-border-vertical-spacing: 0;
@@ -23,7 +19,7 @@ th {
     padding: 1rem 0;
     position: sticky;
     text-align: center;
-    top: 0;
+    top: 0px;
     z-index: 1;
 }
 

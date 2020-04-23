@@ -1,20 +1,44 @@
-#wrapper {
+:host {
     display: grid;
     grid-template-areas:
         "header"
-        "list"
-        "footer";
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
+        "main";
+    grid-template-rows: max-content auto;
     height: 100vh;
 }
 
-#list {
-    grid-area: list;
-    margin: 0 2rem;
-    overflow: hidden;
+#header {
+    display: grid;
+    grid-area: header;
+    grid-template-areas:
+        "title searchbox"
+        "divider divider";
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    margin: 2rem;
 }
 
-#footer {
-    grid-area: footer;
+#header #title {
+    align-items: center;
+    display: flex;
+    grid-area: title;
+    justify-content: flex-start;
+    margin-left: 1rem;
+}
+
+#header #search-box {
+    align-items: center;
+    display: flex;
+    grid-area: searchbox;
+    margin: 0 1rem 0 0;
+}
+
+#main {
+    grid-area: main;
+    grid-auto-rows: 100%;
+    margin: 0 2rem 2rem 2rem;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    width: auto;
 }

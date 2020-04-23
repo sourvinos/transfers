@@ -65,8 +65,18 @@
         </div>
     </mat-expansion-panel>
     <div id="listFormCombo">
-        <div class="scrollable" id="transfersList">
-            <transfer-table [records]="transfersFlat" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></transfer-table>
+        <div id="transfersList">
+            <div class="scrollable">
+                <transfer-table [records]="transfersFlat" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></transfer-table>
+            </div>
+            <div id="footer">
+                <mat-divider></mat-divider>
+                <div id="buttons">
+                    <button mat-flat-button class="secondary" id="assignDriver" [class.hidden]="queryResult.persons == 0" (click)="onAssignDriver()">Assign driver</button>
+                    <button mat-flat-button class="secondary" id="createPdf" [class.hidden]="queryResult.persons == 0" (click)="onCreatePdf()">Create PDFs</button>
+                    <button mat-flat-button class="primary" id="new" (click)="onNewRecord()">New</button>
+                </div>
+            </div>
         </div>
         <router-outlet></router-outlet>
     </div>

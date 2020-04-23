@@ -6,7 +6,6 @@
     grid-template-columns: auto 1fr;
     grid-template-rows: 1fr;
     height: 100%;
-    overflow-y: hidden;
 }
 
 #summaries {
@@ -15,7 +14,6 @@
     display: grid;
     grid-area: summaries;
     height: -webkit-fill-available;
-    margin-right: 1.5rem;
     overflow-x: hidden;
     overflow-y: scroll;
     position: absolute;
@@ -24,12 +22,18 @@
 }
 
 #listFormCombo {
+    align-items: start;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     grid-area: listFormCombo;
-    justify-content: center;
+    height: 100%;
+    justify-content: start;
     overflow-y: hidden;
     padding-left: 2rem;
+}
+
+#footer {
+    margin: 0;
 }
 
 #totals {
@@ -38,8 +42,10 @@
 }
 
 #transfersList {
-    scroll-behavior: smooth;
-    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
 }
 
 .summaryBlock {

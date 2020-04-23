@@ -63,7 +63,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.scrollToForm()
         this.addShortcuts()
         this.populateDropDowns()
-        this.subscribeToInteractionService()
+        // this.subscribeToInteractionService()
     }
 
     ngAfterViewInit() {
@@ -173,6 +173,14 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
+    private getListHeight() {
+        return document.getElementById('listFormCombo').offsetHeight + 'px'
+    }
+
+    private getListWidth() {
+        return document.getElementById('listFormCombo').offsetWidth - 32 + 'px'
+    }
+
     private clearFields(result: any, id: any, description: any) {
         this.form.patchValue({ [id]: result ? result.id : '' })
         this.form.patchValue({ [description]: result ? result.description : '' })
@@ -201,6 +209,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     private getRecord(id: number) {
         this.transferService.getSingle(id).then(result => {
+            console.log(result)
             this.populateFields(result)
         }, () => {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
@@ -326,13 +335,15 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private scrollToForm() {
-        document.getElementById('transfersList').style.height = '1px'
+        document.getElementById('content').style.width = this.getListWidth()
+        document.getElementById('content').style.height = this.getListHeight()
+        document.getElementById('transfersList').style.display = 'none'
     }
 
     private scrollToList() {
-        document.getElementById('content').style.height = '0'
-        document.getElementById('transfersList').style.height = '100%'
-        document.getElementById('table-transfer-input').focus()
+        document.getElementById('content').style.display = 'none'
+        document.getElementById('transfersList').style.display = 'unset'
+        document.getElementById('custom-table-input').focus()
         this.interactionService.performAction('')
     }
 

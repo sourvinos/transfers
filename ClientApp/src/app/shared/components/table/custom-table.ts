@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, IterableDiffer, IterableDiffers, OnDestroy, OnInit } from '@angular/core'
+import { AfterViewInit, Component, Input, IterableDiffer, IterableDiffers, OnInit } from '@angular/core'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { IndexInteractionService } from '../../services/index-interaction.service'
@@ -28,7 +28,7 @@ export class CustomTableComponent implements OnInit, AfterViewInit {
 
     unlisten: Unlisten
 
-    constructor(private baseInteractionService: BaseInteractionService, private indexInteractionService: IndexInteractionService, private iterableDiffers: IterableDiffers, private keyboardShortcutsService: KeyboardShortcuts) { }
+    constructor(private baseInteractionService: BaseInteractionService, private indexInteractionService: IndexInteractionService, private iterableDiffers: IterableDiffers) { }
 
     ngOnInit() {
         this.differences = this.iterableDiffers.find(this.records).create();
@@ -42,6 +42,7 @@ export class CustomTableComponent implements OnInit, AfterViewInit {
     onDomChange($event: Event) {
         this.gotoRow(1)
     }
+
     checkKeyboard(event: any) {
         switch (event.keyCode) {
             case 38: this.gotoRow('Up'); break;

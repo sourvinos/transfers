@@ -4,7 +4,7 @@ import { BaseInteractionService } from 'src/app/shared/services/base-interaction
 @Component({
     selector: 'transfer-table',
     templateUrl: './transfer-table.html',
-    styleUrls: ['./transfer-table.css']
+    styleUrls: ['../../shared/components/table/custom-table.css']
 })
 
 export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
@@ -80,7 +80,7 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
     }
 
     onDomChange($event: Event) {
-        document.getElementById('table-transfer-input').focus()
+        document.getElementById('custom-table-input').focus()
         this.gotoRow(1)
     }
 
@@ -140,7 +140,7 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
             if (direction === 'up') { this.currentRow-- }
             if (direction === 'down') { ++this.currentRow }
         }
-        document.getElementById('table-transfer-input').focus()
+        document.getElementById('custom-table-input').focus()
         table.rows[this.currentRow].classList.add('selected')
     }
 
