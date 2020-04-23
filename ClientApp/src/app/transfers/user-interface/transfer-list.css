@@ -22,12 +22,12 @@
 }
 
 #listFormCombo {
-    align-items: start;
+    align-items: flex-start;
     display: flex;
     flex-direction: row;
     grid-area: listFormCombo;
     height: 100%;
-    justify-content: start;
+    justify-content: flex-start;
     overflow-y: hidden;
     padding-left: 2rem;
 }

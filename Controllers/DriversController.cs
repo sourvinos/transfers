@@ -13,9 +13,9 @@ namespace Transfers {
     public class DriversController : ControllerBase {
 
         private readonly IMapper mapper;
-        private readonly ApplicationDbContext context;
+        private readonly AppDbContext context;
 
-        public DriversController(IMapper mapper, ApplicationDbContext context) =>
+        public DriversController(IMapper mapper, AppDbContext context) =>
             (this.mapper, this.context) = (mapper, context);
 
         [HttpGet]

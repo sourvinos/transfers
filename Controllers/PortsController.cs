@@ -13,9 +13,9 @@ namespace Transfers {
     public class PortsController : ControllerBase {
 
         private readonly IMapper mapper;
-        private readonly ApplicationDbContext context;
+        private readonly AppDbContext context;
 
-        public PortsController(IMapper mapper, ApplicationDbContext context) =>
+        public PortsController(IMapper mapper, AppDbContext context) =>
             (this.mapper, this.context) = (mapper, context);
 
         [HttpGet]

@@ -18,9 +18,9 @@ namespace Transfers {
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly AppSettings appSettings;
         private readonly Token token;
-        private readonly ApplicationDbContext db;
+        private readonly AppDbContext db;
 
-        public TokenController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<AppSettings> appSettings, Token token, ApplicationDbContext db) =>
+        public TokenController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<AppSettings> appSettings, Token token, AppDbContext db) =>
             (this.userManager, this.signInManager, this.appSettings, this.token, this.db) = (userManager, signInManager, appSettings.Value, token, db);
 
         [HttpPost("[action]")]

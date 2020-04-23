@@ -7,7 +7,7 @@
             <input type="text" matInput placeholder="Date" class="date" [(ngModel)]="dateIn" [inputFormat]="'date'" id="dateIn" autocomplete="off">
             <mat-hint>Search by date</mat-hint>
         </mat-form-field>
-        <button mat-flat-button id="search" class="primary" [disabled]="!isValidDate()" (click)="loadTransfers()">Search</button>
+        <button mat-flat-button id="search" class="primary" [disabled]="!isValidDate()" (click)="onLoadTransfers()">Search</button>
     </div>
 </div>
 

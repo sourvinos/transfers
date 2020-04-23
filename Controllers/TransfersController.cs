@@ -13,9 +13,9 @@ namespace Transfers {
     public class TransfersController : ControllerBase {
 
         private readonly IMapper mapper;
-        private readonly ApplicationDbContext context;
+        private readonly AppDbContext context;
 
-        public TransfersController(IMapper mapper, ApplicationDbContext context) =>
+        public TransfersController(IMapper mapper, AppDbContext context) =>
             (this.mapper, this.context) = (mapper, context);
 
         [HttpGet("date/{dateIn}")]

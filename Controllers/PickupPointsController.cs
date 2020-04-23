@@ -13,9 +13,9 @@ namespace Transfers {
     public class PickupPointsController : ControllerBase {
 
         private readonly IMapper mapper;
-        private readonly ApplicationDbContext context;
+        private readonly AppDbContext context;
 
-        public PickupPointsController(IMapper mapper, ApplicationDbContext context) =>
+        public PickupPointsController(IMapper mapper, AppDbContext context) =>
             (this.mapper, this.context) = (mapper, context);
 
         [HttpGet]
