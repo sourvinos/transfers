@@ -9,25 +9,25 @@ namespace Transfers {
         private readonly AppDbContext appDbContext;
         public CustomerRepository(AppDbContext appDbContext) => (this.appDbContext) = (appDbContext);
 
-        public async Task<IEnumerable<Customer>> GetCustomers() {
+        public async Task<IEnumerable<Customer>> Get() {
             return await appDbContext.Customers.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
         }
 
-        public async Task<Customer> GetCustomer(int id) {
+        public async Task<Customer> GetById(int id) {
             return await appDbContext.Customers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
         }
 
-        public void AddCustomer(Customer customer) {
+        public void Add(Customer customer) {
             appDbContext.Customers.AddAsync(customer);
             appDbContext.SaveChanges();
         }
 
-        public void UpdateCustomer(Customer customer) {
+        public void Update(Customer customer) {
             appDbContext.Entry(appDbContext.Customers.Find(customer.Id)).CurrentValues.SetValues(customer);
             appDbContext.SaveChanges();
         }
 
-        public void DeleteCustomer(Customer customer) {
+        public void Delete(Customer customer) {
             appDbContext.Customers.Remove(customer);
             appDbContext.SaveChanges();
         }

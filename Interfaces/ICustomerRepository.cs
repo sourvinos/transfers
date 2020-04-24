@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 
 namespace Transfers {
     public interface ICustomerRepository {
-        Task<IEnumerable<Customer>> GetCustomers();
-        Task<Customer> GetCustomer(int customerId);
-        void AddCustomer(Customer customer);
-        void UpdateCustomer(Customer customer);
-        void DeleteCustomer(Customer customer);
+        Task<IEnumerable<Customer>> Get();
+        Task<Customer> GetById(int id);
+        void Add(Customer customer);
+        void Update(Customer customer);
+        void Delete(Customer customer);
     }
 }

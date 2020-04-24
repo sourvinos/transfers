@@ -25,6 +25,7 @@ namespace Transfers {
             Extensions.AddCors(services);
             services.AddScoped<Token>();
             services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<IDestinationRepository, DestinationRepository>();
             services.AddEmailSenders();
             services.AddAntiforgery(options => { options.Cookie.Name = "_af"; options.Cookie.HttpOnly = true; options.Cookie.SecurePolicy = CookieSecurePolicy.Always; options.HeaderName = "X-XSRF-TOKEN"; });
             services.AddAutoMapper();

@@ -8,19 +8,19 @@ using Microsoft.EntityFrameworkCore;
 namespace Transfers {
 
     [Route("api/[controller]")]
-    // [Authorize(Policy = "RequireLoggedIn")]
+    [Authorize(Policy = "RequireLoggedIn")]
     public class CustomersController : ControllerBase {
         private readonly ICustomerRepository repo;
         public CustomersController(ICustomerRepository repo) => (this.repo) = (repo);
 
         [HttpGet]
         public async Task<IEnumerable<Customer>> Get() {
-            return await repo.GetCustomers();
+            return await repo.Get();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomer(int id) {
-            Customer customer = await repo.GetCustomer(id);
+            Customer customer = await repo.GetById(id);
             if (customer == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             return Ok(customer);
         }
@@ -28,7 +28,7 @@ namespace Transfers {
         [HttpPost]
         public IActionResult PostCustomer([FromBody] Customer customer) {
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            repo.AddCustomer(customer);
+            repo.Add(customer);
             return Ok(new { response = ApiMessages.RecordCreated() });
         }
 
@@ -37,7 +37,7 @@ namespace Transfers {
             if (id != customer.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
             try {
-                repo.UpdateCustomer(customer);
+                repo.Update(customer);
             } catch (System.Exception) {
                 return NotFound(new { response = ApiMessages.RecordNotFound() });
             }
@@ -46,10 +46,10 @@ namespace Transfers {
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer([FromRoute] int id) {
-            Customer customer = await repo.GetCustomer(id);
+            Customer customer = await repo.GetById(id);
             if (customer == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             try {
-                repo.DeleteCustomer(customer);
+                repo.Delete(customer);
                 return Ok(new { response = ApiMessages.RecordDeleted() });
             } catch (DbUpdateException) {
                 return BadRequest(new { response = ApiMessages.RecordInUse() });
