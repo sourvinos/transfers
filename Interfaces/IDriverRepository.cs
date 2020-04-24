@@ -5,8 +5,8 @@ namespace Transfers {
     public interface IDriverRepository {
         Task<IEnumerable<Driver>> Get();
         Task<Driver> GetById(int id);
-        void Add(Driver Driver);
-        void Update(Driver Driver);
-        void Delete(Driver Driver);
+        void Add(Driver driver);
+        void Update(Driver driver);
+        void Delete(Driver driver);
     }
 }

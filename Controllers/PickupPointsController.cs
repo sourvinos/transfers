@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,53 +11,51 @@ namespace Transfers {
     [Authorize(Policy = "RequireLoggedIn")]
     public class PickupPointsController : ControllerBase {
 
-        private readonly IMapper mapper;
-        private readonly AppDbContext context;
-
-        public PickupPointsController(IMapper mapper, AppDbContext context) =>
-            (this.mapper, this.context) = (mapper, context);
+        private readonly IPickupPointRepository repo;
+        public PickupPointsController(IPickupPointRepository repo) => (this.repo) = (repo);
 
         [HttpGet]
-        public async Task<IEnumerable<PickupPoint>> GetAll() {
-            return await context.PickupPoints.Include(x => x.Route).ThenInclude(x => x.Port).OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+        public async Task<IEnumerable<PickupPoint>> Get() {
+            return await repo.Get();
         }
 
         [HttpGet("routeId/{routeId}")]
         public async Task<IEnumerable<PickupPoint>> Get(int routeId) {
-            return await context.PickupPoints.Include(x => x.Route).Where(m => m.RouteId == routeId).OrderBy(o => o.Time).ThenBy(o => o.Description).AsNoTracking().ToListAsync();
+            return await repo.GetForRoute(routeId);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPickupPoint(int id) {
-            PickupPoint pickupPoint = await context.PickupPoints.Include(x => x.Route).AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
+            PickupPoint pickupPoint = await repo.GetById(id);
             if (pickupPoint == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             return Ok(pickupPoint);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostPickupPoint([FromBody] PickupPoint pickupPoint) {
+        public IActionResult PostPickupPoint([FromBody] PickupPoint pickupPoint) {
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            context.PickupPoints.Add(pickupPoint);
-            await context.SaveChangesAsync();
+            repo.Add(pickupPoint);
             return Ok(new { response = ApiMessages.RecordCreated() });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPickupPoint([FromRoute] int id, [FromBody] PickupPoint pickupPoint) {
+        public IActionResult PutPickupPoint([FromRoute] int id, [FromBody] PickupPoint pickupPoint) {
             if (id != pickupPoint.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            if (await context.PickupPoints.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
-            context.Entry(pickupPoint).State = EntityState.Modified;
-            await context.SaveChangesAsync();
+            try {
+                repo.Update(pickupPoint);
+            } catch (System.Exception) {
+                return NotFound(new { response = ApiMessages.RecordNotFound() });
+            }
             return Ok(new { response = ApiMessages.RecordUpdated() });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePickupPoint([FromRoute] int id) {
-            if (await context.PickupPoints.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
-            context.PickupPoints.Remove(await context.PickupPoints.SingleOrDefaultAsync(m => m.Id == id));
+            PickupPoint pickupPoint = await repo.GetById(id);
+            if (pickupPoint == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             try {
-                await context.SaveChangesAsync();
+                repo.Delete(pickupPoint);
                 return Ok(new { response = ApiMessages.RecordDeleted() });
             } catch (DbUpdateException) {
                 return BadRequest(new { response = ApiMessages.RecordInUse() });
