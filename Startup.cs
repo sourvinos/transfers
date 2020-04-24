@@ -19,12 +19,12 @@ namespace Transfers {
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services) {
-            services.AddScoped<Token>();
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
             Extensions.AddIdentity(services);
             Extensions.AddAuthentication(Configuration, services);
             Extensions.AddAuthorization(services);
             Extensions.AddCors(services);
+            services.AddScoped<Token>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddEmailSenders();
             services.AddAntiforgery(options => { options.Cookie.Name = "_af"; options.Cookie.HttpOnly = true; options.Cookie.SecurePolicy = CookieSecurePolicy.Always; options.HeaderName = "X-XSRF-TOKEN"; });
             services.AddAutoMapper();
