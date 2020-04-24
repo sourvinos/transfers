@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,49 +10,46 @@ namespace Transfers {
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLoggedIn")]
     public class PortsController : ControllerBase {
-
-        private readonly IMapper mapper;
-        private readonly AppDbContext context;
-
-        public PortsController(IMapper mapper, AppDbContext context) =>
-            (this.mapper, this.context) = (mapper, context);
+        private readonly IPortRepository repo;
+        public PortsController(IPortRepository repo) => (this.repo) = (repo);
 
         [HttpGet]
         public async Task<IEnumerable<Port>> Get() {
-            return await context.Ports.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+            return await repo.Get();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPort(int id) {
-            Port port = await context.Ports.SingleOrDefaultAsync(m => m.Id == id);
-            if (port == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
-            return Ok(port);
+            Port Port = await repo.GetById(id);
+            if (Port == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
+            return Ok(Port);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostPort([FromBody] Port port) {
+        public IActionResult PostPort([FromBody] Port Port) {
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            context.Ports.Add(port);
-            await context.SaveChangesAsync();
+            repo.Add(Port);
             return Ok(new { response = ApiMessages.RecordCreated() });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPort([FromRoute] int id, [FromBody] Port port) {
-            if (id != port.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
+        public IActionResult PutPort([FromRoute] int id, [FromBody] Port Port) {
+            if (id != Port.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            if (await context.Ports.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
-            context.Entry(port).State = EntityState.Modified;
-            await context.SaveChangesAsync();
+            try {
+                repo.Update(Port);
+            } catch (System.Exception) {
+                return NotFound(new { response = ApiMessages.RecordNotFound() });
+            }
             return Ok(new { response = ApiMessages.RecordUpdated() });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePort([FromRoute] int id) {
-            if (await context.Ports.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
-            context.Ports.Remove(await context.Ports.SingleOrDefaultAsync(m => m.Id == id));
+            Port Port = await repo.GetById(id);
+            if (Port == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             try {
-                await context.SaveChangesAsync();
+                repo.Delete(Port);
                 return Ok(new { response = ApiMessages.RecordDeleted() });
             } catch (DbUpdateException) {
                 return BadRequest(new { response = ApiMessages.RecordInUse() });
