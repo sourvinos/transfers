@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,59 +10,50 @@ namespace Transfers {
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLoggedIn")]
     public class DriversController : ControllerBase {
-
-        private readonly IMapper mapper;
-        private readonly AppDbContext context;
-
-        public DriversController(IMapper mapper, AppDbContext context) =>
-            (this.mapper, this.context) = (mapper, context);
+        private readonly IDriverRepository repo;
+        public DriversController(IDriverRepository repo) => (this.repo) = (repo);
 
         [HttpGet]
         public async Task<IEnumerable<Driver>> Get() {
-            return await context.Drivers.OrderBy(o => o.Description).AsNoTracking().ToListAsync();
+            return await repo.Get();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDriver(int id) {
-            Driver driver = await context.Drivers.SingleOrDefaultAsync(m => m.Id == id);
-            if (driver == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
-            return Ok(driver);
+            Driver Driver = await repo.GetById(id);
+            if (Driver == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
+            return Ok(Driver);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostDriver([FromBody] Driver driver) {
+        public IActionResult PostDriver([FromBody] Driver Driver) {
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            context.Drivers.Add(driver);
-            await context.SaveChangesAsync();
+            repo.Add(Driver);
             return Ok(new { response = ApiMessages.RecordCreated() });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDriver([FromRoute] int id, [FromBody] Driver driver) {
-            if (id != driver.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
+        public IActionResult PutDriver([FromRoute] int id, [FromBody] Driver Driver) {
+            if (id != Driver.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            if (await context.Drivers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { Response = ApiMessages.RecordNotFound() });
-            context.Entry(driver).State = EntityState.Modified;
-            await context.SaveChangesAsync();
+            try {
+                repo.Update(Driver);
+            } catch (System.Exception) {
+                return NotFound(new { response = ApiMessages.RecordNotFound() });
+            }
             return Ok(new { response = ApiMessages.RecordUpdated() });
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDriver([FromRoute] int id) {
-            if (await context.Drivers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id) == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
-            context.Drivers.Remove(await context.Drivers.SingleOrDefaultAsync(m => m.Id == id));
+            Driver Driver = await repo.GetById(id);
+            if (Driver == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             try {
-                await context.SaveChangesAsync();
+                repo.Delete(Driver);
                 return Ok(new { response = ApiMessages.RecordDeleted() });
             } catch (DbUpdateException) {
                 return BadRequest(new { response = ApiMessages.RecordInUse() });
             }
-        }
-
-        [HttpGet("getDefault")]
-        public async Task<IActionResult> GetDefaultDriver() {
-            Driver driver = await context.Drivers.SingleOrDefaultAsync(m => m.IsDefault);
-            return Ok(driver);
         }
 
     }

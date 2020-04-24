@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -79,8 +78,11 @@ namespace Transfers {
             }
         }
 
-        public static string AddApiMessages() {
-            return "Record not found.";
+        public static void AddInterfaces(IServiceCollection services) {
+            services.AddScoped<Token>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<IDestinationRepository, DestinationRepository>();
+            services.AddTransient<IDriverRepository, DriverRepository>();
         }
 
     }
