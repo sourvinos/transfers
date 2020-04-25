@@ -10,6 +10,7 @@ namespace Transfers {
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLoggedIn")]
     public class DriversController : ControllerBase {
+
         private readonly IDriverRepository repo;
         public DriversController(IDriverRepository repo) => (this.repo) = (repo);
 
@@ -23,6 +24,12 @@ namespace Transfers {
             Driver Driver = await repo.GetById(id);
             if (Driver == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             return Ok(Driver);
+        }
+
+        [HttpGet("getDefault")]
+        public async Task<IActionResult> GetDefaultDriver() {
+            Driver driver = await repo.GetDefault();
+            return Ok(driver);
         }
 
         [HttpPost]

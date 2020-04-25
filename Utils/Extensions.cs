@@ -83,9 +83,10 @@ namespace Transfers {
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IDestinationRepository, DestinationRepository>();
             services.AddTransient<IDriverRepository, DriverRepository>();
+            services.AddTransient<IPickupPointRepository, PickupPointRepository>();
             services.AddTransient<IPortRepository, PortRepository>();
             services.AddTransient<IRouteRepository, RouteRepository>();
-            services.AddTransient<IPickupPointRepository, PickupPointRepository>();
+            services.AddTransient<ITransferRepository, TransferRepository>();
         }
 
     }

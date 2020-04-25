@@ -79,6 +79,8 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
                     this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
                     this.resetForm()
                     this.onGoBack()
+                }, () => {
+                    this.showSnackbar(this.messageService.recordIsInUse(), 'error')
                 })
             }
         })

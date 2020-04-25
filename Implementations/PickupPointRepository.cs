@@ -10,7 +10,7 @@ namespace Transfers {
         public PickupPointRepository(AppDbContext appDbContext) => (this.appDbContext) = (appDbContext);
 
         public async Task<IEnumerable<PickupPoint>> Get() {
-            return await appDbContext.PickupPoints.Include(x => x.Route).OrderBy(o => o.Time).ThenBy(o => o.Description).AsNoTracking().ToListAsync();
+            return await appDbContext.PickupPoints.Include(x => x.Route).ThenInclude(y => y.Port).OrderBy(o => o.Time).ThenBy(o => o.Description).AsNoTracking().ToListAsync();
         }
 
         public async Task<IEnumerable<PickupPoint>> GetForRoute(int routeId) {

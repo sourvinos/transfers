@@ -10,6 +10,7 @@ namespace Transfers {
     [Route("api/[controller]")]
     [Authorize(Policy = "RequireLoggedIn")]
     public class DestinationsController : ControllerBase {
+
         private readonly IDestinationRepository repo;
         public DestinationsController(IDestinationRepository repo) => (this.repo) = (repo);
 

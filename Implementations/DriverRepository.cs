@@ -17,6 +17,10 @@ namespace Transfers {
             return await appDbContext.Drivers.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
         }
 
+        public async Task<Driver> GetDefault() {
+            return await appDbContext.Drivers.SingleOrDefaultAsync(m => m.IsDefault);
+        }
+
         public void Add(Driver Driver) {
             appDbContext.Drivers.AddAsync(Driver);
             appDbContext.SaveChanges();

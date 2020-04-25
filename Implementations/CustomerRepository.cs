@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Transfers {
+
     public class CustomerRepository : ICustomerRepository {
 
         private readonly AppDbContext appDbContext;
@@ -31,5 +32,7 @@ namespace Transfers {
             appDbContext.Customers.Remove(customer);
             appDbContext.SaveChanges();
         }
+
     }
+
 }
