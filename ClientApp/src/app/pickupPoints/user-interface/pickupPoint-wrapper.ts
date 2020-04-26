@@ -43,7 +43,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         this.unlisten()
     }
 
-    onDeleteRecord() {
+    onDelete() {
         this.interactionPickupPointService.performAction('deleteRecord')
     }
 
@@ -51,7 +51,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         this.navigateToList()
     }
 
-    onNewRecord() {
+    onNew() {
         this.router.navigate([this.location.path() + '/pickupPoint/new'])
     }
 
@@ -59,7 +59,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
         this.id = event.option.id
     }
 
-    onSaveRecord() {
+    onSave() {
         this.interactionPickupPointService.performAction('saveRecord')
     }
 

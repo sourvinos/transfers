@@ -44,7 +44,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigateByUrl('/forgotPassword');
     }
 
-    onSubmit() {
+    onSave() {
         const form = this.form.value
         this.accountService.login(form.username, form.password).subscribe(() => {
             this.router.navigateByUrl(this.returnUrl);
@@ -59,7 +59,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Alt.L': (event: KeyboardEvent): void => {
                 event.preventDefault()
-                this.onSubmit()
+                document.getElementById('login').click()
             }
         }, {
             priority: 2,

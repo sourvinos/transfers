@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, IterableDiffer, IterableDiffers, OnInit } from '@angular/core'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
-import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
+import { Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { IndexInteractionService } from '../../services/index-interaction.service'
 
 @Component({
@@ -36,28 +36,28 @@ export class CustomTableComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.initVariables()
-        this.gotoRow(1)
+        this.onGotoRow(1)
     }
 
-    onDomChange($event: Event) {
-        this.gotoRow(1)
-    }
-
-    checkKeyboard(event: any) {
+    onCheckKeyboard(event: any) {
         switch (event.keyCode) {
-            case 38: this.gotoRow('Up'); break;
-            case 40: this.gotoRow('Down'); break;
+            case 38: this.onGotoRow('Up'); break;
+            case 40: this.onGotoRow('Down'); break;
             case 13: this.sendRowToService(); break;
             default: break;
         }
     }
 
-    sortMe(columnName: string, sortOrder: string) {
+    onDomChange($event: Event) {
+        this.onGotoRow(1)
+    }
+
+    onSortMe(columnName: string, sortOrder: string) {
         this.records.sort(this.compareValues(columnName, sortOrder))
         this.sortOrder = this.sortOrder === 'asc' ? this.sortOrder = 'desc' : this.sortOrder = 'asc'
     }
 
-    private gotoRow(key: any) {
+    private onGotoRow(key: any) {
         if (!isNaN(key)) {
             this.unselectAllRows().then(() => {
                 this.selectRow(this.customTable, key)

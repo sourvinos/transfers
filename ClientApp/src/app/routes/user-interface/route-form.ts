@@ -67,7 +67,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onDeleteRecord() {
+    onDelete() {
         this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.routeService.delete(this.form.value.id).subscribe(() => {
@@ -97,7 +97,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onSaveRecord() {
+    onSave() {
         if (this.form.value.id === 0) {
             this.routeService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
@@ -117,22 +117,27 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.onGoBack()
+                    document.getElementById('goBack').click()
                 }
             },
             'Alt.D': (event: KeyboardEvent) => {
                 event.preventDefault()
-                this.onDeleteRecord()
+                document.getElementById('delete').click()
             },
             'Alt.S': (event: KeyboardEvent) => {
-                this.onSaveRecord()
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
+                    event.preventDefault()
+                    document.getElementById('save').click()
+                }
             },
             'Alt.C': (event: KeyboardEvent) => {
+                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     document.getElementById('cancel').click()
                 }
             },
             'Alt.O': (event: KeyboardEvent) => {
+                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     document.getElementById('ok').click()
                 }
@@ -250,8 +255,8 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private subscribeToInteractionService() {
         this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            if (response === 'saveRecord') { this.onSaveRecord() }
-            if (response === 'deleteRecord') { this.onDeleteRecord() }
+            if (response === 'saveRecord') { this.onSave() }
+            if (response === 'deleteRecord') { this.onDelete() }
         })
     }
 

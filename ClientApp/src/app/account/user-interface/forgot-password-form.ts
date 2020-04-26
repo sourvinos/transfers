@@ -39,7 +39,7 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
         this.unlisten()
     }
 
-    onSubmit() {
+    onSave() {
         const form = this.form.value;
         this.accountService.forgotPassword(form.email).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
@@ -55,13 +55,13 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.onGoBack()
+                    document.getElementById('goBack').click()
                 }
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     event.preventDefault()
-                    this.onSubmit()
+                    document.getElementById('save').click()
                 }
             }
         }, {

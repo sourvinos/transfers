@@ -29,7 +29,7 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
 
     @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
         if (event.key === 'Enter') { this.sendRowToService() }
-        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') { this.gotoRow(event.key) }
+        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') { this.onGotoRow(event.key) }
     }
 
     ngOnInit() {
@@ -38,7 +38,7 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
 
     ngAfterViewInit() {
         this.initVariables()
-        this.gotoRow(1)
+        this.onGotoRow(1)
     }
 
     ngDoCheck() {
@@ -46,18 +46,6 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
         if (changes) {
             this.checked = false
         }
-    }
-
-    toggleCheckBox(row: number) {
-        this.checkedIds = []
-        this.totalPersons = 0
-        this.table.rows[row].classList.toggle('checked')
-        this.table.querySelectorAll('tr.checked').forEach((element: { childNodes: { innerText: string }[] }) => {
-            this.checkedIds.push(element.childNodes[2].innerText)
-            this.totalPersons += parseInt(element.childNodes[11].innerText, 10)
-        })
-        localStorage.setItem('selectedIds', JSON.stringify(this.checkedIds))
-        this.interactionService.setCheckedTotalPersons(this.totalPersons)
     }
 
     onHeaderClick(column: any) {
@@ -81,10 +69,22 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
 
     onDomChange($event: Event) {
         document.getElementById('custom-table-input').focus()
-        this.gotoRow(1)
+        this.onGotoRow(1)
     }
 
-    private gotoRow(key: any) {
+    onToggleCheckBox(row: number) {
+        this.checkedIds = []
+        this.totalPersons = 0
+        this.table.rows[row].classList.toggle('checked')
+        this.table.querySelectorAll('tr.checked').forEach((element: { childNodes: { innerText: string }[] }) => {
+            this.checkedIds.push(element.childNodes[2].innerText)
+            this.totalPersons += parseInt(element.childNodes[11].innerText, 10)
+        })
+        localStorage.setItem('selectedIds', JSON.stringify(this.checkedIds))
+        this.interactionService.setCheckedTotalPersons(this.totalPersons)
+    }
+
+    private onGotoRow(key: any) {
         if (!isNaN(key)) {
             this.unselectAllRows()
             this.selectRow(this.table, key)

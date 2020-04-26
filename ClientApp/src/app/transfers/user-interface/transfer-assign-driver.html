@@ -19,7 +19,7 @@
 
     <div id="dialog-footer">
         <mat-dialog-actions>
-            <button mat-flat-button class="secondary" id="cancel" tabindex="-1" (click)="close()">Cancel</button>
+            <button mat-flat-button class="secondary" id="cancel" tabindex="-1" (click)="onClose()">Cancel</button>
             <button mat-flat-button class="primary" id="ok" tabindex="-1" [disabled]="!id" [mat-dialog-close]="id">OK</button>
         </mat-dialog-actions>
     </div>

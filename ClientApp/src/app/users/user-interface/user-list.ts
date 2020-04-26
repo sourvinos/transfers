@@ -52,7 +52,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.filteredRecords = query ? this.records.filter(p => p.username.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
-    onNewRecord() {
+    onNew() {
         this.router.navigate([this.url + '/new'])
     }
 

@@ -25,7 +25,7 @@ export class TransferAssignDriverComponent implements OnInit {
         this.trackChangesInAutoComplete()
     }
 
-    close() {
+    onClose() {
         this.dialogRef.close()
     }
 

@@ -47,7 +47,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         this.unlisten()
     }
 
-    onSubmit() {
+    onSave() {
         const form = this.form.value;
         this.accountService.resetPassword(form.email, form.password, form.confirmPassword, form.token).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
@@ -63,15 +63,10 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            'Escape': () => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.onGoBack()
-                }
-            },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     event.preventDefault()
-                    this.onSubmit()
+                    document.getElementById('save').click()
                 }
             }
         }, {

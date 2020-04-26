@@ -58,7 +58,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onDeleteRecord() {
+    onDelete() {
         this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.customerService.delete(this.form.value.id).subscribe(() => {
@@ -72,7 +72,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    onSaveRecord() {
+    onSave() {
         if (this.form.value.id === 0) {
             this.customerService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
@@ -92,17 +92,17 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.onGoBack()
+                    document.getElementById('goBack').click()
                 }
             },
             'Alt.D': (event: KeyboardEvent) => {
                 event.preventDefault()
-                this.onDeleteRecord()
+                document.getElementById('delete').click()
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     event.preventDefault()
-                    this.onSaveRecord()
+                    document.getElementById('save').click()
                 }
             },
             'Alt.C': (event: KeyboardEvent) => {

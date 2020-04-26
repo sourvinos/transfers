@@ -26,7 +26,7 @@
 <div id="footer">
     <mat-divider></mat-divider>
     <div id="buttons">
-        <button mat-flat-button class="delete" [class.hidden]="!id" id="delete" (click)="onDeleteRecord()">Delete</button>
-        <button mat-flat-button class="primary" [disabled]="!form.valid" id="save" (click)="onSaveRecord()">Save</button>
+        <button mat-flat-button class="delete" *ngIf="form.value.id !== 0" id="delete" (click)="onDelete()">Delete</button>
+        <button mat-flat-button class="primary" [disabled]="!form.valid" id="save" (click)="onSave()">Save</button>
     </div>
 </div>

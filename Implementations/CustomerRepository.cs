@@ -8,6 +8,7 @@ namespace Transfers {
     public class CustomerRepository : ICustomerRepository {
 
         private readonly AppDbContext appDbContext;
+
         public CustomerRepository(AppDbContext appDbContext) => (this.appDbContext) = (appDbContext);
 
         public async Task<IEnumerable<Customer>> Get() {

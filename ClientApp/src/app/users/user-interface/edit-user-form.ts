@@ -71,7 +71,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onDeleteRecord() {
+    onDelete() {
         this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['ok', 'cancel']).subscribe(answer => {
             if (answer) {
                 this.userService.delete(this.form.value.id).subscribe((response) => {
@@ -85,7 +85,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    onSaveRecord() {
+    onSave() {
         this.userService.update(this.form.value.id, this.form.value).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
             this.resetForm()
@@ -99,17 +99,17 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.onGoBack()
+                    document.getElementById('goBack').click()
                 }
             },
             'Alt.D': (event: KeyboardEvent) => {
                 event.preventDefault()
-                this.onDeleteRecord()
+                this.onDelete()
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0 && this.form.valid) {
                     event.preventDefault()
-                    this.onSaveRecord()
+                    this.onSave()
                 }
             },
             'Alt.C': (event: KeyboardEvent) => {

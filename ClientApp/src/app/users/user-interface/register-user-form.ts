@@ -62,7 +62,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         this.form.reset()
     }
 
-    onSubmit() {
+    onSave() {
         this.flattenFormFields();
         this.accountService.register(this.flatForm).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
@@ -77,13 +77,13 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.onGoBack()
+                    document.getElementById('goBack').click()
                 }
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     event.preventDefault()
-                    this.onSubmit()
+                    document.getElementById('onSave').click()
                 }
             },
             'Alt.C': (event: KeyboardEvent) => {

@@ -3,20 +3,20 @@
         <mat-accordion>
             <mat-expansion-panel expanded="true" class="summaryBlock">
                 <mat-expansion-panel-header class="summaryHeader">
-                    <mat-checkbox class="checkbox destination" [(ngModel)]="checkedDestinations" (click)="toggleItems('destination', this.selectedDestinations, this.checkedDestinations)"></mat-checkbox>
+                    <mat-checkbox class="checkbox destination" [(ngModel)]="checkedDestinations" (click)="onToggleItems('destination', this.selectedDestinations, this.checkedDestinations)"></mat-checkbox>
                     <header>Destinations</header>
                 </mat-expansion-panel-header>
-                <div *ngFor="let item of queryResult.personsPerDestination" (click)="toggleItem(item, this.selectedDestinations)" class="item destination" [class.active]="item.isSelected" [id]="item.description">
+                <div *ngFor="let item of queryResult.personsPerDestination" (click)="onToggleItem(item, this.selectedDestinations)" class="item destination" [class.active]="item.isSelected" [id]="item.description">
                     <div class="description"> {{ item.description }} </div>
                     <div class="total"> {{ item.persons }} </div>
                 </div>
             </mat-expansion-panel>
             <mat-expansion-panel class="summaryBlock">
                 <mat-expansion-panel-header class="summaryHeader">
-                    <mat-checkbox class="checkbox customer" [(ngModel)]="checkedCustomers" (click)="toggleItems('customer', this.selectedCustomers, this.checkedCustomers)"></mat-checkbox>
+                    <mat-checkbox class="checkbox customer" [(ngModel)]="checkedCustomers" (click)="onToggleItems('customer', this.selectedCustomers, this.checkedCustomers)"></mat-checkbox>
                     <header>Customers</header>
                 </mat-expansion-panel-header>
-                <div *ngFor="let item of queryResult.personsPerCustomer" (click)="toggleItem(item, this.selectedCustomers)" class="item customer" [class.active]="item.isSelected" [id]="item.description">
+                <div *ngFor="let item of queryResult.personsPerCustomer" (click)="onToggleItem(item, this.selectedCustomers)" class="item customer" [class.active]="item.isSelected" [id]="item.description">
                     <div class="description"> {{ item.description }} </div>
                     <div class="total"> {{ item.persons }} </div>
                 </div>
@@ -74,7 +74,7 @@
                 <div id="buttons">
                     <button mat-flat-button class="secondary" id="assignDriver" [class.hidden]="queryResult.persons == 0" (click)="onAssignDriver()">Assign driver</button>
                     <button mat-flat-button class="secondary" id="createPdf" [class.hidden]="queryResult.persons == 0" (click)="onCreatePdf()">Create PDFs</button>
-                    <button mat-flat-button class="primary" id="new" (click)="onNewRecord()">New</button>
+                    <button mat-flat-button class="primary" id="new" (click)="onNew()">New</button>
                 </div>
             </div>
         </div>

@@ -124,7 +124,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.pdfService.createReport(this.transfersFlat, this.getDriversFromLocalStorage(), this.dateIn)
     }
 
-    onNewRecord() {
+    onNew() {
         this.driverService.getDefaultDriver().then(response => {
             if (response) {
                 this.router.navigate([this.location.path() + '/transfer/new'])
@@ -134,7 +134,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         })
     }
 
-    toggleItem(item: any, lookupArray: string[]) {
+    onToggleItem(item: any, lookupArray: string[]) {
         this.toggleActiveItem(item, lookupArray)
         this.initCheckedPersons()
         this.filterByCriteria()
@@ -143,7 +143,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.saveToLocalStorage()
     }
 
-    toggleItems(className: string, lookupArray: { splice: (arg0: number) => void; }, checkedArray: any) {
+    onToggleItems(className: string, lookupArray: { splice: (arg0: number) => void; }, checkedArray: any) {
         event.stopPropagation()
         lookupArray.splice(0)
         this.selectItems(className, lookupArray, !checkedArray)

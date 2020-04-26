@@ -16,7 +16,7 @@ export class MainComponent implements AfterViewInit {
         this.positionHamburger()
     }
 
-    toggleMenu() {
+    onToggleMenu() {
         document.getElementById('hamburger').classList.toggle('open')
         const sidebar = document.getElementById('sidebar')
         const main = document.getElementById('main')

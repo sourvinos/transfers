@@ -97,7 +97,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.form.patchValue({ totalPersons: !!Number(totalPersons) ? totalPersons : 0 })
     }
 
-    onDeleteRecord() {
+    onDelete() {
         this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.transferService.delete(this.form.value.id).subscribe(() => {
@@ -125,7 +125,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onSaveRecord() {
+    onSave() {
         if (this.form.value.id === 0 || this.form.value.id === null) {
             this.transferService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
@@ -145,30 +145,35 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            'Escape': (event: KeyboardEvent): void => {
+            'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.onGoBack()
+                    document.getElementById('goBack').click()
                 }
             },
-            'Alt.D': (event: KeyboardEvent): void => {
+            'Alt.D': (event: KeyboardEvent) => {
                 event.preventDefault()
-                this.onDeleteRecord()
+                document.getElementById('delete').click()
             },
-            'Alt.S': (event: KeyboardEvent): void => {
-                this.onSaveRecord()
+            'Alt.S': (event: KeyboardEvent) => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
+                    event.preventDefault()
+                    document.getElementById('save').click()
+                }
             },
-            'Alt.C': (event: KeyboardEvent): void => {
+            'Alt.C': (event: KeyboardEvent) => {
+                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     document.getElementById('cancel').click()
                 }
             },
-            'Alt.O': (event: KeyboardEvent): void => {
+            'Alt.O': (event: KeyboardEvent) => {
+                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     document.getElementById('ok').click()
                 }
             }
         }, {
-            priority: 2,
+            priority: 1,
             inputs: true
         })
     }
@@ -375,8 +380,8 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private subscribeToInteractionService() {
         this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            if (response === 'saveRecord') { this.onSaveRecord() }
-            if (response === 'deleteRecord') { this.onDeleteRecord() }
+            if (response === 'saveRecord') { this.onSave() }
+            if (response === 'deleteRecord') { this.onDelete() }
         })
     }
 

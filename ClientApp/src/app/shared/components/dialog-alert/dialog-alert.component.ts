@@ -15,7 +15,7 @@ export class DialogAlertComponent {
         this.titleColor = data.titleColor
     }
 
-    close() {
+    onClose() {
         this.dialogRef.close()
     }
 

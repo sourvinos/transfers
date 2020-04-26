@@ -46,21 +46,21 @@ export class PortListComponent implements OnInit, OnDestroy {
         this.unlisten()
     }
 
-    createPdf() {
+    editRecord(id: number) {
+        this.router.navigate([this.url, id])
+    }
+
+    onCreatePdf() {
         this.portService.createPDF().subscribe((file: HttpResponse<Blob>) => {
             window.location.href = file.url
         })
-    }
-
-    editRecord(id: number) {
-        this.router.navigate([this.url, id])
     }
 
     onFilter(query: string) {
         this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
-    onNewRecord() {
+    onNew() {
         this.router.navigate([this.url + '/new'])
     }
 

@@ -38,15 +38,15 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         elem.dispatchEvent(clickEvent)
     }
 
-    logout() {
-        this.accountService.logout()
-    }
-
-    closeSidebar() {
+    onCloseSidebar() {
         const hamburger = document.getElementById('hamburger')
         if (hamburger.className === 'open') {
             this.triggerEvent(hamburger, 'click')
         }
+    }
+
+    onLogout() {
+        this.accountService.logout()
     }
 
 }
