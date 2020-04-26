@@ -4,7 +4,7 @@ import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
-import { Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
+import { Unlisten, KeyboardShortcuts } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { TransferPdfService } from '../classes/transfer-pdf.service';
 import { TransferService } from '../classes/transfer.service';
 import { TransferFlat } from '../classes/transferFlat';
@@ -48,7 +48,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: TransferPdfService, private driverService: DriverService, private location: Location, private snackbarService: SnackbarService, public dialog: MatDialog, private transferService: TransferService, private helperService: HelperService, private messageService: MessageService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: TransferPdfService, private driverService: DriverService, private location: Location, private snackbarService: SnackbarService, public dialog: MatDialog, private transferService: TransferService, private helperService: HelperService, private messageService: MessageService, private keyboardShortcutsService: KeyboardShortcuts) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn !== '' && this.router.url.split('/').length === 4) {
@@ -59,6 +59,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     ngOnInit() {
+        this.addShortcuts()
         this.initPersonsSumArray()
         this.subscribeToInteractionService()
     }
@@ -93,7 +94,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
-        // this.unlisten()
     }
 
     onAssignDriver(): void {
@@ -151,6 +151,44 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.initCheckedPersons()
         this.updateTotals()
         this.flattenResults()
+    }
+
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            'Escape': () => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
+                    // this.onGoBack()
+                }
+            },
+            'Alt.A': (event: KeyboardEvent) => {
+                event.preventDefault()
+                this.clickOnButton('assignDriver')
+            },
+            'Alt.C': (event: KeyboardEvent) => {
+                event.preventDefault()
+                this.clickOnButton('createPdf')
+            },
+            'Alt.N': (event: KeyboardEvent) => {
+                event.preventDefault()
+                alert('List: Alt+N')
+                // document.getElementById('new').click()
+            },
+            'Alt.S': (event: KeyboardEvent) => {
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
+                    event.preventDefault()
+                    document.getElementById('save').click()
+                }
+            },
+            'Alt.O': (event: KeyboardEvent) => {
+                event.preventDefault()
+                if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
+                    document.getElementById('ok').click()
+                }
+            }
+        }, {
+            priority: 2,
+            inputs: true
+        })
     }
 
     private addActiveClassToElements(className: string, lookupArray: string[]) {
@@ -340,6 +378,13 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         } else {
             element.classList.add('activeItem')
             lookupArray.push(item.description)
+        }
+    }
+
+    private clickOnButton(buttonId: string) {
+        const button = document.getElementById(buttonId)
+        if (button && !button.attributes['disabled']) {
+            button.click()
         }
     }
 

@@ -72,7 +72,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         }
     }
 
-    onDelete() {
+    onDeleteRecord() {
         this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.pickupPointService.delete(this.form.value.id).subscribe(() => {
@@ -112,7 +112,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
             },
             'Alt.D': (event: KeyboardEvent): void => {
                 event.preventDefault()
-                this.onDelete()
+                this.onDeleteRecord()
             },
             'Alt.S': (event: KeyboardEvent): void => {
                 this.onSave()
@@ -183,6 +183,10 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         })
     }
 
+    private setStatus(status: string) {
+        this.interactionService.setRecordStatus(status)
+    }
+
     private scrollToForm() {
         document.getElementById('pickupPointsList').style.height = '0'
     }
@@ -193,10 +197,6 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         this.interactionService.performAction('')
     }
 
-    private setStatus(status: string) {
-        this.interactionService.setRecordStatus(status)
-    }
-
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
@@ -204,7 +204,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     private subscribeTointeractionService() {
         this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             if (response === 'saveRecord') { this.onSave() }
-            if (response === 'deleteRecord') { this.onDelete() }
+            if (response === 'deleteRecord') { this.onDeleteRecord() }
         })
     }
 

@@ -14,7 +14,7 @@ import { TransferFlat } from 'src/app/transfers/classes/transferFlat';
 
 export class TransferWrapperComponent implements OnInit, OnDestroy {
 
-    dateIn = '01/10/2019'
+    dateIn = '20/04/2020'
     dateInISO = ''
     records: string[] = []
     transfersFlat: TransferFlat[] = []
@@ -49,12 +49,24 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.onGoBack()
+                    // this.onGoBack()
                 }
+            },
+            // 'Alt.A': (event: KeyboardEvent) => {
+            //     event.preventDefault()
+            //     this.clickOnButton('assignDriver')
+            // },
+            'Alt.C': (event: KeyboardEvent) => {
+                event.preventDefault()
+                this.clickOnButton('createPdf')
+            },
+            'Alt.N': (event: KeyboardEvent) => {
+                event.preventDefault()
+                this.clickOnButton('new')
             },
             'Alt.S': (event: KeyboardEvent) => {
                 event.preventDefault()
-                document.getElementById('search').click()
+                alert('Wrapper: Alt+S')
             }
         }, {
             priority: 1,
@@ -66,12 +78,19 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
         localStorage.removeItem('transfers')
     }
 
+    private clickOnButton(buttonId: string) {
+        const button = document.getElementById(buttonId)
+        if (button && !button.attributes['disabled']) {
+            button.click()
+        }
+    }
+
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
-    private onGoBack() {
-        this.router.navigate(['/'])
+    onGoBack() {
+        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
     private isValidDate(): boolean {

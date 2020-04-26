@@ -46,13 +46,11 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) {
                 this.getRecord(p.id)
-                this.setStatus('editRecord')
             } else {
                 this.driverService.getDefaultDriver()
                     .then(response => {
                         this.defaultDriver = response
                         this.populateFormWithDefaultValues(this.defaultDriver)
-                        this.setStatus('newRecord')
                     })
             }
         })
@@ -63,7 +61,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.scrollToForm()
         this.addShortcuts()
         this.populateDropDowns()
-        // this.subscribeToInteractionService()
     }
 
     ngAfterViewInit() {
@@ -147,7 +144,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    document.getElementById('goBack').click()
+                    this.onGoBack()
                 }
             },
             'Alt.D': (event: KeyboardEvent) => {
@@ -173,7 +170,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
         }, {
-            priority: 1,
+            priority: 3,
             inputs: true
         })
     }
@@ -209,12 +206,8 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         Utils.setFocus(field)
     }
 
-    private resetForm() {
-        this.form.reset()
-    }
     private getRecord(id: number) {
         this.transferService.getSingle(id).then(result => {
-            console.log(result)
             this.populateFields(result)
         }, () => {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
@@ -223,7 +216,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private onGoBack() {
-        this.setStatus('empty')
         this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
@@ -339,6 +331,10 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
+    private resetForm() {
+        this.form.reset()
+    }
+
     private scrollToForm() {
         document.getElementById('content').style.width = this.getListWidth()
         document.getElementById('content').style.height = this.getListHeight()
@@ -350,10 +346,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         document.getElementById('transfersList').style.display = 'flex'
         document.getElementById('custom-table-input').focus()
         this.interactionService.performAction('')
-    }
-
-    private setStatus(status: string) {
-        this.interactionService.setRecordStatus(status)
     }
 
     private showSnackbar(message: string, type: string): void {
