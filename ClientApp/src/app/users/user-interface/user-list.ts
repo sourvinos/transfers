@@ -3,9 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { ButtonClickService } from 'src/app/shared/services/button-click.service'
+import { User } from '../../account/classes/user'
 import { Utils } from '../../shared/classes/utils'
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service'
-import { User } from '../../account/classes/user'
 
 @Component({
     selector: 'user-list',
@@ -29,7 +30,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService) {
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService, private buttonClickService: ButtonClickService) {
         this.loadRecords()
     }
 
@@ -59,22 +60,23 @@ export class UserListComponent implements OnInit, OnDestroy {
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.onGoBack()
-                }
+                this.onGoBack()
             },
             'Alt.F': (event: KeyboardEvent): void => {
-                event.preventDefault()
-                this.focus('searchField')
+                this.focus(event, 'searchField')
             },
             'Alt.N': (event: KeyboardEvent): void => {
-                event.preventDefault()
-                document.getElementById('new').click()
+                this.buttonClickService.clickOnButton(event, 'new')
             }
         }, {
             priority: 0,
             inputs: true
         })
+    }
+
+    private focus(event: KeyboardEvent, element: string) {
+        event.preventDefault()
+        Utils.setFocus(element)
     }
 
     private onGoBack(): void {
@@ -84,10 +86,6 @@ export class UserListComponent implements OnInit, OnDestroy {
     private loadRecords() {
         this.records = this.activatedRoute.snapshot.data[this.resolver]
         this.filteredRecords = this.records
-    }
-
-    private focus(element: string) {
-        Utils.setFocus(element)
     }
 
     private subscribeToInteractionService() {

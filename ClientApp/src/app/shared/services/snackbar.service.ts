@@ -25,9 +25,6 @@ export class SnackbarService {
                 },
                 panelClass: [type],
             })
-            // this.snackBar.open(errors, 'Close', {
-            //     panelClass: [type],
-            // })
         })
     }
 

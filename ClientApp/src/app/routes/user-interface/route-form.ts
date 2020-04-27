@@ -8,6 +8,7 @@ import { PortService } from 'src/app/ports/classes/port.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
@@ -30,7 +31,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService, private messageService: MessageService, private snackbarService: SnackbarService) {
+    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService, private messageService: MessageService, private snackbarService: SnackbarService, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) { this.getRecord(p.id) }
         })
@@ -115,31 +116,27 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            'Escape': () => {
+            'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    document.getElementById('goBack').click()
+                    this.buttonClickService.clickOnButton(event, 'goBack')
                 }
             },
             'Alt.D': (event: KeyboardEvent) => {
-                event.preventDefault()
-                document.getElementById('delete').click()
+                this.buttonClickService.clickOnButton(event, 'delete')
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    event.preventDefault()
-                    document.getElementById('save').click()
+                    this.buttonClickService.clickOnButton(event, 'save')
                 }
             },
             'Alt.C': (event: KeyboardEvent) => {
-                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
-                    document.getElementById('cancel').click()
+                    this.buttonClickService.clickOnButton(event, 'cancel')
                 }
             },
             'Alt.O': (event: KeyboardEvent) => {
-                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
-                    document.getElementById('ok').click()
+                    this.buttonClickService.clickOnButton(event, 'ok')
                 }
             }
         }, {

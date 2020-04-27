@@ -3,11 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
+import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { PasswordValidator } from 'src/app/shared/services/password-validator';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { ValidationService } from 'src/app/shared/services/validation.service';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
-import { ValidationService } from 'src/app/shared/services/validation.service';
 
 @Component({
     selector: 'reset-password-form',
@@ -25,7 +26,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private activatedRoute: ActivatedRoute) {
+    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe(p => {
             this.email = p['email']
             this.token = p['token']
@@ -65,12 +66,11 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         this.unlisten = this.keyboardShortcutsService.listen({
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    event.preventDefault()
-                    document.getElementById('save').click()
+                    this.buttonClickService.clickOnButton(event, 'save')
                 }
             }
         }, {
-            priority: 2,
+            priority: 1,
             inputs: true
         })
     }

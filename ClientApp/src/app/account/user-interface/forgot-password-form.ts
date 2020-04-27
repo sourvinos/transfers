@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
+import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
@@ -23,7 +24,7 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
         email: ['johnsourvinos@hotmail.com', [Validators.required, Validators.email, Validators.maxLength(100)]],
     })
 
-    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService) { }
+    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private buttonClickService: ButtonClickService) { }
 
     ngOnInit() {
         this.addShortcuts()
@@ -53,19 +54,18 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            'Escape': () => {
+            'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    document.getElementById('goBack').click()
+                    this.buttonClickService.clickOnButton(event, 'goBack')
                 }
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    event.preventDefault()
-                    document.getElementById('save').click()
+                    this.buttonClickService.clickOnButton(event, 'save')
                 }
             }
         }, {
-            priority: 2,
+            priority: 1,
             inputs: true
         })
     }

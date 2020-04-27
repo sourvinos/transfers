@@ -1,11 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
-import { Subject } from 'rxjs'
-import { takeUntil } from 'rxjs/operators'
-import { Utils } from 'src/app/shared/classes/utils'
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
-import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
-import { Customer } from '../classes/customer'
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Utils } from 'src/app/shared/classes/utils';
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
+import { Customer } from '../classes/customer';
+import { ButtonClickService } from './../../shared/services/button-click.service';
 
 @Component({
     selector: 'customer-list',
@@ -29,7 +30,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService) {
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService, private buttonClickService: ButtonClickService) {
         this.loadRecords()
     }
 
@@ -59,17 +60,13 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent): void => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.onGoBack()
-                }
+                this.onGoBack()
             },
             'Alt.F': (event: KeyboardEvent): void => {
-                event.preventDefault()
-                this.focus('searchField')
+                this.focus(event, 'searchField')
             },
             'Alt.N': (event: KeyboardEvent): void => {
-                event.preventDefault()
-                document.getElementById('new').click()
+                this.buttonClickService.clickOnButton(event, 'new')
             }
         }, {
             priority: 0,
@@ -86,7 +83,8 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         this.filteredRecords = this.records
     }
 
-    private focus(element: string) {
+    private focus(event: KeyboardEvent, element: string) {
+        event.preventDefault()
         Utils.setFocus(element)
     }
 

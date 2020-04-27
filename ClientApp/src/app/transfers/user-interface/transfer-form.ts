@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material'
 import { ActivatedRoute, Router } from '@angular/router'
 import { forkJoin, Subject } from 'rxjs'
-import { takeUntil } from 'rxjs/operators'
 import { CustomerService } from 'src/app/customers/classes/customer.service'
 import { DestinationService } from 'src/app/destinations/classes/destination.service'
 import { Driver } from 'src/app/drivers/classes/driver'
@@ -13,6 +12,7 @@ import { PortService } from 'src/app/ports/classes/port.service'
 import { Utils } from 'src/app/shared/classes/utils'
 import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { ButtonClickService } from 'src/app/shared/services/button-click.service'
 import { DialogService } from 'src/app/shared/services/dialog.service'
 import { HelperService } from 'src/app/shared/services/helper.service'
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
@@ -31,18 +31,16 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     form: FormGroup
     defaultDriver: Driver
-
     destinations: any[]
     customers: any[]
     pickupPoints: any[]
     pickupPointsFlat: any[]
     drivers: any[]
     ports: any[]
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService) {
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) {
                 this.getRecord(p.id)
@@ -148,39 +146,28 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             },
             'Alt.D': (event: KeyboardEvent) => {
-                event.preventDefault()
-                document.getElementById('delete').click()
+                this.buttonClickService.clickOnButton(event, 'delete')
+
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    event.preventDefault()
-                    document.getElementById('save').click()
+                    this.buttonClickService.clickOnButton(event, 'save')
                 }
             },
             'Alt.C': (event: KeyboardEvent) => {
-                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
-                    document.getElementById('cancel').click()
+                    this.buttonClickService.clickOnButton(event, 'cancel')
                 }
             },
             'Alt.O': (event: KeyboardEvent) => {
-                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
-                    document.getElementById('ok').click()
+                    this.buttonClickService.clickOnButton(event, 'ok')
                 }
             }
         }, {
             priority: 3,
             inputs: true
         })
-    }
-
-    private getListHeight() {
-        return document.getElementById('listFormCombo').offsetHeight + 'px'
-    }
-
-    private getListWidth() {
-        return document.getElementById('listFormCombo').offsetWidth - 32 + 'px'
     }
 
     private clearFields(result: any, id: any, description: any) {
@@ -206,6 +193,14 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         Utils.setFocus(field)
     }
 
+    private getListHeight() {
+        return document.getElementById('listFormCombo').offsetHeight + 'px'
+    }
+
+    private getListWidth() {
+        return document.getElementById('listFormCombo').offsetWidth - 32 + 'px'
+    }
+
     private getRecord(id: number) {
         this.transferService.getSingle(id).then(result => {
             this.populateFields(result)
@@ -213,10 +208,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
             this.onGoBack()
         })
-    }
-
-    private onGoBack() {
-        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
     private initForm() {
@@ -228,13 +219,17 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             pickupPointId: [0, Validators.required], pickupPointDescription: ['', Validators.required],
             driverId: [0, Validators.required], driverDescription: [{ value: '', disabled: true }, Validators.required],
             portId: [0, Validators.required], portDescription: [Validators.required],
-            adults: [0, Validators.required],
-            kids: [0, Validators.required],
-            free: [0, Validators.required],
+            adults: [0, [Validators.required, Validators.min(0), Validators.max(999)]],
+            kids: [0, [Validators.required, Validators.min(0), Validators.max(999)]],
+            free: [0, [Validators.required, Validators.min(0), Validators.max(999)]],
             totalPersons: 0,
             remarks: ['', Validators.maxLength(128)],
             userName: ''
         })
+    }
+
+    private onGoBack() {
+        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
     private patchFields(result: any, fields: any[]) {
@@ -348,7 +343,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.interactionService.performAction('')
     }
 
-    private showSnackbar(message: string, type: string): void {
+    private showSnackbar(message: string, type: string) {
         this.snackbarService.open(message, type)
     }
 
@@ -367,13 +362,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
         dialog.afterClosed().subscribe((result) => {
             this.patchFields(result, fields)
-        })
-    }
-
-    private subscribeToInteractionService() {
-        this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            if (response === 'saveRecord') { this.onSave() }
-            if (response === 'deleteRecord') { this.onDelete() }
         })
     }
 

@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { Utils } from 'src/app/shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { TransferFlat } from 'src/app/transfers/classes/transferFlat';
+import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 
 @Component({
     selector: 'transfer-wrapper',
@@ -19,11 +20,10 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
     records: string[] = []
     transfersFlat: TransferFlat[] = []
     hasTableData = false
-
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute) { }
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService) { }
 
     ngOnInit() {
         this.addShortcuts()
@@ -49,24 +49,11 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    // this.onGoBack()
+                    this.onGoBack()
                 }
             },
-            // 'Alt.A': (event: KeyboardEvent) => {
-            //     event.preventDefault()
-            //     this.clickOnButton('assignDriver')
-            // },
-            'Alt.C': (event: KeyboardEvent) => {
-                event.preventDefault()
-                this.clickOnButton('createPdf')
-            },
-            'Alt.N': (event: KeyboardEvent) => {
-                event.preventDefault()
-                this.clickOnButton('new')
-            },
             'Alt.S': (event: KeyboardEvent) => {
-                event.preventDefault()
-                alert('Wrapper: Alt+S')
+                this.buttonClickService.clickOnButton(event, 'search')
             }
         }, {
             priority: 1,
@@ -78,22 +65,16 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
         localStorage.removeItem('transfers')
     }
 
-    private clickOnButton(buttonId: string) {
-        const button = document.getElementById(buttonId)
-        if (button && !button.attributes['disabled']) {
-            button.click()
-        }
-    }
-
     private focus(field: string) {
         Utils.setFocus(field)
     }
 
-    onGoBack() {
-        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
+    private onGoBack() {
+        alert('Wrapper - going back')
+        // this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
-    private isValidDate(): boolean {
+    private isValidDate() {
         const date = (<HTMLInputElement>document.getElementById('dateIn')).value
         if (date.length === 10) {
             this.dateInISO = moment(date, 'DD/MM/YYYY').toISOString(true)

@@ -1,19 +1,20 @@
-import { MessageService } from 'src/app/shared/services/message.service';
+import { Location } from '@angular/common';
 import { AfterViewChecked, AfterViewInit, Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { DriverService } from 'src/app/drivers/classes/driver.service';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
-import { Unlisten, KeyboardShortcuts } from 'src/app/shared/services/keyboard-shortcuts.service';
+import { ButtonClickService } from 'src/app/shared/services/button-click.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
+import { MessageService } from 'src/app/shared/services/message.service';
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { TransferPdfService } from '../classes/transfer-pdf.service';
 import { TransferService } from '../classes/transfer.service';
 import { TransferFlat } from '../classes/transferFlat';
-import { DriverService } from 'src/app/drivers/classes/driver.service';
-import { Location } from '@angular/common';
-import { SnackbarService } from 'src/app/shared/services/snackbar.service';
-import { MatDialog } from '@angular/material';
 import { TransferAssignDriverComponent } from './transfer-assign-driver';
-import { HelperService } from 'src/app/shared/services/helper.service';
 
 @Component({
     selector: 'transfer-list',
@@ -23,6 +24,7 @@ import { HelperService } from 'src/app/shared/services/helper.service';
 
 export class TransferListComponent implements OnInit, AfterViewInit, AfterViewChecked, DoCheck, OnDestroy {
 
+    transferWrapperUrl = '/transfers'
     dateIn: string
     queryResult: any = {}
     queryResultClone: any = {}
@@ -48,7 +50,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: TransferPdfService, private driverService: DriverService, private location: Location, private snackbarService: SnackbarService, public dialog: MatDialog, private transferService: TransferService, private helperService: HelperService, private messageService: MessageService, private keyboardShortcutsService: KeyboardShortcuts) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: TransferPdfService, private driverService: DriverService, private location: Location, private snackbarService: SnackbarService, public dialog: MatDialog, private transferService: TransferService, private helperService: HelperService, private messageService: MessageService, private keyboardShortcutsService: KeyboardShortcuts, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn !== '' && this.router.url.split('/').length === 4) {
@@ -96,7 +98,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.ngUnsubscribe.unsubscribe()
     }
 
-    onAssignDriver(): void {
+    onAssignDriver() {
         if (this.isRecordSelected()) {
             const dialogRef = this.dialog.open(TransferAssignDriverComponent, {
                 height: '350px',
@@ -153,44 +155,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.flattenResults()
     }
 
-    private addShortcuts() {
-        this.unlisten = this.keyboardShortcutsService.listen({
-            'Escape': () => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    // this.onGoBack()
-                }
-            },
-            'Alt.A': (event: KeyboardEvent) => {
-                event.preventDefault()
-                this.clickOnButton('assignDriver')
-            },
-            'Alt.C': (event: KeyboardEvent) => {
-                event.preventDefault()
-                this.clickOnButton('createPdf')
-            },
-            'Alt.N': (event: KeyboardEvent) => {
-                event.preventDefault()
-                alert('List: Alt+N')
-                // document.getElementById('new').click()
-            },
-            'Alt.S': (event: KeyboardEvent) => {
-                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    event.preventDefault()
-                    document.getElementById('save').click()
-                }
-            },
-            'Alt.O': (event: KeyboardEvent) => {
-                event.preventDefault()
-                if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
-                    document.getElementById('ok').click()
-                }
-            }
-        }, {
-            priority: 2,
-            inputs: true
-        })
-    }
-
     private addActiveClassToElements(className: string, lookupArray: string[]) {
         const elements = document.querySelectorAll(className)
         elements.forEach((element) => {
@@ -209,6 +173,26 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
             this.addActiveClassToElements('.item.driver', this.selectedDrivers)
             this.addActiveClassToElements('.item.port', this.selectedPorts)
         }, 100);
+    }
+
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            'Escape': () => {
+                this.onGoBack()
+            },
+            'Alt.A': (event: KeyboardEvent) => {
+                this.buttonClickService.clickOnButton(event, 'assignDriver')
+            },
+            'Alt.C': (event: KeyboardEvent) => {
+                this.buttonClickService.clickOnButton(event, 'createPdf')
+            },
+            'Alt.N': (event: KeyboardEvent) => {
+                this.buttonClickService.clickOnButton(event, 'new')
+            },
+        }, {
+            priority: 2,
+            inputs: true
+        })
     }
 
     private editRecord(id: number) {
@@ -249,11 +233,23 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         return JSON.parse(localStorageData.drivers)
     }
 
+    private initCheckedPersons() {
+        this.interactionService.setCheckedTotalPersons(0)
+    }
+
+    private initPersonsSumArray() {
+        this.totals.push(
+            { description: 'ALL', sum: 0 },
+            { description: 'DISPLAYED', sum: 0 },
+            { description: 'CHECKED', sum: 0 }
+        )
+    }
+
     private isDataInLocalStorage() {
         return localStorage.getItem('transfers')
     }
 
-    private isRecordSelected(): boolean {
+    private isRecordSelected() {
         this.records = JSON.parse(localStorage.getItem('selectedIds'))
         if (this.records == null || this.records.length === 0) {
             this.showSnackbar(this.messageService.noRecordsSelected(), 'error')
@@ -272,6 +268,14 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
 
     private navigateToList() {
         this.router.navigate(['transfers/dateIn/', this.helperService.getDateFromLocalStorage()])
+    }
+
+    private onGoBack() {
+        this.router.navigate([this.transferWrapperUrl])
+    }
+
+    private removeSelectedIdsFromLocalStorage() {
+        localStorage.removeItem('selectedIds')
     }
 
     private saveToLocalStorage() {
@@ -299,6 +303,18 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         }
     }
 
+    private sendRecordsToService() {
+        this.interactionService.sendRecords(this.transfersFlat)
+    }
+
+    private setTableStatus() {
+        this.interactionService.setTableStatus(!!this.queryResult.persons)
+    }
+
+    private showSnackbar(message: string, type: string) {
+        this.snackbarService.open(message, type)
+    }
+
     private subscribeToInteractionService() {
         this.interactionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
@@ -309,59 +325,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
                 this.ngAfterViewInit()
             })
         })
-    }
-
-    private updateSelectedArraysFromInitialResults() {
-        this.queryResult.personsPerDestination.forEach((element: { description: string; }) => { this.selectedDestinations.push(element.description) })
-        this.queryResult.personsPerCustomer.forEach((element: { description: string; }) => { this.selectedCustomers.push(element.description) })
-        this.queryResult.personsPerRoute.forEach((element: { description: string; }) => { this.selectedRoutes.push(element.description) })
-        this.queryResult.personsPerDriver.forEach((element: { description: string; }) => { this.selectedDrivers.push(element.description) })
-        this.queryResult.personsPerPort.forEach((element: { description: string; }) => { this.selectedPorts.push(element.description) })
-    }
-
-    private updateSelectedArraysFromLocalStorage() {
-        const localStorageData = JSON.parse(localStorage.getItem('transfers'))
-        this.selectedDestinations = JSON.parse(localStorageData.destinations)
-        this.selectedCustomers = JSON.parse(localStorageData.customers)
-        this.selectedRoutes = JSON.parse(localStorageData.routes)
-        this.selectedDrivers = JSON.parse(localStorageData.drivers)
-        this.selectedPorts = JSON.parse(localStorageData.ports)
-    }
-
-    private removeSelectedIdsFromLocalStorage(): void {
-        localStorage.removeItem('selectedIds')
-    }
-
-    private setTableStatus() {
-        this.interactionService.setTableStatus(!!this.queryResult.persons)
-    }
-
-    private updateTotals() {
-        this.totals[0].sum = this.queryResult.persons
-        this.totals[1].sum = this.queryResultClone.transfers.reduce((sum: any, array: { totalPersons: any; }) => sum + array.totalPersons, 0);
-        this.interactionService.checked.pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
-            this.totals[2].sum = result
-        })
-    }
-
-    private initCheckedPersons() {
-        this.interactionService.setCheckedTotalPersons(0)
-    }
-
-    private initPersonsSumArray() {
-        this.totals.push(
-            { description: 'ALL', sum: 0 },
-            { description: 'DISPLAYED', sum: 0 },
-            { description: 'CHECKED', sum: 0 }
-        )
-    }
-
-    private sendRecordsToService() {
-        this.interactionService.sendRecords(this.transfersFlat)
-    }
-
-    private showSnackbar(message: string, type: string): void {
-        this.snackbarService.open(message, type)
     }
 
     private toggleActiveItem(item: { description: string; }, lookupArray: string[]) {
@@ -381,11 +344,29 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         }
     }
 
-    private clickOnButton(buttonId: string) {
-        const button = document.getElementById(buttonId)
-        if (button && !button.attributes['disabled']) {
-            button.click()
-        }
+    private updateSelectedArraysFromInitialResults() {
+        this.queryResult.personsPerDestination.forEach((element: { description: string; }) => { this.selectedDestinations.push(element.description) })
+        this.queryResult.personsPerCustomer.forEach((element: { description: string; }) => { this.selectedCustomers.push(element.description) })
+        this.queryResult.personsPerRoute.forEach((element: { description: string; }) => { this.selectedRoutes.push(element.description) })
+        this.queryResult.personsPerDriver.forEach((element: { description: string; }) => { this.selectedDrivers.push(element.description) })
+        this.queryResult.personsPerPort.forEach((element: { description: string; }) => { this.selectedPorts.push(element.description) })
+    }
+
+    private updateSelectedArraysFromLocalStorage() {
+        const localStorageData = JSON.parse(localStorage.getItem('transfers'))
+        this.selectedDestinations = JSON.parse(localStorageData.destinations)
+        this.selectedCustomers = JSON.parse(localStorageData.customers)
+        this.selectedRoutes = JSON.parse(localStorageData.routes)
+        this.selectedDrivers = JSON.parse(localStorageData.drivers)
+        this.selectedPorts = JSON.parse(localStorageData.ports)
+    }
+
+    private updateTotals() {
+        this.totals[0].sum = this.queryResult.persons
+        this.totals[1].sum = this.queryResultClone.transfers.reduce((sum: any, array: { totalPersons: any; }) => sum + array.totalPersons, 0);
+        this.interactionService.checked.pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
+            this.totals[2].sum = result
+        })
     }
 
 }

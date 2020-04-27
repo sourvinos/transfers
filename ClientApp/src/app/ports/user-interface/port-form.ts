@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { Utils } from 'src/app/shared/classes/utils';
+import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
@@ -23,7 +24,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService) {
+    constructor(private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) { this.getRecord(p.id) }
         })
@@ -90,31 +91,27 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            'Escape': () => {
+            'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    document.getElementById('goBack').click()
+                    this.buttonClickService.clickOnButton(event, 'goBack')
                 }
             },
             'Alt.D': (event: KeyboardEvent) => {
-                event.preventDefault()
-                document.getElementById('delete').click()
+                this.buttonClickService.clickOnButton(event, 'delete')
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    event.preventDefault()
-                    document.getElementById('save').click()
+                    this.buttonClickService.clickOnButton(event, 'save')
                 }
             },
             'Alt.C': (event: KeyboardEvent) => {
-                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
-                    document.getElementById('cancel').click()
+                    this.buttonClickService.clickOnButton(event, 'cancel')
                 }
             },
             'Alt.O': (event: KeyboardEvent) => {
-                event.preventDefault()
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
-                    document.getElementById('ok').click()
+                    this.buttonClickService.clickOnButton(event, 'ok')
                 }
             }
         }, {
