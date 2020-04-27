@@ -26,7 +26,7 @@
                     <mat-checkbox class="checkbox route" [(ngModel)]="checkedRoutes" (click)="onToggleItems('route', this.selectedRoutes, this.checkedRoutes)"></mat-checkbox>
                     <header>Routes</header>
                 </mat-expansion-panel-header>
-                <div *ngFor="let item of queryResult.personsPerRoute" (click)="toggleItem(item, this.selectedRoutes)" class="item route" [class.activeItem]="item.isSelected" [id]="item.description">
+                <div *ngFor="let item of queryResult.personsPerRoute" (click)="onToggleItem(item, this.selectedRoutes)" class="item route" [class.activeItem]="item.isSelected" [id]="item.description">
                     <div class="description"> {{ item.description }} </div>
                     <div class="total"> {{ item.persons }} </div>
                 </div>
@@ -36,7 +36,7 @@
                     <mat-checkbox class="checkbox driver" [(ngModel)]="checkedDrivers" (click)="onToggleItems('driver', this.selectedDrivers, this.checkedDrivers)"></mat-checkbox>
                     <header>Drivers</header>
                 </mat-expansion-panel-header>
-                <div *ngFor="let item of queryResult.personsPerDriver" (click)="toggleItem(item, this.selectedDrivers)" class="item driver" [class.active]="item.isSelected" [id]="item.description">
+                <div *ngFor="let item of queryResult.personsPerDriver" (click)="onToggleItem(item, this.selectedDrivers)" class="item driver" [class.active]="item.isSelected" [id]="item.description">
                     <div class="description"> {{ item.description }} </div>
                     <div class="total"> {{ item.persons }} </div>
                 </div>
@@ -46,7 +46,7 @@
                     <mat-checkbox class="checkbox port" [(ngModel)]="checkedPorts" (click)="onToggleItems('port', this.selectedPorts, this.checkedPorts)"></mat-checkbox>
                     <header>Ports</header>
                 </mat-expansion-panel-header>
-                <div *ngFor="let item of queryResult.personsPerPort" (click)="toggleItem(item, this.selectedPorts)" class="item port" [class.active]="item.isSelected" [id]="item.description">
+                <div *ngFor="let item of queryResult.personsPerPort" (click)="onToggleItem(item, this.selectedPorts)" class="item port" [class.active]="item.isSelected" [id]="item.description">
                     <div class="description"> {{ item.description }} </div>
                     <div class="total"> {{ item.persons }} </div>
                 </div>

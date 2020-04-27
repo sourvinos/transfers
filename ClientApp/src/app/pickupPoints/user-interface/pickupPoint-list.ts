@@ -6,6 +6,7 @@ import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.ser
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 import { KeyboardShortcuts } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { PickupPoint } from '../classes/pickupPoint';
+import { RouteService } from 'src/app/routes/classes/route.service';
 
 @Component({
     selector: 'pickuppoint-list',
@@ -17,6 +18,7 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
 
     routeId: string
     routes: Route[]
+    selectedRoutes: string[] = []
     pickupPoints: PickupPoint[]
     url = '/pickupPoints'
     resolver = 'pickupPointList'
@@ -30,18 +32,19 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
 
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService, private keyboardShortcutsService: KeyboardShortcuts) {
-        this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
-        this.router.events.subscribe((navigation: any) => {
-            if (navigation instanceof NavigationEnd && this.routeId !== '' && this.router.url.split('/').length === 4) {
-                this.mustRefresh = true
-                this.loadRecords()
-            }
-        })
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService, private routeService: RouteService, private keyboardShortcutsService: KeyboardShortcuts) {
+        // this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
+        this.loadRecords()
+        // this.router.events.subscribe((navigation: any) => {
+        //     if (navigation instanceof NavigationEnd && this.routeId !== '' && this.router.url.split('/').length === 4) {
+        //         this.mustRefresh = true
+        //     }
+        // })
     }
 
     ngOnInit() {
         this.subscribeToInteractionService()
+        this.populateRoutes()
     }
 
     ngDoCheck() {
@@ -72,6 +75,34 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
                 this.pickupPoints = result
             })
         })
+    }
+
+    private populateRoutes() {
+        this.routeService.getAll().subscribe((result: any) => {
+            this.routes = result
+        })
+    }
+    onToggleItem(item: any, lookupArray: string[]) {
+        this.toggleActiveItem(item, lookupArray)
+        // this.filterByCriteria()
+        // this.saveToLocalStorage()
+    }
+
+    private toggleActiveItem(item: { description: string; }, lookupArray: string[]) {
+        const element = document.getElementById(item.description)
+        if (element.classList.contains('activeItem')) {
+            for (let i = 0; i < lookupArray.length; i++) {
+                if ((lookupArray)[i] === item.description) {
+                    lookupArray.splice(i, 1)
+                    i--
+                    element.classList.remove('activeItem')
+                    break
+                }
+            }
+        } else {
+            element.classList.add('activeItem')
+            lookupArray.push(item.description)
+        }
     }
 
 }

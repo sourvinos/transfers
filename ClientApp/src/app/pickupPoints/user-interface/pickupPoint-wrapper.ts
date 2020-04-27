@@ -31,10 +31,9 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.addShortcuts()
-        this.subscribeTointeractionService()
-        this.populateDropDowns()
-        this.trackChangesInAutoComplete()
-        this.focus('routeDescription')
+        // this.subscribeTointeractionService()
+        // this.populateDropDowns()
+        // this.trackChangesInAutoComplete()
     }
 
     ngOnDestroy() {

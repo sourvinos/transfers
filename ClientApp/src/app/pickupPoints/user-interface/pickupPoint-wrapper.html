@@ -1,39 +1,9 @@
-<div id="wrapper">
-
-    <div id="header">
-        <div id="title">
-            <h1>Pickup points</h1>
-        </div>
-        <div id="search-box">
-            <mat-form-field>
-                <input type="text" placeholder="Route" matInput [formControl]="routeDescription" [inputFormat]="'text'" id="routeDescription" [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete" class="scrollable" (optionSelected)="onSelectionChanged($event)">
-                    <mat-option *ngFor="let route of filteredRoutes | async" [value]="route.abbreviation" [id]="route.id">{{ route.abbreviation }}</mat-option>
-                </mat-autocomplete>
-                <mat-hint>Search by route abbreviation</mat-hint>
-            </mat-form-field>
-            <button mat-flat-button id="search" class="primary" (click)="onLoadPickupPoints()">Search</button>
-        </div>
+<div id="header">
+    <div id="title">
+        <h1>Pickup points</h1>
     </div>
+</div>
 
-    <div id="list">
-        <router-outlet></router-outlet>
-    </div>
-
-    <div id="footer">
-        <mat-divider></mat-divider>
-        <div id="buttons">
-            <ng-container *ngIf="recordStatus == 'empty'">
-                <button mat-flat-button class="primary" id="new" [disabled]="!inList()" (click)="onNew()">New</button>
-            </ng-container>
-            <ng-container *ngIf="recordStatus == 'newRecord'">
-                <button mat-flat-button class="primary" id="save" (click)="onSave()">Save</button>
-            </ng-container>
-            <ng-container *ngIf="recordStatus != 'empty' && recordStatus != 'newRecord'">
-                <button mat-flat-button class="delete" id="delete" (click)="onDelete()">Delete</button>
-                <button mat-flat-button class="primary" id="save" (click)="onSave()">Save</button>
-            </ng-container>
-        </div>
-    </div>
-
+<div id="main">
+    <pickuppoint-list></pickuppoint-list>
 </div>

@@ -1,7 +1,25 @@
 <div id="results">
+    <div class="scrollable" id="routes">
+        <mat-expansion-panel expanded="true" class="summaryBlock" id="routes" disabled>
+            <mat-expansion-panel-header class="summaryHeader">
+                <header id="header-totals">Routes</header>
+            </mat-expansion-panel-header>
+            <div *ngFor="let item of routes" (click)="onToggleItem(item, this.selectedRoutes)" class="item route" [class.active]="item.isSelected" [id]="item.description">
+                <div class="description"> {{ item.abbreviation }} </div>
+            </div>
+        </mat-expansion-panel>
+    </div>
     <div id="listFormCombo">
-        <div class="scrollable" id="pickupPointsList">
-            <custom-table [records]="pickupPoints" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></custom-table>
+        <div id="pickupPointsList">
+            <div class="scrollable">
+                <custom-table [records]="pickupPoints" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></custom-table>
+            </div>
+            <div id="footer">
+                <mat-divider></mat-divider>
+                <div id="buttons">
+                    <button mat-flat-button class="primary" id="new" (click)="onNew()">New</button>
+                </div>
+            </div>
         </div>
         <router-outlet></router-outlet>
     </div>

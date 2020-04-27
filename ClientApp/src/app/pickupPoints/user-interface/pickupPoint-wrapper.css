@@ -1,21 +1,39 @@
-#wrapper {
+:host {
     display: grid;
     grid-template-areas:
         "header"
-        "list"
-        "footer";
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
+        "main";
+    grid-template-rows: max-content auto;
     height: 100vh;
 }
 
-#list {
-    grid-area: list;
-    margin: 0 2rem;
-    overflow: hidden;
-    padding-top: 3px;
+#header {
+    display: grid;
+    grid-area: header;
+    grid-template-areas:
+        "title"
+        "divider";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    margin: 2rem;
+    background-color: violet;
 }
 
-#footer {
-    grid-area: footer;
+#header #title {
+    align-items: center;
+    display: flex;
+    grid-area: title;
+    justify-content: flex-start;
+    margin-left: 1rem;
+}
+
+#main {
+    grid-area: main;
+    grid-auto-rows: 100%;
+    margin: 0 2rem 2rem 2rem;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    width: auto;
+    background-color: yellowgreen;
 }

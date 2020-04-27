@@ -11,7 +11,7 @@ export class PickupPointListResolver implements Resolve<PickupPoint[]> {
     constructor(private pickupPointService: PickupPointService) { }
 
     resolve(route: ActivatedRouteSnapshot): Observable<PickupPoint[]> {
-        return this.pickupPointService.getAllForRoute(route.params.routeId)
+        return this.pickupPointService.getAll()
     }
 
 }
