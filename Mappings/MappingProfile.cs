@@ -10,7 +10,7 @@ namespace Transfers {
                 .ForMember(tr => tr.Driver, opt => opt.MapFrom(v => new DriverResource { Id = v.Driver.Id, Description = v.Driver.Description }))
                 .ForMember(tr => tr.PickupPoint, opt => opt.MapFrom(v => new PickupPointResource {
                     Id = v.PickupPoint.Id,
-                        Description = v.PickupPoint.Description,
+                        Description = v.PickupPoint.PickupPointDescription,
                         ExactPoint = v.PickupPoint.ExactPoint,
                         Time = v.PickupPoint.Time,
                         Route = new RouteResource {

@@ -163,8 +163,8 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         this.form = this.formBuilder.group({
             id: 0,
             routeId: ['', Validators.required], routeAbbreviation: ['', Validators.required],
-            description: ['', [Validators.required, Validators.maxLength(100)]],
-            exactPoint: ['', [Validators.required, Validators.maxLength(100)]],
+            pickupPointdescription: ['', [Validators.required, Validators.maxLength(128)]],
+            exactPoint: ['', [Validators.required, Validators.maxLength(128)]],
             time: ['', [Validators.required, Validators.pattern('[0-9][0-9]:[0-9][0-9]')]],
             userName: this.helperService.getUsernameFromLocalStorage()
         })
@@ -192,6 +192,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         return forkJoin(sources).subscribe(
             result => {
                 this.routes = result[0]
+                this.renameObjects()
             })
     }
 
@@ -199,10 +200,23 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         this.form.setValue({
             id: result.id,
             routeId: result.route.id, routeAbbreviation: result.route.abbreviation,
-            description: result.description,
+            pickupPointdescription: result.pickupPointDescription,
             exactPoint: result.exactPoint,
             time: result.time,
             userName: result.userName
+        })
+    }
+
+    private renameKey(obj: Object, oldKey: string, newKey: string) {
+        if (oldKey !== newKey) {
+            Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey))
+            delete obj[oldKey]
+        }
+    }
+
+    private renameObjects() {
+        this.routes.forEach(obj => {
+            this.renameKey(obj, 'id', 'routeId'); this.renameKey(obj, 'abbreviation', 'routeAbbreviation')
         })
     }
 
@@ -242,8 +256,8 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         return this.form.get('routeAbbreviation')
     }
 
-    get description() {
-        return this.form.get('description')
+    get pickupPointdescription() {
+        return this.form.get('pickupPointdescription')
     }
 
     get exactPoint() {

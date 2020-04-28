@@ -14,17 +14,23 @@
     <form [formGroup]="form" autocomplete="off">
         <div id="section-one">
             <mat-form-field>
-                <input type="text" matInput placeholder="Route" formControlName="routeAbbreviation" data-tabindex="1" id="routeAbbreviation" [inputTabStop]="input" (change)="lookupIndex(routes, 'Routes', ['routeId', 'routeAbbreviation'], ['id', 'abbreviation'], ['Id', 'Abbreviation'], ['1px', '220px'], ['none', ''], ['center', 'left'], $event)">
+                <input type="text" matInput placeholder="Route" formControlName="routeAbbreviation" data-tabindex="1" id="routeAbbreviation" [inputTabStop]="input" (change)="lookupIndex(routes, 'Routes', ['routeId', 'routeAbbreviation'], ['id', 'routeAbbreviation'], ['Id', 'Abbreviation'], ['1px', '220px'], ['none', ''], ['center', 'left'], $event)">
                 <mat-error *ngIf="routeAbbreviation.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Description" formControlName="description" data-tabindex="2" id="description" [inputTabStop]="input">
+                <input type="text" matInput placeholder="Description" formControlName="pickupPointdescription" data-tabindex="2" id="pickupPointdescription" [inputTabStop]="input">
+                <mat-error *ngIf="pickupPointdescription.hasError('required')">This is a required field!</mat-error>
+                <mat-error *ngIf="pickupPointdescription.errors?.maxlength">This field can be up to {{ pickupPointdescription.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <input type="text" matInput placeholder="ExactPoint" formControlName="exactPoint" data-tabindex="3" id="exactPoint" [inputTabStop]="input">
+                <mat-error *ngIf="exactPoint.hasError('required')">This is a required field!</mat-error>
+                <mat-error *ngIf="exactPoint.errors?.maxlength">This field can be up to {{ exactPoint.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <input type="text" matInput placeholder="Time" formControlName="time" data-tabindex="4" id="time" [inputTabStop]="input">
+                <mat-error *ngIf="time.hasError('required')">This is a required field!</mat-error>
+                <mat-error *ngIf="!time?.hasError('required') && time.errors">This field has errors!</mat-error>
             </mat-form-field>
         </div>
         <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
