@@ -68,19 +68,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onDelete() {
-        this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
-            if (response) {
-                this.routeService.delete(this.form.value.id).subscribe(() => {
-                    this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
-                    this.onGoBack()
-                }, () => {
-                    this.showSnackbar(this.messageService.recordIsInUse(), 'error')
-                })
-            }
-        })
-    }
-
     lookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
@@ -96,6 +83,19 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.clearFields(null, formFields[0], formFields[1])
             this.focus(formFields[1])
         }
+    }
+
+    onDelete() {
+        this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
+            if (response) {
+                this.routeService.delete(this.form.value.id).subscribe(() => {
+                    this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
+                    this.onGoBack()
+                }, () => {
+                    this.showSnackbar(this.messageService.recordIsInUse(), 'error')
+                })
+            }
+        })
     }
 
     onSave() {

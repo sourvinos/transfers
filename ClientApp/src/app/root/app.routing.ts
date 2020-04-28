@@ -1,18 +1,19 @@
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 // Components
-import { HomeComponent } from '../home/home.component'
-import { EmptyPageComponent } from '../shared/components/empty-page/empty-page.component';
-import { LoginFormComponent } from '../login/user-interface/login-form'
 import { CustomerListComponent } from '../customers/user-interface/customer-list'; import { CustomerFormComponent } from '../customers/user-interface/customer-form'
 import { DestinationListComponent } from '../destinations/user-interface/destination-list'; import { DestinationFormComponent } from '../destinations/user-interface/destination-form'
 import { DriverListComponent } from '../drivers/user-interface/driver-list'; import { DriverFormComponent } from '../drivers/user-interface/driver-form'
-import { PickupPointWrapperComponent } from '../pickupPoints/user-interface/pickupPoint-wrapper'; import { PickupPointListComponent } from '../pickupPoints/user-interface/pickupPoint-list'; import { PickupPointFormComponent } from '../pickupPoints/user-interface/pickupPoint-form';
+import { EmptyPageComponent } from '../shared/components/empty-page/empty-page.component';
+import { ForgotPasswordFormComponent } from '../account/user-interface/forgot-password-form';
+import { HomeComponent } from '../home/home.component'
+import { LoginFormComponent } from '../login/user-interface/login-form'
+import { PickupPointListComponent } from '../pickupPoints/user-interface/pickupPoint-list'; import { PickupPointFormComponent } from '../pickupPoints/user-interface/pickupPoint-form';
 import { PortListComponent } from '../ports/user-interface/port-list'; import { PortFormComponent } from '../ports/user-interface/port-form'
 import { RouteListComponent } from '../routes/user-interface/route-list'; import { RouteFormComponent } from '../routes/user-interface/route-form'
 import { TransferWrapperComponent } from '../transfers/user-interface/transfer-wrapper'; import { TransferListComponent } from '../transfers/user-interface/transfer-list'; import { TransferFormComponent } from '../transfers/user-interface/transfer-form'
 import { UserListComponent } from '../users/user-interface/user-list'; import { RegisterUserFormComponent } from '../users/user-interface/register-user-form'; import { EditUserFormComponent } from '../users/user-interface/edit-user-form'; import { ChangePasswordFormComponent } from '../users/user-interface/change-password-form'
-import { ForgotPasswordFormComponent } from '../account/user-interface/forgot-password-form';
+
 // Resolvers
 import { CustomerListResolver } from './../customers/classes/customer-list.resolver';
 import { DestinationListResolver } from '../destinations/classes/destination-list.resolver'
@@ -33,12 +34,7 @@ const appRoutes: Routes = [
     { path: 'customers', component: CustomerListComponent, canActivate: [AuthGuardService], resolve: { customerList: CustomerListResolver } }, { path: 'customers/new', component: CustomerFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'customers/:id', component: CustomerFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
     { path: 'destinations', component: DestinationListComponent, canActivate: [AuthGuardService], resolve: { destinationList: DestinationListResolver } }, { path: 'destinations/new', component: DestinationFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'destinations/:id', component: DestinationFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
     { path: 'drivers', component: DriverListComponent, canActivate: [AuthGuardService], resolve: { driverList: DriverListResolver } }, { path: 'drivers/new', component: DriverFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'drivers/:id', component: DriverFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
-    {
-        path: 'pickupPoints', component: PickupPointWrapperComponent, canActivate: [AuthGuardService], resolve: { pickupPointList: PickupPointListResolver }, children: [
-            { path: 'pickupPoint/new', component: PickupPointFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
-            { path: 'pickupPoint/:pickupPointId', component: PickupPointFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }
-        ], runGuardsAndResolvers: 'always'
-    },
+    { path: 'pickupPoints', component: PickupPointListComponent, canActivate: [AuthGuardService], resolve: { pickupPointList: PickupPointListResolver } }, { path: 'pickupPoints/new', component: PickupPointFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'pickupPoints/:id', component: PickupPointFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
     { path: 'ports', component: PortListComponent, canActivate: [AuthGuardService], resolve: { portList: PortListResolver } }, { path: 'ports/new', component: PortFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'ports/:id', component: PortFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
     { path: 'routes', component: RouteListComponent, canActivate: [AuthGuardService], resolve: { routeList: RouteListResolver } }, { path: 'routes/new', component: RouteFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] }, { path: 'routes/:id', component: RouteFormComponent, canActivate: [AuthGuardService], canDeactivate: [CanDeactivateGuard] },
     {

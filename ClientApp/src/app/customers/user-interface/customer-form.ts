@@ -91,7 +91,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            'Escape': (event: KeyboardEvent): void => {
+            'Escape': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.buttonClickService.clickOnButton(event, 'goBack')
                 }
@@ -168,7 +168,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.form.reset()
     }
 
-    private showSnackbar(message: string, type: string): void {
+    private showSnackbar(message: string, type: string) {
         this.snackbarService.open(message, type)
     }
 

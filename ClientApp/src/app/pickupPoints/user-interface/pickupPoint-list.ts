@@ -1,108 +1,124 @@
-import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Params, Route, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.service';
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
-import { KeyboardShortcuts } from 'src/app/shared/services/keyboard-shortcuts.service';
-import { PickupPoint } from '../classes/pickupPoint';
-import { RouteService } from 'src/app/routes/classes/route.service';
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators'
+import { Utils } from 'src/app/shared/classes/utils'
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { ButtonClickService } from 'src/app/shared/services/button-click.service'
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
+import { PickupPoint } from '../classes/pickupPoint'
+import { PickupPointFlat } from '../classes/pickupPointFlat'
 
 @Component({
     selector: 'pickuppoint-list',
     templateUrl: './pickupPoint-list.html',
-    styleUrls: ['../../shared/styles/lists.css', './pickupPoint-list.css']
+    styleUrls: ['../../shared/styles/lists.css']
 })
 
-export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
+export class PickupPointListComponent implements OnInit, OnDestroy {
 
-    routeId: string
-    routes: Route[]
-    selectedRoutes: string[] = []
-    pickupPoints: PickupPoint[]
+    queryResult: any = {}
+    queryResultClone: any = {}
+    records: PickupPoint[]
+    flatRecords: PickupPointFlat[] = []
+    flatFilteredRecords: PickupPointFlat[] = []
+    // pickupPointsFlat: PickupPointFlat[] = []
     url = '/pickupPoints'
     resolver = 'pickupPointList'
-    mustRefresh = true
 
-    headers = ['Id', 'Description', 'Exact point', 'Time']
-    widths = ['0', '45%', '45%', '10%']
-    visibility = ['none', '', '', '']
-    justify = ['center', 'left', 'left', 'center']
-    fields = ['id', 'description', 'exactPoint', 'time']
+    headers = ['Id', 'Route', 'Description', 'Exact point', 'Time']
+    widths = ['0px', '10%', '40%', '40%', '10%']
+    visibility = ['none', '', '', '', '']
+    justify = ['center', 'center', 'left', 'left', 'center']
+    fields = ['id', 'route', 'description', 'exactPoint', 'time']
 
-    ngUnsubscribe = new Subject<void>();
+    unlisten: Unlisten
+    ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService, private routeService: RouteService, private keyboardShortcutsService: KeyboardShortcuts) {
-        // this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService, private buttonClickService: ButtonClickService) {
         this.loadRecords()
-        // this.router.events.subscribe((navigation: any) => {
-        //     if (navigation instanceof NavigationEnd && this.routeId !== '' && this.router.url.split('/').length === 4) {
-        //         this.mustRefresh = true
-        //     }
-        // })
     }
 
     ngOnInit() {
+        this.addShortcuts()
         this.subscribeToInteractionService()
-        this.populateRoutes()
-    }
-
-    ngDoCheck() {
-        if (this.mustRefresh) {
-            this.mustRefresh = false
-        }
+        // this.filterByCriteria()
+        this.flattenResults()
     }
 
     ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
+        this.unlisten()
     }
 
-    private editRecord(id: number) {
-        this.router.navigate(['pickupPoint/', id], { relativeTo: this.activatedRoute })
+    editRecord(id: number) {
+        this.router.navigate([this.url, id])
+    }
+
+    onFilter(query: string) {
+        // console.log(query)
+        this.flatFilteredRecords = query ? this.flatRecords.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.flatRecords
+    }
+
+    onNew() {
+        this.router.navigate([this.url + '/new'])
+    }
+
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            'Escape': (event: KeyboardEvent): void => {
+                this.onGoBack()
+            },
+            'Alt.F': (event: KeyboardEvent): void => {
+                this.focus(event, 'searchField')
+            },
+            'Alt.N': (event: KeyboardEvent): void => {
+                this.buttonClickService.clickOnButton(event, 'new')
+            }
+        }, {
+            priority: 0,
+            inputs: true
+        })
+    }
+
+    private filterByCriteria() {
+        this.queryResultClone = this.queryResult
+    }
+
+    private flattenResults() {
+        this.flatRecords.splice(0)
+        for (const {
+            id: a,
+            route: { abbreviation: b },
+            description: c,
+            exactPoint: d,
+            time: e,
+        } of this.queryResult) {
+            this.flatRecords.push({ id: a, route: b, description: c, exactPoint: d, time: e })
+        }
+        this.flatFilteredRecords = this.flatRecords
+        // console.log('flatRecords', this.flatRecords)
+    }
+
+    private focus(event: KeyboardEvent, element: string) {
+        event.preventDefault()
+        Utils.setFocus(element)
+    }
+
+    private onGoBack() {
+        this.router.navigate(['/'])
     }
 
     private loadRecords() {
-        this.pickupPoints = this.activatedRoute.snapshot.data[this.resolver]
+        this.queryResult = this.activatedRoute.snapshot.data[this.resolver]
+        // console.log('queryResult', this.queryResult)
     }
 
     private subscribeToInteractionService() {
         this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
-        this.baseInteractionService.refreshList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
-            this.pickupPointService.getAllForRoute(this.routeId).subscribe(result => {
-                this.pickupPoints = result
-            })
-        })
-    }
-
-    private populateRoutes() {
-        this.routeService.getAll().subscribe((result: any) => {
-            this.routes = result
-        })
-    }
-    onToggleItem(item: any, lookupArray: string[]) {
-        this.toggleActiveItem(item, lookupArray)
-        // this.filterByCriteria()
-        // this.saveToLocalStorage()
-    }
-
-    private toggleActiveItem(item: { description: string; }, lookupArray: string[]) {
-        const element = document.getElementById(item.description)
-        if (element.classList.contains('activeItem')) {
-            for (let i = 0; i < lookupArray.length; i++) {
-                if ((lookupArray)[i] === item.description) {
-                    lookupArray.splice(i, 1)
-                    i--
-                    element.classList.remove('activeItem')
-                    break
-                }
-            }
-        } else {
-            element.classList.add('activeItem')
-            lookupArray.push(item.description)
-        }
     }
 
 }

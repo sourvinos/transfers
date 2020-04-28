@@ -1,10 +1,9 @@
 import { KeyValuePair } from 'src/app/shared/classes/model-keyValuePair';
 
-export class PickupPoint extends KeyValuePair {
-    route: {
-        id: number
-        abbreviation: string
-    }
+export class PickupPointFlat {
+    id: string
+    route: string
+    description: string
     exactPoint: string
     time: string
 }

@@ -133,10 +133,6 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private onGoBack() {
-        this.router.navigate([this.url])
-    }
-
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
@@ -144,6 +140,10 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
             phones: ['', [Validators.maxLength(128)]],
             userName: this.helperService.getUsernameFromLocalStorage()
         })
+    }
+
+    private onGoBack() {
+        this.router.navigate([this.url])
     }
 
     private populateFields(result: any) {
