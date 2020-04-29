@@ -63,6 +63,7 @@
     --color-button-primary: #57617B;
     --color-button-secondary: #5A75BC;
     --color-button-text: #FFFDDD;
+    --color-button-text-transparent: #FFFDDD;
     /* Dialogs */
     --color-dialog-background: #373F46;
     --color-dialog-content: #939393;
@@ -84,6 +85,7 @@
     --color-input-text-selected: #5F5E5E;
     --color-input-text-underline-focus: #BA680B;
     --color-input-text-not-focus: #FFFFFF;
+    --color-icon: #e2dcdc;
     /* Main background */
     --color-background: #373F46;
     /* Navigation icon */
@@ -99,6 +101,7 @@
     --color-menu-active-item: #FE9F36;
     --color-menu-list-items: #b3b2b2;
     --color-user-info: #b3b2b2;
+    --color-stroke: #e2dcdc;
     /* Tables */
     --color-table-background: #373F46;
     --color-table-header: #b3b2b2;
@@ -107,7 +110,6 @@
     --color-table-row-odd: #363D44;
     --color-table-row-even: #3c434b;
     --color-table-row-selected: #394D59;
-    --color-table-rows-hover: #ffc788;
     /* Transfer summary boxes */
     --color-summary-block-background: #373F46;
     --color-summary-block-border: #57617B;
@@ -133,5 +135,4 @@
     --color-autocomplete-selected: #b3b2b245;
     /* Instructions on forms */
     --color-paragraphs: #ffc788;
-
 }

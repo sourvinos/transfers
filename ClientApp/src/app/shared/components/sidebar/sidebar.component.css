@@ -29,6 +29,7 @@
 #companyLogo>:first-child {
     color: var(--color-company-logo-first-child) !important;
     font-size: var(--font-size-logo-first-child) !important;
+    -webkit-text-stroke: 1px var(--color-stroke);
 }
 
 #companyLogo>:last-child {
@@ -36,6 +37,7 @@
     font-size: var(--font-size-logo-second-child) !important;
     font-weight: normal !important;
     margin: -1rem 0 0 0 !important;
+    -webkit-text-stroke: 1px var(--color-stroke);
 }
 
 #image {
@@ -52,11 +54,28 @@
 }
 
 #double-ring {
-    display: flex;
-    background: url(../../../../assets/logo-double-ring.gif) right bottom no-repeat var(--color-background);
-    width: 150px;
-    height: 150px;
     position: absolute;
+}
+
+#double-ring:after {
+    content: " ";
+    display: block;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 3px solid #dfc;
+    border-color: #dfc transparent #dfc transparent;
+    animation: double-ring 20s linear infinite;
+}
+
+@keyframes double-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 #menu {

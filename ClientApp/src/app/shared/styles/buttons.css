@@ -27,6 +27,10 @@ button.navigation {
     outline: 0 !important;
 }
 
+button.transparent {
+    color: var(--color-button-text-transparent) !important;
+}
+
 button::first-letter {
     text-decoration: underline;
 }
@@ -38,4 +42,8 @@ button:disabled {
 
 button:not(:disabled) {
     cursor: pointer !important;
+}
+
+.mat-mini-fab .mat-button-wrapper {
+    padding: 7px 0 !important;
 }

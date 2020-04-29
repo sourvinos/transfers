@@ -1,0 +1,138 @@
+* {
+    --font-weight-buttons: 100 !important;
+    --font-weight-headers: 100 !important;
+    --font-weight-labels: 500 !important;
+}
+
+* {
+    /* Font sizes */
+    /* All headers */
+    --font-size-headers: 2rem;
+    /* Labels */
+    --font-size-labels: 0.8rem;
+    /* Dialogs */
+    --font-size-mat-dialog-title: 2.0rem;
+    --font-size-mat-dialog-content: 1.1rem;
+    /* Snackbar*/
+    --font-size-snackbar: 0.95rem;
+    /* Transfer summary boxes */
+    --font-size-summary-block-header: 1.4rem;
+    --font-size-summary-block-item: 1.0rem;
+    /* Sidebar - Menu */
+    --font-size-copyright: 0.6rem;
+    --font-size-logo-first-child: 4.375rem;
+    --font-size-logo-second-child: 2.5rem;
+    --font-size-menu-list-item-active: 1.3rem;
+    --font-size-menu-list-items: 1.3rem;
+    --font-size-user-info: 0.9rem;
+    /* Tables */
+    --font-size-table-header: 1.1rem;
+    --font-size-table-rows: 0.9rem;
+    /* Instructions */
+    --font-size-paragraphs: 0.8rem;
+}
+
+* {
+    /* Font families */
+    /* Buttons */
+    --font-family-buttons: "Noto Sans";
+    /* All headers */
+    --font-family-headers: "Noto Sans";
+    /* Dialogs */
+    --font-family-dialog-header: "Noto Sans";
+    --font-family-dialog-content: "Noto Sans";
+    /* Snackbars */
+    --font-family-snackbar: "Noto Sans";
+    /* Tables */
+    --font-family-table: 'Noto Sans';
+    /* Transfer summary boxes */
+    --font-family-summary-block: "Noto Sans";
+    /* Sidebar  */
+    --font-family-user-info: "Noto Sans";
+    --font-family-logo: "Anton";
+    --font-family-menu-list-items: "Noto Sans";
+    --font-family-copyright: "Noto Sans";
+    /* Instructions */
+    --font-family-paragraphs: "Noto Sans";
+}
+
+* {
+    /* Colors */
+    /* Buttons */
+    --color-button-delete: #D67474;
+    --color-button-primary: #57617B;
+    --color-button-secondary: #5A75BC;
+    --color-button-text: #FFFDDD;
+    --color-button-text-transparent: #66645A;
+    /* Dialogs */
+    --color-dialog-background: #D9C68F;
+    --color-dialog-content: #57617B;
+    --color-dialog-title: #939393;
+    /* Snackbar */
+    --color-snackbar: #FFFDDD;
+    /* Divider lines */
+    --color-divider: #57617B;
+    /* Hamburger */
+    --color-hamburger: #939393;
+    /* All headers */
+    --color-headers: #66645A;
+    /* Input boxes */
+    --color-input-text-caret: #4c66da;
+    --color-input-text-error: #FC3B3B;
+    --color-input-text-focus: #BA680B;
+    --color-input-text-label: #5F5E5E;
+    --color-input-text-underline: #5F5E5E;
+    --color-input-text-selected: #FFFFFF;
+    --color-input-text-underline-focus: #BA680B;
+    --color-input-text-not-focus: #5F5E5E;
+    --color-icon: #5F5E5E;
+    /* Main background */
+    --color-background: #D9C68F;
+    /* Navigation icon */
+    --color-navigation-button: #D9C68F;
+    /* Scrollbars */
+    --color-scrollbar: #BF9B7A;
+    --color-scrollbar-background: #FFFDDD;
+    /* Sidebar */
+    --color-sidebar-background: #BF9B7A;
+    --color-company-logo-first-child: #66645A;
+    --color-company-logo-second-child: #FFE85C;
+    --color-copyright: #66645A;
+    --color-menu-active-item: #FFE85C;
+    --color-menu-list-items: #424242;
+    --color-user-info: #424242;
+    --color-stroke: #000000;
+    /* Tables */
+    --color-table-background: #D9C68F;
+    --color-table-header: #66645A;
+    --color-table-header-border: #57617B;
+    --color-table-row: #66645A;
+    --color-table-row-odd: #D9C68F;
+    --color-table-row-even: #E3CD8B;
+    --color-table-row-selected: #FDE7A6;
+    /* Transfer summary boxes */
+    --color-summary-block-background: #D9C68F;
+    --color-summary-block-border: #57617B;
+    --color-summary-block-expansion-indicator: #939393;
+    --color-summary-block-item-border-active: #FFFDDD;
+    --color-summary-block-item-border-inactive: #939393;
+    --color-summary-block-item-hover-background: #D9C68F;
+    --color-summary-block-item-hover-color: #FFFFFF;
+    --color-summary-block-item: #FFFDDD;
+    /* Checkboxes */
+    --color-checkbox-checked: #FFFDDD;
+    /* Snackbars */
+    --color-snackbar-text: #ffffff;
+    --color-snackbar-background-danger: #a52a2a;
+    --color-snackbar-background-info: #0e8d97;
+    /* Spinner */
+    --color-spinner: #d67474;
+    --color-spinner-background: #FFE85C;
+    /* Autocomplete */
+    --color-autocomplete-background: #D9C68F;
+    --color-autocomplete-color: #FFFDDD;
+    --color-autocomplete-ripple: #648e9f4a;
+    --color-autocomplete-selected: #FFFDDD45;
+    /* Instructions on forms */
+    --color-paragraphs: #66645A;
+}

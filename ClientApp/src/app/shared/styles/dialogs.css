@@ -8,7 +8,7 @@
 }
 
 #dialog {
-    background-color: var(--color-dialog-background);
+    background-color: var(--color-dialog-background) !important;
     display: flex;
     flex-direction: column;
     height: 100%;

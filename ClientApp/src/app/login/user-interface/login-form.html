@@ -20,7 +20,7 @@
                 <mat-error *ngIf="Password?.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <div id="forgotPassword">
-                <button type="button" mat-button (click)="onForgotPassword()">Forgot password?</button>
+                <button type="button" class="transparent" mat-button (click)="onForgotPassword()">Forgot password?</button>
             </div>
             <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
         </div>

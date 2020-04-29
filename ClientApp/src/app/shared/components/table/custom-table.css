@@ -41,8 +41,8 @@ tr.selected {
 }
 
 tr:hover td {
-    color: var(--color-table-rows-hover) !important;
     cursor: pointer;
+    font-weight: bold;
 }
 
 td {

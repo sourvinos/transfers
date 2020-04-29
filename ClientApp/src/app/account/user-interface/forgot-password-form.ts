@@ -21,7 +21,7 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
     ngUnsubscribe = new Subject<void>();
 
     form = this.formBuilder.group({
-        email: ['johnsourvinos@hotmail.com', [Validators.required, Validators.email, Validators.maxLength(100)]],
+        email: ['johnsourvinos@hotmail.com', [Validators.required, Validators.email]]
     })
 
     constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private buttonClickService: ButtonClickService) { }

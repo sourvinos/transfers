@@ -31,6 +31,10 @@ input[type=number] {
     color: var(--color-input-text-label) !important;
 }
 
+.mat-icon {
+    color: var(--color-icon);
+}
+
 #search-box .mat-form-field {
     width: 15rem !important;
 }

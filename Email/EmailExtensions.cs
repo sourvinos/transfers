@@ -4,7 +4,7 @@ namespace Transfers {
 
     public static class AddEmailExtensions {
         public static IServiceCollection AddEmailSenders(this IServiceCollection services) {
-            services.AddTransient<IEmailSender, SendGridEmail>();
+            services.AddTransient<IEmailSender, SendOutlookEmail>();
             return services;
         }
     }
