@@ -2,7 +2,7 @@ import { KeyValuePair } from 'src/app/shared/classes/model-keyValuePair';
 
 export class PickupPoint {
     id: number
-    pickupPointDescription: string
+    description: string
     route: {
         id: number
         abbreviation: string

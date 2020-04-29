@@ -163,7 +163,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         this.form = this.formBuilder.group({
             id: 0,
             routeId: ['', Validators.required], routeAbbreviation: ['', Validators.required],
-            pickupPointdescription: ['', [Validators.required, Validators.maxLength(128)]],
+            description: ['', [Validators.required, Validators.maxLength(128)]],
             exactPoint: ['', [Validators.required, Validators.maxLength(128)]],
             time: ['', [Validators.required, Validators.pattern('[0-9][0-9]:[0-9][0-9]')]],
             userName: this.helperService.getUsernameFromLocalStorage()
@@ -200,7 +200,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         this.form.setValue({
             id: result.id,
             routeId: result.route.id, routeAbbreviation: result.route.abbreviation,
-            pickupPointdescription: result.pickupPointDescription,
+            description: result.description,
             exactPoint: result.exactPoint,
             time: result.time,
             userName: result.userName
@@ -256,8 +256,8 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         return this.form.get('routeAbbreviation')
     }
 
-    get pickupPointdescription() {
-        return this.form.get('pickupPointdescription')
+    get description() {
+        return this.form.get('description')
     }
 
     get exactPoint() {

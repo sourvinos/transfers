@@ -19,6 +19,12 @@ namespace Transfers {
             return await repo.Get();
         }
 
+        [HttpGet]
+        [Route("getForIndex")]
+        public async Task<IList<Route>> GetForIndex() {
+            return await repo.GetForDropDown();
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRoute(int id) {
             Route route = await repo.GetById(id);
@@ -29,7 +35,7 @@ namespace Transfers {
         [HttpPost]
         public IActionResult PostRoute([FromBody] Route route) {
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            repo.Add(route);
+            repo.Create(route);
             return Ok(new { response = ApiMessages.RecordCreated() });
         }
 

@@ -29,7 +29,7 @@ namespace Transfers {
         [HttpPost]
         public IActionResult PostPort([FromBody] Port Port) {
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            repo.Add(Port);
+            repo.Create(Port);
             return Ok(new { response = ApiMessages.RecordCreated() });
         }
 

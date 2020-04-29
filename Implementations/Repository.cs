@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Transfers {
@@ -8,20 +9,16 @@ namespace Transfers {
     public class Repository<T> : IRepository<T> where T : class {
 
         protected readonly AppDbContext context;
+
         public Repository(AppDbContext context) {
             this.context = context;
         }
-
-        public IEnumerable<T> GetAll() {
-            return context.Set<T>();
+        async Task<IEnumerable<T>> IRepository<T>.Get() {
+            return await context.Set<T>().ToListAsync();
         }
 
-        IEnumerable<T> IRepository<T>.Find(Func<T, bool> predicate) {
-            return context.Set<T>().Where(predicate);
-        }
-
-        public T GetById(int id) {
-            return context.Set<T>().Find(id);
+        public async Task<T> GetById(int id) {
+            return await context.Set<T>().FindAsync(id);
         }
 
         public void Create(T entity) {

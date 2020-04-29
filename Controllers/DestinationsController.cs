@@ -29,7 +29,7 @@ namespace Transfers {
         [HttpPost]
         public IActionResult PostDestination([FromBody] Destination Destination) {
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            repo.Add(Destination);
+            repo.Create(Destination);
             return Ok(new { response = ApiMessages.RecordCreated() });
         }
 

@@ -30,7 +30,7 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
     widths = ['0px', '10%', '40%', '40%', '10%']
     visibility = ['none', '', '', '', '']
     justify = ['center', 'center', 'left', 'left', 'center']
-    fields = ['id', 'route', 'pickupPointDescription', 'exactPoint', 'time']
+    fields = ['id', 'route', 'description', 'exactPoint', 'time']
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
@@ -58,7 +58,7 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
 
     onFilter(query: string) {
         // console.log(query)
-        this.flatFilteredRecords = query ? this.flatRecords.filter(p => p.pickupPointDescription.toLowerCase().includes(query.toLowerCase())) : this.flatRecords
+        this.flatFilteredRecords = query ? this.flatRecords.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.flatRecords
     }
 
     onNew() {
@@ -91,11 +91,11 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
         for (const {
             id: a,
             route: { abbreviation: b },
-            pickupPointDescription: c,
+            description: c,
             exactPoint: d,
             time: e,
         } of this.queryResult) {
-            this.flatRecords.push({ id: a, route: b, pickupPointDescription: c, exactPoint: d, time: e })
+            this.flatRecords.push({ id: a, route: b, description: c, exactPoint: d, time: e })
         }
         this.flatFilteredRecords = this.flatRecords
     }

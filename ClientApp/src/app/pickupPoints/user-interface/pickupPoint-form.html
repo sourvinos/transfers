@@ -18,9 +18,9 @@
                 <mat-error *ngIf="routeAbbreviation.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Description" formControlName="pickupPointdescription" data-tabindex="2" id="pickupPointdescription" [inputTabStop]="input">
-                <mat-error *ngIf="pickupPointdescription.hasError('required')">This is a required field!</mat-error>
-                <mat-error *ngIf="pickupPointdescription.errors?.maxlength">This field can be up to {{ pickupPointdescription.errors.maxlength.requiredLength }} characters long</mat-error>
+                <input type="text" matInput placeholder="Description" formControlName="description" data-tabindex="2" id="description" [inputTabStop]="input">
+                <mat-error *ngIf="description.hasError('required')">This is a required field!</mat-error>
+                <mat-error *ngIf="description.errors?.maxlength">This field can be up to {{ description.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <input type="text" matInput placeholder="ExactPoint" formControlName="exactPoint" data-tabindex="3" id="exactPoint" [inputTabStop]="input">

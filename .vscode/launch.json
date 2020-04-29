@@ -1,14 +1,5 @@
 {
     "version": "0.2.0",
-    "compounds": [
-        {
-            "name": "Core & Chrome",
-            "configurations": [
-                "Chrome",
-                ".NET Core"
-            ]
-        }
-    ],
     "configurations": [
         {
             "type": "chrome",

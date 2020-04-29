@@ -34,7 +34,7 @@ namespace Transfers {
         [HttpPost]
         public IActionResult PostPickupPoint([FromBody] PickupPoint pickupPoint) {
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            repo.Add(pickupPoint);
+            repo.Create(pickupPoint);
             return Ok(new { response = ApiMessages.RecordCreated() });
         }
 
