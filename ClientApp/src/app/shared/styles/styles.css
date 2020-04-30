@@ -10,7 +10,7 @@
 @import "labels.css";
 @import "snackbar.css";
 @import "scrollable.css";
-@import "variables-dark.css";
+@import "variables-light.css";
 
 * {
     box-sizing: border-box !important;

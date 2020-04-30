@@ -16,7 +16,7 @@
             <mat-checkbox class="checkbox route"></mat-checkbox>
             <header>Routes</header>
         </mat-expansion-panel-header>
-        <div *ngFor="let item of routes" class="item route" [class.active]="item.isSelected" [id]="item.description">
+        <div *ngFor="let item of routes" (click)="onToggleItem(item, this.selectedRoutes)" class="item route" [class.active]="item.isSelected" [id]="item.description">
             <div class="description"> {{ item.description }} </div>
         </div>
     </mat-expansion-panel>

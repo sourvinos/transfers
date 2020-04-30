@@ -113,6 +113,7 @@
     color: var(--color-menu-active-item);
     cursor: pointer;
     font-size: var(--font-size-menu-list-item-active);
+    -webkit-text-stroke: 1px var(--color-stroke);
 }
 
 #copyright {

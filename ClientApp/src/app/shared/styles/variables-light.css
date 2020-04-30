@@ -79,11 +79,11 @@
     /* Input boxes */
     --color-input-text-caret: #4c66da;
     --color-input-text-error: #fc3b3b;
-    --color-input-text-focus: #ba680b;
+    --color-input-text-focus: #652108;
     --color-input-text-label: #5f5e5e;
     --color-input-text-underline: #5f5e5e;
     --color-input-text-selected: #ffffff;
-    --color-input-text-underline-focus: #ba680b;
+    --color-input-text-underline-focus: #652108;
     --color-input-text-not-focus: #5f5e5e;
     --color-icon: #5f5e5e;
     /* Main background */
@@ -94,14 +94,14 @@
     --color-scrollbar: #bf9b7a;
     --color-scrollbar-background: #fffddd;
     /* Sidebar */
-    --color-sidebar-background: #bf9b7a;
-    --color-company-logo-first-child: #66645a;
+    --color-sidebar-background: #d9c68f;
+    --color-company-logo-first-child: ##541717;
     --color-company-logo-second-child: #ffe85c;
     --color-copyright: #66645a;
-    --color-menu-active-item: #ffe85c;
+    --color-menu-active-item: #670649;
     --color-menu-list-items: #424242;
     --color-user-info: #424242;
-    --color-stroke: #000000;
+    --color-stroke: #670649;
     /* Tables */
     --color-table-background: #d9c68f;
     --color-table-header: #66645a;
@@ -114,13 +114,13 @@
     --color-summary-block-background: #d9c68f;
     --color-summary-block-border: #57617b;
     --color-summary-block-expansion-indicator: #939393;
-    --color-summary-block-item-border-active: #fffddd;
+    --color-summary-block-item-border-active: ##541717;
     --color-summary-block-item-border-inactive: #939393;
     --color-summary-block-item-hover-background: #d9c68f;
-    --color-summary-block-item-hover-color: #ffffff;
-    --color-summary-block-item: #fffddd;
+    --color-summary-block-item-hover-color: #652108;
+    --color-summary-block-item: #66645a;
     /* Checkboxes */
-    --color-checkbox-checked: #fffddd;
+    --color-checkbox-checked: ##541717;
     /* Snackbars */
     --color-snackbar-text: #ffffff;
     --color-snackbar-background-danger: #a52a2a;

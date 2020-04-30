@@ -19,12 +19,11 @@ import { Route } from 'src/app/routes/classes/route'
 export class PickupPointListComponent implements OnInit, OnDestroy {
 
     queryResult: any = {}
-    queryResultClone: any = {}
     flatRecords: PickupPointFlat[] = []
     flatFilteredRecords: PickupPointFlat[] = []
+    selectedRoutes: string[] = []
     url = '/pickupPoints'
     resolver = 'pickupPointList'
-    routeResolver = 'routeList'
     routes: Route[]
 
     headers = ['Id', 'Route', 'Description', 'Exact point', 'Time']
@@ -45,6 +44,7 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
         this.loadRoutes()
         this.subscribeToInteractionService()
         this.flattenResults()
+        this.filterByCriteria()
     }
 
     ngOnDestroy() {
@@ -55,6 +55,11 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
 
     onFilter(query: string) {
         this.flatFilteredRecords = query ? this.flatRecords.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.flatRecords
+    }
+
+    onToggleItem(item: any, lookupArray: string[]) {
+        this.toggleActiveItem(item, lookupArray)
+        this.filterByCriteria()
     }
 
     onNew() {
@@ -80,6 +85,10 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
             priority: 0,
             inputs: true
         })
+    }
+    private filterByCriteria() {
+        this.flatFilteredRecords = this.flatRecords
+            .filter((routeDescription) => this.selectedRoutes.indexOf(routeDescription.routeDescription) !== -1)
     }
 
     private flattenResults() {
@@ -119,6 +128,23 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
         this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
+    }
+
+    private toggleActiveItem(item: { description: string; }, lookupArray: string[]) {
+        const element = document.getElementById(item.description)
+        if (element.classList.contains('activeItem')) {
+            for (let i = 0; i < lookupArray.length; i++) {
+                if ((lookupArray)[i] === item.description) {
+                    lookupArray.splice(i, 1)
+                    i--
+                    element.classList.remove('activeItem')
+                    break
+                }
+            }
+        } else {
+            element.classList.add('activeItem')
+            lookupArray.push(item.description)
+        }
     }
 
 }
