@@ -46,7 +46,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     canDeactivate() {
         if (this.form.dirty) {
-            this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
+            this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
                     this.onGoBack()
@@ -72,7 +72,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onDelete() {
-        this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['ok', 'cancel']).subscribe(answer => {
+        this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToDelete(), ['ok', 'cancel']).subscribe(answer => {
             if (answer) {
                 this.userService.delete(this.form.value.id).subscribe((response) => {
                     this.showSnackbar(response.response, 'info')

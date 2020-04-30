@@ -12,7 +12,13 @@ export class DialogAlertComponent {
     public titleColor = ''
 
     constructor(private dialogRef: MatDialogRef<DialogAlertComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.titleColor = data.titleColor
+        switch (data.titleColor) {
+            case 'warningColor':
+                this.titleColor = '#FE9F36'
+                break;
+            default:
+                break;
+        }
     }
 
     onClose() {

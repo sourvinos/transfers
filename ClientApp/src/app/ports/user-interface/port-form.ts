@@ -47,7 +47,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     canDeactivate() {
         if (this.form.dirty) {
-            this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
+            this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
                     this.onGoBack()
@@ -60,7 +60,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onDelete() {
-        this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
+        this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.portService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar(this.messageService.showDeletedRecord(), 'info')

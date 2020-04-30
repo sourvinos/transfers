@@ -47,7 +47,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
 
     canDeactivate() {
         if (this.form.dirty) {
-            this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
+            this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
                     this.onGoBack()

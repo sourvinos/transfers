@@ -73,7 +73,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     canDeactivate() {
         if (this.form.dirty) {
-            this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
+            this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
                     this.scrollToList()
@@ -93,7 +93,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onDelete() {
-        this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
+        this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.transferService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
