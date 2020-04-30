@@ -42,7 +42,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     ngAfterViewInit() {
-        this.focus('routeAbbreviation')
+        this.focus('routeDescription')
     }
 
     ngOnDestroy() {
@@ -162,7 +162,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
-            routeId: ['', Validators.required], routeAbbreviation: ['', Validators.required],
+            routeId: ['', Validators.required], routeDescription: ['', Validators.required],
             description: ['', [Validators.required, Validators.maxLength(128)]],
             exactPoint: ['', [Validators.required, Validators.maxLength(128)]],
             time: ['', [Validators.required, Validators.pattern('[0-9][0-9]:[0-9][0-9]')]],
@@ -199,7 +199,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     private populateFields(result: PickupPoint) {
         this.form.setValue({
             id: result.id,
-            routeId: result.route.id, routeAbbreviation: result.route.abbreviation,
+            routeId: result.route.id, routeDescription: result.route.description,
             description: result.description,
             exactPoint: result.exactPoint,
             time: result.time,
@@ -216,7 +216,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
 
     private renameObjects() {
         this.routes.forEach(obj => {
-            this.renameKey(obj, 'id', 'routeId'); this.renameKey(obj, 'abbreviation', 'routeAbbreviation')
+            this.renameKey(obj, 'id', 'routeId'); this.renameKey(obj, 'description', 'routeDescription')
         })
     }
 
@@ -252,8 +252,8 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         return this.form.get('routeId')
     }
 
-    get routeAbbreviation() {
-        return this.form.get('routeAbbreviation')
+    get routeDescription() {
+        return this.form.get('routeDescription')
     }
 
     get description() {

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -31,7 +31,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackBar: MatSnackBar, private dialogService: DialogService, private messageService: MessageService, private snackbarService: SnackbarService, private buttonClickService: ButtonClickService) {
+    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private dialogService: DialogService, private messageService: MessageService, private snackbarService: SnackbarService, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) { this.getRecord(p.id) }
         })
@@ -45,7 +45,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        this.focus('abbreviation')
+        this.focus('description')
     }
 
     ngOnDestroy() {
@@ -170,8 +170,8 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
-            abbreviation: ['', [Validators.required, Validators.maxLength(10)]],
-            description: ['', [Validators.required, Validators.maxLength(128)]],
+            description: ['', [Validators.required, Validators.maxLength(10)]],
+            fullDescription: ['', [Validators.required, Validators.maxLength(128)]],
             portId: ['', Validators.required], portDescription: ['', Validators.required],
             userName: this.helperService.getUsernameFromLocalStorage()
         })
@@ -181,8 +181,8 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private populateFields(result: Route) {
         this.form.setValue({
             id: result.id,
-            abbreviation: result.abbreviation,
             description: result.description,
+            fullDescription: result.fullDescription,
             portId: result.port.id, portDescription: result.port.description,
             userName: result.userName
         })
@@ -259,12 +259,12 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // #region Getters
 
-    get abbreviation() {
-        return this.form.get('abbreviation')
-    }
-
     get description() {
         return this.form.get('description')
+    }
+
+    get fullDescription() {
+        return this.form.get('fullDescription')
     }
     get portId() {
         return this.form.get('portId')

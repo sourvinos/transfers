@@ -71,7 +71,7 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
 
     private onGoBack() {
         alert('Wrapper - going back')
-        // this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
+        this.router.navigate(['/'])
     }
 
     private isValidDate() {

@@ -30,7 +30,7 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
     widths = ['0px', '10%', '40%', '40%', '10%']
     visibility = ['none', '', '', '', '']
     justify = ['center', 'center', 'left', 'left', 'center']
-    fields = ['id', 'route', 'description', 'exactPoint', 'time']
+    fields = ['id', 'routeDescription', 'description', 'exactPoint', 'time']
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
@@ -90,12 +90,12 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
         this.flatRecords.splice(0)
         for (const {
             id: a,
-            route: { abbreviation: b },
+            route: { description: b },
             description: c,
             exactPoint: d,
             time: e,
         } of this.queryResult) {
-            this.flatRecords.push({ id: a, route: b, description: c, exactPoint: d, time: e })
+            this.flatRecords.push({ id: a, routeDescription: b, description: c, exactPoint: d, time: e })
         }
         this.flatFilteredRecords = this.flatRecords
     }

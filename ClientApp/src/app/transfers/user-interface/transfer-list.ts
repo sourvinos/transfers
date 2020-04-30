@@ -203,7 +203,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.queryResultClone.transfers = this.queryResult.transfers
             .filter((destination: { destination: { description: string } }) => this.selectedDestinations.indexOf(destination.destination.description) !== -1)
             .filter((customer: { customer: { description: string } }) => this.selectedCustomers.indexOf(customer.customer.description) !== -1)
-            .filter((route: { pickupPoint: { route: { abbreviation: string } } }) => this.selectedRoutes.indexOf(route.pickupPoint.route.abbreviation) !== -1)
+            .filter((route: { pickupPoint: { route: { description: string } } }) => this.selectedRoutes.indexOf(route.pickupPoint.route.description) !== -1)
             .filter((driver: { driver: { description: string } }) => this.selectedDrivers.indexOf(driver.driver.description) !== -1)
             .filter((port: { pickupPoint: { route: { port: { description: string } } } }) => this.selectedPorts.indexOf(port.pickupPoint.route.port.description) !== -1)
     }
@@ -218,7 +218,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
             kids: e,
             free: f,
             totalPersons: g,
-            pickupPoint: { description: h, time: i, route: { abbreviation: j, port: { description: k } } },
+            pickupPoint: { description: h, time: i, route: { description: j, port: { description: k } } },
             driver: { description: l },
             userName: m,
             dateIn: n,

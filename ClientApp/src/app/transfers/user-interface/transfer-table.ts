@@ -96,7 +96,7 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
                 this.tableContainer.scrollTop = (this.currentRow - 1) * this.rowHeight
             }
         }
-        if (key === 'ArrowDown' && this.currentRow < this.rowCount) {
+        if (key === 'ArrowDown' && this.currentRow < this.records.length) {
             this.unselectRow()
             this.selectRow(this.table, 'down')
             if (!this.isRowIntoView(this.table.rows[this.currentRow], key)) {

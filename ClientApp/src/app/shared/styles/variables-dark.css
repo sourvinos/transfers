@@ -59,32 +59,32 @@
 * {
     /* Colors */
     /* Buttons */
-    --color-button-delete: #D67474;
-    --color-button-primary: #57617B;
-    --color-button-secondary: #5A75BC;
-    --color-button-text: #FFFDDD;
-    --color-button-text-transparent: #FFFDDD;
+    --color-button-delete: #d67474;
+    --color-button-primary: #57617b;
+    --color-button-secondary: #5a75bc;
+    --color-button-text: #fffddd;
+    --color-button-text-transparent: #fffddd;
     /* Dialogs */
-    --color-dialog-background: #373F46;
+    --color-dialog-background: #373f46;
     --color-dialog-content: #939393;
-    --color-dialog-title: #939393;
+    --color-dialog-title: #949494;
     /* Snackbar */
-    --color-snackbar: #FFFDDD;
+    --color-snackbar: #fffddd;
     /* Divider lines */
-    --color-divider: #57617B;
+    --color-divider: #57617b;
     /* Hamburger */
     --color-hamburger: #939393;
     /* All headers */
     --color-headers: #ffc788;
     /* Input boxes */
-    --color-input-text-caret: #FFFFFF;
-    --color-input-text-error: #FC3B3B;
-    --color-input-text-focus: #FE9F36;
+    --color-input-text-caret: #ffffff;
+    --color-input-text-error: #fc3b3b;
+    --color-input-text-focus: #fe9f36;
     --color-input-text-label: #e2dcdc;
-    --color-input-text-underline: #5F5E5E;
-    --color-input-text-selected: #5F5E5E;
-    --color-input-text-underline-focus: #BA680B;
-    --color-input-text-not-focus: #FFFFFF;
+    --color-input-text-underline: #5f5e5e;
+    --color-input-text-selected: #5f5e5e;
+    --color-input-text-underline-focus: #ba680b;
+    --color-input-text-not-focus: #ffffff;
     --color-icon: #e2dcdc;
     /* Main background */
     --color-background: #373F46;
@@ -92,47 +92,42 @@
     --color-navigation-button: #373F46;
     /* Scrollbars */
     --color-scrollbar: #fe9f36;
-    --color-scrollbar-background: #fe9f3680;
+    --color-scrollbar-background: #b67933;
     /* Sidebar */
-    --color-sidebar-background: #1D2733;
-    --color-company-logo-first-child: #FE9F36;
-    --color-company-logo-second-child: #FFE85C;
-    --color-copyright: #FE9F36;
-    --color-menu-active-item: #FE9F36;
+    --color-sidebar-background: #1d2733;
+    --color-company-logo-first-child: #fe9f36;
+    --color-company-logo-second-child: #ffe85c;
+    --color-copyright: #fe9f36;
+    --color-menu-active-item: #fe9f36;
     --color-menu-list-items: #b3b2b2;
     --color-user-info: #b3b2b2;
-    --color-stroke: #e2dcdc;
+    --color-stroke: #1d2733;
     /* Tables */
-    --color-table-background: #373F46;
+    --color-table-background: #373f46;
     --color-table-header: #b3b2b2;
-    --color-table-header-border: #57617B;
-    --color-table-row: #B3B2B2;
-    --color-table-row-odd: #363D44;
+    --color-table-header-border: #57617b;
+    --color-table-row: #b3b2b2;
+    --color-table-row-odd: #363d44;
     --color-table-row-even: #3c434b;
-    --color-table-row-selected: #394D59;
+    --color-table-row-selected: #394d59;
     /* Transfer summary boxes */
-    --color-summary-block-background: #373F46;
-    --color-summary-block-border: #57617B;
+    --color-summary-block-background: #373f46;
+    --color-summary-block-border: #57617b;
     --color-summary-block-expansion-indicator: #939393;
-    --color-summary-block-item-border-active: #FE9F36;
+    --color-summary-block-item-border-active: #fe9f36;
     --color-summary-block-item-border-inactive: #939393;
-    --color-summary-block-item-hover-background: #373F46;
-    --color-summary-block-item-hover-color: #FFFFFF;
-    --color-summary-block-item: #B3B2B2;
+    --color-summary-block-item-hover-background: #373f46;
+    --color-summary-block-item-hover-color: #ffffff;
+    --color-summary-block-item: #b3b2b2;
     /* Checkboxes */
-    --color-checkbox-checked: #FE9F36;
+    --color-checkbox-checked: #fe9f36;
     /* Snackbars */
     --color-snackbar-text: #ffffff;
     --color-snackbar-background-danger: #a52a2a;
     --color-snackbar-background-info: #0e8d97;
     /* Spinner */
     --color-spinner: #d67474;
-    --color-spinner-background: #FFE85C;
-    /* Autocomplete */
-    --color-autocomplete-background: #373F46;
-    --color-autocomplete-color: #B3B2B2;
-    --color-autocomplete-ripple: #648e9f4a;
-    --color-autocomplete-selected: #b3b2b245;
+    --color-spinner-background: #ffe85c;
     /* Instructions on forms */
     --color-paragraphs: #ffc788;
 }

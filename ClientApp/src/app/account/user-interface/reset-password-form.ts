@@ -4,11 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
-import { PasswordValidator } from 'src/app/shared/services/password-validator';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
-import { ValidationService } from 'src/app/shared/services/validation.service';
 import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
+import { ConfirmValidParentMatcher, ValidationService } from '../../shared/services/validation.service';
 
 @Component({
     selector: 'reset-password-form',
@@ -25,6 +24,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
     form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
+    confirmValidParentMatcher = new ConfirmValidParentMatcher();
 
     constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe(p => {
@@ -50,7 +50,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
 
     onSave() {
         const form = this.form.value;
-        this.accountService.resetPassword(form.email, form.password, form.confirmPassword, form.token).subscribe((response) => {
+        this.accountService.resetPassword(form.email, form.passwords.password, form.passwords.confirmPassword, form.token).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
             this.router.navigateByUrl(this.loginUrl)
         }, error => {
@@ -83,17 +83,18 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         this.form = this.formBuilder.group({
             email: [this.email],
             token: [this.token],
-            password: ['1234567890', [Validators.required, Validators.minLength(10), Validators.maxLength(128), ValidationService.containsSpace]],
-            confirmPassword: ['1234567890', [Validators.required]],
-        }, { validator: PasswordValidator })
-
+            passwords: this.formBuilder.group({
+                password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(128), ValidationService.containsSpace]],
+                confirmPassword: ['', [Validators.required]]
+            }, { validator: ValidationService.childrenEqual })
+        })
     }
 
     private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
 
-    // #region Helper properties
+    // #region Getters
 
     get Passwords() {
         return this.form.get('passwords')
@@ -101,6 +102,14 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
 
     get Password() {
         return this.form.get('passwords.password')
+    }
+
+    get ConfirmPassword() {
+        return this.form.get('passwords.confirmPassword')
+    }
+
+    get MatchingPasswords() {
+        return this.form.get('passwords.password').value === this.form.get('passwords.confirmPassword').value
     }
 
     // #endregion
