@@ -45,7 +45,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         this.unlisten()
     }
 
-    editRecord(id: number) {
+    private editRecord(id: number) {
         this.router.navigate([this.url, id])
     }
 

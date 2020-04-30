@@ -8,6 +8,7 @@ import { ButtonClickService } from 'src/app/shared/services/button-click.service
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { Route } from '../classes/route';
 
+
 @Component({
     selector: 'route-list',
     templateUrl: './route-list.html',

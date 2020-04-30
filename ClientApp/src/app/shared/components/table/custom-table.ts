@@ -72,7 +72,7 @@ export class CustomTableComponent implements OnInit, AfterViewInit {
                 this.tableContainer.scrollTop = (this.currentRow - 1) * this.rowHeight
             }
         }
-        if (key === 'Down' && this.currentRow < this.rowCount) {
+        if (key === 'Down' && this.currentRow < this.records.length) {
             this.unselectRow()
             this.selectRow(this.customTable, 'down')
             this.sendRowToIndexService()

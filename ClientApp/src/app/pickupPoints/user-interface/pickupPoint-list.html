@@ -10,8 +10,19 @@
     </div>
 </div>
 
-<div id="content" class="scrollable">
-    <custom-table [records]="flatFilteredRecords" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></custom-table>
+<div id="content">
+    <mat-expansion-panel expanded="true" class="summaryBlock" disabled>
+        <mat-expansion-panel-header class="summaryHeader">
+            <mat-checkbox class="checkbox route"></mat-checkbox>
+            <header>Routes</header>
+        </mat-expansion-panel-header>
+        <div *ngFor="let item of routes" class="item route" [class.active]="item.isSelected" [id]="item.description">
+            <div class="description"> {{ item.description }} </div>
+        </div>
+    </mat-expansion-panel>
+    <div class="scrollable">
+        <custom-table [records]="flatFilteredRecords" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></custom-table>
+    </div>
 </div>
 
 <div id="footer">

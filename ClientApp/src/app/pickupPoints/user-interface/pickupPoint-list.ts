@@ -1,30 +1,31 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
-import { Subject } from 'rxjs'
+import { Subject, Observable } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
+import { RouteService } from 'src/app/routes/classes/route.service'
 import { Utils } from 'src/app/shared/classes/utils'
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
 import { ButtonClickService } from 'src/app/shared/services/button-click.service'
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
-import { PickupPoint } from '../classes/pickupPoint'
 import { PickupPointFlat } from '../classes/pickupPointFlat'
+import { Route } from 'src/app/routes/classes/route'
 
 @Component({
     selector: 'pickuppoint-list',
     templateUrl: './pickupPoint-list.html',
-    styleUrls: ['../../shared/styles/lists.css']
+    styleUrls: ['../../shared/styles/lists.css', './pickupPoint-list.css']
 })
 
 export class PickupPointListComponent implements OnInit, OnDestroy {
 
     queryResult: any = {}
     queryResultClone: any = {}
-    records: PickupPoint[]
     flatRecords: PickupPointFlat[] = []
     flatFilteredRecords: PickupPointFlat[] = []
-    // pickupPointsFlat: PickupPointFlat[] = []
     url = '/pickupPoints'
     resolver = 'pickupPointList'
+    routeResolver = 'routeList'
+    routes: Route[]
 
     headers = ['Id', 'Route', 'Description', 'Exact point', 'Time']
     widths = ['0px', '10%', '40%', '40%', '10%']
@@ -35,14 +36,14 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService, private buttonClickService: ButtonClickService) {
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService, private buttonClickService: ButtonClickService, private routeService: RouteService) {
         this.loadRecords()
     }
 
     ngOnInit() {
         this.addShortcuts()
+        this.loadRoutes()
         this.subscribeToInteractionService()
-        // this.filterByCriteria()
         this.flattenResults()
     }
 
@@ -52,17 +53,16 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
         this.unlisten()
     }
 
-    editRecord(id: number) {
-        this.router.navigate([this.url, id])
-    }
-
     onFilter(query: string) {
-        // console.log(query)
         this.flatFilteredRecords = query ? this.flatRecords.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.flatRecords
     }
 
     onNew() {
         this.router.navigate([this.url + '/new'])
+    }
+
+    private editRecord(id: number) {
+        this.router.navigate([this.url, id])
     }
 
     private addShortcuts() {
@@ -80,10 +80,6 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
             priority: 0,
             inputs: true
         })
-    }
-
-    private filterByCriteria() {
-        this.queryResultClone = this.queryResult
     }
 
     private flattenResults() {
@@ -111,7 +107,12 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
 
     private loadRecords() {
         this.queryResult = this.activatedRoute.snapshot.data[this.resolver]
-        // console.log('queryResult', this.queryResult)
+    }
+
+    private loadRoutes() {
+        this.routeService.getAll().subscribe(results => {
+            this.routes = results
+        })
     }
 
     private subscribeToInteractionService() {
