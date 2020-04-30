@@ -216,7 +216,9 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
 
     private renameObjects() {
         this.routes.forEach(obj => {
-            this.renameKey(obj, 'id', 'routeId'); this.renameKey(obj, 'description', 'routeDescription')
+            this.renameKey(obj, 'id', 'routeId')
+            this.renameKey(obj, 'description', 'routeDescription')
+            this.renameKey(obj, 'fullDescription', 'routeFullDescription')
         })
     }
 

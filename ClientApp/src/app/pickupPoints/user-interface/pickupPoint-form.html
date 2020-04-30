@@ -14,7 +14,7 @@
     <form [formGroup]="form" autocomplete="off">
         <div id="section-one">
             <mat-form-field>
-                <input type="text" matInput placeholder="Route" formControlName="routeDescription" data-tabindex="1" id="routeDescription" [inputTabStop]="input" (change)="lookupIndex(routes, 'Routes', ['routeId', 'routeDescription'], ['id', 'routeDescription'], ['Id', 'Description'], ['1px', '220px'], ['none', ''], ['center', 'left'], $event)">
+                <input type="text" matInput placeholder="Route" formControlName="routeDescription" data-tabindex="1" id="routeDescription" [inputTabStop]="input" (change)="lookupIndex(routes, 'Routes', ['routeId', 'routeDescription', 'routeFullDescription'], ['id', 'routeDescription', 'routeFullDescription'], ['Id', 'Description', 'Full description'], ['1px', '220px', '550px'], ['none', '', ''], ['center', 'center', 'left'], $event)">
                 <mat-error *ngIf="routeDescription.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <mat-form-field>
