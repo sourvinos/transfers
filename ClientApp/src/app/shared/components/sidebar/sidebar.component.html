@@ -8,9 +8,8 @@
         <p>People</p>
         <p>movers</p>
     </div>
-    <div id="image" [routerLink]="['/']">
-        <div [class.hidden]="isNotLoaded" id="double-ring"></div>
-        <img src="../../../../assets/logo-bus-brown.png">
+    <div id="double-ring" [routerLink]="['/']">
+        <double-ring></double-ring>
     </div>
     <div id="menu">
         <ul id="menuItems" (click)="onCloseSidebar()">
