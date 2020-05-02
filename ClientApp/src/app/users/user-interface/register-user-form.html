@@ -49,9 +49,9 @@
                     <mat-error *ngIf="!ConfirmPassword?.hasError('required') && MatchingPasswords">This field has errors!</mat-error>
                 </mat-form-field>
             </div>
-            <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
         </div>
     </form>
+    <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
 </div>
 
 <div id="footer">

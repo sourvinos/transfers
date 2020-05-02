@@ -1,76 +1,68 @@
 * {
-    /* Buttons */
-    --color-button-delete: #FC8A8A;
-    --color-button-primary: #B4C8D3;
-    --color-button-secondary: #9AB6C6;
-    --color-button-text: #474747;
-    --color-button-text-transparent: #fffddd;
-    /* Dialogs */
-    --color-dialog-background: #373f46;
-    --color-dialog-content: #939393;
-    --color-dialog-title: #949494;
-    /* Snackbar */
-    --color-snackbar: #fffddd;
-    /* Divider lines */
-    --color-divider: #57617b;
-    /* Hamburger */
-    --color-hamburger: #939393;
-    /* All headers */
-    --color-headers: #fe9f36;
-    /* Input boxes */
-    --color-input-text-caret: #939393;
-    --color-input-text-error: #fc3b3b;
-    --color-input-text-focus: #fe9f36;
-    --color-input-text-label: #939393;
-    --color-input-text-underline: #939393;
-    --color-input-text-selected: #939393;
-    --color-input-text-underline-focus: #ba680b;
-    --color-input-text-not-focus: #939393;
-    --color-icon: #e2dcdc;
-    /* Main background */
-    --color-background: #FEFEFE;
-    /* Navigation icon */
-    --color-navigation-button: #fcb89a;
-    /* Scrollbars */
-    --color-scrollbar: #9AB6C6;
-    --color-scrollbar-background: #F3F8FC;
     /* Sidebar */
-    --top-color: #B4C8D3;
-    --bottom-color: #B4C8D3;
+    --top-color: #A6826D;
+    --bottom-color: #A6826D;
     --color-sidebar-background: linear-gradient(var(--top-color), var(--bottom-color));
-    --color-company-logo-first-child: #FEFEFE;
-    --color-company-logo-second-child: #FEFEFE;
-    --color-copyright: #FEFEFE;
-    --color-menu-active-item: #ad3008;
-    --color-menu-list-items: #FEFEFE;
-    --color-user-info: #FEFEFE;
-    --color-stroke: #939393;
+    --color-company-logo-first-child: #FFA500;
+    --color-company-logo-second-child: #F2CFBB;
+    --color-menu-list-items: #F2CFBB;
+    --color-menu-active-item: #734230;
+    --color-user-info: #F2CFBB;
+    --color-copyright: #F2CFBB;
+    /* Main background */
+    --color-background: #F2CFBB;
+    /* Buttons */
+    --color-button-primary: #A6826D;
+    --color-button-delete: #F78787;
+    --color-button-secondary: #FFBB9C;
+    --color-button-text-all: #FFEBE2;
+    --color-button-text-secondary: #734230;
+    --color-button-text-transparent: #734230;
+    /* Input boxes */
+    --color-input-text-caret: #FFFFFF;
+    --color-input-text-selected: #FFC29E;
+    --color-input-focus: #0D0D0D;
+    --color-input-not-focus: #734230;
+    --color-input-text-error: #EF1717;
+    /* Navigation icon */
+    --color-navigation-button: #A6826D;
+    --color-navigation-arrow: #F2CFBB;
+    /* Scrollbars */
+    --color-scrollbar: #734230;
+    --color-scrollbar-background: #A6826D;
     /* Tables */
-    --color-table-background: #FEFEFE;
+    --color-table-background: #F2CFBB;
     --color-table-header: #474747;
-    --color-table-header-border: #57617b;
+    --color-table-header-border: #A6826D;
     --color-table-row: #474747;
-    --color-table-row-odd: #FEFEFE;
-    --color-table-row-even: #F3F8FC;
-    --color-table-row-selected: #B4C8D3;
-    /* Transfer summary boxes */
-    --color-summary-block-background: #373f46;
-    --color-summary-block-border: #57617b;
-    --color-summary-block-expansion-indicator: #939393;
-    --color-summary-block-item-border-active: #fe9f36;
-    --color-summary-block-item-border-inactive: #939393;
-    --color-summary-block-item-hover-background: #373f46;
-    --color-summary-block-item-hover-color: #ffffff;
-    --color-summary-block-item: #b3b2b2;
-    /* Checkboxes */
-    --color-checkbox-checked: #fe9f36;
+    --color-table-row-even: #FFEBE2;
+    --color-table-row-odd: #F2CFBB;
+    --color-table-row-selected: #FFBB9C;
+    /* All headers */
+    --color-headers: #734230;
+    /* Hamburger */
+    --color-hamburger: #A6826D;
+    /* Dialogs */
+    --color-dialog-background: #F2CFBB;
     /* Snackbars */
-    --color-snackbar-text: #ffffff;
     --color-snackbar-background-danger: #a52a2a;
     --color-snackbar-background-info: #0e8d97;
+    /* Divider lines */
+    --color-divider: #57617b;
+    /* Instructions on forms */
+    --color-paragraphs: #734230;
+    /* Transfer summary boxes */
+    --color-summary-block-background: #F2CFBB;
+    --color-summary-block-border: #A6826D;
+    --color-summary-block-expansion-indicator: #939393;
+    --color-summary-block-item-border-active: #734230;
+    --color-summary-block-item-border-inactive: #939393;
+    --color-summary-block-item-hover-background: #F2CFBB;
+    --color-summary-block-item-hover-color: #FFFFFF;
+    --color-summary-block-item: #474747;
+    /* Checkboxes */
+    --color-checkbox-checked: #734230;
     /* Spinner */
     --color-spinner: #d67474;
     --color-spinner-background: #ffe85c;
-    /* Instructions on forms */
-    --color-paragraphs: #ffc788;
 }

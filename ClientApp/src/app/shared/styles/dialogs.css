@@ -20,7 +20,6 @@
 }
 
 #dialog-header h1 {
-    color: var(--color-dialog-title);
     font-family: var(--font-family-dialog-header) !important;
     margin: 0 !important;
 }

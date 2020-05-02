@@ -17,7 +17,7 @@ th {
     font-family: var(--font-family-table);
     font-size: var(--font-size-table-header);
     font-weight: var(--font-weight-table-headers);
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     position: sticky;
     text-align: center;
     top: 0px;
@@ -52,7 +52,7 @@ td {
     font-size: var(--font-size-table-rows);
     max-width: 0;
     overflow: hidden;
-    padding: 0.7rem 0.5rem;
+    padding: 0.5rem 0.5rem;
     text-overflow: ellipsis;
     white-space: nowrap;
 }

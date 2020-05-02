@@ -1,58 +1,56 @@
 * {
-    /* Buttons */
-    --color-button-delete: #d67474;
-    --color-button-primary: #57617b;
-    --color-button-secondary: #5a75bc;
-    --color-button-text: #fffddd;
-    --color-button-text-transparent: #fffddd;
-    /* Dialogs */
-    --color-dialog-background: #373f46;
-    --color-dialog-content: #939393;
-    --color-dialog-title: #949494;
-    /* Snackbar */
-    --color-snackbar: #fffddd;
-    /* Divider lines */
-    --color-divider: #57617b;
-    /* Hamburger */
-    --color-hamburger: #939393;
-    /* All headers */
-    --color-headers: #ffc788;
-    /* Input boxes */
-    --color-input-text-caret: #ffffff;
-    --color-input-text-error: #fc3b3b;
-    --color-input-text-focus: #fe9f36;
-    --color-input-text-label: #e2dcdc;
-    --color-input-text-underline: #5f5e5e;
-    --color-input-text-selected: #5f5e5e;
-    --color-input-text-underline-focus: #ba680b;
-    --color-input-text-not-focus: #ffffff;
-    --color-icon: #e2dcdc;
+    /* Sidebar */
+    --top-color: #1D2733;
+    --bottom-color: #1D2733;
+    --color-sidebar-background: linear-gradient(var(--top-color), var(--bottom-color));
+    --color-company-logo-first-child: #FE9F36;
+    --color-company-logo-second-child: #FFE85C;
+    --color-menu-list-items: #9F9F9F;
+    --color-menu-active-item: #FE9F36;
+    --color-user-info: #FFE85C;
+    --color-copyright: #FE9F36;
     /* Main background */
     --color-background: #373F46;
+    /* Buttons */
+    --color-button-primary: #57617B;
+    --color-button-delete: #D67474;
+    --color-button-secondary: #5A75BC;
+    --color-button-text-all: #FFFDDD;
+    --color-button-text-secondary: #FFFDDD;
+    --color-button-text-transparent: #373f46;
+    /* Input boxes */
+    --color-input-text-caret: #ffffff;
+    --color-input-text-selected: #5F5E5E;
+    --color-input-focus: #fe9f36;
+    --color-input-not-focus: #939393;
+    --color-input-text-error: #EF1717;
     /* Navigation icon */
     --color-navigation-button: #373F46;
+    --color-navigation-arrow: #F2CFBB;
     /* Scrollbars */
     --color-scrollbar: #fe9f36;
     --color-scrollbar-background: #b67933;
-    /* Sidebar */
-    --top-color: rgba(0, 0, 0, 1);
-    --bottom-color: rgba(0, 0, 0, 1);
-    --color-sidebar-background: linear-gradient(var(--top-color), var(--bottom-color));
-    --color-company-logo-first-child: #fe9f36;
-    --color-company-logo-second-child: #ffe85c;
-    --color-copyright: #fe9f36;
-    --color-menu-active-item: #fe9f36;
-    --color-menu-list-items: #b3b2b2;
-    --color-user-info: #b3b2b2;
-    --color-stroke: #1d2733;
     /* Tables */
     --color-table-background: #373f46;
     --color-table-header: #b3b2b2;
     --color-table-header-border: #57617b;
     --color-table-row: #b3b2b2;
-    --color-table-row-odd: #363d44;
     --color-table-row-even: #3c434b;
+    --color-table-row-odd: #363d44;
     --color-table-row-selected: #394d59;
+    /* All headers */
+    --color-headers: #ffc788;
+    /* Hamburger */
+    --color-hamburger: #939393;
+    /* Dialogs */
+    --color-dialog-background: #373f46;
+    /* Snackbars */
+    --color-snackbar-background-danger: #a52a2a;
+    --color-snackbar-background-info: #0e8d97;
+    /* Divider lines */
+    --color-divider: #57617b;
+    /* Instructions on forms */
+    --color-paragraphs: #ffc788;
     /* Transfer summary boxes */
     --color-summary-block-background: #373f46;
     --color-summary-block-border: #57617b;
@@ -64,13 +62,7 @@
     --color-summary-block-item: #b3b2b2;
     /* Checkboxes */
     --color-checkbox-checked: #fe9f36;
-    /* Snackbars */
-    --color-snackbar-text: #ffffff;
-    --color-snackbar-background-danger: #a52a2a;
-    --color-snackbar-background-info: #0e8d97;
     /* Spinner */
     --color-spinner: #d67474;
     --color-spinner-background: #ffe85c;
-    /* Instructions on forms */
-    --color-paragraphs: #ffc788;
 }

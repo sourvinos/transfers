@@ -29,6 +29,7 @@
 }
 
 #header #navigation {
+    align-items: center;
     display: flex;
     grid-area: "navigation";
     justify-content: flex-start;

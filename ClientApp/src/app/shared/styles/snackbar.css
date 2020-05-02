@@ -8,7 +8,6 @@
 
 #customSnackbar div {
     align-items: center;
-    color: var(--color-snackbar);
     display: flex;
     font-family: var(--font-family-snackbar);
     font-size: var(--font-size-snackbar);

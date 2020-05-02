@@ -12,7 +12,7 @@ input::selection {
 
 input[type=text], input[type=email] {
     caret-color: var(--color-input-text-caret);
-    color: var(--color-input-text-not-focus);
+    color: var(--color-input-not-focus);
     cursor: text !important;
     font-size: var(--font-size-input);
 }
@@ -28,11 +28,11 @@ input[type=number] {
 }
 
 .mat-hint {
-    color: var(--color-input-text-label) !important;
+    color: var(--color-input-not-focus) !important;
 }
 
 .mat-icon {
-    color: var(--color-icon);
+    color: var(--color-input-not-focus);
 }
 
 #search-box .mat-form-field {
@@ -41,28 +41,28 @@ input[type=number] {
 
 /* Not focused - Not error*/
 .mat-form-field .mat-form-field-label {
-    color: var(--color-input-text-label) !important;
+    color: var(--color-input-not-focus) !important;
 }
 
 .mat-form-field .mat-input-element {
-    color: var(--color-input-text-not-focus) !important;
+    color: var(--color-input-not-focus) !important;
 }
 
 .mat-form-field-underline {
-    background-color: var(--color-input-text-underline) !important
+    background-color: var(--color-input-not-focus) !important
 }
 
 /* Focused */
 .mat-form-field.mat-focused .mat-form-field-label {
-    color: var(--color-input-text-focus) !important;
+    color: var(--color-input-focus) !important;
 }
 
 .mat-form-field.mat-focused .mat-input-element {
-    color: var(--color-input-text-focus) !important;
+    color: var(--color-input-focus) !important;
 }
 
 .mat-form-field.mat-focused .mat-form-field-ripple {
-    background-color: var(--color-input-text-underline-focus) !important
+    background-color: var(--color-input-focus) !important
 }
 
 /* Error */

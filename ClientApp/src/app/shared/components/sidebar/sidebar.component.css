@@ -14,14 +14,13 @@
     font-family: var(--font-family-user-info);
     font-size: var(--font-size-user-info);
     margin: 1.5rem auto 0;
-    min-height: 2.375rem;
     text-align: center;
 }
 
 #companyLogo {
     cursor: pointer;
     font-family: var(--font-family-logo);
-    margin: 0 auto 1.4rem;
+    margin: 0 auto 1.5rem;
     outline: 0;
     text-align: center;
 }
@@ -29,7 +28,6 @@
 #companyLogo>:first-child {
     color: var(--color-company-logo-first-child) !important;
     font-size: var(--font-size-logo-first-child) !important;
-    -webkit-text-stroke: 1px var(--color-stroke);
 }
 
 #companyLogo>:last-child {
@@ -37,7 +35,6 @@
     font-size: var(--font-size-logo-second-child) !important;
     font-weight: normal !important;
     margin: -1rem 0 0 0 !important;
-    -webkit-text-stroke: 1px var(--color-stroke);
 }
 
 #double-ring {
@@ -61,8 +58,8 @@
     line-height: 2.5rem;
     list-style: none;
     margin: 0;
-    padding: 0;
     text-align: center;
+    padding: 0;
 }
 
 #menu ul>li {
@@ -80,25 +77,28 @@
     color: var(--color-menu-active-item);
     cursor: pointer;
     font-size: var(--font-size-menu-list-item-active);
-    -webkit-text-stroke: 0 var(--color-stroke);
 }
 
 #copyright {
     color: var(--color-copyright);
     font-family: var(--font-family-copyright);
     font-size: var(--font-size-copyright);
-    margin: 0 auto 1.5rem;
+    margin: 0.8 auto 1.5rem;
     text-align: center;
 }
 
 /* Small heights = hide bus circle */
-@media only screen and (max-height: 899px) {
-    #image {
+@media only screen and (max-height: 799px) {
+    #companyLogo {
+        margin-bottom: 1rem;
+    }
+
+    #double-ring {
         display: none;
     }
 
     #menu {
-        padding: 0 0 1rem 0;
+        margin: 0;
     }
 
     #menuItems {

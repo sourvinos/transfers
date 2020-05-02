@@ -28,11 +28,9 @@
                 <mat-error *ngIf="Email?.hasError('required')">This is a required field!</mat-error>
                 <mat-error *ngIf="Email?.hasError('email')">This field seems to be invalid!</mat-error>
             </mat-form-field>
-            <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
-            <p class="instructions" [class.hidden]=true>Valid {{ form.valid }}</p>
-            <p class="instructions" [class.hidden]=true>Dirty {{ form.dirty }}</p>
         </div>
     </form>
+    <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
 </div>
 
 <div id="footer">

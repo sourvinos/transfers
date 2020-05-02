@@ -1,5 +1,5 @@
 button {
-    color: var(--color-button-text) !important;
+    color: var(--color-button-text-all) !important;
     cursor: default !important;
     font-family: var(--font-family-buttons) !important;
     font-weight: var(--font-weight-buttons) !important;
@@ -15,6 +15,7 @@ button.primary {
 
 button.secondary {
     background-color: var(--color-button-secondary) !important;
+    color: var(--color-button-text-secondary) !important;
 }
 
 button.delete {
@@ -46,4 +47,8 @@ button:not(:disabled) {
 
 .mat-mini-fab .mat-button-wrapper {
     padding: 7px 0 !important;
+}
+
+#goBack {
+    color: var(--color-navigation-arrow) !important;
 }
