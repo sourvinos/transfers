@@ -1,0 +1,76 @@
+* {
+    /* Buttons */
+    --color-button-delete: #FC8A8A;
+    --color-button-primary: #B4C8D3;
+    --color-button-secondary: #9AB6C6;
+    --color-button-text: #474747;
+    --color-button-text-transparent: #fffddd;
+    /* Dialogs */
+    --color-dialog-background: #373f46;
+    --color-dialog-content: #939393;
+    --color-dialog-title: #949494;
+    /* Snackbar */
+    --color-snackbar: #fffddd;
+    /* Divider lines */
+    --color-divider: #57617b;
+    /* Hamburger */
+    --color-hamburger: #939393;
+    /* All headers */
+    --color-headers: #fe9f36;
+    /* Input boxes */
+    --color-input-text-caret: #939393;
+    --color-input-text-error: #fc3b3b;
+    --color-input-text-focus: #fe9f36;
+    --color-input-text-label: #939393;
+    --color-input-text-underline: #939393;
+    --color-input-text-selected: #939393;
+    --color-input-text-underline-focus: #ba680b;
+    --color-input-text-not-focus: #939393;
+    --color-icon: #e2dcdc;
+    /* Main background */
+    --color-background: #FEFEFE;
+    /* Navigation icon */
+    --color-navigation-button: #fcb89a;
+    /* Scrollbars */
+    --color-scrollbar: #9AB6C6;
+    --color-scrollbar-background: #F3F8FC;
+    /* Sidebar */
+    --top-color: #B4C8D3;
+    --bottom-color: #B4C8D3;
+    --color-sidebar-background: linear-gradient(var(--top-color), var(--bottom-color));
+    --color-company-logo-first-child: #FEFEFE;
+    --color-company-logo-second-child: #FEFEFE;
+    --color-copyright: #FEFEFE;
+    --color-menu-active-item: #ad3008;
+    --color-menu-list-items: #FEFEFE;
+    --color-user-info: #FEFEFE;
+    --color-stroke: #939393;
+    /* Tables */
+    --color-table-background: #FEFEFE;
+    --color-table-header: #474747;
+    --color-table-header-border: #57617b;
+    --color-table-row: #474747;
+    --color-table-row-odd: #FEFEFE;
+    --color-table-row-even: #F3F8FC;
+    --color-table-row-selected: #B4C8D3;
+    /* Transfer summary boxes */
+    --color-summary-block-background: #373f46;
+    --color-summary-block-border: #57617b;
+    --color-summary-block-expansion-indicator: #939393;
+    --color-summary-block-item-border-active: #fe9f36;
+    --color-summary-block-item-border-inactive: #939393;
+    --color-summary-block-item-hover-background: #373f46;
+    --color-summary-block-item-hover-color: #ffffff;
+    --color-summary-block-item: #b3b2b2;
+    /* Checkboxes */
+    --color-checkbox-checked: #fe9f36;
+    /* Snackbars */
+    --color-snackbar-text: #ffffff;
+    --color-snackbar-background-danger: #a52a2a;
+    --color-snackbar-background-info: #0e8d97;
+    /* Spinner */
+    --color-spinner: #d67474;
+    --color-spinner-background: #ffe85c;
+    /* Instructions on forms */
+    --color-paragraphs: #ffc788;
+}
