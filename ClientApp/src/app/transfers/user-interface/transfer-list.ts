@@ -83,7 +83,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     ngAfterViewChecked() {
-        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - document.getElementById('totals').offsetHeight - 16 + 'px'
+        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - document.getElementById('footer').offsetHeight + 'px'
     }
 
     ngDoCheck() {

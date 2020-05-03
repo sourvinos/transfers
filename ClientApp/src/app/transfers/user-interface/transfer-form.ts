@@ -198,7 +198,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private getListWidth() {
-        return document.getElementById('listFormCombo').offsetWidth - 32 + 'px'
+        return document.getElementById('listFormCombo').offsetWidth - 32 - 352 + 'px'
     }
 
     private getRecord(id: number) {

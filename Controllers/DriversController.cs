@@ -21,14 +21,15 @@ namespace Transfers {
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDriver(int id) {
-            Driver Driver = await repo.GetById(id);
-            if (Driver == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
-            return Ok(Driver);
+            Driver driver = await repo.GetById(id);
+            if (driver == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
+            return Ok(driver);
         }
 
         [HttpGet("getDefault")]
         public async Task<IActionResult> GetDefaultDriver() {
             Driver driver = await repo.GetDefault();
+            if (driver == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             return Ok(driver);
         }
 

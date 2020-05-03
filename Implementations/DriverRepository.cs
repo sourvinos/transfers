@@ -4,11 +4,10 @@ using Microsoft.EntityFrameworkCore;
 namespace Transfers {
     public class DriverRepository : Repository<Driver>, IDriverRepository {
 
-        private readonly AppDbContext appDbContext;
-        public DriverRepository(AppDbContext appDbContext) : base(appDbContext) { }
+        public DriverRepository(AppDbContext context) : base(context) { }
 
         public async Task<Driver> GetDefault() {
-            return await appDbContext.Drivers.SingleOrDefaultAsync(m => m.IsDefault);
+            return await context.Drivers.AsNoTracking().SingleOrDefaultAsync(m => m.IsDefault);
         }
 
     }
