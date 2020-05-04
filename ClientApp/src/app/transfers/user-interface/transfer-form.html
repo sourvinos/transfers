@@ -10,7 +10,7 @@
                 <mat-error *ngIf="customerDescription.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="PickupPoint" formControlName="pickupPointDescription" data-tabindex="3" id="pickupPointDescription" [inputTabStop]="input" (change)="lookupIndex(pickupPointsFlat, 'Pickup points', ['pickupPointId', 'pickupPointDescription', 'portId', 'portDescription'], ['pickupPointId', 'pickupPointDescription', 'exactPoint', 'time', 'portId', 'portDescription'], ['Id', 'Description', 'Exact point', 'Time', 'Port Id', 'Port'], ['100px', '440px', '440px', '100px', '100px', '440px'], ['none', '', '', '', 'none', 'none'], ['center', 'left', 'left', 'center', 'center', 'left'], $event)">
+                <input type="text" matInput placeholder="Pickup point" formControlName="pickupPointDescription" data-tabindex="3" id="pickupPointDescription" [inputTabStop]="input" (change)="lookupIndex(pickupPointsFlat, 'Pickup points', ['pickupPointId', 'pickupPointDescription', 'portId', 'portDescription'], ['pickupPointId', 'pickupPointDescription', 'exactPoint', 'time', 'portId', 'portDescription'], ['Id', 'Description', 'Exact point', 'Time', 'Port Id', 'Port'], ['100px', '440px', '440px', '100px', '100px', '440px'], ['none', '', '', '', 'none', 'none'], ['center', 'left', 'left', 'center', 'center', 'left'], $event)">
                 <mat-error *ngIf="pickupPointDescription.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <div id="persons-panel">

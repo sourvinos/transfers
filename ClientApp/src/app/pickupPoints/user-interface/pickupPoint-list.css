@@ -1,3 +1,29 @@
+#results {
+    display: grid;
+    grid-template-areas:
+        "listFormCombo";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    height: 100%;
+}
+
 #listFormCombo {
-    margin: auto 0;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    grid-area: listFormCombo;
+    height: 100%;
+    justify-content: flex-start;
+    overflow-y: hidden;
+}
+
+#footer {
+    margin: 0;
+}
+
+#pickupPointList {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
 }

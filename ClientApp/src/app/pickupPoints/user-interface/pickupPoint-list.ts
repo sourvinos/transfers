@@ -1,4 +1,4 @@
-import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Route, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -10,10 +10,10 @@ import { PickupPoint } from '../classes/pickupPoint';
 @Component({
     selector: 'pickuppoint-list',
     templateUrl: './pickupPoint-list.html',
-    styleUrls: ['../../shared/styles/lists.css', './pickupPoint-list.css']
+    styleUrls: ['./pickupPoint-list.css']
 })
 
-export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
+export class PickupPointListComponent implements OnInit, AfterViewChecked, DoCheck, OnDestroy {
 
     routeId: string
     routes: Route[]
@@ -42,6 +42,10 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
 
     ngOnInit() {
         this.subscribeToInteractionService()
+    }
+
+    ngAfterViewChecked() {
+        // document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - 102 + 'px'
     }
 
     ngDoCheck() {

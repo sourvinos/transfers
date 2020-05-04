@@ -16,8 +16,7 @@ import { PickupPointService } from '../classes/pickupPoint.service';
 @Component({
     selector: 'pickuppoint-form',
     templateUrl: './pickupPoint-form.html',
-    styleUrls: ['../../shared/styles/forms.css']
-    // styleUrls: ['./pickupPoint-form.css']
+    styleUrls: ['./pickupPoint-form.css']
 })
 
 export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -137,6 +136,14 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         Utils.setFocus(field)
     }
 
+    private getListHeight() {
+        return document.getElementById('listFormCombo').offsetHeight + 'px'
+    }
+
+    private getListWidth() {
+        return document.getElementById('listFormCombo').offsetWidth - 32 + 'px'
+    }
+
     private getRecord(id: string | number) {
         this.pickupPointService.getSingle(id).then(result => {
             this.populateFields(result)
@@ -150,8 +157,8 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         this.form = this.formBuilder.group({
             id: 0,
             routeId: [0, Validators.required],
-            description: ['', [Validators.required, Validators.maxLength(100)]],
-            exactPoint: ['', [Validators.required, Validators.maxLength(100)]],
+            description: ['', [Validators.required, Validators.maxLength(128)]],
+            exactPoint: ['', [Validators.required, Validators.maxLength(128)]],
             time: ['', [Validators.required, Validators.pattern('[0-9][0-9]:[0-9][0-9]')]],
             userName: this.helperService.getUsernameFromLocalStorage()
         })
@@ -188,12 +195,15 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     private scrollToForm() {
-        document.getElementById('pickupPointsList').style.height = '0'
+        document.getElementById('content').style.width = this.getListWidth()
+        document.getElementById('content').style.height = this.getListHeight()
+        document.getElementById('pickupPointList').style.display = 'none'
     }
 
     private scrollToList() {
-        document.getElementById('content').style.height = '0'
-        document.getElementById('pickupPointsList').style.height = '100%'
+        document.getElementById('content').style.display = 'none'
+        document.getElementById('pickupPointList').style.display = 'flex'
+        document.getElementById('custom-table-input').focus()
         this.interactionService.performAction('')
     }
 

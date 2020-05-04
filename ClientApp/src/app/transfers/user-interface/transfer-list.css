@@ -39,7 +39,7 @@
     grid-area: totals;
 }
 
-#transfersList {
+#transferList {
     display: flex;
     flex-direction: column;
     height: 100%;

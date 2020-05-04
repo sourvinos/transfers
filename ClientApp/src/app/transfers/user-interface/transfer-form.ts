@@ -334,12 +334,12 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private scrollToForm() {
         document.getElementById('content').style.width = this.getListWidth()
         document.getElementById('content').style.height = this.getListHeight()
-        document.getElementById('transfersList').style.display = 'none'
+        document.getElementById('transferList').style.display = 'none'
     }
 
     private scrollToList() {
         document.getElementById('content').style.display = 'none'
-        document.getElementById('transfersList').style.display = 'flex'
+        document.getElementById('transferList').style.display = 'flex'
         document.getElementById('custom-table-input').focus()
         this.interactionService.performAction('')
     }
