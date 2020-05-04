@@ -83,7 +83,7 @@
 }
 
 /* Small heights */
-@media only screen and (max-height: 60rem) {
+@media only screen and (max-height: 767px) {
     form {
         flex-direction: row !important;
     }

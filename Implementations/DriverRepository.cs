@@ -6,7 +6,7 @@ namespace Transfers {
 
         public DriverRepository(AppDbContext context) : base(context) { }
 
-        public async Task<Driver> GetDefault() {
+        public async Task<Driver> GetDefaultDriver() {
             return await context.Drivers.AsNoTracking().SingleOrDefaultAsync(m => m.IsDefault);
         }
 

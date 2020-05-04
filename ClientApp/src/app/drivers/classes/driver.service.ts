@@ -7,12 +7,12 @@ import { Driver } from './driver';
 
 export class DriverService extends DataService {
 
-    constructor(private httpClient: HttpClient) {
-        super(httpClient, '/api/drivers')
+    constructor(http: HttpClient) {
+        super(http, '/api/drivers')
     }
 
-    async getDefaultDriver() {
-        return await this.http.get<Driver>(this.url + '/' + 'getDefault').toPromise()
+    getDefaultDriver() {
+        return this.http.get<Driver>('/api/drivers/defaultDriver')
     }
 
 }

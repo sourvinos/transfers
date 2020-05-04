@@ -26,9 +26,9 @@ namespace Transfers {
             return Ok(driver);
         }
 
-        [HttpGet("getDefault")]
+        [HttpGet("defaultDriver")]
         public async Task<IActionResult> GetDefaultDriver() {
-            Driver driver = await repo.GetDefault();
+            Driver driver = await repo.GetDefaultDriver();
             if (driver == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             return Ok(driver);
         }

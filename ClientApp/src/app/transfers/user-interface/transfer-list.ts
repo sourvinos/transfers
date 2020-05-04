@@ -1,20 +1,20 @@
-import { Location } from '@angular/common';
-import { AfterViewChecked, AfterViewInit, Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
-import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { DriverService } from 'src/app/drivers/classes/driver.service';
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
-import { ButtonClickService } from 'src/app/shared/services/button-click.service';
-import { HelperService } from 'src/app/shared/services/helper.service';
-import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
-import { MessageService } from 'src/app/shared/services/message.service';
-import { SnackbarService } from 'src/app/shared/services/snackbar.service';
-import { TransferPdfService } from '../classes/transfer-pdf.service';
-import { TransferService } from '../classes/transfer.service';
-import { TransferFlat } from '../classes/transferFlat';
-import { TransferAssignDriverComponent } from './transfer-assign-driver';
+import { Location } from '@angular/common'
+import { AfterViewChecked, AfterViewInit, Component, DoCheck, OnDestroy, OnInit } from '@angular/core'
+import { MatDialog } from '@angular/material'
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router'
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators'
+import { DriverService } from 'src/app/drivers/classes/driver.service'
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { ButtonClickService } from 'src/app/shared/services/button-click.service'
+import { HelperService } from 'src/app/shared/services/helper.service'
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
+import { MessageService } from 'src/app/shared/services/message.service'
+import { SnackbarService } from 'src/app/shared/services/snackbar.service'
+import { TransferPdfService } from '../classes/transfer-pdf.service'
+import { TransferService } from '../classes/transfer.service'
+import { TransferFlat } from '../classes/transferFlat'
+import { TransferAssignDriverComponent } from './transfer-assign-driver'
 
 @Component({
     selector: 'transfer-list',
@@ -48,7 +48,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     fields = ['', 'id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
     mustRefresh = true
     unlisten: Unlisten
-    ngUnsubscribe = new Subject<void>();
+    ngUnsubscribe = new Subject<void>()
 
     constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: TransferPdfService, private driverService: DriverService, private location: Location, private snackbarService: SnackbarService, public dialog: MatDialog, private transferService: TransferService, private helperService: HelperService, private messageService: MessageService, private keyboardShortcutsService: KeyboardShortcuts, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
@@ -83,7 +83,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     ngAfterViewChecked() {
-        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - document.getElementById('footer').offsetHeight + 'px'
+        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - 102 + 'px'
     }
 
     ngDoCheck() {
@@ -127,12 +127,10 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     onNew() {
-        this.driverService.getDefaultDriver().then(response => {
-            if (response) {
-                this.router.navigate([this.location.path() + '/transfer/new'])
-            } else {
-                this.showSnackbar(this.messageService.noDefaultDriverFound(), 'error')
-            }
+        this.driverService.getDefaultDriver().subscribe(response => {
+            this.router.navigate([this.location.path() + '/transfer/new'])
+        }, () => {
+            this.showSnackbar(this.messageService.noDefaultDriverFound(), 'error')
         })
     }
 
@@ -145,7 +143,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.saveToLocalStorage()
     }
 
-    onToggleItems(className: string, lookupArray: { splice: (arg0: number) => void; }, checkedArray: any) {
+    onToggleItems(className: string, lookupArray: { splice: (arg0: number) => void }, checkedArray: any) {
         event.stopPropagation()
         lookupArray.splice(0)
         this.selectItems(className, lookupArray, !checkedArray)
@@ -172,7 +170,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
             this.addActiveClassToElements('.item.route', this.selectedRoutes)
             this.addActiveClassToElements('.item.driver', this.selectedDrivers)
             this.addActiveClassToElements('.item.port', this.selectedPorts)
-        }, 100);
+        }, 100)
     }
 
     private addShortcuts() {
@@ -327,7 +325,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         })
     }
 
-    private toggleActiveItem(item: { description: string; }, lookupArray: string[]) {
+    private toggleActiveItem(item: { description: string }, lookupArray: string[]) {
         const element = document.getElementById(item.description)
         if (element.classList.contains('activeItem')) {
             for (let i = 0; i < lookupArray.length; i++) {
@@ -345,11 +343,11 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     private updateSelectedArraysFromInitialResults() {
-        this.queryResult.personsPerDestination.forEach((element: { description: string; }) => { this.selectedDestinations.push(element.description) })
-        this.queryResult.personsPerCustomer.forEach((element: { description: string; }) => { this.selectedCustomers.push(element.description) })
-        this.queryResult.personsPerRoute.forEach((element: { description: string; }) => { this.selectedRoutes.push(element.description) })
-        this.queryResult.personsPerDriver.forEach((element: { description: string; }) => { this.selectedDrivers.push(element.description) })
-        this.queryResult.personsPerPort.forEach((element: { description: string; }) => { this.selectedPorts.push(element.description) })
+        this.queryResult.personsPerDestination.forEach((element: { description: string }) => { this.selectedDestinations.push(element.description) })
+        this.queryResult.personsPerCustomer.forEach((element: { description: string }) => { this.selectedCustomers.push(element.description) })
+        this.queryResult.personsPerRoute.forEach((element: { description: string }) => { this.selectedRoutes.push(element.description) })
+        this.queryResult.personsPerDriver.forEach((element: { description: string }) => { this.selectedDrivers.push(element.description) })
+        this.queryResult.personsPerPort.forEach((element: { description: string }) => { this.selectedPorts.push(element.description) })
     }
 
     private updateSelectedArraysFromLocalStorage() {
@@ -363,7 +361,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
 
     private updateTotals() {
         this.totals[0].sum = this.queryResult.persons
-        this.totals[1].sum = this.queryResultClone.transfers.reduce((sum: any, array: { totalPersons: any; }) => sum + array.totalPersons, 0);
+        this.totals[1].sum = this.queryResultClone.transfers.reduce((sum: any, array: { totalPersons: any }) => sum + array.totalPersons, 0)
         this.interactionService.checked.pipe(takeUntil(this.ngUnsubscribe)).subscribe(result => {
             this.totals[2].sum = result
         })

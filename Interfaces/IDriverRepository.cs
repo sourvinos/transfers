@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 namespace Transfers {
 
     public interface IDriverRepository : IRepository<Driver> {
-        Task<Driver> GetDefault();
+        Task<Driver> GetDefaultDriver();
     }
 
 }

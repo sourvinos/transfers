@@ -11,8 +11,4 @@ export class RouteService extends DataService {
         super(httpClient, '/api/routes')
     }
 
-    async getRoute(id: number) {
-        return await this.http.get<Route>(this.url + '/' + id).toPromise()
-    }
-
 }

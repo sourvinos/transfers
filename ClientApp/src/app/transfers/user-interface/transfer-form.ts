@@ -45,11 +45,12 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             if (p.id) {
                 this.getRecord(p.id)
             } else {
-                this.driverService.getDefaultDriver()
-                    .then(response => {
-                        this.defaultDriver = response
-                        this.populateFormWithDefaultValues(this.defaultDriver)
-                    })
+                this.driverService.getDefaultDriver().subscribe(result => {
+                    this.defaultDriver = result
+                    this.populateFormWithDefaultValues(this.defaultDriver)
+                }, () => {
+                    this.showSnackbar(this.messageService.noDefaultDriverFound(), 'error')
+                })
             }
         })
     }
