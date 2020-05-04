@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, forkJoin } from 'rxjs';
-import { ButtonClickService } from 'src/app/shared/services/button-click.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { MessageService } from 'src/app/shared/services/message.service';
@@ -11,38 +12,42 @@ import { Utils } from '../../shared/classes/utils';
 import { DialogService } from '../../shared/services/dialog.service';
 import { PickupPoint } from '../classes/pickupPoint';
 import { PickupPointService } from '../classes/pickupPoint.service';
-import { MatDialog } from '@angular/material';
-import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
-import { RouteService } from 'src/app/routes/classes/route.service';
 
 @Component({
     selector: 'pickuppoint-form',
     templateUrl: './pickupPoint-form.html',
     styleUrls: ['../../shared/styles/forms.css']
+    // styleUrls: ['./pickupPoint-form.css']
 })
 
 export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     url = '/pickupPoints'
     form: FormGroup
-    routes: any[]
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private pickupPointService: PickupPointService, private routeService: RouteService, private helperService: HelperService, private dialogService: DialogService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private messageService: MessageService, private buttonClickService: ButtonClickService, public dialog: MatDialog) {
+    constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService) {
         this.activatedRoute.params.subscribe(p => {
-            if (p.id) { this.getRecord(p.id) }
+            if (p.pickupPointId) {
+                this.getRecord(p.pickupPointId)
+                this.setStatus('editRecord')
+            } else {
+                this.form.patchValue({ routeId: this.router.url.split('/')[3] })
+                this.setStatus('newRecord')
+            }
         })
     }
 
     ngOnInit() {
         this.initForm()
+        this.scrollToForm()
         this.addShortcuts()
-        this.populateDropDowns()
+        this.subscribeTointeractionService()
     }
 
     ngAfterViewInit() {
-        this.focus('routeDescription')
+        this.focus('description')
     }
 
     ngOnDestroy() {
@@ -53,37 +58,22 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
 
     canDeactivate() {
         if (this.form.dirty) {
-            this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
+            this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
+                    this.scrollToList()
                     this.onGoBack()
                     return true
                 }
             })
         } else {
+            this.scrollToList()
             return true
         }
     }
 
-    lookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
-        const filteredArray = []
-        lookupArray.filter(x => {
-            const key = fields[1]
-            if (x[key].toUpperCase().includes(value.target.value.toUpperCase())) {
-                filteredArray.push(x)
-            }
-        })
-        if (filteredArray.length > 0) {
-            this.showModalIndex(filteredArray, title, fields, headers, widths, visibility, justify)
-        }
-        if (filteredArray.length === 0) {
-            this.clearFields(null, formFields[0], formFields[1])
-            this.focus(formFields[1])
-        }
-    }
-
-    onDelete() {
-        this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
+    onDeleteRecord() {
+        this.dialogService.open('Warning', '#FE9F36', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.pickupPointService.delete(this.form.value.id).subscribe(() => {
                     this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
@@ -97,11 +87,12 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     onSave() {
+        if (!this.form.valid) { return }
         if (this.form.value.id === 0) {
             this.pickupPointService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
                 this.resetForm()
-                this.onGoBack()
+                this.focus('description')
             })
         } else {
             this.pickupPointService.update(this.form.value.id, this.form.value).subscribe(() => {
@@ -114,36 +105,32 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            'Escape': (event: KeyboardEvent) => {
+            'Escape': (): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.buttonClickService.clickOnButton(event, 'goBack')
+                    this.onGoBack()
                 }
             },
-            'Alt.D': (event: KeyboardEvent) => {
-                this.buttonClickService.clickOnButton(event, 'delete')
+            'Alt.D': (event: KeyboardEvent): void => {
+                event.preventDefault()
+                this.onDeleteRecord()
             },
-            'Alt.S': (event: KeyboardEvent) => {
-                this.buttonClickService.clickOnButton(event, 'save')
+            'Alt.S': (event: KeyboardEvent): void => {
+                this.onSave()
             },
-            'Alt.C': (event: KeyboardEvent) => {
+            'Alt.C': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
-                    this.buttonClickService.clickOnButton(event, 'cancel')
+                    document.getElementById('cancel').click()
                 }
             },
-            'Alt.O': (event: KeyboardEvent) => {
+            'Alt.O': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
-                    this.buttonClickService.clickOnButton(event, 'ok')
+                    document.getElementById('ok').click()
                 }
             }
         }, {
             priority: 2,
             inputs: true
         })
-    }
-
-    private clearFields(result: any, id: any, description: any) {
-        this.form.patchValue({ [id]: result ? result.id : '' })
-        this.form.patchValue({ [description]: result ? result.description : '' })
     }
 
     private focus(field: string) {
@@ -162,44 +149,23 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
-            routeId: ['', Validators.required], routeDescription: ['', Validators.required],
-            description: ['', [Validators.required, Validators.maxLength(128)]],
-            exactPoint: ['', [Validators.required, Validators.maxLength(128)]],
+            routeId: [0, Validators.required],
+            description: ['', [Validators.required, Validators.maxLength(100)]],
+            exactPoint: ['', [Validators.required, Validators.maxLength(100)]],
             time: ['', [Validators.required, Validators.pattern('[0-9][0-9]:[0-9][0-9]')]],
             userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
 
     private onGoBack() {
-        this.router.navigate([this.url])
-    }
-
-    private patchFields(result: any, fields: any[]) {
-        if (result) {
-            Object.entries(result).forEach(([key, value]) => {
-                this.form.patchValue({ [key]: value })
-            })
-        } else {
-            fields.forEach(field => {
-                this.form.patchValue({ [field]: '' })
-            })
-        }
-    }
-
-    private populateDropDowns() {
-        const sources = []
-        sources.push(this.routeService.getAll())
-        return forkJoin(sources).subscribe(
-            result => {
-                this.routes = result[0]
-                this.renameObjects()
-            })
+        this.setStatus('empty')
+        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
     private populateFields(result: PickupPoint) {
         this.form.setValue({
             id: result.id,
-            routeId: result.route.id, routeDescription: result.route.description,
+            routeId: result.route.id,
             description: result.description,
             exactPoint: result.exactPoint,
             time: result.time,
@@ -207,56 +173,42 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         })
     }
 
-    private renameKey(obj: Object, oldKey: string, newKey: string) {
-        if (oldKey !== newKey) {
-            Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey))
-            delete obj[oldKey]
-        }
-    }
-
-    private renameObjects() {
-        this.routes.forEach(obj => {
-            this.renameKey(obj, 'id', 'routeId')
-            this.renameKey(obj, 'description', 'routeDescription')
-            this.renameKey(obj, 'fullDescription', 'routeFullDescription')
-        })
-    }
-
     private resetForm() {
-        this.form.reset()
-    }
-
-    private showModalIndex(elements: any, title: string, fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {
-        const dialog = this.dialog.open(DialogIndexComponent, {
-            height: '685px',
-            data: {
-                records: elements,
-                title: title,
-                fields: fields,
-                headers: headers,
-                widths: widths,
-                visibility: visibility,
-                justify: justify
-            }
-        })
-        dialog.afterClosed().subscribe((result) => {
-            this.patchFields(result, fields)
+        this.form.reset({
+            id: 0,
+            routeId: 0,
+            description: '',
+            exactPoint: '',
+            userName: ''
         })
     }
 
-    private showSnackbar(message: string, type: string) {
+    private setStatus(status: string) {
+        this.interactionService.setRecordStatus(status)
+    }
+
+    private scrollToForm() {
+        document.getElementById('pickupPointsList').style.height = '0'
+    }
+
+    private scrollToList() {
+        document.getElementById('content').style.height = '0'
+        document.getElementById('pickupPointsList').style.height = '100%'
+        this.interactionService.performAction('')
+    }
+
+    private showSnackbar(message: string, type: string): void {
         this.snackbarService.open(message, type)
     }
 
+    private subscribeTointeractionService() {
+        this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+            if (response === 'saveRecord') { this.onSave() }
+            if (response === 'deleteRecord') { this.onDeleteRecord() }
+        })
+    }
+
     // #region Getters
-
-    get routeId() {
-        return this.form.get('routeId')
-    }
-
-    get routeDescription() {
-        return this.form.get('routeDescription')
-    }
 
     get description() {
         return this.form.get('description')

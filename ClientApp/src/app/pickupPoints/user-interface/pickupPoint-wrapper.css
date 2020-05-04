@@ -1,0 +1,21 @@
+#wrapper {
+    display: grid;
+    grid-template-areas:
+        "header"
+        "list"
+        "footer";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+}
+
+#list {
+    grid-area: list;
+    margin: 0 2rem;
+    overflow: hidden;
+    padding-top: 3px;
+}
+
+#footer {
+    grid-area: footer;
+}

@@ -1,46 +1,16 @@
-<div id="header">
-    <div id="navigation">
-        <button mat-mini-fab class="navigation">
-            <mat-icon id="goBack" (click)="onGoBack()">arrow_back</mat-icon>
-        </button>
-    </div>
-    <div id="title">
-        <h1>Pickup point</h1>
-    </div>
-    <mat-divider></mat-divider>
-</div>
-
 <div id="content">
     <form [formGroup]="form" autocomplete="off">
         <div id="section-one">
             <mat-form-field>
-                <input type="text" matInput placeholder="Route" formControlName="routeDescription" data-tabindex="1" id="routeDescription" [inputTabStop]="input" (change)="lookupIndex(routes, 'Routes', ['routeId', 'routeDescription', 'routeFullDescription'], ['id', 'routeDescription', 'routeFullDescription'], ['Id', 'Description', 'Full description'], ['1px', '220px', '550px'], ['none', '', ''], ['center', 'center', 'left'], $event)">
-                <mat-error *ngIf="routeDescription.hasError('required')">This is a required field!</mat-error>
+                <input type="text" matInput placeholder="Description" formControlName="description" data-tabindex="1" id="description" [inputTabStop]="input">
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Description" formControlName="description" data-tabindex="2" id="description" [inputTabStop]="input">
-                <mat-error *ngIf="description.hasError('required')">This is a required field!</mat-error>
-                <mat-error *ngIf="description.errors?.maxlength">This field can be up to {{ description.errors.maxlength.requiredLength }} characters long</mat-error>
+                <input type="text" matInput placeholder="ExactPoint" formControlName="exactPoint" data-tabindex="2" id="exactPoint" [inputTabStop]="input">
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="ExactPoint" formControlName="exactPoint" data-tabindex="3" id="exactPoint" [inputTabStop]="input">
-                <mat-error *ngIf="exactPoint.hasError('required')">This is a required field!</mat-error>
-                <mat-error *ngIf="exactPoint.errors?.maxlength">This field can be up to {{ exactPoint.errors.maxlength.requiredLength }} characters long</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput placeholder="Time" formControlName="time" data-tabindex="4" id="time" [inputTabStop]="input">
-                <mat-error *ngIf="time.hasError('required')">This is a required field!</mat-error>
-                <mat-error *ngIf="!time?.hasError('required') && time.errors">This field has errors!</mat-error>
+                <input type="text" matInput placeholder="Time" formControlName="time" data-tabindex="3" id="time" [inputTabStop]="input">
             </mat-form-field>
         </div>
         <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
     </form>
-</div>
-
-<div id="footer">
-    <mat-divider></mat-divider>
-    <div id="buttons">
-        <button mat-flat-button class="delete" *ngIf="form.value.id !== 0" id="delete" (click)="onDelete()">Delete</button>
-        <button mat-flat-button class="primary" [disabled]="!form.valid" id="save" (click)="onSave()">Save</button>
-    </div>
 </div>
