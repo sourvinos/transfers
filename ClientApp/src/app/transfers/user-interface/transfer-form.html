@@ -36,17 +36,15 @@
                     <span>{{ form.value.totalPersons }}</span>
                 </div>
             </div>
-        </div>
-        <div id="section-two">
             <mat-form-field>
                 <input type="text" matInput placeholder="Remarks" formControlName="remarks" data-tabindex="7" id="remarks" [inputTabStop]="input">
                 <mat-error *ngIf="remarks.errors?.maxlength">This field can be up to {{ remarks.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
-            <mat-form-field>
-                <input type="text" matInput placeholder="Driver" formControlName="driverDescription" id="driverDescription">
-            </mat-form-field>
         </div>
-        <span id="form-values" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</span>
+        <mat-form-field>
+            <input type="text" matInput placeholder="Driver" formControlName="driverDescription" id="driverDescription">
+        </mat-form-field>
+        <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
     </form>
     <div id="footer">
         <mat-divider></mat-divider>

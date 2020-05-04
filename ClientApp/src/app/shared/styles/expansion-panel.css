@@ -1,0 +1,15 @@
+.mat-expansion-indicator::after {
+    color: var(--color-summary-block-expansion-indicator) !important;
+}
+
+.mat-expansion-panel {
+    border: 1px dotted var(--color-summary-block-border) !important;
+}
+
+.mat-expansion-panel-body {
+    padding-bottom: 1.25rem !important;
+}
+
+.mat-expansion-panel-body p {
+    margin: 0;
+}

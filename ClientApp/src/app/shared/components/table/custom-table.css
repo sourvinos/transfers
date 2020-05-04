@@ -52,7 +52,7 @@ td {
     font-size: var(--font-size-table-rows);
     max-width: 0;
     overflow: hidden;
-    padding: 0.5rem 0.5rem;
+    padding: 0.7rem 0.7rem;
     text-overflow: ellipsis;
     white-space: nowrap;
 }

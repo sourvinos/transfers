@@ -5,11 +5,14 @@
 @import "buttons.css";
 @import "checkbox.css";
 @import "dialogs.css";
+@import "dividers.css";
+@import "expansion-panel.css";
 @import "headers.css";
 @import "inputs.css";
 @import "labels.css";
-@import "snackbar.css";
 @import "scrollable.css";
+@import "select.css";
+@import "snackbar.css";
 @import "variables.css";
 @import "colors-dark.css";
 
@@ -111,64 +114,6 @@ p.instructions {
 
 .info {
     background-color: var(--color-snackbar-background-info) !important;
-}
-
-.mat-divider {
-    border-top: 1px dotted !important;
-    color: var(--color-divider) !important;
-    margin: 2rem 0 !important;
-}
-
-.mat-checkbox-inner-container-no-side-margin {
-    height: 1rem !important;
-    width: 1rem !important;
-}
-
-.mat-expansion-indicator::after {
-    color: var(--color-summary-block-expansion-indicator) !important;
-}
-
-.mat-expansion-panel {
-    border: 1px dotted var(--color-summary-block-border) !important;
-}
-
-.mat-expansion-panel-body {
-    padding-bottom: 1.25rem !important;
-}
-
-.mat-expansion-panel-body p {
-    margin: 0;
-}
-
-.mat-autocomplete-panel {
-    background-color: var(--color-autocomplete-background) !important;
-    max-height: 500px;
-}
-
-.mat-option {
-    color: var(--color-autocomplete-color) !important;
-}
-
-.mat-option.mat-active {
-    background-color: var(--color-autocomplete-ripple) !important;
-}
-
-.mat-option.mat-selected {
-    background-color: var(--color-autocomplete-selected) !important;
-}
-
-.mat-form-field-wrapper {
-    margin-bottom: 1rem !important;
-}
-
-.mat-form-field-label-wrapper {
-    font-size: 1.2rem;
-}
-
-.mat-snack-bar-container {
-    max-width: 100% !important;
-    min-width: 100% !important;
-    padding: 10px 16px !important;
 }
 
 /* Wide screen */

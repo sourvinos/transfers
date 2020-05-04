@@ -6,14 +6,13 @@
 
     <div id="dialog-content">
         <mat-form-field>
-            <!-- <input type="text" placeholder="Driver" matInput [formControl]="driverDescription" [inputTabStop]="input" id="driverDescription" [matAutocomplete]="auto"> -->
-            <input type="text" placeholder="Driver" matInput [formControl]="driverDescription" id="driverDescription" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete" class="scrollable" (optionSelected)="onSelectionChanged($event)">
-                <mat-option *ngFor="let driver of filteredDrivers | async" [value]="driver.description" [id]="driver.id">
+            <mat-label>Driver</mat-label>
+            <mat-select [(value)]="id">
+                <mat-option *ngFor="let driver of drivers" [value]="driver.id">
                     {{ driver.description }}
                 </mat-option>
-            </mat-autocomplete>
-            <mat-hint>Enter anything!</mat-hint>
+            </mat-select>
+            <mat-hint>Select from the list</mat-hint>
         </mat-form-field>
     </div>
 

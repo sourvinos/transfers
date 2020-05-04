@@ -27,6 +27,14 @@ input[type=number] {
     text-align: right;
 }
 
+.mat-form-field-wrapper {
+    margin-bottom: 1rem !important;
+}
+
+.mat-form-field-label-wrapper {
+    font-size: 1.2rem;
+}
+
 .mat-hint {
     color: var(--color-input-not-focus) !important;
 }
@@ -52,6 +60,10 @@ input[type=number] {
     background-color: var(--color-input-not-focus) !important
 }
 
+.mat-form-field .mat-hint {
+    color: var(--color-input-not-focus) !important;
+}
+
 /* Focused */
 .mat-form-field.mat-focused .mat-form-field-label {
     color: var(--color-input-focus) !important;
@@ -63,6 +75,10 @@ input[type=number] {
 
 .mat-form-field.mat-focused .mat-form-field-ripple {
     background-color: var(--color-input-focus) !important
+}
+
+.mat-form-field.mat-focused .mat-hint {
+    color: var(--color-input-focus) !important;
 }
 
 /* Error */

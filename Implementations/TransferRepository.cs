@@ -69,7 +69,7 @@ namespace Transfers {
         public void AssignDriver(int driverId, int[] ids) {
             var transfers = appDbContext.Transfers.Where(x => ids.Contains(x.Id)).ToList();
             transfers.ForEach(a => a.DriverId = driverId);
-            appDbContext.SaveChangesAsync();
+            appDbContext.SaveChanges();
         }
 
     }

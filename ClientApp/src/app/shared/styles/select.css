@@ -1,0 +1,39 @@
+.mat-select-panel {
+    background-color: var(--color-select-background-color) !important;
+    border: 1px solid var(--color-select-border) !important;
+}
+
+.mat-select-panel::-webkit-scrollbar {
+    width: 0.4rem;
+}
+
+.mat-select-panel::-webkit-scrollbar-track {
+    background-color: var(--color-scrollbar-background);
+    margin-top: 1px;
+}
+
+.mat-select-panel::-webkit-scrollbar-thumb {
+    background-color: var(--color-scrollbar);
+    border-radius: 0;
+    min-height: 6.25rem;
+}
+
+.mat-option {
+    color: var(--color-select-option-color) !important;
+}
+
+.mat-form-field .mat-select-value-text {
+    color: var(--color-input-not-focus) !important;
+}
+
+.mat-form-field.mat-focused .mat-select-value-text {
+    color: var(--color-input-focus) !important;
+}
+
+.mat-form-field .mat-select-arrow {
+    color: var(--color-input-not-focus) !important;
+}
+
+.mat-form-field.mat-focused .mat-select-arrow {
+    color: var(--color-input-focus) !important;
+}

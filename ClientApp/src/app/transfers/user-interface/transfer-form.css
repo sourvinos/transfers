@@ -54,14 +54,14 @@
 }
 
 #persons-total p {
-    color: var(--color-input-text-label);
+    color: var(--color-input-not-focus);
     font-family: var(--font-family-paragraphs);
     font-size: 0.87rem !important;
     margin-right: 0.5rem !important;
 }
 
 #persons-total span {
-    color: var(--color-input-text-focus);
+    color: var(--color-input-focus);
     font-family: var(--font-family-headers);
     font-size: 2rem;
     padding-bottom: 2px;
