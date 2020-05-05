@@ -24,11 +24,11 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
     pickupPoints: PickupPoint[]
     mustRefresh = true
 
-    headers = ['Id', 'Description', 'Exact point', 'Time']
-    widths = ['0', '45%', '45%', '10%']
-    visibility = ['none', '', '', '']
-    justify = ['center', 'left', 'left', 'center']
-    fields = ['id', 'description', 'exactPoint', 'time']
+    headers = ['S', 'Id', 'Description', 'Exact point', 'Time']
+    widths = ['40px', '0', '45%', '', '100px']
+    visibility = ['', 'none', '', '', '']
+    justify = ['center', 'center', 'left', 'left', 'center']
+    fields = ['', 'id', 'description', 'exactPoint', 'time']
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()

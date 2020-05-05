@@ -21,11 +21,11 @@ export class PortListComponent implements OnInit, OnDestroy {
     url = '/ports'
     resolver = 'portList'
 
-    headers = ['Id', 'Description']
-    widths = ['0px', '100%']
-    visibility = ['none', '']
-    justify = ['center', 'left']
-    fields = ['id', 'description']
+    headers = ['S', 'Id', 'Description']
+    widths = ['40px', '0px', '']
+    visibility = ['', 'none', '']
+    justify = ['center', 'center', 'left']
+    fields = ['', 'id', 'description']
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()

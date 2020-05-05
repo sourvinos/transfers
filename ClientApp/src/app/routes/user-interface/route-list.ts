@@ -21,11 +21,11 @@ export class RouteListComponent implements OnInit, OnDestroy {
     url = '/routes'
     resolver = 'routeList'
 
-    headers = ['Id', 'Description', 'Full description']
-    widths = ['0px', '5%', '50%']
-    visibility = ['none', '', '']
-    justify = ['center', 'center', 'left']
-    fields = ['id', 'description', 'fullDescription']
+    headers = ['S', 'Id', 'Description', 'Full description']
+    widths = ['40px', '0px', '150px', '']
+    visibility = ['', 'none', '', '']
+    justify = ['center', 'center', 'center', 'left']
+    fields = ['', 'id', 'description', 'fullDescription']
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()

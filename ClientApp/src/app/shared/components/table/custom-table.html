@@ -6,7 +6,12 @@
     </thead>
     <tbody>
         <tr *ngFor="let record of records, index as index" (click)="onGotoRow(index+1)" (dblclick)="sendRowToService()" id="line-{{ index+1 }}">
-            <td *ngFor="let field of fields, index as i" [style.text-align]="justify[i]" [style.display]="visibility[i]">{{ record[field] }}</td>
+            <td *ngFor="let field of fields, index as i" [style.text-align]="justify[i]" [style.display]="visibility[i]">
+                <div *ngIf="i==0; else elseBlock">
+                    <mat-checkbox (click)="onToggleCheckBox(index+1)" [checked]="checked"></mat-checkbox>
+                </div>
+                <ng-template #elseBlock>{{ record[field] }}</ng-template>
+            </td>
         </tr>
     </tbody>
 </table>

@@ -21,11 +21,11 @@ export class UserListComponent implements OnInit, OnDestroy {
     url = '/users'
     resolver = 'userList'
 
-    headers = ['Id', 'Display name', 'Username', 'Email']
-    widths = ['0px', '40%', '30%', '30%']
-    visibility = ['none', '', '', '', '']
-    justify = ['center', 'left', 'left', 'left']
-    fields = ['id', 'displayname', 'username', 'email']
+    headers = ['S', 'Id', 'Display name', 'Username', 'Email']
+    widths = ['40px', '0px', '40%', '30%', '']
+    visibility = ['', 'none', '', '', '', '']
+    justify = ['center', 'center', 'left', 'left', 'left']
+    fields = ['', 'id', 'displayname', 'username', 'email']
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()

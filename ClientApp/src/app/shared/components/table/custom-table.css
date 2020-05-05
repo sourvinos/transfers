@@ -17,7 +17,7 @@ th {
     font-family: var(--font-family-table);
     font-size: var(--font-size-table-header);
     font-weight: var(--font-weight-table-headers);
-    padding: 0.5rem 0;
+    padding: 0.5rem 0.5rem;
     position: sticky;
     text-align: center;
     top: 0px;

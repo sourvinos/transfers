@@ -21,11 +21,11 @@ export class DestinationListComponent implements OnInit, OnDestroy {
     url = '/destinations'
     resolver = 'destinationList'
 
-    headers = ['Id', 'Abbreviation', 'Description']
-    widths = ['0px', '5%', '50%']
-    visibility = ['none', '', '', '']
-    justify = ['center', 'center', 'left']
-    fields = ['id', 'abbreviation', 'description']
+    headers = ['S', 'Id', 'Abbreviation', 'Description']
+    widths = ['40px', '0px', '150px', '']
+    visibility = ['', 'none', '', '', '']
+    justify = ['center', 'center', 'center', 'left']
+    fields = ['', 'id', 'abbreviation', 'description']
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
