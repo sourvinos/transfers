@@ -4,13 +4,14 @@
     </div>
     <div id="search-box">
         <mat-form-field>
-            <input type="text" placeholder="Route" matInput [formControl]="routeDescription" [inputFormat]="'text'" id="routeDescription" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete" class="scrollable" (optionSelected)="onSelectionChanged($event)">
-                <mat-option *ngFor="let route of filteredRoutes | async" [value]="route.description" [id]="route.id">{{ route.description }}</mat-option>
-            </mat-autocomplete>
-            <mat-hint>Search by route description</mat-hint>
+            <mat-label>Routes</mat-label>
+            <mat-select [(value)]="id" (selectionChange)="onLoadPickupPoints($event)">
+                <mat-option *ngFor=" let route of routes" [value]="route.id">
+                    {{ route.description }}
+                </mat-option>
+            </mat-select>
+            <mat-hint>Select from the list</mat-hint>
         </mat-form-field>
-        <button mat-flat-button id="search" class="primary" (click)="onLoadPickupPoints()">Search</button>
     </div>
 </div>
 

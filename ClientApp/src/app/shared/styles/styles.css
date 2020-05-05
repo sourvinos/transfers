@@ -14,7 +14,7 @@
 @import "select.css";
 @import "snackbar.css";
 @import "variables.css";
-@import "colors-light.css";
+@import "colors-dark.css";
 
 * {
     box-sizing: border-box !important;

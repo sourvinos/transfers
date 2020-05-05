@@ -16,17 +16,17 @@
             <div id="persons-panel">
                 <div id="persons-details">
                     <mat-form-field>
-                        <input type="number" matInput placeholder="Adults" formControlName="adults" data-tabindex="4" id="adults" [inputTabStop]="input" class="number" (change)="calculateTotalPersons()">
+                        <input type="number" matInput placeholder="Adults" formControlName="adults" data-tabindex="4" id="adults" [inputTabStop]="input" class="number" (change)="onCalculateTotalPersons()">
                         <mat-error *ngIf="adults.hasError('required')">This is a required field!</mat-error>
                         <mat-error *ngIf="!adults.hasError('required') && adults.errors?.min || adults.errors?.max">This field is invalid!</mat-error>
                     </mat-form-field>
                     <mat-form-field>
-                        <input type="number" matInput placeholder="Kids" formControlName="kids" data-tabindex="5" id="kids" [inputTabStop]="input" class="number" (change)="calculateTotalPersons()">
+                        <input type="number" matInput placeholder="Kids" formControlName="kids" data-tabindex="5" id="kids" [inputTabStop]="input" class="number" (change)="onCalculateTotalPersons()">
                         <mat-error *ngIf="kids.hasError('required')">This is a required field!</mat-error>
                         <mat-error *ngIf="!kids.hasError('required') && kids.errors?.min || kids.errors?.max">This field is invalid!</mat-error>
                     </mat-form-field>
                     <mat-form-field>
-                        <input type="number" matInput placeholder="Free" formControlName="free" data-tabindex="6" id="free" [inputTabStop]="input" class="number" (change)="calculateTotalPersons()">
+                        <input type="number" matInput placeholder="Free" formControlName="free" data-tabindex="6" id="free" [inputTabStop]="input" class="number" (change)="onCalculateTotalPersons()">
                         <mat-error *ngIf="free.hasError('required')">This is a required field!</mat-error>
                         <mat-error *ngIf="!free.hasError('required') && free.errors?.min || free.errors?.max">This field is invalid!</mat-error>
                     </mat-form-field>
@@ -44,8 +44,8 @@
         <mat-form-field>
             <input type="text" matInput placeholder="Driver" formControlName="driverDescription" id="driverDescription">
         </mat-form-field>
-        <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
     </form>
+    <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
     <div id="footer">
         <mat-divider></mat-divider>
         <div id="buttons">

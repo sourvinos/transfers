@@ -25,6 +25,7 @@ import { TransferAssignDriverComponent } from './transfer-assign-driver'
 export class TransferListComponent implements OnInit, AfterViewInit, AfterViewChecked, DoCheck, OnDestroy {
 
     transferWrapperUrl = '/transfers'
+    resolver = 'transferList'
     dateIn: string
     queryResult: any = {}
     queryResultClone: any = {}
@@ -55,7 +56,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn !== '' && this.router.url.split('/').length === 4) {
                 this.mustRefresh = true
-                this.loadTransfers()
+                this.loadRecords()
             }
         })
     }
@@ -79,7 +80,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.updateTotals()
         this.flattenResults()
         this.sendRecordsToService()
-        this.setTableStatus()
     }
 
     ngAfterViewChecked() {
@@ -256,8 +256,8 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         return true
     }
 
-    private loadTransfers() {
-        this.queryResult = this.activatedRoute.snapshot.data['transferList']
+    private loadRecords() {
+        this.queryResult = this.activatedRoute.snapshot.data[this.resolver]
     }
 
     private navigateToEditRoute(id: number) {
@@ -269,7 +269,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     private onGoBack() {
-        this.router.navigate([this.transferWrapperUrl])
+        this.router.navigate(['/'])
     }
 
     private removeSelectedIdsFromLocalStorage() {
@@ -303,10 +303,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
 
     private sendRecordsToService() {
         this.interactionService.sendRecords(this.transfersFlat)
-    }
-
-    private setTableStatus() {
-        this.interactionService.setTableStatus(!!this.queryResult.persons)
     }
 
     private showSnackbar(message: string, type: string) {

@@ -43,43 +43,6 @@ export class BaseInteractionService {
     }
 
     /**
-     * Callers(s):
-     *  wrapper-transfer.ts
-     *
-     * Subscriber(s):
-     *  form-transfer.ts
-     *
-     * Description:
-     *  The caller sends 'saveRecord' or 'deleteRecord' to the 'action' property
-     *  The subscriber checks the value and deletes or saves the record
-     *
-     * @param action
-     */
-    performAction(action: string) {
-        this._action.next(action)
-    }
-
-    /**
-     * Caller(s):
-     *  form-transfer.ts
-     *
-     * Subscriber(s):
-     *  wrapper-transfer.ts
-     *
-     * Description:
-     *  The caller sends 'empty', 'newRecord' or 'editRecord' to the 'recordStatus' property
-     *  The subscriber checks the value and displays the buttons:
-     *   recordStatus = 'empty' displays 'New'
-     *   recordStatus = 'newRecord' displays 'Save'
-     *   recordStatus = 'editRecord' displays 'Delete' and 'Save'
-     *
-     * @param status
-     */
-    setRecordStatus(status: string) {
-        this._recordStatus.next(status)
-    }
-
-    /**
      * Caller(s):
      *  form-transfer.ts
      *
@@ -108,22 +71,6 @@ export class BaseInteractionService {
      */
     setCheckedTotalPersons(total: number) {
         this._checked.next(total)
-    }
-
-    /**
-     * Caller(s):
-     *  list-transfer.ts
-     *
-     * Subscriber(s):
-     *  wrapper-transfer.ts
-     *
-     * Description:
-     *  The caller sends true or false according to the persons count so that the subscriber can display the 'Assign driver' button
-     *
-     * @param records
-     */
-    setTableStatus(records: boolean) {
-        this._hasTableData.next(records)
     }
 
 }

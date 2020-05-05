@@ -18,7 +18,7 @@
             </mat-form-field>
         </div>
     </form>
-    <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
+    <span id="form-values" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</span>
     <div id="footer">
         <mat-divider></mat-divider>
         <div id="buttons">

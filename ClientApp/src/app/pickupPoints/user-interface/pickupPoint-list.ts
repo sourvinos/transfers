@@ -1,10 +1,12 @@
-import { AfterViewChecked, Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Params, Route, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.service';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
-import { KeyboardShortcuts } from 'src/app/shared/services/keyboard-shortcuts.service';
+import { ButtonClickService } from 'src/app/shared/services/button-click.service';
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { PickupPoint } from '../classes/pickupPoint';
 
 @Component({
@@ -13,12 +15,12 @@ import { PickupPoint } from '../classes/pickupPoint';
     styleUrls: ['./pickupPoint-list.css']
 })
 
-export class PickupPointListComponent implements OnInit, AfterViewChecked, DoCheck, OnDestroy {
+export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
 
+    wrapperUrl = '/pickupPoints'
     routeId: string
     routes: Route[]
     pickupPoints: PickupPoint[]
-    url = '/pickupPoints'
     resolver = 'pickupPointList'
     mustRefresh = true
 
@@ -28,9 +30,10 @@ export class PickupPointListComponent implements OnInit, AfterViewChecked, DoChe
     justify = ['center', 'left', 'left', 'center']
     fields = ['id', 'description', 'exactPoint', 'time']
 
-    ngUnsubscribe = new Subject<void>();
+    unlisten: Unlisten
+    ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService, private keyboardShortcutsService: KeyboardShortcuts) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService, private keyboardShortcutsService: KeyboardShortcuts, private buttonClickService: ButtonClickService, private location: Location) {
         this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.routeId !== '' && this.router.url.split('/').length === 4) {
@@ -41,11 +44,8 @@ export class PickupPointListComponent implements OnInit, AfterViewChecked, DoChe
     }
 
     ngOnInit() {
+        this.addShortcuts()
         this.subscribeToInteractionService()
-    }
-
-    ngAfterViewChecked() {
-        // document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - 102 + 'px'
     }
 
     ngDoCheck() {
@@ -59,12 +59,38 @@ export class PickupPointListComponent implements OnInit, AfterViewChecked, DoChe
         this.ngUnsubscribe.unsubscribe()
     }
 
+    onNew() {
+        this.router.navigate([this.location.path() + '/pickupPoint/new'])
+    }
+
+    private addShortcuts() {
+        this.unlisten = this.keyboardShortcutsService.listen({
+            'Escape': () => {
+                this.onGoBack()
+            },
+            'Alt.N': (event: KeyboardEvent) => {
+                this.buttonClickService.clickOnButton(event, 'new')
+            },
+        }, {
+            priority: 2,
+            inputs: true
+        })
+    }
+
     private editRecord(id: number) {
-        this.router.navigate(['pickupPoint/', id], { relativeTo: this.activatedRoute })
+        this.navigateToEditRoute(id)
     }
 
     private loadRecords() {
         this.pickupPoints = this.activatedRoute.snapshot.data[this.resolver]
+    }
+
+    private navigateToEditRoute(id: number) {
+        this.router.navigate(['pickupPoint/', id], { relativeTo: this.activatedRoute })
+    }
+
+    private onGoBack() {
+        this.router.navigate(['/'])
     }
 
     private subscribeToInteractionService() {

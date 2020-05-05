@@ -88,7 +88,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    calculateTotalPersons() {
+    onCalculateTotalPersons() {
         const totalPersons = parseInt(this.form.value.adults, 10) + parseInt(this.form.value.kids, 10) + parseInt(this.form.value.free, 10)
         this.form.patchValue({ totalPersons: !!Number(totalPersons) ? totalPersons : 0 })
     }
@@ -148,7 +148,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             },
             'Alt.D': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'delete')
-
             },
             'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
@@ -225,7 +224,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             free: [0, [Validators.required, Validators.min(0), Validators.max(999)]],
             totalPersons: 0,
             remarks: ['', Validators.maxLength(128)],
-            userName: ''
+            userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
 
@@ -341,7 +340,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         document.getElementById('content').style.display = 'none'
         document.getElementById('transferList').style.display = 'flex'
         document.getElementById('custom-table-input').focus()
-        this.interactionService.performAction('')
     }
 
     private showSnackbar(message: string, type: string) {

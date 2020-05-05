@@ -44,7 +44,7 @@ input[type=number] {
 }
 
 #search-box .mat-form-field {
-    width: 15rem !important;
+    width: 100% !important;
 }
 
 /* Not focused - Not error*/
