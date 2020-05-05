@@ -24,7 +24,7 @@ import { TransferAssignDriverComponent } from './transfer-assign-driver'
 
 export class TransferListComponent implements OnInit, AfterViewInit, AfterViewChecked, DoCheck, OnDestroy {
 
-    transferWrapperUrl = '/transfers'
+    wrapperUrl = '/transfers'
     resolver = 'transferList'
     dateIn: string
     queryResult: any = {}

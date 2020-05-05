@@ -18,10 +18,10 @@ import { PickupPoint } from '../classes/pickupPoint';
 export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
 
     wrapperUrl = '/pickupPoints'
+    resolver = 'pickupPointList'
     routeId: string
     routes: Route[]
     pickupPoints: PickupPoint[]
-    resolver = 'pickupPointList'
     mustRefresh = true
 
     headers = ['Id', 'Description', 'Exact point', 'Time']

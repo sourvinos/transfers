@@ -45,10 +45,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         this.unlisten()
     }
 
-    private editRecord(id: number) {
-        this.router.navigate([this.url, id])
-    }
-
     onFilter(query: string) {
         this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
@@ -74,8 +70,13 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         })
     }
 
-    private onGoBack(): void {
-        this.router.navigate(['/'])
+    private editRecord(id: number) {
+        this.router.navigate([this.url, id])
+    }
+
+    private focus(event: KeyboardEvent, element: string) {
+        event.preventDefault()
+        Utils.setFocus(element)
     }
 
     private loadRecords() {
@@ -83,9 +84,8 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         this.filteredRecords = this.records
     }
 
-    private focus(event: KeyboardEvent, element: string) {
-        event.preventDefault()
-        Utils.setFocus(element)
+    private onGoBack() {
+        this.router.navigate(['/'])
     }
 
     private subscribeToInteractionService() {

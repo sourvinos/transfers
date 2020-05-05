@@ -32,11 +32,10 @@ namespace Transfers {
                 .ForMember(v => v.CustomerId, opt => opt.MapFrom(vr => vr.CustomerId))
                 .ForMember(v => v.PickupPointId, opt => opt.MapFrom(vr => vr.PickupPointId))
                 .ForMember(v => v.Adults, opt => opt.MapFrom(vr => vr.Adults))
-                .ForMember(v => v.kids, opt => opt.MapFrom(vr => vr.Kids))
+                .ForMember(v => v.Kids, opt => opt.MapFrom(vr => vr.Kids))
                 .ForMember(v => v.Free, opt => opt.MapFrom(vr => vr.Free))
                 .ForMember(v => v.DestinationId, opt => opt.MapFrom(vr => vr.DestinationId))
                 .ForMember(v => v.DriverId, opt => opt.MapFrom(vr => vr.DriverId))
-                .ForMember(v => v.PortId, opt => opt.MapFrom(vr => vr.PortId))
                 .ForMember(v => v.Remarks, opt => opt.MapFrom(vr => vr.Remarks))
                 .ForMember(v => v.UserName, opt => opt.MapFrom(vr => vr.UserName));
         }

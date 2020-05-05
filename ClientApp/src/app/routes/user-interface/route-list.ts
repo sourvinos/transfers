@@ -8,7 +8,6 @@ import { ButtonClickService } from 'src/app/shared/services/button-click.service
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { Route } from '../classes/route';
 
-
 @Component({
     selector: 'route-list',
     templateUrl: './route-list.html',
@@ -46,10 +45,6 @@ export class RouteListComponent implements OnInit, OnDestroy {
         this.unlisten()
     }
 
-    editRecord(id: number) {
-        this.router.navigate([this.url, id])
-    }
-
     onFilter(query: string) {
         this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
@@ -75,18 +70,22 @@ export class RouteListComponent implements OnInit, OnDestroy {
         })
     }
 
+    private editRecord(id: number) {
+        this.router.navigate([this.url, id])
+    }
+
     private focus(event: KeyboardEvent, element: string) {
         event.preventDefault()
         Utils.setFocus(element)
     }
 
-    private onGoBack() {
-        this.router.navigate(['/'])
-    }
-
     private loadRecords() {
         this.records = this.activatedRoute.snapshot.data[this.resolver]
         this.filteredRecords = this.records
+    }
+
+    private onGoBack() {
+        this.router.navigate(['/'])
     }
 
     private subscribeToInteractionService() {

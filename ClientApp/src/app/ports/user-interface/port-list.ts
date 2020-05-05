@@ -1,4 +1,3 @@
-import { HttpResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -8,7 +7,6 @@ import { BaseInteractionService } from 'src/app/shared/services/base-interaction
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { Port } from '../classes/port';
-import { PortService } from '../classes/port.service';
 
 @Component({
     selector: 'port-list',
@@ -32,7 +30,7 @@ export class PortListComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService, private portService: PortService, private buttonClickService: ButtonClickService) {
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService, private buttonClickService: ButtonClickService) {
         this.loadRecords()
     }
 
@@ -45,16 +43,6 @@ export class PortListComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
         this.unlisten()
-    }
-
-    editRecord(id: number) {
-        this.router.navigate([this.url, id])
-    }
-
-    onCreatePdf() {
-        this.portService.createPDF().subscribe((file: HttpResponse<Blob>) => {
-            window.location.href = file.url
-        })
     }
 
     onFilter(query: string) {
@@ -82,18 +70,22 @@ export class PortListComponent implements OnInit, OnDestroy {
         })
     }
 
+    private editRecord(id: number) {
+        this.router.navigate([this.url, id])
+    }
+
     private focus(event: KeyboardEvent, element: string) {
         event.preventDefault()
         Utils.setFocus(element)
     }
 
-    private onGoBack() {
-        this.router.navigate(['/'])
-    }
-
     private loadRecords() {
         this.records = this.activatedRoute.snapshot.data[this.resolver]
         this.filteredRecords = this.records
+    }
+
+    private onGoBack() {
+        this.router.navigate(['/'])
     }
 
     private subscribeToInteractionService() {

@@ -7,7 +7,7 @@ namespace Transfers {
         public int Id { get; set; }
         public DateTime DateIn { get; set; }
         public int Adults { get; set; }
-        public int kids { get; set; }
+        public int Kids { get; set; }
         public int Free { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
