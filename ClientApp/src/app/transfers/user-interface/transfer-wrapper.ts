@@ -19,7 +19,6 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
     dateInISO = ''
     records: string[] = []
     transfersFlat: TransferFlat[] = []
-    hasTableData = false
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
@@ -52,7 +51,7 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
                     this.onGoBack()
                 }
             },
-            'Alt.S': (event: KeyboardEvent) => {
+            'Control.S': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'search')
             }
         }, {

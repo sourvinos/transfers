@@ -2,8 +2,8 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { MessageService } from 'src/app/shared/services/message.service';
@@ -12,7 +12,6 @@ import { Utils } from '../../shared/classes/utils';
 import { DialogService } from '../../shared/services/dialog.service';
 import { PickupPoint } from '../classes/pickupPoint';
 import { PickupPointService } from '../classes/pickupPoint.service';
-import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 
 @Component({
     selector: 'pickuppoint-form',
@@ -26,7 +25,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService, private buttonClickService: ButtonClickService) {
+    constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.pickupPointId) {
                 this.getRecord(p.pickupPointId)
@@ -104,18 +103,18 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
                     this.onGoBack()
                 }
             },
-            'Alt.D': (event: KeyboardEvent): void => {
+            'Control.D': (event: KeyboardEvent): void => {
                 this.buttonClickService.clickOnButton(event, 'delete')
             },
-            'Alt.S': (event: KeyboardEvent): void => {
+            'Control.S': (event: KeyboardEvent): void => {
                 this.buttonClickService.clickOnButton(event, 'save')
             },
-            'Alt.C': (event: KeyboardEvent): void => {
+            'Control.C': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'cancel')
                 }
             },
-            'Alt.O': (event: KeyboardEvent): void => {
+            'Control.O': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'ok')
                 }
@@ -176,10 +175,6 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     private resetForm() {
         this.form.reset()
     }
-
-    // private setStatus(status: string) {
-    //     this.interactionService.setRecordStatus(status)
-    // }
 
     private scrollToForm() {
         document.getElementById('content').style.width = this.getListWidth()

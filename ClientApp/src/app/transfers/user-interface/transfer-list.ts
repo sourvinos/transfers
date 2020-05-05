@@ -178,13 +178,13 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
             'Escape': () => {
                 this.onGoBack()
             },
-            'Alt.A': (event: KeyboardEvent) => {
+            'Control.A': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'assignDriver')
             },
-            'Alt.C': (event: KeyboardEvent) => {
+            'Control.C': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'createPdf')
             },
-            'Alt.N': (event: KeyboardEvent) => {
+            'Control.N': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'new')
             },
         }, {

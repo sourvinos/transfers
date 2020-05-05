@@ -59,7 +59,7 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
                     this.buttonClickService.clickOnButton(event, 'goBack')
                 }
             },
-            'Alt.S': (event: KeyboardEvent) => {
+            'Control.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.buttonClickService.clickOnButton(event, 'save')
                 }

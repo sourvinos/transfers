@@ -64,7 +64,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            'Alt.S': (event: KeyboardEvent) => {
+            'Control.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.buttonClickService.clickOnButton(event, 'save')
                 }

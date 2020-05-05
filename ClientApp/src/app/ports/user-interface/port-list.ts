@@ -70,10 +70,10 @@ export class PortListComponent implements OnInit, OnDestroy {
             'Escape': (event: KeyboardEvent): void => {
                 this.onGoBack()
             },
-            'Alt.F': (event: KeyboardEvent): void => {
+            'Control.F': (event: KeyboardEvent): void => {
                 this.focus(event, 'searchField')
             },
-            'Alt.N': (event: KeyboardEvent): void => {
+            'Control.N': (event: KeyboardEvent): void => {
                 this.buttonClickService.clickOnButton(event, 'new')
             }
         }, {

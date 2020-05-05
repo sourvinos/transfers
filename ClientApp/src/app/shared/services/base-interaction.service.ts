@@ -6,17 +6,13 @@ import { Subject } from 'rxjs';
 export class BaseInteractionService {
 
     _record = new Subject<string[]>()
-    _recordStatus = new Subject<string>()
     _action = new Subject<string>()
-    _hasTableData = new Subject<boolean>()
     _checked = new Subject<number>()
     _refreshList = new Subject<any>()
     _transfers = new Subject<any[]>()
 
     record = this._record.asObservable()
-    recordStatus = this._recordStatus.asObservable()
     action = this._action.asObservable()
-    hasTableData = this._hasTableData.asObservable()
     checked = this._checked.asObservable()
     refreshList = this._refreshList.asObservable()
     transfers = this._transfers.asObservable()

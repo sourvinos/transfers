@@ -121,20 +121,20 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.buttonClickService.clickOnButton(event, 'goBack')
                 }
             },
-            'Alt.D': (event: KeyboardEvent) => {
+            'Control.D': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'delete')
             },
-            'Alt.S': (event: KeyboardEvent) => {
+            'Control.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.buttonClickService.clickOnButton(event, 'save')
                 }
             },
-            'Alt.C': (event: KeyboardEvent) => {
+            'Control.C': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'cancel')
                 }
             },
-            'Alt.O': (event: KeyboardEvent) => {
+            'Control.O': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'ok')
                 }

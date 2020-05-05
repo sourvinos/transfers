@@ -68,7 +68,7 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
             'Escape': () => {
                 this.onGoBack()
             },
-            'Alt.N': (event: KeyboardEvent) => {
+            'Control.N': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'new')
             },
         }, {
