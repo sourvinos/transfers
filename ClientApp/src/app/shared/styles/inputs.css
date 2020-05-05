@@ -44,7 +44,11 @@ input[type=number] {
 }
 
 #search-box .mat-form-field {
-    width: 100% !important;
+    flex: auto;
+}
+
+#search-box .mat-form-field-wrapper {
+    margin: 0 !important;
 }
 
 /* Not focused - Not error*/

@@ -3,47 +3,22 @@ import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 
-export class BaseInteractionService {
+export class InteractionService {
 
     _record = new Subject<string[]>()
-    _action = new Subject<string>()
     _checked = new Subject<number>()
     _refreshList = new Subject<any>()
-    _transfers = new Subject<any[]>()
 
     record = this._record.asObservable()
-    action = this._action.asObservable()
     checked = this._checked.asObservable()
     refreshList = this._refreshList.asObservable()
-    transfers = this._transfers.asObservable()
-
-    sendRecords(records: any[]) {
-        this._transfers.next(records)
-    }
 
     /**
      * Caller(s):
-     *  table-transfer.ts
-     *
-     * Subscriber(s):
-     *  list-transfer.ts
-     *
-     * Description
-     *  The caller sends the selected record to the 'record' property
-     *  The subscriber executes 'editRecord'
-     *
-     * @param record
-     */
-    sendObject(record: any) {
-        this._record.next(record)
-    }
-
-    /**
-     * Caller(s):
-     *  form-transfer.ts
+     *  transfer-form.ts
      *
      * Subscribers(s):
-     *  list-transfer.ts
+     *  transfer-list.ts
      *
      * Description:
      *  The caller tells the list to refresh when a record is saved
@@ -52,13 +27,33 @@ export class BaseInteractionService {
         this._refreshList.next()
     }
 
-    /**
-     * Caller(s):
-     *  list-transfer.ts
-     *  table-transfer.ts
+    /** Caller(s):
+     *  Custom-table.ts
      *
      * Subscriber(s):
-     *  list-transfer.ts
+     *  customer-list.ts
+     *  destination-list.ts
+     *  driver-list.ts
+     *  pickupPoint-list.ts
+     *  port-list.ts
+     *  route-list.ts
+     *  user-list.ts
+     *
+     * Description:
+     *  The caller(s) sends the selected item and the subscribers call the edit method
+     *
+    */
+    sendObject(record: any) {
+        this._record.next(record)
+    }
+
+    /**
+     * Caller(s):
+     *  transfer-list.ts
+     *  transfer-table.ts
+     *
+     * Subscriber(s):
+     *  transfer-list.ts
      *
      * Description:
      *  The callers send the sum of checked persons so that the subscriber can display it

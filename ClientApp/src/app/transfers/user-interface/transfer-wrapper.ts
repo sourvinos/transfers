@@ -51,7 +51,7 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
                     this.onGoBack()
                 }
             },
-            'Control.S': (event: KeyboardEvent) => {
+            'Alt.S': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'search')
             }
         }, {

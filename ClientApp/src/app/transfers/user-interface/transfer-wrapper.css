@@ -29,8 +29,10 @@
 #header #search-box {
     align-items: center;
     display: flex;
+    flex: auto;
     grid-area: searchbox;
     margin: 0 1rem 0 0;
+    width: 20rem;
 }
 
 #main {
@@ -41,4 +43,8 @@
     overflow-y: hidden;
     scroll-behavior: smooth;
     width: auto;
+}
+
+#footer {
+    grid-area: footer;
 }

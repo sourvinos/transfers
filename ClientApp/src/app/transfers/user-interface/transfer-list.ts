@@ -5,7 +5,7 @@ import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { DriverService } from 'src/app/drivers/classes/driver.service'
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { InteractionService } from 'src/app/shared/services/interaction.service'
 import { ButtonClickService } from 'src/app/shared/services/button-click.service'
 import { HelperService } from 'src/app/shared/services/helper.service'
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
@@ -51,7 +51,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: BaseInteractionService, private service: TransferService, private pdfService: TransferPdfService, private driverService: DriverService, private location: Location, private snackbarService: SnackbarService, public dialog: MatDialog, private transferService: TransferService, private helperService: HelperService, private messageService: MessageService, private keyboardShortcutsService: KeyboardShortcuts, private buttonClickService: ButtonClickService) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: InteractionService, private service: TransferService, private pdfService: TransferPdfService, private driverService: DriverService, private location: Location, private snackbarService: SnackbarService, public dialog: MatDialog, private transferService: TransferService, private helperService: HelperService, private messageService: MessageService, private keyboardShortcutsService: KeyboardShortcuts, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.dateIn !== '' && this.router.url.split('/').length === 4) {
@@ -79,7 +79,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.initCheckedPersons()
         this.updateTotals()
         this.flattenResults()
-        this.sendRecordsToService()
     }
 
     ngAfterViewChecked() {
@@ -178,13 +177,13 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
             'Escape': () => {
                 this.onGoBack()
             },
-            'Control.A': (event: KeyboardEvent) => {
+            'Alt.A': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'assignDriver')
             },
-            'Control.C': (event: KeyboardEvent) => {
+            'Alt.C': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'createPdf')
             },
-            'Control.N': (event: KeyboardEvent) => {
+            'Alt.N': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'new')
             },
         }, {
@@ -299,10 +298,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
                 element.classList.remove('activeItem')
             }
         }
-    }
-
-    private sendRecordsToService() {
-        this.interactionService.sendRecords(this.transfersFlat)
     }
 
     private showSnackbar(message: string, type: string) {

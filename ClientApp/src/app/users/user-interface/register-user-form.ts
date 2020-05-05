@@ -81,17 +81,17 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
                     this.buttonClickService.clickOnButton(event, 'goBack')
                 }
             },
-            'Control.S': (event: KeyboardEvent) => {
+            'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.buttonClickService.clickOnButton(event, 'save')
                 }
             },
-            'Control.C': (event: KeyboardEvent) => {
+            'Alt.C': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'cancel')
                 }
             },
-            'Control.O': (event: KeyboardEvent) => {
+            'Alt.O': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'ok')
                 }

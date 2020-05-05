@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
@@ -103,18 +103,18 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
                     this.onGoBack()
                 }
             },
-            'Control.D': (event: KeyboardEvent): void => {
+            'Alt.D': (event: KeyboardEvent): void => {
                 this.buttonClickService.clickOnButton(event, 'delete')
             },
-            'Control.S': (event: KeyboardEvent): void => {
+            'Alt.S': (event: KeyboardEvent): void => {
                 this.buttonClickService.clickOnButton(event, 'save')
             },
-            'Control.C': (event: KeyboardEvent): void => {
+            'Alt.C': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'cancel')
                 }
             },
-            'Control.O': (event: KeyboardEvent): void => {
+            'Alt.O': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'ok')
                 }

@@ -4,7 +4,7 @@ import { ActivatedRoute, NavigationEnd, Params, Route, Router } from '@angular/r
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.service';
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { PickupPoint } from '../classes/pickupPoint';
@@ -33,7 +33,7 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private baseInteractionService: BaseInteractionService, private pickupPointService: PickupPointService, private keyboardShortcutsService: KeyboardShortcuts, private buttonClickService: ButtonClickService, private location: Location) {
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: InteractionService, private pickupPointService: PickupPointService, private keyboardShortcutsService: KeyboardShortcuts, private buttonClickService: ButtonClickService, private location: Location) {
         this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.routeId !== '' && this.router.url.split('/').length === 4) {
@@ -68,7 +68,7 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
             'Escape': () => {
                 this.onGoBack()
             },
-            'Control.N': (event: KeyboardEvent) => {
+            'Alt.N': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'new')
             },
         }, {
@@ -94,10 +94,10 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
     }
 
     private subscribeToInteractionService() {
-        this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+        this.interactionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
-        this.baseInteractionService.refreshList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
+        this.interactionService.refreshList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
             this.pickupPointService.getAllForRoute(this.routeId).subscribe(result => {
                 this.pickupPoints = result
             })

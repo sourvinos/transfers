@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, IterableChanges, IterableDiffer, IterableDiffers, OnInit, AfterViewInit, DoCheck } from '@angular/core'
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { InteractionService } from 'src/app/shared/services/interaction.service'
 
 @Component({
     selector: 'transfer-table',
@@ -25,7 +25,7 @@ export class TransferTableComponent implements OnInit, AfterViewInit, DoCheck {
     totalPersons = 0
     differences: IterableDiffer<any>;
 
-    constructor(private interactionService: BaseInteractionService, private iterableDiffers: IterableDiffers) { }
+    constructor(private interactionService: InteractionService, private iterableDiffers: IterableDiffers) { }
 
     @HostListener('keyup', ['$event']) onkeyup(event: { key: string; target: { getAttribute: { (arg0: string): void; (arg0: string): void } } }) {
         if (event.key === 'Enter') { this.sendRowToService() }

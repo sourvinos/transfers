@@ -102,20 +102,20 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.buttonClickService.clickOnButton(event, 'goBack')
                 }
             },
-            'Control.D': (event: KeyboardEvent) => {
+            'Alt.D': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'delete')
             },
-            'Control.S': (event: KeyboardEvent) => {
+            'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.buttonClickService.clickOnButton(event, 'save')
                 }
             },
-            'Control.C': (event: KeyboardEvent) => {
+            'Alt.C': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'cancel')
                 }
             },
-            'Control.O': (event: KeyboardEvent) => {
+            'Alt.O': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'ok')
                 }

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Utils } from 'src/app/shared/classes/utils';
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { Destination } from '../classes/destination';
@@ -30,7 +30,7 @@ export class DestinationListComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private baseInteractionService: BaseInteractionService, private buttonClickService: ButtonClickService) {
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private interactionService: InteractionService, private buttonClickService: ButtonClickService) {
         this.loadRecords()
     }
 
@@ -58,10 +58,10 @@ export class DestinationListComponent implements OnInit, OnDestroy {
             'Escape': (event: KeyboardEvent): void => {
                 this.onGoBack()
             },
-            'Control.F': (event: KeyboardEvent): void => {
+            'Alt.F': (event: KeyboardEvent): void => {
                 this.focus(event, 'searchField')
             },
-            'Control.N': (event: KeyboardEvent): void => {
+            'Alt.N': (event: KeyboardEvent): void => {
                 this.buttonClickService.clickOnButton(event, 'new')
             }
         }, {
@@ -89,7 +89,7 @@ export class DestinationListComponent implements OnInit, OnDestroy {
     }
 
     private subscribeToInteractionService() {
-        this.baseInteractionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
+        this.interactionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
         })
     }

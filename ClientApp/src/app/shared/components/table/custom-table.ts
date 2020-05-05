@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, IterableDiffer, IterableDiffers, OnInit } from '@angular/core'
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { InteractionService } from 'src/app/shared/services/interaction.service'
 import { Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { IndexInteractionService } from '../../services/index-interaction.service'
 
@@ -28,7 +28,7 @@ export class CustomTableComponent implements OnInit, AfterViewInit {
 
     unlisten: Unlisten
 
-    constructor(private baseInteractionService: BaseInteractionService, private indexInteractionService: IndexInteractionService, private iterableDiffers: IterableDiffers) { }
+    constructor(private interactionService: InteractionService, private indexInteractionService: IndexInteractionService, private iterableDiffers: IterableDiffers) { }
 
     ngOnInit() {
         this.differences = this.iterableDiffers.find(this.records).create();
@@ -130,7 +130,7 @@ export class CustomTableComponent implements OnInit, AfterViewInit {
     }
 
     private sendRowToBaseService() {
-        this.baseInteractionService.sendObject(this.records[this.currentRow - 1])
+        this.interactionService.sendObject(this.records[this.currentRow - 1])
     }
 
     private sendRowToIndexService() {

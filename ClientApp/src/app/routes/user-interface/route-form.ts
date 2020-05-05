@@ -3,11 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { PortService } from 'src/app/ports/classes/port.service';
 import { Utils } from 'src/app/shared/classes/utils';
 import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service';
+import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
@@ -31,7 +30,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private dialogService: DialogService, private messageService: MessageService, private snackbarService: SnackbarService, private buttonClickService: ButtonClickService) {
+    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: InteractionService, private dialogService: DialogService, private messageService: MessageService, private snackbarService: SnackbarService, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) { this.getRecord(p.id) }
         })
@@ -41,7 +40,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.initForm()
         this.addShortcuts()
         this.populateDropDowns()
-        this.subscribeToInteractionService()
     }
 
     ngAfterViewInit() {
@@ -121,20 +119,20 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.buttonClickService.clickOnButton(event, 'goBack')
                 }
             },
-            'Control.D': (event: KeyboardEvent) => {
+            'Alt.D': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'delete')
             },
-            'Control.S': (event: KeyboardEvent) => {
+            'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.buttonClickService.clickOnButton(event, 'save')
                 }
             },
-            'Control.C': (event: KeyboardEvent) => {
+            'Alt.C': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'cancel')
                 }
             },
-            'Control.O': (event: KeyboardEvent) => {
+            'Alt.O': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'ok')
                 }
@@ -247,13 +245,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
         dialog.afterClosed().subscribe((result) => {
             this.patchFields(result, fields)
-        })
-    }
-
-    private subscribeToInteractionService() {
-        this.interactionService.action.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
-            if (response === 'saveRecord') { this.onSave() }
-            if (response === 'deleteRecord') { this.onDelete() }
         })
     }
 

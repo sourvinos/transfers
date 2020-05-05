@@ -59,7 +59,6 @@ import { RootComponent } from './root.component';
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        // { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
     ],
     bootstrap: [RootComponent]
 })

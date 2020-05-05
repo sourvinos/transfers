@@ -11,7 +11,7 @@ import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.ser
 import { PortService } from 'src/app/ports/classes/port.service'
 import { Utils } from 'src/app/shared/classes/utils'
 import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component'
-import { BaseInteractionService } from 'src/app/shared/services/base-interaction.service'
+import { InteractionService } from 'src/app/shared/services/interaction.service'
 import { ButtonClickService } from 'src/app/shared/services/button-click.service'
 import { DialogService } from 'src/app/shared/services/dialog.service'
 import { HelperService } from 'src/app/shared/services/helper.service'
@@ -40,7 +40,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: BaseInteractionService, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService, private buttonClickService: ButtonClickService) {
+    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: InteractionService, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) {
                 this.getRecord(p.id)
@@ -146,20 +146,20 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.onGoBack()
                 }
             },
-            'Control.D': (event: KeyboardEvent) => {
+            'Alt.D': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'delete')
             },
-            'Control.S': (event: KeyboardEvent) => {
+            'Alt.S': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
                     this.buttonClickService.clickOnButton(event, 'save')
                 }
             },
-            'Control.C': (event: KeyboardEvent) => {
+            'Alt.C': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'cancel')
                 }
             },
-            'Control.O': (event: KeyboardEvent) => {
+            'Alt.O': (event: KeyboardEvent) => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
                     this.buttonClickService.clickOnButton(event, 'ok')
                 }
