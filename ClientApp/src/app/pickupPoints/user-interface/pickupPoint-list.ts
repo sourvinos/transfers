@@ -26,7 +26,7 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
 
     headers = ['S', 'Id', 'Description', 'Exact point', 'Time']
     widths = ['40px', '0', '45%', '', '100px']
-    visibility = ['', 'none', '', '', '']
+    visibility = ['none', 'none', '', '', '']
     justify = ['center', 'center', 'left', 'left', 'center']
     fields = ['', 'id', 'description', 'exactPoint', 'time']
 

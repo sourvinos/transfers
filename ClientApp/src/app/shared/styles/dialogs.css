@@ -28,8 +28,6 @@
     color: var(--color-dialog-content);
     flex: 1;
     font-family: var(--font-family-dialog-content) !important;
-    line-height: 2rem;
-    scroll-behavior: smooth;
 }
 
 #dialog-footer {

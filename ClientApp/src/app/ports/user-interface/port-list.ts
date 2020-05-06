@@ -23,7 +23,7 @@ export class PortListComponent implements OnInit, OnDestroy {
 
     headers = ['S', 'Id', 'Description']
     widths = ['40px', '0px', '']
-    visibility = ['', 'none', '']
+    visibility = ['none', 'none', '']
     justify = ['center', 'center', 'left']
     fields = ['', 'id', 'description']
 

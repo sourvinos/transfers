@@ -3,7 +3,7 @@
     width: 100%;
 }
 
-#custom-table, #table-transfer {
+table, #table-transfer {
     table-layout: fixed;
     -webkit-border-horizontal-spacing: 2px;
     -webkit-border-vertical-spacing: 0;
@@ -24,6 +24,10 @@ th {
     z-index: 1;
 }
 
+th:hover {
+    cursor: pointer;
+}
+
 tr {
     transition: background-color;
     transition-duration: 200ms;
@@ -42,8 +46,8 @@ tr.selected {
 }
 
 tr:hover td {
+    color: var(--color-table-rows-hover) !important;
     cursor: pointer;
-    font-weight: bold;
 }
 
 td {
@@ -52,7 +56,7 @@ td {
     font-size: var(--font-size-table-rows);
     max-width: 0;
     overflow: hidden;
-    padding: 0.7rem 0.7rem;
+    padding: 0.7rem 0.5rem;
     text-overflow: ellipsis;
     white-space: nowrap;
 }

@@ -23,7 +23,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
 
     headers = ['S', 'Id', 'Name', 'Phones']
     widths = ['40px', '0px', '50%', '']
-    visibility = ['', 'none', '', '']
+    visibility = ['none', 'none', '', '']
     justify = ['center', 'center', 'left', 'left']
     fields = ['', 'id', 'description', 'phones']
 

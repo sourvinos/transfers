@@ -1,5 +1,18 @@
 import { NgModule } from '@angular/core'
-import { MatButtonModule, MatCheckboxModule, MatDialogModule, MatExpansionModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSnackBarModule, MatAutocompleteModule, MatDividerModule, MAT_LABEL_GLOBAL_OPTIONS, MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSelect, MatSelectModule } from '@angular/material'
+import {
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatSnackBarModule,
+    MatAutocompleteModule,
+    MatDividerModule,
+    MatSelectModule,
+    MAT_LABEL_GLOBAL_OPTIONS, MAT_SNACK_BAR_DEFAULT_OPTIONS
+} from '@angular/material'
 
 @NgModule({
     exports: [

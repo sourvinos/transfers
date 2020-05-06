@@ -2,6 +2,7 @@
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto !important;
+    scroll-behavior: smooth;
     scrollbar-color: var(--color-scrollbar) var(--color-scrollbar-background);
     scrollbar-width: thin;
     width: 100%;

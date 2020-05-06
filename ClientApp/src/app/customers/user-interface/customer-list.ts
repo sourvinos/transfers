@@ -23,7 +23,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     headers = ['S', 'Id', 'Description', 'Phones', 'Email']
     widths = ['40px', '0px', '50%', '25%', '']
-    visibility = ['', 'none', '', '', '']
+    visibility = ['none', 'none', '', '', '']
     justify = ['center', 'center', 'left', 'left', 'left']
     fields = ['', 'id', 'description', 'phones', 'email']
 

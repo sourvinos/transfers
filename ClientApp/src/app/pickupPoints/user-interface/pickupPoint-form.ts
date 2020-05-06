@@ -21,6 +21,7 @@ import { PickupPointService } from '../classes/pickupPoint.service';
 
 export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    routeId = 0
     form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
@@ -30,7 +31,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
             if (p.pickupPointId) {
                 this.getRecord(p.pickupPointId)
             } else {
-                this.form.patchValue({ routeId: this.router.url.split('/')[3] })
+                this.routeId = parseInt(this.router.url.split('/')[3], 10)
             }
         })
     }
@@ -149,7 +150,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
-            routeId: [0, Validators.required],
+            routeId: [this.routeId],
             description: ['', [Validators.required, Validators.maxLength(128)]],
             exactPoint: ['', [Validators.required, Validators.maxLength(128)]],
             time: ['', [Validators.required, Validators.pattern('[0-9][0-9]:[0-9][0-9]')]],

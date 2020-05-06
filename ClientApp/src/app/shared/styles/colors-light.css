@@ -38,6 +38,7 @@
     --color-table-row-even: #FFE0D2;
     --color-table-row-odd: #F2CFBB;
     --color-table-row-selected: #FFBB9C;
+    --color-table-rows-hover: #FFBB9C;
     /* All headers */
     --color-headers: #734230;
     /* Hamburger */
@@ -46,6 +47,7 @@
     --color-dialog-background: #F2CFBB;
     --color-dialog-content: #939393;
     /* Snackbars */
+    --color-snackbar-text: #FFEBE2;
     --color-snackbar-background-danger: #a52a2a;
     --color-snackbar-background-info: #0e8d97;
     /* Divider lines */
@@ -66,4 +68,10 @@
     /* Spinner */
     --color-spinner: #d67474;
     --color-spinner-background: #ffe85c;
+    /* Select */
+    --color-select-background-color: #373F46;
+    --color-select-border: #fe9f36;
+    --color-select-option-color: #b3b2b2;
+    --color-select-option-ripple: #394d59;
+    --color-select-value: #b3b2b2;
 }

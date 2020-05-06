@@ -38,6 +38,7 @@
     --color-table-row-even: #3c434b;
     --color-table-row-odd: #363d44;
     --color-table-row-selected: #394d59;
+    --color-table-rows-hover: #FFE85C;
     /* All headers */
     --color-headers: #ffc788;
     /* Hamburger */
@@ -46,6 +47,7 @@
     --color-dialog-background: #373f46;
     --color-dialog-content: #939393;
     /* Snackbars */
+    --color-snackbar-text: #FFFDDD;
     --color-snackbar-background-danger: #a52a2a;
     --color-snackbar-background-info: #0e8d97;
     /* Divider lines */

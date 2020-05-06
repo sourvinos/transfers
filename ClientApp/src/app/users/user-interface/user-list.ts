@@ -23,7 +23,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     headers = ['S', 'Id', 'Display name', 'Username', 'Email']
     widths = ['40px', '0px', '40%', '30%', '']
-    visibility = ['', 'none', '', '', '', '']
+    visibility = ['none', 'none', '', '', '', '']
     justify = ['center', 'center', 'left', 'left', 'left']
     fields = ['', 'id', 'displayname', 'username', 'email']
 

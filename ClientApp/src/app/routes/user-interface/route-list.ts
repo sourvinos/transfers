@@ -23,7 +23,7 @@ export class RouteListComponent implements OnInit, OnDestroy {
 
     headers = ['S', 'Id', 'Description', 'Full description']
     widths = ['40px', '0px', '150px', '']
-    visibility = ['', 'none', '', '']
+    visibility = ['none', 'none', '', '']
     justify = ['center', 'center', 'center', 'left']
     fields = ['', 'id', 'description', 'fullDescription']
 
