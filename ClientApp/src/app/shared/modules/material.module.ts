@@ -3,20 +3,19 @@ import {
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatDividerModule,
     MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatSnackBarModule,
-    MatAutocompleteModule,
-    MatDividerModule,
+    MatProgressBarModule,
     MatSelectModule,
+    MatSnackBarModule,
     MAT_LABEL_GLOBAL_OPTIONS, MAT_SNACK_BAR_DEFAULT_OPTIONS
 } from '@angular/material'
 
 @NgModule({
     exports: [
-        MatAutocompleteModule,
         MatButtonModule,
         MatCheckboxModule,
         MatDialogModule,
@@ -26,6 +25,7 @@ import {
         MatIconModule,
         MatInputModule,
         MatSelectModule,
+        MatProgressBarModule,
         MatSnackBarModule
     ],
     providers: [

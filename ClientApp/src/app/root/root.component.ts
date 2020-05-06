@@ -40,8 +40,8 @@ export class RootComponent implements OnInit, AfterViewInit {
     }
 
     private positionLoader() {
-        document.getElementById('spinner').style.left = (window.screen.width / 2) - (document.getElementById('spinner').clientWidth / 2) + 'px'
-        document.getElementById('spinner').style.top = (document.getElementById('main').clientHeight / 2) - (document.getElementById('spinner').clientHeight / 2) + 'px'
+        document.getElementById('spinner').style.left = (document.getElementsByTagName('app-main')[0].clientWidth / 2) - (document.getElementById('spinner').clientWidth) + document.getElementById('sidebar').clientWidth + 'px'
+        document.getElementById('spinner').style.top = (document.getElementsByTagName('app-main')[0].clientHeight / 2) - (document.getElementById('spinner').clientHeight / 2) + 'px'
     }
 
 }

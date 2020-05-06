@@ -28,10 +28,4 @@ export class DataService {
         return this.http.delete<any>(this.url + '/' + id)
     }
 
-    private handleError(error: Response) {
-        if (error.status === 404) {
-            return ('Error 404')
-        }
-    }
-
 }
