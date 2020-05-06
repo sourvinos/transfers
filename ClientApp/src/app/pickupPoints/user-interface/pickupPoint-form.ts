@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';

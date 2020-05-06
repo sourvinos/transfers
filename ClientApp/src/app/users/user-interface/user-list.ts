@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
-import { InteractionService } from 'src/app/shared/services/interaction.service'
+import { User } from 'src/app/account/classes/user'
+import { Utils } from 'src/app/shared/classes/utils'
 import { ButtonClickService } from 'src/app/shared/services/button-click.service'
-import { User } from '../../account/classes/user'
-import { Utils } from '../../shared/classes/utils'
+import { InteractionService } from 'src/app/shared/services/interaction.service'
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service'
 
 @Component({

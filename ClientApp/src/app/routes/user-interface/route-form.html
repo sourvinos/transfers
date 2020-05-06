@@ -24,7 +24,7 @@
                 <mat-error *ngIf="fullDescription.errors?.maxlength">This field can be up to {{ fullDescription.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Port" formControlName="portDescription" data-tabindex="3" id="portDescription" [inputTabStop]="input" (change)="lookupIndex(ports, 'Ports', ['portId', 'portDescription'], ['portId', 'portDescription'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
+                <input type="text" matInput placeholder="Port" formControlName="portDescription" data-tabindex="3" id="portDescription" [inputTabStop]="input" (change)="onLookupIndex(ports, 'Ports', ['portId', 'portDescription'], ['portId', 'portDescription'], ['Id', 'Description'], ['1px', '440px'], ['none', ''], ['center', 'left'], $event)">
                 <mat-error *ngIf="portDescription.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
         </div>

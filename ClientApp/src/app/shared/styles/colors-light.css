@@ -1,8 +1,8 @@
 * {
     /* Sidebar */
-    --top-color: #A6826D;
-    --bottom-color: #A6826D;
-    --color-sidebar-background: linear-gradient(var(--top-color), var(--bottom-color));
+    --color-sidebar-top: #A6826D;
+    --color-sidebar-bottom: #A6826D;
+    --color-sidebar-background: linear-gradient(var(--color-sidebar-top), var(--color-sidebar-bottom));
     --color-company-logo-first-child: #FFA500;
     --color-company-logo-second-child: #F2CFBB;
     --color-menu-list-items: #F2CFBB;
@@ -19,7 +19,7 @@
     --color-button-text-secondary: #734230;
     --color-button-text-transparent: #734230;
     /* Input boxes */
-    --color-input-text-caret: #43db43;
+    --color-input-text-caret: #ffffff;
     --color-input-text-selected: #FFC29E;
     --color-input-focus: #0D0D0D;
     --color-input-not-focus: #734230;
@@ -38,7 +38,7 @@
     --color-table-row-even: #FFE0D2;
     --color-table-row-odd: #F2CFBB;
     --color-table-row-selected: #FFBB9C;
-    --color-table-rows-hover: #FFBB9C;
+    --color-table-rows-hover: #734230;
     /* All headers */
     --color-headers: #734230;
     /* Hamburger */

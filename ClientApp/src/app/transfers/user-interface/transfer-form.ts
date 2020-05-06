@@ -104,7 +104,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    lookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
+    onLookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
             const key = fields[1]
@@ -342,10 +342,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         document.getElementById('custom-table-input').focus()
     }
 
-    private showSnackbar(message: string, type: string) {
-        this.snackbarService.open(message, type)
-    }
-
     private showModalIndex(elements: any, title: string, fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {
         const dialog = this.dialog.open(DialogIndexComponent, {
             height: '685px',
@@ -362,6 +358,10 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         dialog.afterClosed().subscribe((result) => {
             this.patchFields(result, fields)
         })
+    }
+
+    private showSnackbar(message: string, type: string) {
+        this.snackbarService.open(message, type)
     }
 
     // #region Getters

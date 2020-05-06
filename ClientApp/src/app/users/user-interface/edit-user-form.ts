@@ -136,10 +136,6 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private onGoBack() {
-        this.router.navigate([this.url])
-    }
-
     private initForm() {
         this.form = this.formBuilder.group({
             id: '',
@@ -147,6 +143,10 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
             displayname: ['', [Validators.required, Validators.maxLength(32)]],
             email: ['', [Validators.required, Validators.email, Validators.maxLength(128)]],
         })
+    }
+
+    private onGoBack() {
+        this.router.navigate([this.url])
     }
 
     private populateFields(result: any) {

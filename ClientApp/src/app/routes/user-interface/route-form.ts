@@ -66,7 +66,20 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    lookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
+    onDelete() {
+        this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
+            if (response) {
+                this.routeService.delete(this.form.value.id).subscribe(() => {
+                    this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
+                    this.onGoBack()
+                }, () => {
+                    this.showSnackbar(this.messageService.recordIsInUse(), 'error')
+                })
+            }
+        })
+    }
+
+    onLookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
             const key = fields[1]
@@ -81,19 +94,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.clearFields(null, formFields[0], formFields[1])
             this.focus(formFields[1])
         }
-    }
-
-    onDelete() {
-        this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
-            if (response) {
-                this.routeService.delete(this.form.value.id).subscribe(() => {
-                    this.showSnackbar(this.messageService.showDeletedRecord(), 'info')
-                    this.onGoBack()
-                }, () => {
-                    this.showSnackbar(this.messageService.recordIsInUse(), 'error')
-                })
-            }
-        })
     }
 
     onSave() {
@@ -161,10 +161,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private onGoBack() {
-        this.router.navigate([this.url])
-    }
-
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
@@ -173,25 +169,10 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
             portId: ['', Validators.required], portDescription: ['', Validators.required],
             userName: this.helperService.getUsernameFromLocalStorage()
         })
-
     }
 
-    private populateFields(result: Route) {
-        this.form.setValue({
-            id: result.id,
-            description: result.description,
-            fullDescription: result.fullDescription,
-            portId: result.port.id, portDescription: result.port.description,
-            userName: result.userName
-        })
-    }
-
-    private resetForm() {
-        this.form.reset()
-    }
-
-    private showSnackbar(message: string, type: string): void {
-        this.snackbarService.open(message, type)
+    private onGoBack() {
+        this.router.navigate([this.url])
     }
 
     private patchFields(result: any, fields: any[]) {
@@ -217,6 +198,16 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         )
     }
 
+    private populateFields(result: Route) {
+        this.form.setValue({
+            id: result.id,
+            description: result.description,
+            fullDescription: result.fullDescription,
+            portId: result.port.id, portDescription: result.port.description,
+            userName: result.userName
+        })
+    }
+
     private renameKey(obj: Object, oldKey: string, newKey: string) {
         if (oldKey !== newKey) {
             Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey))
@@ -228,6 +219,10 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.ports.forEach(obj => {
             this.renameKey(obj, 'id', 'portId'); this.renameKey(obj, 'description', 'portDescription')
         })
+    }
+
+    private resetForm() {
+        this.form.reset()
     }
 
     private showModalIndex(elements: any, title: string, fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {
@@ -246,6 +241,10 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         dialog.afterClosed().subscribe((result) => {
             this.patchFields(result, fields)
         })
+    }
+
+    private showSnackbar(message: string, type: string): void {
+        this.snackbarService.open(message, type)
     }
 
     // #region Getters

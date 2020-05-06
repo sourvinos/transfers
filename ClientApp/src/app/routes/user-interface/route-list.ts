@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Utils } from 'src/app/shared/classes/utils';
-import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
+import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { Route } from '../classes/route';
 

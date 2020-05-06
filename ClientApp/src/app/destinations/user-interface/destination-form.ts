@@ -133,10 +133,6 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         })
     }
 
-    private onGoBack() {
-        this.router.navigate([this.url])
-    }
-
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
@@ -144,7 +140,10 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
             description: ['', [Validators.required, Validators.maxLength(128)]],
             userName: this.helperService.getUsernameFromLocalStorage()
         })
+    }
 
+    private onGoBack() {
+        this.router.navigate([this.url])
     }
 
     private populateFields(result: any) {

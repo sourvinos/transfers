@@ -57,6 +57,7 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
     ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
+        this.unlisten()
     }
 
     onNew() {
@@ -72,7 +73,7 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
                 this.buttonClickService.clickOnButton(event, 'new')
             },
         }, {
-            priority: 2,
+            priority: 1,
             inputs: true
         })
     }

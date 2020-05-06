@@ -31,7 +31,7 @@ body, h1, h2, h3, p {
 
 #loader {
     align-items: center;
-    background: var(--color-background);
+    background: var(--color-sidebar-background);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -57,7 +57,7 @@ body, h1, h2, h3, p {
 }
 
 #loader>:nth-child(3) {
-    background: url(../../../assets/loader.gif) no-repeat var(--color-background);
+    background: url(../../../assets/loader.gif) no-repeat var(--color-sidebar-background);
     background-position-x: center;
     background-position-y: bottom;
     display: flex;

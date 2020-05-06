@@ -133,16 +133,16 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    private onGoBack() {
-        this.router.navigate([this.url])
-    }
-
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
             description: ['', [Validators.required, Validators.maxLength(128)]],
             userName: this.helperService.getUsernameFromLocalStorage()
         })
+    }
+
+    private onGoBack() {
+        this.router.navigate([this.url])
     }
 
     private populateFields(result: any) {
