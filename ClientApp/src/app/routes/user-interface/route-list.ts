@@ -81,7 +81,7 @@ export class RouteListComponent implements OnInit, OnDestroy {
 
     private loadRecords() {
         this.records = this.activatedRoute.snapshot.data[this.resolver]
-        this.filteredRecords = this.records
+        this.filteredRecords = this.records.sort((a, b) => (a.fullDescription > b.fullDescription) ? 1 : -1)
     }
 
     private onGoBack() {

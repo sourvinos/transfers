@@ -84,6 +84,7 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
 
     private loadRecords() {
         this.pickupPoints = this.activatedRoute.snapshot.data[this.resolver]
+        this.pickupPoints.sort((a, b) => (a.description > b.description) ? 1 : -1)
     }
 
     private navigateToEditRoute(id: number) {

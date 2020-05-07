@@ -81,7 +81,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
 
     private loadRecords() {
         this.records = this.activatedRoute.snapshot.data[this.resolver]
-        this.filteredRecords = this.records
+        this.filteredRecords = this.records.sort((a, b) => (a.description > b.description) ? 1 : -1)
     }
 
     private onGoBack() {
