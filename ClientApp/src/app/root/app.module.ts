@@ -1,3 +1,4 @@
+import { LoaderComponent } from './../shared/components/loader/loader.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -31,6 +32,7 @@ import { RootComponent } from './root.component';
         MainComponent,
         RootComponent,
         HomeComponent,
+        LoaderComponent,
         SidebarComponent,
         DoubleRingComponent,
         DomChangeDirective,

@@ -11,6 +11,8 @@
     --color-copyright: #F2CFBB;
     /* Main background */
     --color-background: #F2CFBB;
+    /* Loader */
+    --color-loader-background: #A6826D;
     /* Buttons */
     --color-button-primary: #A6826D;
     --color-button-delete: #F78787;
@@ -29,7 +31,7 @@
     --color-navigation-arrow: #F2CFBB;
     /* Scrollbars */
     --color-scrollbar: #734230;
-    --color-scrollbar-background: #A6826D;
+    --color-scrollbar-background: #F2CFBB;
     /* Tables */
     --color-table-background: #F2CFBB;
     --color-table-header: #474747;

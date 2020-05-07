@@ -49,6 +49,18 @@
     width: auto;
 }
 
+#footer {
+    grid-area: footer;
+    margin: 0 2rem 2rem 2rem;
+}
+
+#footer #buttons {
+    align-items: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 1rem;
+}
+
 /* ! Narrow screen */
 @media only screen and (max-width: 1366px) {
     h1 {
