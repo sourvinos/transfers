@@ -21,7 +21,6 @@
     font-size: var(--font-size-logo-second-child) !important;
     font-weight: normal !important;
     margin: -1rem 0 0 0 !important;
-    -webkit-text-stroke: 1px black;
 }
 
 #loading-message {
@@ -36,14 +35,14 @@
 }
 
 .progress-line {
-    background-color: #ddffcc;
+    background-color: var(--color-loader-progress-background);
     display: -webkit-flex;
     display: flex;
     margin: 2rem 0;
 }
 
 .progress-line:before {
-    background-color: #ffa500;
+    background-color: var(--color-loader-progress);
     content: '';
     animation: running-progress 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }

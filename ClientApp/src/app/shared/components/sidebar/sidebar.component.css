@@ -36,7 +36,6 @@
     font-size: var(--font-size-logo-second-child) !important;
     font-weight: normal !important;
     margin: -1rem 0 0 0 !important;
-    -webkit-text-stroke: 1px black;
 }
 
 #double-ring {

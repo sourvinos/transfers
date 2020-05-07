@@ -21,6 +21,13 @@
     margin: 0;
 }
 
+#footer #buttons {
+    align-items: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 1rem;
+}
+
 #pickupPointList {
     display: flex;
     flex-direction: column;

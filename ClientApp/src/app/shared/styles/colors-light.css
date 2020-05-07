@@ -3,8 +3,8 @@
     --color-sidebar-top: #A6826D;
     --color-sidebar-bottom: #A6826D;
     --color-sidebar-background: linear-gradient(var(--color-sidebar-top), var(--color-sidebar-bottom));
-    --color-company-logo-first-child: #FFA500;
-    --color-company-logo-second-child: #F2CFBB;
+    --color-company-logo-first-child: #734230;
+    --color-company-logo-second-child: #e1a07b;
     --color-menu-list-items: #F2CFBB;
     --color-menu-active-item: #734230;
     --color-user-info: #F2CFBB;
@@ -12,7 +12,9 @@
     /* Main background */
     --color-background: #F2CFBB;
     /* Loader */
-    --color-loader-background: #A6826D;
+    --color-loader-background: #F2CFBB;
+    --color-loader-progress: #ffa500;
+    --color-loader-progress-background: #734230;
     /* Buttons */
     --color-button-primary: #A6826D;
     --color-button-delete: #F78787;
@@ -40,7 +42,7 @@
     --color-table-row-even: #FFE0D2;
     --color-table-row-odd: #F2CFBB;
     --color-table-row-selected: #FFBB9C;
-    --color-table-rows-hover: #734230;
+    --color-table-rows-hover: #000000;
     /* All headers */
     --color-headers: #734230;
     /* Hamburger */

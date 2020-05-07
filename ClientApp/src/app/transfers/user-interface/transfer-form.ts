@@ -197,8 +197,8 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         return document.getElementById('listFormCombo').offsetHeight + 'px'
     }
 
-    private getListWidth() {
-        return document.getElementById('listFormCombo').offsetWidth - 32 - 352 + 'px'
+    private getFormWidth() {
+        return document.getElementById('listFormCombo').offsetWidth - 352 + 'px'
     }
 
     private getRecord(id: number) {
@@ -331,7 +331,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private scrollToForm() {
-        document.getElementById('content').style.width = this.getListWidth()
+        document.getElementById('content').style.width = this.getFormWidth()
         document.getElementById('content').style.height = this.getListHeight()
         document.getElementById('transferList').style.display = 'none'
     }

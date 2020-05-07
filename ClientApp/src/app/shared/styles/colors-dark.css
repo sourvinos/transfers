@@ -13,6 +13,8 @@
     --color-background: #373F46;
     /* Loader */
     --color-loader-background: #373F46;
+    --color-loader-progress: #ffa500;
+    --color-loader-progress-background: #1D2733;
     /* Buttons */
     --color-button-primary: #57617B;
     --color-button-delete: #D67474;

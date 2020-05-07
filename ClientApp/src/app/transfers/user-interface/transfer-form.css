@@ -74,6 +74,13 @@ span#form-values {
     margin: 0;
 }
 
+#footer #buttons {
+    align-items: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 1rem;
+}
+
 /* Small heights */
 @media only screen and (max-height: 768px) {
     form {
