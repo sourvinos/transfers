@@ -25,7 +25,7 @@ export class TransferAssignDriverComponent implements OnInit {
 
     private populateDropDowns() {
         this.data.drivers.subscribe((result: any) => {
-            this.drivers = result
+            this.drivers = result.sort((a: { description: number; }, b: { description: number; }) => (a.description > b.description) ? 1 : -1)
         })
     }
 
