@@ -8,10 +8,12 @@ export class InteractionService {
     _record = new Subject<string[]>()
     _checked = new Subject<number>()
     _refreshList = new Subject<any>()
+    _wrapperHeader = new Subject<string>()
 
     record = this._record.asObservable()
     checked = this._checked.asObservable()
     refreshList = this._refreshList.asObservable()
+    wrapperHeader = this._wrapperHeader.asObservable()
 
     /**
      * Caller(s):
@@ -25,6 +27,10 @@ export class InteractionService {
      */
     mustRefreshList() {
         this._refreshList.next()
+    }
+
+    activeRoute(title: string) {
+        this._wrapperHeader.next(title)
     }
 
     /** Caller(s):

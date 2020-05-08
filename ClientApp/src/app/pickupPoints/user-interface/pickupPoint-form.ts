@@ -1,3 +1,4 @@
+import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,12 +22,14 @@ import { PickupPointService } from '../classes/pickupPoint.service';
 export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     routeId = 0
+    activeRoute = 'form'
     form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService, private buttonClickService: ButtonClickService) {
+    constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService, private buttonClickService: ButtonClickService, private interactionService: InteractionService) {
         this.activatedRoute.params.subscribe(p => {
+            this.interactionService.activeRoute(this.activeRoute)
             if (p.pickupPointId) {
                 this.getRecord(p.pickupPointId)
             } else {

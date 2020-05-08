@@ -19,6 +19,7 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
 
     wrapperUrl = '/pickupPoints'
     resolver = 'pickupPointList'
+    activeRoute = 'list'
     routeId: string
     routes: Route[]
     pickupPoints: PickupPoint[]
@@ -37,6 +38,7 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
         this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
         this.router.events.subscribe((navigation: any) => {
             if (navigation instanceof NavigationEnd && this.routeId !== '' && this.router.url.split('/').length === 4) {
+                this.interactionService.activeRoute(this.activeRoute)
                 this.mustRefresh = true
                 this.loadRecords()
             }

@@ -15,11 +15,18 @@ import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-sh
 export class PickupPointWrapperComponent implements OnInit, OnDestroy {
 
     id = ''
+    activeRoute: string
     routes: Route[] = []
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private interactionPickupPointService: InteractionService, private routeService: RouteService) { }
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private routeService: RouteService, private interactionService: InteractionService) {
+        if (this.router.url.split('/').length === 2) {
+            this.interactionService.wrapperHeader.subscribe((response) => {
+                this.activeRoute = response
+            })
+        }
+    }
 
     ngOnInit() {
         this.addShortcuts()
@@ -50,6 +57,10 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     }
 
     private onGoBack() {
+        this.activeRoute === 'list' ? this.navigateToHome() : this.navigateToList()
+    }
+
+    private navigateToHome() {
         this.router.navigate(['/'])
     }
 
