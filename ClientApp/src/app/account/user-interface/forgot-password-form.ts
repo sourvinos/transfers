@@ -5,8 +5,8 @@ import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
-import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
 
 @Component({
     selector: 'forgot-password-form',
@@ -24,7 +24,7 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
         email: ['johnsourvinos@hotmail.com', [Validators.required, Validators.email]]
     })
 
-    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private buttonClickService: ButtonClickService) { }
+    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private buttonClickService: ButtonClickService, private helperService: HelperService) { }
 
     ngOnInit() {
         this.addShortcuts()
@@ -71,7 +71,7 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
     }
 
     private focus(field: string) {
-        Utils.setFocus(field)
+        this.helperService.setFocus(field)
     }
 
     private showSnackbar(message: string, type: string): void {

@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { CustomerService } from 'src/app/customers/classes/customer.service';
-import { Utils } from 'src/app/shared/classes/utils';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
@@ -77,8 +76,8 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.form.value.id === 0) {
             this.customerService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
+                this.focus('description')
                 this.resetForm()
-                this.onGoBack()
             })
         } else {
             this.customerService.update(this.form.value.id, this.form.value).subscribe(() => {
@@ -121,7 +120,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private focus(field: string) {
-        Utils.setFocus(field)
+        this.helperService.setFocus(field)
     }
 
     private getRecord(id: string | number) {
@@ -165,7 +164,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private resetForm() {
-        this.form.reset()
+        this.helperService.resetForm(this.form)
     }
 
     private showSnackbar(message: string, type: string) {

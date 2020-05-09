@@ -7,10 +7,10 @@ import { DialogService } from 'src/app/shared/services/dialog.service';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { ConfirmValidParentMatcher, ValidationService } from 'src/app/shared/services/validation.service';
-import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { UserService } from '../classes/user.service';
 import { ChangePassword } from './../classes/change-password';
+import { HelperService } from 'src/app/shared/services/helper.service';
 
 @Component({
     selector: 'change-password-form',
@@ -28,7 +28,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
-    constructor(private userService: UserService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService, private buttonClickService: ButtonClickService) {
+    constructor(private userService: UserService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService, private buttonClickService: ButtonClickService, private helperService: HelperService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) { this.getRecord(p.id) }
         });
@@ -112,7 +112,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
     }
 
     private focus(field: string) {
-        Utils.setFocus(field)
+        this.helperService.setFocus(field)
     }
 
     private getRecord(id: string) {

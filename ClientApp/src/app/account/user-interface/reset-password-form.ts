@@ -1,3 +1,4 @@
+import { HelperService } from 'src/app/shared/services/helper.service';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -5,7 +6,6 @@ import { Subject } from 'rxjs';
 import { AccountService } from 'src/app/shared/services/account.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
-import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { ConfirmValidParentMatcher, ValidationService } from '../../shared/services/validation.service';
 
@@ -26,7 +26,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
     ngUnsubscribe = new Subject<void>();
     confirmValidParentMatcher = new ConfirmValidParentMatcher();
 
-    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService) {
+    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService, private helperService: HelperService) {
         this.activatedRoute.params.subscribe(p => {
             this.email = p['email']
             this.token = p['token']
@@ -76,7 +76,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
     }
 
     private focus(field: string) {
-        Utils.setFocus(field)
+        this.helperService.setFocus(field)
     }
 
     private initForm() {

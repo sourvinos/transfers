@@ -23,7 +23,7 @@ button.delete {
 }
 
 button.navigation {
-    margin: 0 0.5rem 0 0 !important;
+    margin: 0 1rem 0 0 !important;
     background-color: var(--color-navigation-button) !important;
     outline: 0 !important;
 }

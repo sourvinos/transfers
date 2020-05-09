@@ -1,19 +1,7 @@
-<div id="header">
-    <div *ngIf="this.activeRoute != 'form'; else elseBlock">
-        <div id="title">
-            <h1>Pickup points</h1>
-        </div>
+<div id="header" *ngIf="this.activeRoute != 'form'; else elseBlock">
+    <div id="title">
+        <h1>Pickup points</h1>
     </div>
-    <ng-template #elseBlock>
-        <div id="navigation">
-            <button mat-mini-fab class="navigation">
-                <mat-icon id="goBack" (click)="onGoBack()">arrow_back</mat-icon>
-            </button>
-        </div>
-        <div id="title">
-            <h1>Pickup point</h1>
-        </div>
-    </ng-template>
     <div id="search-box">
         <mat-form-field>
             <mat-label>Routes</mat-label>
@@ -26,6 +14,16 @@
         </mat-form-field>
     </div>
 </div>
+<ng-template #elseBlock>
+    <div id="header">
+        <div id="title">
+            <button mat-mini-fab class="navigation">
+                <mat-icon id="goBack" (click)="onGoBack()">arrow_back</mat-icon>
+            </button>
+            <h1>Pickup point</h1>
+        </div>
+    </div>
+</ng-template>
 
 <div id="main">
     <router-outlet></router-outlet>

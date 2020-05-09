@@ -22,9 +22,9 @@
                 <input type="text" matInput placeholder="Phones" formControlName="phones" data-tabindex="2" id="phones" [inputTabStop]="input">
                 <mat-error *ngIf="phones.errors?.maxlength">This field can be up to {{ phones.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
-            <span id="form-values" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</span>
         </div>
     </form>
+    <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
 </div>
 
 <div id="footer">

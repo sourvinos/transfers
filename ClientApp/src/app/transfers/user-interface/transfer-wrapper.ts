@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
-import { Utils } from 'src/app/shared/classes/utils';
+import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { TransferFlat } from 'src/app/transfers/classes/transferFlat';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
@@ -22,7 +22,7 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService) { }
+    constructor(private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService, private helperService: HelperService) { }
 
     ngOnInit() {
         this.addShortcuts()
@@ -65,7 +65,7 @@ export class TransferWrapperComponent implements OnInit, OnDestroy {
     }
 
     private focus(field: string) {
-        Utils.setFocus(field)
+        this.helperService.setFocus(field)
     }
 
     private onGoBack() {

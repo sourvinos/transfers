@@ -9,12 +9,11 @@ import { Driver } from 'src/app/drivers/classes/driver'
 import { DriverService } from 'src/app/drivers/classes/driver.service'
 import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.service'
 import { PortService } from 'src/app/ports/classes/port.service'
-import { Utils } from 'src/app/shared/classes/utils'
 import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component'
-import { InteractionService } from 'src/app/shared/services/interaction.service'
 import { ButtonClickService } from 'src/app/shared/services/button-click.service'
 import { DialogService } from 'src/app/shared/services/dialog.service'
 import { HelperService } from 'src/app/shared/services/helper.service'
+import { InteractionService } from 'src/app/shared/services/interaction.service'
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { MessageService } from 'src/app/shared/services/message.service'
 import { SnackbarService } from 'src/app/shared/services/snackbar.service'
@@ -125,9 +124,9 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.form.value.id === 0 || this.form.value.id === null) {
             this.transferService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
+                this.focus('destinationDescription')
                 this.resetForm()
                 this.populateFormWithDefaultValues(this.defaultDriver)
-                this.focus('destinationDescription')
                 this.refreshSummaries()
             })
         } else {
@@ -190,7 +189,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private focus(field: string) {
-        Utils.setFocus(field)
+        this.helperService.setFocus(field)
     }
 
     private getListHeight() {
@@ -327,7 +326,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private resetForm() {
-        this.form.reset()
+        this.helperService.resetForm(this.form)
     }
 
     private scrollToForm() {

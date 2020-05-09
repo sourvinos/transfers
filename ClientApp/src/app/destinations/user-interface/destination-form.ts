@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { DestinationService } from 'src/app/destinations/classes/destination.service';
-import { Utils } from 'src/app/shared/classes/utils';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
@@ -77,8 +76,8 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         if (this.form.value.id === 0) {
             this.destinationService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
+                this.focus('abbreviation')
                 this.resetForm()
-                this.onGoBack()
             })
         } else {
             this.destinationService.update(this.form.value.id, this.form.value).subscribe(() => {
@@ -121,7 +120,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     private focus(field: string) {
-        Utils.setFocus(field)
+        this.helperService.setFocus(field)
     }
 
     private getRecord(id: string | number) {
@@ -156,7 +155,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     private resetForm() {
-        this.form.reset()
+        this.helperService.resetForm(this.form)
     }
 
     private showSnackbar(message: string, type: string): void {

@@ -6,9 +6,9 @@ import { ButtonClickService } from 'src/app/shared/services/button-click.service
 import { DialogService } from 'src/app/shared/services/dialog.service'
 import { MessageService } from 'src/app/shared/services/message.service'
 import { SnackbarService } from 'src/app/shared/services/snackbar.service'
-import { Utils } from '../../shared/classes/utils'
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service'
 import { UserService } from '../classes/user.service'
+import { HelperService } from 'src/app/shared/services/helper.service'
 
 @Component({
     selector: 'edit-user-form',
@@ -23,7 +23,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private userService: UserService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService, private buttonClickService: ButtonClickService) {
+    constructor(private userService: UserService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService, private buttonClickService: ButtonClickService, private helperService: HelperService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) { this.getRecord(p.id) }
         })
@@ -127,7 +127,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private focus(field: string) {
-        Utils.setFocus(field)
+        this.helperService.setFocus(field)
     }
 
     private getRecord(id: string) {

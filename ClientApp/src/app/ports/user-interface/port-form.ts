@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { Utils } from 'src/app/shared/classes/utils';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
@@ -77,8 +76,8 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.form.value.id === 0) {
             this.portService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
+                this.focus('description')
                 this.resetForm()
-                this.onGoBack()
             })
         } else {
             this.portService.update(this.form.value.id, this.form.value).subscribe(() => {
@@ -121,7 +120,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private focus(field: string) {
-        Utils.setFocus(field)
+        this.helperService.setFocus(field)
     }
 
     private getRecord(id: string | number) {
@@ -154,7 +153,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private resetForm() {
-        this.form.reset()
+        this.helperService.resetForm(this.form)
     }
 
     private showSnackbar(message: string, type: string): void {

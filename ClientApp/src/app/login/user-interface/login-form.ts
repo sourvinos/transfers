@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { Utils } from 'src/app/shared/classes/utils';
+import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { AccountService } from '../../shared/services/account.service';
 import { CountdownService } from '../../shared/services/countdown.service';
@@ -23,7 +23,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private accountService: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService) { }
+    constructor(private accountService: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private helperService: HelperService) { }
 
     ngOnInit() {
         this.initForm()
@@ -68,7 +68,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private focus(field: string) {
-        Utils.setFocus(field)
+        this.helperService.setFocus(field)
     }
 
     private initForm() {

@@ -11,11 +11,11 @@
     display: grid;
     grid-area: header;
     grid-template-areas:
-        "title searchbox"
-        "divider divider";
+        "title searchbox";
     grid-template-columns: 1fr auto;
-    grid-template-rows: auto auto;
-    margin: 2rem;
+    grid-template-rows: auto;
+    height: 4.1rem;
+    margin: 2rem 2rem 0 2rem;
 }
 
 #header #title {
@@ -24,13 +24,14 @@
     grid-area: title;
     justify-content: flex-start;
     margin-left: 1rem;
+    height: -webkit-fill-available;
 }
 
 #header #search-box {
     align-items: center;
     display: flex;
     grid-area: searchbox;
-    margin: 0 1rem 0 0;
+    margin-right: 1rem;
     width: 20rem;
 }
 

@@ -11,19 +11,9 @@
     display: flex;
     flex-direction: column;
     height: -webkit-fill-available;
+    justify-content: center;
     margin: 0 auto;
     width: 80%;
-}
-
-#section-one, #section-two {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-span#form-values {
-    color: olivedrab;
-    font-family: "Ubuntu Condensed";
 }
 
 #footer {

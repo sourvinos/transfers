@@ -8,9 +8,9 @@ import { DialogService } from 'src/app/shared/services/dialog.service';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { RegisterUser } from '../../account/classes/register-user';
-import { Utils } from '../../shared/classes/utils';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { ConfirmValidParentMatcher, ValidationService } from '../../shared/services/validation.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
 
 @Component({
     selector: 'register-user-form',
@@ -28,7 +28,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     ngUnsubscribe = new Subject<void>();
     confirmValidParentMatcher = new ConfirmValidParentMatcher();
 
-    constructor(private accountService: AccountService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService, private buttonClickService: ButtonClickService) { }
+    constructor(private accountService: AccountService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService, private buttonClickService: ButtonClickService, private helperService: HelperService) { }
 
     ngOnInit() {
         this.initForm()
@@ -113,7 +113,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     private focus(field: string) {
-        Utils.setFocus(field)
+        this.helperService.setFocus(field)
     }
 
     private initForm() {

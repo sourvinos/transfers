@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
-import { Utils } from 'src/app/shared/classes/utils'
 import { ButtonClickService } from 'src/app/shared/services/button-click.service'
 import { InteractionService } from 'src/app/shared/services/interaction.service'
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { Driver } from '../classes/driver'
+import { HelperService } from 'src/app/shared/services/helper.service'
 
 @Component({
     selector: 'driver-list',
@@ -30,7 +30,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private interactionService: InteractionService, private buttonClickService: ButtonClickService) {
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private interactionService: InteractionService, private buttonClickService: ButtonClickService, private helperService: HelperService) {
         this.loadRecords()
     }
 
@@ -76,7 +76,7 @@ export class DriverListComponent implements OnInit, OnDestroy {
 
     private focus(event: KeyboardEvent, element: string) {
         event.preventDefault()
-        Utils.setFocus(element)
+        this.helperService.setFocus(element)
     }
 
     private loadRecords() {

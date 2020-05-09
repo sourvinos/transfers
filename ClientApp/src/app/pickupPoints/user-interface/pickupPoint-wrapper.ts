@@ -57,7 +57,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     }
 
     private onGoBack() {
-        this.activeRoute === 'list' ? this.navigateToHome() : this.navigateToList()
+        this.activeRoute === 'list' || this.activeRoute === undefined ? this.navigateToHome() : this.navigateToList()
     }
 
     private navigateToHome() {
