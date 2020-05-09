@@ -11,8 +11,8 @@
     display: grid;
     grid-area: header;
     grid-template-areas:
-        "title searchbox";
-    grid-template-columns: 1fr auto;
+        "navigation title searchbox";
+    grid-template-columns: auto 1fr auto;
     grid-template-rows: auto;
     height: 4.1rem;
     margin: 2rem 2rem 0 2rem;
@@ -27,6 +27,14 @@
     height: -webkit-fill-available;
 }
 
+#header #navigation {
+    align-items: center;
+    display: flex;
+    grid-area: "navigation";
+    justify-content: flex-start;
+    margin: 0 0 0 1rem;
+}
+
 #header #search-box {
     align-items: center;
     display: flex;
@@ -38,7 +46,6 @@
 #main {
     grid-area: main;
     grid-auto-rows: 100%;
-    margin: 0 2rem 2rem 2rem;
     overflow-x: hidden;
     overflow-y: hidden;
     width: auto;

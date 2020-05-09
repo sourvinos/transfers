@@ -1,15 +1,13 @@
-<div id="results">
-    <div id="listFormCombo">
-        <div id="pickupPointList">
-            <div class="scrollable">
-                <custom-table [records]="pickupPoints" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></custom-table>
-            </div>
-            <div id="footer">
-                <div id="buttons">
-                    <button mat-flat-button class="primary" id="new" (click)="onNew()">New</button>
-                </div>
+<div id="listFormCombo">
+    <div id="pickupPointList">
+        <div class="scrollable">
+            <custom-table [records]="pickupPoints" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></custom-table>
+        </div>
+        <div id="footer">
+            <div id="buttons">
+                <button mat-flat-button class="primary" id="new" (click)="onNew()">New</button>
             </div>
         </div>
-        <router-outlet></router-outlet>
     </div>
+    <router-outlet></router-outlet>
 </div>

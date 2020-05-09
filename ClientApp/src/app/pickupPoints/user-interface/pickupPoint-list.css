@@ -5,6 +5,7 @@
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
     height: 100%;
+    margin-left: 2rem;
 }
 
 #listFormCombo {
@@ -25,11 +26,12 @@
 }
 
 .scrollable {
-    margin: 2rem auto;
+    margin: 2rem 2rem 0 2rem;
+    width: auto;
 }
 
 #footer {
-    margin: 0;
+    margin: 2rem;
 }
 
 #footer #buttons {

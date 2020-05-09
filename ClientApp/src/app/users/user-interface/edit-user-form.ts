@@ -131,7 +131,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private getRecord(id: string) {
-        this.userService.getSingle(id).then(result => {
+        this.userService.getSingle(id).subscribe(result => {
             this.populateFields(result)
         })
     }

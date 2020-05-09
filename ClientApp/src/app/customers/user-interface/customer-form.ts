@@ -124,7 +124,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private getRecord(id: string | number) {
-        this.customerService.getSingle(id).then(result => {
+        this.customerService.getSingle(id).subscribe(result => {
             this.populateFields(result)
         }, () => {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')

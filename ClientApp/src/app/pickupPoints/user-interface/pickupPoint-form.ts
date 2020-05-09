@@ -2,7 +2,8 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Subject } from 'rxjs';
+import { forkJoin, Subject, Observable } from 'rxjs';
+import { Route } from 'src/app/routes/classes/route';
 import { RouteService } from 'src/app/routes/classes/route.service';
 import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
@@ -23,12 +24,13 @@ import { PickupPointService } from '../classes/pickupPoint.service';
 
 export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    routeId = 0
+    route = new Route
     activeRoute = 'form'
     form: FormGroup
     routes: any[]
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
+    routeId: any;
 
     constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService, private buttonClickService: ButtonClickService, private interactionService: InteractionService, private routeService: RouteService, public dialog: MatDialog) {
         this.activatedRoute.params.subscribe(p => {
@@ -36,7 +38,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
             if (p.pickupPointId) {
                 this.getRecord(p.pickupPointId)
             } else {
-                this.routeId = parseInt(this.router.url.split('/')[3], 10)
+                this.route.id = parseInt(this.router.url.split('/')[3], 10)
             }
         })
     }
@@ -167,7 +169,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     private getRecord(id: number) {
-        this.pickupPointService.getSingle(id).then(result => {
+        this.pickupPointService.getSingle(id).subscribe(result => {
             this.populateFields(result)
         }, () => {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
@@ -175,10 +177,14 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         })
     }
 
+    private getRouteDescription(): Observable<string> {
+        return this.routeService.getSingle(this.route.id)
+    }
+
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
-            routeId: ['', Validators.required], routeDescription: ['', Validators.required],
+            routeId: [this.route.id, Validators.required], routeDescription: ['', Validators.required],
             description: ['', [Validators.required, Validators.maxLength(128)]],
             exactPoint: ['', [Validators.required, Validators.maxLength(128)]],
             time: ['', [Validators.required, Validators.pattern('[0-9][0-9]:[0-9][0-9]')]],

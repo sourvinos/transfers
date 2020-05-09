@@ -124,7 +124,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private getRecord(id: string | number) {
-        this.portService.getSingle(id).then(result => {
+        this.portService.getSingle(id).subscribe(result => {
             this.populateFields(result)
         }, () => {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')

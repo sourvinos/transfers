@@ -9,7 +9,7 @@ import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-sh
 @Component({
     selector: 'pickuppoint-wrapper',
     templateUrl: './pickupPoint-wrapper.html',
-    styleUrls: ['../../shared/styles/lists.css', './pickupPoint-wrapper.css']
+    styleUrls: ['./pickupPoint-wrapper.css']
 })
 
 export class PickupPointWrapperComponent implements OnInit, OnDestroy {

@@ -70,7 +70,6 @@
                 <custom-table [records]="transfersFlat" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></custom-table>
             </div>
             <div id="footer">
-                <mat-divider></mat-divider>
                 <div id="buttons">
                     <button mat-flat-button class="secondary" id="assignDriver" [class.hidden]="queryResult.persons == 0" (click)="onAssignDriver()">Assign driver</button>
                     <button mat-flat-button class="secondary" id="createPdf" [class.hidden]="queryResult.persons == 0" (click)="onCreatePdf()">Create PDFs</button>

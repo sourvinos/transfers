@@ -12,8 +12,8 @@ export class DataService {
         return this.http.get<any[]>(this.url)
     }
 
-    async getSingle(id: string | number) {
-        return await this.http.get<any>(this.url + '/' + id).toPromise()
+    getSingle(id: string | number) {
+        return this.http.get<any>(this.url + '/' + id)
     }
 
     add(formData: any): Observable<any> {

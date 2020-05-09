@@ -124,7 +124,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private getRecord(id: string | number) {
-        this.driverService.getSingle(id).then(result => {
+        this.driverService.getSingle(id).subscribe(result => {
             this.populateFields(result)
         }, () => {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')

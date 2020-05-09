@@ -201,7 +201,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private getRecord(id: number) {
-        this.transferService.getSingle(id).then(result => {
+        this.transferService.getSingle(id).subscribe(result => {
             this.populateFields(result)
         }, () => {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')

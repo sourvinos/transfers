@@ -49,7 +49,6 @@
     </form>
     <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
     <div id="footer">
-        <mat-divider></mat-divider>
         <div id="buttons">
             <button mat-flat-button class="delete" *ngIf="form.value.id !== 0" id="delete" (click)="onDelete()">Delete</button>
             <button mat-flat-button class="primary" [disabled]="!form.valid" id="save" (click)="onSave()">Save</button>

@@ -152,7 +152,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private getRecord(id: string | number) {
-        this.routeService.getSingle(id).then(result => {
+        this.routeService.getSingle(id).subscribe(result => {
             this.populateFields(result)
         }, () => {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')

@@ -22,7 +22,7 @@
             </mat-form-field>
         </div>
     </form>
-    <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
+    <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
     <div id="footer">
         <div id="buttons">
             <button mat-flat-button class="delete" *ngIf="form.value.id !== 0" id="delete" (click)="onDelete()">Delete</button>

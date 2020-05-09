@@ -1,3 +1,7 @@
+#results {
+    margin-left: 0;
+}
+
 #content {
     align-content: flex-start;
     border-top: 1px solid var(--color-background);
@@ -17,7 +21,7 @@
 }
 
 #footer {
-    margin: 0;
+    margin: 2rem;
 }
 
 #footer #buttons {

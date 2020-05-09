@@ -124,7 +124,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     private getRecord(id: string | number) {
-        this.destinationService.getSingle(id).then(result => {
+        this.destinationService.getSingle(id).subscribe(result => {
             this.populateFields(result)
         }, () => {
             this.showSnackbar(this.messageService.showNotFoundRecord(), 'error')
