@@ -56,7 +56,7 @@ export class InteractionService {
     /**
      * Caller(s):
      *  transfer-list.ts
-     *  transfer-table.ts
+     *  custom-table.ts
      *
      * Subscriber(s):
      *  transfer-list.ts

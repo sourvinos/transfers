@@ -51,23 +51,20 @@
                     <div class="total"> {{ item.persons }} </div>
                 </div>
             </mat-expansion-panel>
-            <mat-expansion-panel class="summaryBlock" expanded="true" id="totals" disabled>
-                <mat-expansion-panel-header class="summaryHeader">
-                    <header id="header-totals">Persons</header>
-                </mat-expansion-panel-header>
-                <div *ngFor="let item of totals">
-                    <div class="item activeItem">
-                        <div class="description"> {{ item.description }} </div>
-                        <div class="total">{{ item.sum }}</div>
-                    </div>
-                </div>
-            </mat-expansion-panel>
         </mat-accordion>
     </div>
     <div id="listFormCombo">
         <div id="transferList">
             <div class="scrollable">
                 <custom-table [records]="transfersFlat" [headers]="headers" [widths]="widths" [visibility]="visibility" [justify]="justify" [fields]="fields"></custom-table>
+            </div>
+            <div id="totals">
+                <div *ngFor="let item of totals">
+                    <div class="selection">
+                        <div class="label"> {{ item.description }} </div>
+                        <div class="sum">{{ item.sum }}</div>
+                    </div>
+                </div>
             </div>
             <div id="footer">
                 <div id="buttons">

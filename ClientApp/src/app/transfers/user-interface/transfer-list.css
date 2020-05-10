@@ -32,7 +32,7 @@
 }
 
 #footer {
-    margin: 0;
+    margin: 2rem 0 0 0;
 }
 
 #footer #buttons {
@@ -40,10 +40,6 @@
     display: flex;
     justify-content: flex-end;
     margin-right: 1rem;
-}
-
-#totals {
-    grid-area: totals;
 }
 
 #transferList {
@@ -73,10 +69,6 @@
     color: var(--color-headers);
     font-family: var(--font-family-summary-block);
     font-size: var(--font-size-summary-block-header);
-}
-
-.summaryBlock header#header-totals {
-    padding-left: 0.9rem !important;
 }
 
 .summaryBlock .item {
@@ -113,4 +105,31 @@
 
 .activeItem {
     border-left-color: var(--color-summary-block-item-border-active) !important;
+}
+
+#totals {
+    display: flex;
+    justify-content: flex-end;
+    margin: 2rem 1rem 0 0 !important;
+    text-align: right;
+}
+
+.selection {
+    align-items: baseline;
+    display: flex;
+    font-family: var(--font-family-headers);
+    font-size: var(--font-size-table-rows);
+    margin: 0 1rem 0 1rem;
+    text-align: right;
+}
+
+.selection .label {
+    color: var(--color-label);
+    font-size: var(--font-size-label);
+    margin: 0 0.5rem 0 0;
+}
+
+.selection .sum {
+    color: var(--color-sum);
+    font-size: var(--font-size-sum)
 }

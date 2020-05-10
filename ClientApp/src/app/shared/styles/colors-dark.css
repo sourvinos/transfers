@@ -76,4 +76,7 @@
     --color-select-background-color: #373F46;
     --color-select-border: #fe9f36;
     --color-select-option-color: #b3b2b2;
+    /* Transfers totals */
+    --color-label: #b3b2b2;
+    --color-sum: #fe9f36;
 }

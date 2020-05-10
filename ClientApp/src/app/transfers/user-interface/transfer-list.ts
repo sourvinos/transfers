@@ -84,7 +84,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     ngAfterViewChecked() {
-        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - 102 + 'px'
+        document.getElementById('summaries').style.height = document.getElementById('listFormCombo').offsetHeight - 125 + 'px'
     }
 
     ngDoCheck() {
@@ -250,8 +250,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     private isRecordSelected() {
-        this.records = JSON.parse(localStorage.getItem('selectedIds'))
-        if (this.records == null || this.records.length === 0) {
+        if (this.totals[2].sum === 0) {
             this.showSnackbar(this.messageService.noRecordsSelected(), 'error')
             return false
         }

@@ -31,6 +31,9 @@
     --font-size-table-rows: 0.9rem;
     /* Instructions */
     --font-size-paragraphs: 0.8rem;
+    /* Transfers totals */
+    --font-size-label: 0.7rem;
+    --font-size-sum: 1rem;
 }
 
 * {

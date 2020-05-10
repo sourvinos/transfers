@@ -10,8 +10,6 @@ import { InteractionService } from 'src/app/shared/services/interaction.service'
 
 export class CustomTableComponent implements OnInit, AfterViewInit, DoCheck {
 
-    // #region Variables
-
     @Input() records: any[]
     @Input() headers: any
     @Input() widths: any
@@ -29,8 +27,6 @@ export class CustomTableComponent implements OnInit, AfterViewInit, DoCheck {
     sortOrder = 'desc'
     differences: IterableDiffer<any>;
     randomTableId = Math.floor(Math.random() * 1000) + 1
-
-    // #endregion
 
     constructor(private interactionService: InteractionService, private indexInteractionService: IndexInteractionService, private iterableDiffers: IterableDiffers) { }
 

@@ -117,16 +117,18 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            'Escape': (): void => {
+            'Escape': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
-                    this.onGoBack()
+                    this.buttonClickService.clickOnButton(event, 'goBack')
                 }
             },
-            'Alt.D': (event: KeyboardEvent): void => {
+            'Alt.D': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'delete')
             },
             'Alt.S': (event: KeyboardEvent): void => {
-                this.buttonClickService.clickOnButton(event, 'save')
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
+                    this.buttonClickService.clickOnButton(event, 'save')
+                }
             },
             'Alt.C': (event: KeyboardEvent): void => {
                 if (document.getElementsByClassName('cdk-overlay-pane').length !== 0) {
@@ -139,7 +141,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
                 }
             }
         }, {
-            priority: 2,
+            priority: 0,
             inputs: true
         })
     }

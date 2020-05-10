@@ -60,17 +60,17 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
 
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
-            'Escape': () => {
-                this.onGoBack()
+            'Escape': (event: KeyboardEvent) => {
+                this.buttonClickService.clickOnButton(event, 'goBack')
             },
-            'Alt.F': (event: KeyboardEvent): void => {
+            'Alt.F': (event: KeyboardEvent) => {
                 this.focus(event, 'searchField')
             },
             'Alt.N': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'new')
             },
         }, {
-            priority: 1,
+            priority: 0,
             inputs: true
         })
     }
