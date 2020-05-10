@@ -74,7 +74,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
             this.updateSelectedArraysFromLocalStorage()
         } else {
             this.updateSelectedArraysFromInitialResults()
-            this.saveToLocalStorage()
+            this.saveArraysToLocalStorage()
         }
         this.addActiveClassToSelectedArrays()
         this.filterByCriteria()
@@ -136,13 +136,14 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         })
     }
 
-    onToggleItem(item: any, lookupArray: string[]) {
+    onToggleItem(item: any, lookupArray: string[], checkedVariable, className: string) {
         this.toggleActiveItem(item, lookupArray)
         this.initCheckedPersons()
         this.filterByCriteria()
         this.updateTotals()
         this.flattenResults()
-        this.saveToLocalStorage()
+        this.saveArraysToLocalStorage()
+        this.checkToToggleHeaderCheckbox(lookupArray, checkedVariable, className)
     }
 
     onToggleItems(className: string, lookupArray: { splice: (arg0: number) => void }, checkedArray: any) {
@@ -193,6 +194,15 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
             priority: 2,
             inputs: true
         })
+    }
+
+    private checkToToggleHeaderCheckbox(lookupArray: string[], checkedVariable: any, className: string) {
+        if (lookupArray.length === 0) {
+            this[checkedVariable] = false
+        }
+        if (lookupArray.length === document.getElementsByClassName('item ' + className).length) {
+            this[checkedVariable] = true
+        }
     }
 
     private editRecord(id: number) {
@@ -277,7 +287,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         localStorage.removeItem('selectedIds')
     }
 
-    private saveToLocalStorage() {
+    private saveArraysToLocalStorage() {
         const summaryItems = {
             'destinations': JSON.stringify(this.selectedDestinations),
             'customers': JSON.stringify(this.selectedCustomers),
