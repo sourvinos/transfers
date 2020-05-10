@@ -1,42 +1,26 @@
-#results {
+#header {
+    align-items: center;
     display: grid;
+    grid-area: header;
     grid-template-areas:
-        "listFormCombo";
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    height: 100%;
-    margin-left: 2rem;
-}
-
-#listFormCombo {
-    align-items: flex-start;
-    display: flex;
-    flex-direction: row;
-    grid-area: listFormCombo;
-    height: 100%;
-    justify-content: flex-start;
-    overflow-y: hidden;
-}
-
-#pickupPointList {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-}
-
-.scrollable {
-    margin: 2rem 2rem 0 2rem;
-    width: auto;
-}
-
-#footer {
+        "navigation title searchbox";
+    grid-template-columns: fit-content(0%) 1fr auto;
+    grid-template-rows: 66px;
     margin: 2rem;
 }
 
-#footer #buttons {
-    align-items: flex-end;
+#header #navigation {
+    align-items: center;
     display: flex;
-    justify-content: flex-end;
-    margin-right: 1rem;
+    grid-area: "navigation";
+    justify-content: flex-start;
+    margin: 0 0 0 1rem;
+}
+
+span#routeDescription {
+    color: var(--color-headers);
+    font-family: var(--font-family-headers);
+    font-size: 24px;
+    font-weight: bold;
+    margin: 4px 0 0 10px;
 }

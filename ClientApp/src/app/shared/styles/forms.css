@@ -12,11 +12,10 @@
     display: grid;
     grid-area: header;
     grid-template-areas:
-        "navigation title"
-        "divider divider";
+        "navigation title";
     grid-template-columns: fit-content(0%) auto;
-    grid-template-rows: 45px auto;
-    margin: 2rem 2rem 0 2rem;
+    grid-template-rows: 66px;
+    margin: 2rem;
 }
 
 #header #title {
@@ -56,7 +55,7 @@
 
 #footer {
     grid-area: footer;
-    margin: 0 2rem 2rem 2rem;
+    margin: 2rem;
 }
 
 #footer #buttons {

@@ -24,6 +24,7 @@ button.delete {
 
 button.navigation {
     background-color: var(--color-navigation-button) !important;
+    margin: 0 !important;
     outline: 0 !important;
 }
 

@@ -2,13 +2,11 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, Subject, Observable } from 'rxjs';
-import { Route } from 'src/app/routes/classes/route';
+import { forkJoin, Subject } from 'rxjs';
 import { RouteService } from 'src/app/routes/classes/route.service';
 import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
-import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
@@ -19,33 +17,30 @@ import { PickupPointService } from '../classes/pickupPoint.service';
 @Component({
     selector: 'pickuppoint-form',
     templateUrl: './pickupPoint-form.html',
-    styleUrls: ['./pickupPoint-form.css']
+    styleUrls: ['../../shared/styles/forms.css']
 })
 
 export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    route = new Route
-    activeRoute = 'form'
     form: FormGroup
     routes: any[]
+    routeId: number
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
-    routeId: any;
 
-    constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService, private buttonClickService: ButtonClickService, private interactionService: InteractionService, private routeService: RouteService, public dialog: MatDialog) {
+    constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService, private buttonClickService: ButtonClickService, private routeService: RouteService, public dialog: MatDialog) {
         this.activatedRoute.params.subscribe(p => {
-            this.interactionService.activeRoute(this.activeRoute)
             if (p.pickupPointId) {
                 this.getRecord(p.pickupPointId)
             } else {
-                this.route.id = parseInt(this.router.url.split('/')[3], 10)
+                this.routeId = parseInt(this.router.url.split('/')[3], 10)
+                this.patchRouteFields()
             }
         })
     }
 
     ngOnInit() {
         this.initForm()
-        this.scrollToForm()
         this.addShortcuts()
         this.populateDropDowns()
     }
@@ -65,13 +60,11 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
             this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToAbortEditing(), ['cancel', 'ok']).subscribe(response => {
                 if (response) {
                     this.resetForm()
-                    this.scrollToList()
                     this.onGoBack()
                     return true
                 }
             })
         } else {
-            this.scrollToList()
             return true
         }
     }
@@ -160,14 +153,6 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         this.helperService.setFocus(field)
     }
 
-    private getListHeight() {
-        return document.getElementById('listFormCombo').offsetHeight + 'px'
-    }
-
-    private getFormWidth() {
-        return document.getElementById('listFormCombo').offsetWidth + 'px'
-    }
-
     private getRecord(id: number) {
         this.pickupPointService.getSingle(id).subscribe(result => {
             this.populateFields(result)
@@ -177,14 +162,10 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         })
     }
 
-    private getRouteDescription(): Observable<string> {
-        return this.routeService.getSingle(this.route.id)
-    }
-
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
-            routeId: [this.route.id, Validators.required], routeDescription: ['', Validators.required],
+            routeId: [0, Validators.required], routeDescription: ['', Validators.required],
             description: ['', [Validators.required, Validators.maxLength(128)]],
             exactPoint: ['', [Validators.required, Validators.maxLength(128)]],
             time: ['', [Validators.required, Validators.pattern('[0-9][0-9]:[0-9][0-9]')]],
@@ -206,6 +187,16 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
                 this.form.patchValue({ [field]: '' })
             })
         }
+    }
+
+    private patchRouteFields() {
+        setTimeout(() => {
+            const route: any[] = this.routes.filter(x => x.routeId === this.routeId)
+            this.form.patchValue({
+                routeId: route[0].id,
+                routeDescription: route[0].routeDescription
+            })
+        }, 500)
     }
 
     private populateDropDowns() {
@@ -245,18 +236,6 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
 
     private resetForm() {
         this.helperService.resetForm(this.form)
-    }
-
-    private scrollToForm() {
-        document.getElementById('content').style.width = this.getFormWidth()
-        document.getElementById('content').style.height = this.getListHeight()
-        document.getElementById('pickupPointList').style.display = 'none'
-    }
-
-    private scrollToList() {
-        document.getElementById('content').style.display = 'none'
-        document.getElementById('pickupPointList').style.display = 'flex'
-        document.getElementById('custom-table-input').focus()
     }
 
     private showModalIndex(elements: any, title: string, fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[]) {

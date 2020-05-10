@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -18,7 +19,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     records: Customer[]
     filteredRecords: Customer[]
-    url = '/customers'
     resolver = 'customerList'
 
     headers = ['S', 'Id', 'Description', 'Phones', 'Email']
@@ -30,7 +30,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private interactionService: InteractionService, private buttonClickService: ButtonClickService, private helperService: HelperService) {
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private interactionService: InteractionService, private buttonClickService: ButtonClickService, private helperService: HelperService, private location: Location) {
         this.loadRecords()
     }
 
@@ -50,7 +50,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     }
 
     onNew() {
-        this.router.navigate([this.url + '/new'])
+        this.router.navigate([this.location.path() + '/new'])
     }
 
     private addShortcuts() {
@@ -71,7 +71,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     }
 
     private editRecord(id: number) {
-        this.router.navigate([this.url, id])
+        this.router.navigate([this.location.path(), id])
     }
 
     private focus(event: KeyboardEvent, element: string) {

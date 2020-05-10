@@ -1,29 +1,27 @@
 import { Location } from '@angular/common';
-import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Params, Route, Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.service';
-import { InteractionService } from 'src/app/shared/services/interaction.service';
+import { RouteService } from 'src/app/routes/classes/route.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
+import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { PickupPoint } from '../classes/pickupPoint';
 
 @Component({
     selector: 'pickuppoint-list',
     templateUrl: './pickupPoint-list.html',
-    styleUrls: ['./pickupPoint-list.css']
+    styleUrls: ['../../shared/styles/lists.css', './pickupPoint-list.css']
 })
 
-export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
+export class PickupPointListComponent implements OnInit, OnDestroy {
 
-    wrapperUrl = '/pickupPoints'
+    records: PickupPoint[]
+    filteredRecords: PickupPoint[]
     resolver = 'pickupPointList'
-    activeRoute = 'list'
-    routeId: string
-    routes: Route[]
-    pickupPoints: PickupPoint[]
-    mustRefresh = true
+    routeDescription: string
 
     headers = ['S', 'Id', 'Description', 'Exact point', 'Time']
     widths = ['40px', '0', '45%', '', '100px']
@@ -34,15 +32,11 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: InteractionService, private pickupPointService: PickupPointService, private keyboardShortcutsService: KeyboardShortcuts, private buttonClickService: ButtonClickService, private location: Location) {
-        this.activatedRoute.params.subscribe((params: Params) => this.routeId = params['routeId'])
-        this.router.events.subscribe((navigation: any) => {
-            if (navigation instanceof NavigationEnd && this.routeId !== '' && this.router.url.split('/').length === 4) {
-                this.interactionService.activeRoute(this.activeRoute)
-                this.mustRefresh = true
-                this.loadRecords()
-            }
+    constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: InteractionService, private routeService: RouteService, private keyboardShortcutsService: KeyboardShortcuts, private buttonClickService: ButtonClickService, private location: Location, private helperService: HelperService) {
+        this.activatedRoute.params.subscribe(p => {
+            this.getRouteDescription(p.routeId)
         })
+        this.loadRecords()
     }
 
     ngOnInit() {
@@ -50,16 +44,14 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
         this.subscribeToInteractionService()
     }
 
-    ngDoCheck() {
-        if (this.mustRefresh) {
-            this.mustRefresh = false
-        }
-    }
-
     ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
         this.unlisten()
+    }
+
+    onFilter(query: string) {
+        this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
     onNew() {
@@ -71,6 +63,9 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
             'Escape': () => {
                 this.onGoBack()
             },
+            'Alt.F': (event: KeyboardEvent): void => {
+                this.focus(event, 'searchField')
+            },
             'Alt.N': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'new')
             },
@@ -81,30 +76,32 @@ export class PickupPointListComponent implements OnInit, DoCheck, OnDestroy {
     }
 
     private editRecord(id: number) {
-        this.navigateToEditRoute(id)
-    }
-
-    private loadRecords() {
-        this.pickupPoints = this.activatedRoute.snapshot.data[this.resolver]
-        this.pickupPoints.sort((a, b) => (a.description > b.description) ? 1 : -1)
-    }
-
-    private navigateToEditRoute(id: number) {
         this.router.navigate(['pickupPoint/', id], { relativeTo: this.activatedRoute })
     }
 
+    private focus(event: KeyboardEvent, element: string) {
+        event.preventDefault()
+        this.helperService.setFocus(element)
+    }
+
+    private getRouteDescription(routeId: number) {
+        this.routeService.getSingle(routeId).subscribe(result => {
+            this.routeDescription = result.description
+        })
+    }
+
+    private loadRecords() {
+        this.records = this.activatedRoute.snapshot.data[this.resolver]
+        this.filteredRecords = this.records.sort((a, b) => (a.description > b.description) ? 1 : -1)
+    }
+
     private onGoBack() {
-        this.router.navigate(['/'])
+        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
     private subscribeToInteractionService() {
         this.interactionService.record.pipe(takeUntil(this.ngUnsubscribe)).subscribe(response => {
             this.editRecord(response['id'])
-        })
-        this.interactionService.refreshList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
-            this.pickupPointService.getAllForRoute(this.routeId).subscribe(result => {
-                this.pickupPoints = result
-            })
         })
     }
 

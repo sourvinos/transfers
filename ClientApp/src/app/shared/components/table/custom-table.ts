@@ -141,7 +141,7 @@ export class CustomTableComponent implements OnInit, AfterViewInit, DoCheck {
     private initVariables() {
         this.table = document.getElementById('custom-table-' + this.randomTableId)
         this.tableContainer = this.table.parentNode.parentNode
-        this.rowHeight = this.table.rows[1].offsetHeight
+        this.rowHeight = this.table.rows[1] ? this.table.rows[1].offsetHeight : 0
         this.rowCount = this.table.rows.length - 1
     }
 
@@ -174,7 +174,7 @@ export class CustomTableComponent implements OnInit, AfterViewInit, DoCheck {
             if (direction === 'down') { ++this.currentRow }
         }
         document.getElementById('custom-table-input').focus()
-        table.rows[this.currentRow].classList.add('selected')
+        if (this.rowHeight !== 0) { table.rows[this.currentRow].classList.add('selected') }
     }
 
     private sendRowToBaseService() {
