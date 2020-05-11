@@ -19,7 +19,7 @@
 }
 
 #header #title {
-    align-items: center;
+    align-items: baseline;
     display: flex;
     grid-area: title;
     justify-content: flex-start;

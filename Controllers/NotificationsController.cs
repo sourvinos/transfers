@@ -15,8 +15,8 @@ namespace Transfers {
             return View();
         }
 
-        public IActionResult ResetPasswordConfirmation() {
-            return View();
+        public IActionResult UserNotFound() {
+            return Redirect("/login");
         }
 
     }

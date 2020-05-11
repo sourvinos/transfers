@@ -79,4 +79,6 @@
     /* Transfers totals */
     --color-label: #474747;
     --color-sum: #734230;
+    /* Route description at pickup point list */
+    --color-route-description: #d47e5e;
 }

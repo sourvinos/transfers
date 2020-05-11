@@ -18,7 +18,7 @@
 }
 
 span#routeDescription {
-    color: var(--color-headers);
+    color: var(--color-route-description);
     font-family: var(--font-family-headers);
     font-size: 24px;
     font-weight: bold;

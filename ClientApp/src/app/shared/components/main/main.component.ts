@@ -19,7 +19,6 @@ export class MainComponent implements AfterViewInit {
     onToggleMenu() {
         document.getElementById('hamburger').classList.toggle('open')
         const sidebar = document.getElementById('sidebar')
-        const main = document.getElementById('main')
         sidebar.style.width = sidebar.style.width === '17rem' ? '0' : '17rem'
     }
 

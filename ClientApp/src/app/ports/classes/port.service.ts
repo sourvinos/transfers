@@ -7,7 +7,7 @@ import { DataService } from 'src/app/shared/services/data.service'
 
 export class PortService extends DataService {
 
-    constructor(private httpClient: HttpClient) {
+    constructor(httpClient: HttpClient) {
         super(httpClient, '/api/ports')
     }
 

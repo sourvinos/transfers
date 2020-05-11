@@ -21,7 +21,7 @@
     --color-button-secondary: #5A75BC;
     --color-button-text-all: #FFFDDD;
     --color-button-text-secondary: #FFFDDD;
-    --color-button-text-transparent: #373f46;
+    --color-button-text-transparent: #939393;
     /* Input boxes */
     --color-input-text-caret: #ffffff;
     --color-input-text-selected: #5F5E5E;
@@ -79,4 +79,6 @@
     /* Transfers totals */
     --color-label: #b3b2b2;
     --color-sum: #fe9f36;
+    /* Route description at pickup point list */
+    --color-route-description: #d47e5e;
 }

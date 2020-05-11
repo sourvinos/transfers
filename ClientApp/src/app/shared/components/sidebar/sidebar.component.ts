@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnInit } from '@angular/core'
 import { Observable } from 'rxjs'
 import { AccountService } from '../../services/account.service'
 import { CountdownService } from '../../services/countdown.service'
-import { Router } from '@angular/router'
 
 @Component({
     selector: 'app-sidebar',
@@ -17,7 +16,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     loginStatus: Observable<boolean>
     displayName: Observable<string>
 
-    constructor(private accountService: AccountService, private countdownService: CountdownService, private router: Router) {
+    constructor(private accountService: AccountService, private countdownService: CountdownService) {
         this.countdownService.reset()
         this.countdownService.countdown.subscribe(data => { this.countdown = data })
     }

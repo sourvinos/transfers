@@ -26,10 +26,6 @@ export class Transfer {
         id: number,
         description: string
     }
-    port: {
-        id: number,
-        description: string
-    }
     adults: number
     kids: number
     free: number

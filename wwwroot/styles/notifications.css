@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Anton&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans&display=swap');
 
-body {
-    margin: 0;
+body, h1, h2, h3, p {
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 #content {
@@ -13,15 +15,47 @@ body {
     justify-content: center;
 }
 
-h3 {
-    font-family: "Noto Sans";
-    font-size: 1.5rem;
+#companyLogo {
+    cursor: pointer;
+    font-family: "Anton";
+    margin: 0 auto 1.5rem;
+    outline: 0;
+    text-align: center;
 }
 
-h3#info {
+#companyLogo>:first-child {
+    color: #FE9F36 !important;
+    font-size: 4.375rem !important;
+}
+
+#companyLogo>:last-child {
+    color: #FFE85C !important;
+    font-size: 2.5rem !important;
+    font-weight: normal !important;
+    margin: -1rem 0 0 0 !important;
+}
+
+#message {
     color: #ffc788;
+    font-family: "Anton";
+    font-size: 1.6rem;
 }
 
-h3#error {
-    color: #FC3B3B;
+.error {
+    color: #EF1717 !important;
+}
+
+input[type=submit] {
+    background-color: #57617B !important;
+    border-radius: 5px;
+    border: none;
+    color: #FFFDDD !important;
+    cursor: pointer !important;
+    font-family: "Noto Sans" !important;
+    font-size: 1rem;
+    font-weight: 100 !important;
+    margin: 2rem 0 0 0 !important;
+    min-width: 0 !important;
+    outline: 0 !important;
+    padding: 1rem 2rem 1rem 2rem !important;
 }

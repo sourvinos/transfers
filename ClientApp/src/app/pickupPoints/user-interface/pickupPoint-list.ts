@@ -54,6 +54,10 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
         this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
+    onGoBack() {
+        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
+    }
+
     onNew() {
         this.router.navigate([this.location.path() + '/pickupPoint/new'])
     }
@@ -93,10 +97,6 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
     private loadRecords() {
         this.records = this.activatedRoute.snapshot.data[this.resolver]
         this.filteredRecords = this.records.sort((a, b) => (a.description > b.description) ? 1 : -1)
-    }
-
-    private onGoBack() {
-        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
     private subscribeToInteractionService() {
