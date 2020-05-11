@@ -10,6 +10,7 @@ import {
     MatInputModule,
     MatProgressBarModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatSnackBarModule,
     MAT_LABEL_GLOBAL_OPTIONS, MAT_SNACK_BAR_DEFAULT_OPTIONS
 } from '@angular/material'
@@ -24,9 +25,10 @@ import {
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
-        MatSelectModule,
         MatProgressBarModule,
-        MatSnackBarModule
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatSnackBarModule,
     ],
     providers: [
         { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } },

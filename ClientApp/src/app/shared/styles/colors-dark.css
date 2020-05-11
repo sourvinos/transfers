@@ -81,4 +81,7 @@
     --color-sum: #fe9f36;
     /* Route description at pickup point list */
     --color-route-description: #d47e5e;
+    /* Checkboxes*/
+    --color-bar-checked: #FFE85C;
+    --color-thumb-checked: #fe9f36;
 }

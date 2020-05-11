@@ -36,3 +36,16 @@
 .mat-checkbox-checked .mat-checkbox-checkmark {
     background-color: var(--color-checkbox-checked);
 }
+
+.mat-slide-toggle-content {
+    color: var(--color-input-not-focus);
+    font-family: var(--font-family-checkbox) !important;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+    background-color: var(--color-bar-checked) !important;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: var(--color-thumb-checked) !important;
+}

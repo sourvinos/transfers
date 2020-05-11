@@ -15,6 +15,7 @@ namespace Transfers {
         public static string PasswordChanged() { return "Password was changed successfully."; }
         public static string AuthenticationFailed() { return "Authentication failed."; }
         public static string UserNotFound() { return "User not found."; }
+        public static string DefaultDriverAlreadyExists() { return "Default driver already exists."; }
 
     }
 

@@ -34,15 +34,17 @@ namespace Transfers {
         }
 
         [HttpPost]
-        public IActionResult PostDriver([FromBody] Driver Driver) {
+        public async Task<IActionResult> PostDriver([FromBody] Driver Driver) {
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
+            if (await repo.CheckForDuplicateDefaultDriver(null, Driver)) { return BadRequest(new { response = ApiMessages.DefaultDriverAlreadyExists() }); };
             repo.Create(Driver);
             return Ok(new { response = ApiMessages.RecordCreated() });
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutDriver([FromRoute] int id, [FromBody] Driver Driver) {
+        public async Task<IActionResult> PutDriver([FromRoute] int id, [FromBody] Driver Driver) {
             if (id != Driver.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
+            if (await repo.CheckForDuplicateDefaultDriver(id, Driver)) { return BadRequest(new { response = ApiMessages.DefaultDriverAlreadyExists() }); };
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
             try {
                 repo.Update(Driver);

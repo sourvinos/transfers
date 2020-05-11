@@ -78,6 +78,8 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
                 this.focus('description')
                 this.resetForm()
+            }, () => {
+                this.showSnackbar(this.messageService.defaultDriverAlreadyExists(), 'error')
             })
         } else {
             this.driverService.update(this.form.value.id, this.form.value).subscribe(() => {
@@ -137,6 +139,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
             id: 0,
             description: ['', [Validators.required, Validators.maxLength(128)]],
             phones: ['', [Validators.maxLength(128)]],
+            isDefault: false,
             userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
@@ -150,6 +153,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
             id: result.id,
             description: result.description,
             phones: result.phones,
+            isDefault: result.isDefault,
             userName: result.userName
         })
     }
@@ -170,6 +174,10 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     get phones() {
         return this.form.get('phones')
+    }
+
+    get isDefault() {
+        return this.form.get('isDefault')
     }
 
     // #endregion
