@@ -5,15 +5,16 @@ import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { DriverService } from 'src/app/drivers/classes/driver.service'
-import { InteractionService } from 'src/app/shared/services/interaction.service'
 import { ButtonClickService } from 'src/app/shared/services/button-click.service'
 import { HelperService } from 'src/app/shared/services/helper.service'
+import { InteractionService } from 'src/app/shared/services/interaction.service'
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { MessageService } from 'src/app/shared/services/message.service'
 import { SnackbarService } from 'src/app/shared/services/snackbar.service'
 import { TransferPdfService } from '../classes/transfer-pdf.service'
 import { TransferService } from '../classes/transfer.service'
 import { TransferFlat } from '../classes/transferFlat'
+import { TransferViewModel } from './../classes/transferViewModel'
 import { TransferAssignDriverComponent } from './transfer-assign-driver'
 
 @Component({
@@ -27,8 +28,8 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     wrapperUrl = '/transfers'
     resolver = 'transferList'
     dateIn: string
-    queryResult: any = {}
-    queryResultClone: any = {}
+    queryResult = new TransferViewModel()
+    queryResultClone = new TransferViewModel()
     records: string[] = []
     totals: any[] = []
     selectedDestinations: string[] = []
@@ -179,7 +180,9 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     private addShortcuts() {
         this.unlisten = this.keyboardShortcutsService.listen({
             'Escape': () => {
-                this.onGoBack()
+                if (document.getElementsByClassName('cdk-overlay-pane').length === 0) {
+                    this.onGoBack()
+                }
             },
             'Alt.A': (event: KeyboardEvent) => {
                 this.buttonClickService.clickOnButton(event, 'assignDriver')
@@ -222,7 +225,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.transfersFlat.splice(0)
         for (const {
             id: a,
-            destination: { abbreviation: b },
+            destination: { description: b },
             customer: { description: c },
             adults: d,
             kids: e,
@@ -264,6 +267,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
             this.showSnackbar(this.messageService.noRecordsSelected(), 'error')
             return false
         }
+        this.records = JSON.parse(localStorage.getItem('selectedIds'))
         return true
     }
 

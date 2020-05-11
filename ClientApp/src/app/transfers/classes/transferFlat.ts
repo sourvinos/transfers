@@ -1,5 +1,5 @@
 export class TransferFlat {
-    id: string
+    id: number
     destination: string
     customer: string
     route: string

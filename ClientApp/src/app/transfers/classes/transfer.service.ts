@@ -12,8 +12,8 @@ export class TransferService extends DataService {
         super(http, '/api/transfers')
     }
 
-    getTransfers(date: string): Observable<TransferViewModel[]> {
-        return this.http.get<TransferViewModel[]>('/api/transfers/date/' + date)
+    getTransfers(date: string): Observable<TransferViewModel> {
+        return this.http.get<TransferViewModel>('/api/transfers/date/' + date)
     }
 
     assignDriver(driverId: string, ids: string[]) {

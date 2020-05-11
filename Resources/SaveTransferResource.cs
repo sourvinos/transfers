@@ -18,7 +18,7 @@ namespace Transfers {
         public int CustomerId { get; set; }
         public int PickupPointId { get; set; }
         public int DestinationId { get; set; }
-        public int DriverId { get; set; }
+        public int? DriverId { get; set; }
 
     }
 

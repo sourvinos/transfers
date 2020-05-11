@@ -8,6 +8,7 @@ export class Transfer {
     pickupPoint: {
         id: number,
         description: string
+        time: string,
         route: {
             id: number
             description: string,

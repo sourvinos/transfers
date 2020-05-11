@@ -3,7 +3,9 @@ import { Transfer } from './transfer'
 export class TransferViewModel {
     persons: number
     transfers: Transfer[]
-    personsPerCustomer: number[]
-    personsPerDestination: number[]
-    personsPerRoute: number[]
+    personsPerDestination: any[]
+    personsPerCustomer: any[]
+    personsPerRoute: any[]
+    personsPerDriver: any[]
+    personsPerPort: any[]
 }
