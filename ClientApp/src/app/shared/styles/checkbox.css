@@ -40,6 +40,9 @@
 .mat-slide-toggle-content {
     color: var(--color-input-not-focus);
     font-family: var(--font-family-checkbox) !important;
+    font-size: var(--font-size-checkbox) !important;
+    font-weight: bold;
+    ;
 }
 
 .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {

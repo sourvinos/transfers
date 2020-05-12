@@ -178,10 +178,6 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.form.get('phones')
     }
 
-    get isDefault() {
-        return this.form.get('isDefault')
-    }
-
     // #endregion
 
 }

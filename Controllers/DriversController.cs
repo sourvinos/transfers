@@ -36,7 +36,8 @@ namespace Transfers {
         [HttpPost]
         public async Task<IActionResult> PostDriver([FromBody] Driver Driver) {
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
-            if (await repo.CheckForDuplicateDefaultDriver(null, Driver)) { return BadRequest(new { response = ApiMessages.DefaultDriverAlreadyExists() }); };
+            var defaultDriver = await repo.CheckDefaultDriverExists(null, Driver);
+            if (defaultDriver != null) { return BadRequest(new { response = ApiMessages.DefaultDriverAlreadyExists(defaultDriver) }); };
             repo.Create(Driver);
             return Ok(new { response = ApiMessages.RecordCreated() });
         }
@@ -44,7 +45,8 @@ namespace Transfers {
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDriver([FromRoute] int id, [FromBody] Driver Driver) {
             if (id != Driver.Id) return BadRequest(new { response = ApiMessages.InvalidId() });
-            if (await repo.CheckForDuplicateDefaultDriver(id, Driver)) { return BadRequest(new { response = ApiMessages.DefaultDriverAlreadyExists() }); };
+            var defaultDriver = await repo.CheckDefaultDriverExists(null, Driver);
+            if (defaultDriver != null) { return BadRequest(new { response = ApiMessages.DefaultDriverAlreadyExists(defaultDriver) }); };
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
             try {
                 repo.Update(Driver);

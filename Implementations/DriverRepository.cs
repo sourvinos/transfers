@@ -11,17 +11,19 @@ namespace Transfers {
             return await context.Drivers.AsNoTracking().SingleOrDefaultAsync(m => m.IsDefault);
         }
 
-        async Task<bool> IDriverRepository.CheckForDuplicateDefaultDriver(int? id, Driver driver) {
+        async Task<string> IDriverRepository.CheckDefaultDriverExists(int? id, Driver driver) {
             if (driver.IsDefault) {
                 if (id == null) {
-                    var defaultDriver = await context.Drivers.AsNoTracking().Where(m => m.IsDefault).ToListAsync();
-                    return true;
+                    var defaultDriver = await context.Drivers.AsNoTracking().Where(m => m.IsDefault).FirstOrDefaultAsync();
+                    if (defaultDriver != null)
+                        return defaultDriver.Description;
                 } else {
-                    var defaultDriver = await context.Drivers.AsNoTracking().Where(m => m.Id != id).Where(m => m.IsDefault).ToListAsync();
-                    return true;
+                    var defaultDriver = await context.Drivers.AsNoTracking().Where(m => m.Id != id && m.IsDefault).FirstOrDefaultAsync();
+                    if (defaultDriver != null)
+                        return defaultDriver.Description;
                 }
             }
-            return false;
+            return null;
         }
 
     }

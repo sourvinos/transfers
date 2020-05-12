@@ -9,8 +9,8 @@
     /* Font sizes */
     /* All headers */
     --font-size-headers: 2rem;
-    /* Labels */
-    --font-size-labels: 0.8rem;
+    /* Checkboxes */
+    --font-size-checkbox: 0.9rem;
     /* Dialogs */
     --font-size-mat-dialog-title: 2.0rem;
     --font-size-mat-dialog-content: 1.1rem;
