@@ -21,11 +21,11 @@ export class DriverListComponent implements OnInit, OnDestroy {
     url = '/drivers'
     resolver = 'driverList'
 
-    headers = ['S', 'Id', 'Name', 'Phones']
-    widths = ['40px', '0px', '50%', '']
-    visibility = ['none', 'none', '', '']
-    justify = ['center', 'center', 'left', 'left']
-    fields = ['', 'id', 'description', 'phones']
+    headers = ['S', 'Id', 'Name', 'Phones', 'D']
+    widths = ['40px', '0px', '50%', '', '100px']
+    visibility = ['none', 'none', '', '', '']
+    justify = ['center', 'center', 'left', 'left', 'center']
+    fields = ['', 'id', 'description', 'phones', 'isDefault']
 
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()

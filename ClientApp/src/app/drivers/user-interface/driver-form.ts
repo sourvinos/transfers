@@ -78,14 +78,16 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
                 this.focus('description')
                 this.resetForm()
-            }, () => {
-                this.showSnackbar(this.messageService.defaultDriverAlreadyExists(), 'error')
+            }, error => {
+                this.showSnackbar(error, 'error')
             })
         } else {
             this.driverService.update(this.form.value.id, this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showUpdatedRecord(), 'info')
                 this.resetForm()
                 this.onGoBack()
+            }, error => {
+                this.showSnackbar(error, 'error')
             })
         }
     }

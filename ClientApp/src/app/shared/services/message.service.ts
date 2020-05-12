@@ -14,6 +14,5 @@ export class MessageService {
     public noRecordsSelected() { return 'No records have been selected.' }
     public recordsHaveBeenProcessed() { return 'All records have been processed.' }
     public noDefaultDriverFound() { return 'No default driver found.' }
-    public defaultDriverAlreadyExists() { return 'Default driver already exists.' }
 
 }
