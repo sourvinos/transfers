@@ -1,3 +1,4 @@
+import { Destination } from './../classes/destination';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -137,6 +138,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
             id: 0,
             abbreviation: ['', [Validators.maxLength(5)]],
             description: ['', [Validators.required, Validators.maxLength(128)]],
+            isActive: true,
             userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
@@ -145,11 +147,12 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         this.router.navigate([this.url])
     }
 
-    private populateFields(result: any) {
+    private populateFields(result: Destination) {
         this.form.setValue({
             id: result.id,
             abbreviation: result.abbreviation,
             description: result.description,
+            isActive: result.isActive,
             userName: result.userName
         })
     }

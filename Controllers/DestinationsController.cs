@@ -19,6 +19,11 @@ namespace Transfers {
             return await repo.Get();
         }
 
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<Destination>> GetActive() {
+            return await repo.GetActive();
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDestination(int id) {
             Destination Destination = await repo.GetById(id);

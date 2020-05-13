@@ -245,7 +245,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private populateDropDowns() {
         const sources = []
-        sources.push(this.destinationService.getAll())
+        sources.push(this.destinationService.getAllActive())
         sources.push(this.customerService.getAllActive())
         sources.push(this.pickupPointService.getAll())
         sources.push(this.driverService.getAll())
