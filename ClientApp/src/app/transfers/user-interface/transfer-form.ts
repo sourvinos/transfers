@@ -19,6 +19,7 @@ import { MessageService } from 'src/app/shared/services/message.service'
 import { SnackbarService } from 'src/app/shared/services/snackbar.service'
 import { Transfer } from '../classes/transfer'
 import { TransferService } from '../classes/transfer.service'
+import { PickupPointFlat } from 'src/app/pickupPoints/classes/pickupPoint-flat'
 
 @Component({
     selector: 'transfer-form',
@@ -33,7 +34,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
     destinations: any[]
     customers: any[]
     pickupPoints: any[]
-    pickupPointsFlat: any[]
+    pickupPointsFlat: PickupPointFlat[]
     drivers: any[]
     ports: any[]
     unlisten: Unlisten
@@ -180,11 +181,11 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             id: a,
             description: b,
             exactPoint: c,
-            time: d,
-            route: { port: { id: e, description: f } }
+            time: d
         } of this.pickupPoints) {
-            this.pickupPointsFlat.push({ pickupPointId: a, pickupPointDescription: b, exactPoint: c, time: d, portId: e, portDescription: f })
+            this.pickupPointsFlat.push({ id: a, description: b, exactPoint: c, time: d })
         }
+        console.log(this.pickupPointsFlat)
         return this.pickupPointsFlat
     }
 
@@ -247,8 +248,8 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         const sources = []
         sources.push(this.destinationService.getAllActive())
         sources.push(this.customerService.getAllActive())
+        sources.push(this.driverService.getAllActive())
         sources.push(this.pickupPointService.getAll())
-        sources.push(this.driverService.getAll())
         sources.push(this.portService.getAll())
         return forkJoin(sources).subscribe(
             result => {

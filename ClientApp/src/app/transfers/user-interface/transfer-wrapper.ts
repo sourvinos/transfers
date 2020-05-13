@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import { Subject } from 'rxjs';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
-import { TransferFlat } from 'src/app/transfers/classes/transferFlat';
+import { TransferFlat } from 'src/app/transfers/classes/transfer-flat';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 
 @Component({

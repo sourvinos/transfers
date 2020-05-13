@@ -9,6 +9,7 @@ import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-sh
 import { MessageService } from 'src/app/shared/services/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { DriverService } from '../classes/driver.service';
+import { Driver } from '../classes/driver';
 
 @Component({
     selector: 'driver-form',
@@ -56,6 +57,14 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             return true
         }
+    }
+
+    onSetActiveState() {
+        if (this.form.value.isDefault === false) { this.form.patchValue({ isActive: true }) }
+    }
+
+    onSetDefaultState() {
+        if (this.form.value.isActive === true) { this.form.patchValue({ isDefault: false }) }
     }
 
     onDelete() {
@@ -142,6 +151,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
             description: ['', [Validators.required, Validators.maxLength(128)]],
             phones: ['', [Validators.maxLength(128)]],
             isDefault: false,
+            isActive: true,
             userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
@@ -150,11 +160,12 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigate([this.url])
     }
 
-    private populateFields(result: any) {
+    private populateFields(result: Driver) {
         this.form.setValue({
             id: result.id,
             description: result.description,
             phones: result.phones,
+            isActive: result.isActive,
             isDefault: result.isDefault,
             userName: result.userName
         })
@@ -176,6 +187,10 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     get phones() {
         return this.form.get('phones')
+    }
+
+    get isActive() {
+        return this.form.get('isActive')
     }
 
     // #endregion

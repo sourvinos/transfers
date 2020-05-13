@@ -19,6 +19,11 @@ namespace Transfers {
             return await repo.Get();
         }
 
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<Driver>> GetActive() {
+            return await repo.GetActive();
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDriver(int id) {
             Driver driver = await repo.GetById(id);

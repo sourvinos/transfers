@@ -13,7 +13,7 @@ import { MessageService } from 'src/app/shared/services/message.service'
 import { SnackbarService } from 'src/app/shared/services/snackbar.service'
 import { TransferPdfService } from '../classes/transfer-pdf.service'
 import { TransferService } from '../classes/transfer.service'
-import { TransferFlat } from '../classes/transferFlat'
+import { TransferFlat } from '../classes/transfer-flat'
 import { TransferViewModel } from './../classes/transferViewModel'
 import { TransferAssignDriverComponent } from './transfer-assign-driver'
 
@@ -108,7 +108,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
                 width: '550px',
                 data: {
                     title: 'Assign driver',
-                    drivers: this.driverService.getAll(),
+                    drivers: this.driverService.getAllActive(),
                     actions: ['cancel', 'ok']
                 },
                 panelClass: 'dialog'

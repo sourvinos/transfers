@@ -21,7 +21,8 @@
                 <input type="text" matInput placeholder="Phones" formControlName="phones" data-tabindex="2" id="phones" [inputTabStop]="input">
                 <mat-error *ngIf="phones.errors?.maxlength">This field can be up to {{ phones.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
-            <mat-slide-toggle formControlName="isDefault" [checked]="isDefault">Default</mat-slide-toggle>
+            <mat-slide-toggle formControlName="isDefault" (click)="onSetActiveState()">Default</mat-slide-toggle>
+            <mat-slide-toggle formControlName="isActive" (click)="onSetDefaultState()">Active</mat-slide-toggle>
         </div>
     </form>
     <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>

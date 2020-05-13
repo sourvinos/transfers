@@ -1,15 +1,15 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Transfers {
+
     public class DriverRepository : Repository<Driver>, IDriverRepository {
 
         public DriverRepository(AppDbContext context) : base(context) { }
 
-        public async Task<Driver> GetDefaultDriver() {
-            return await context.Drivers.AsNoTracking().SingleOrDefaultAsync(m => m.IsDefault);
-        }
+        public async Task<Driver> GetDefaultDriver() => await context.Drivers.AsNoTracking().SingleOrDefaultAsync(m => m.IsDefault);
 
         async Task<string> IDriverRepository.CheckDefaultDriverExists(int? id, Driver driver) {
             if (driver.IsDefault) {
@@ -25,6 +25,8 @@ namespace Transfers {
             }
             return null;
         }
+
+        public async Task<IEnumerable<Driver>> GetActive() => await context.Set<Driver>().Where(x => x.IsActive).ToListAsync();
 
     }
 
