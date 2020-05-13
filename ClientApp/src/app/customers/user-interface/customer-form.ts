@@ -9,6 +9,7 @@ import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { Customer } from '../classes/customer';
 
 @Component({
     selector: 'customer-form',
@@ -141,6 +142,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             phones: ['', [Validators.maxLength(128)]],
             personInCharge: ['', [Validators.maxLength(128)]],
             email: ['', [Validators.maxLength(128)]],
+            isActive: true,
             userName: this.helperService.getUsernameFromLocalStorage()
         })
 
@@ -150,7 +152,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigate([this.url])
     }
 
-    private populateFields(result: any) {
+    private populateFields(result: Customer) {
         this.form.setValue({
             id: result.id,
             description: result.description,
@@ -159,6 +161,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             phones: result.phones,
             personInCharge: result.personInCharge,
             email: result.email,
+            isActive: result.isActive,
             userName: result.userName
         })
     }

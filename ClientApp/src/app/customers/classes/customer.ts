@@ -7,4 +7,5 @@ export class Customer extends KeyValuePair {
     phones: string
     personInCharge: string
     email: string
+    isActive: boolean
 }

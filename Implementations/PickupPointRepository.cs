@@ -8,7 +8,7 @@ namespace Transfers {
 
         public PickupPointRepository(AppDbContext context) : base(context) { }
 
-        public async Task<IEnumerable<PickupPoint>> Get() {
+        public new async Task<IEnumerable<PickupPoint>> Get() {
             return await context.PickupPoints.Include(x => x.Route).ThenInclude(y => y.Port).AsNoTracking().ToListAsync();
         }
 
