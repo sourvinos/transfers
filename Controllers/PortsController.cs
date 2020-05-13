@@ -26,6 +26,11 @@ namespace Transfers {
             return Ok(Port);
         }
 
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<Port>> GetActive() {
+            return await repo.GetActive();
+        }
+
         [HttpPost]
         public IActionResult PostPort([FromBody] Port Port) {
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });

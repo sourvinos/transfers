@@ -165,6 +165,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
             description: ['', [Validators.required, Validators.maxLength(10)]],
             fullDescription: ['', [Validators.required, Validators.maxLength(128)]],
             portId: ['', Validators.required], portDescription: ['', Validators.required],
+            isActive: true,
             userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
@@ -202,6 +203,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
             description: result.description,
             fullDescription: result.fullDescription,
             portId: result.port.id, portDescription: result.port.description,
+            isActive: result.isActive,
             userName: result.userName
         })
     }

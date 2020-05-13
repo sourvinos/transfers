@@ -19,6 +19,11 @@ namespace Transfers {
             return await repo.Get();
         }
 
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<Route>> GetActive() {
+            return await repo.GetActive();
+        }
+
         [HttpGet]
         [Route("getForIndex")]
         public async Task<IList<Route>> GetForIndex() {

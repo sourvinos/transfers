@@ -5,4 +5,5 @@ export class Route extends KeyValuePair {
     description: string
     fullDescription: string
     port: Port
+    isActive: boolean
 }

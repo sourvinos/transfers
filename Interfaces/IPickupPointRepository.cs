@@ -6,6 +6,7 @@ namespace Transfers {
     public interface IPickupPointRepository : IRepository<PickupPoint> {
 
         new Task<IEnumerable<PickupPoint>> Get();
+        Task<IEnumerable<PickupPoint>> GetActive();
         Task<IEnumerable<PickupPoint>> GetForRoute(int routeId);
         new Task<PickupPoint> GetById(int pickupPointId);
 

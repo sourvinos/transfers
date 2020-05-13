@@ -5,6 +5,7 @@ namespace Transfers {
 
     public interface IRouteRepository : IRepository<Route> {
         new Task<IList<Route>> Get();
+        Task<IEnumerable<Route>> GetActive();
         new Task<Route> GetById(int routeId);
         Task<List<Route>> GetForDropDown();
     }

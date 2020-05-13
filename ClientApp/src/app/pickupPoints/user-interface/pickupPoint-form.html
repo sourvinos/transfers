@@ -31,9 +31,10 @@
                 <mat-error *ngIf="time.hasError('required')">This is a required field!</mat-error>
                 <mat-error *ngIf="time.hasError('pattern')">This field is invalid!</mat-error>
             </mat-form-field>
+            <mat-slide-toggle formControlName="isActive">Active</mat-slide-toggle>
         </div>
     </form>
-    <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
+    <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
 </div>
 
 <div id="footer">

@@ -14,6 +14,8 @@ namespace Transfers {
         [MaxLength(128, ErrorMessage = "Full description can not be longer than 128 characters")]
         public string FullDescription { get; set; }
 
+        public bool IsActive { get; set; }
+
         [Required(ErrorMessage = "UserName is required")]
         [MaxLength(128, ErrorMessage = "UserName can not be longer than 128 characters")]
         public string UserName { get; set; }

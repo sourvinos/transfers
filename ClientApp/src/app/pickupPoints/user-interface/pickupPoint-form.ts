@@ -171,6 +171,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
             description: ['', [Validators.required, Validators.maxLength(128)]],
             exactPoint: ['', [Validators.required, Validators.maxLength(128)]],
             time: ['', [Validators.required, Validators.pattern('[0-9][0-9]:[0-9][0-9]')]],
+            isActive: true,
             userName: this.helperService.getUsernameFromLocalStorage()
         })
     }
@@ -219,6 +220,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
             description: result.description,
             exactPoint: result.exactPoint,
             time: result.time,
+            isActive: result.isActive,
             userName: result.userName
         })
     }

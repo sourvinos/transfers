@@ -8,17 +8,17 @@ namespace Transfers {
 
         public PickupPointRepository(AppDbContext context) : base(context) { }
 
-        public new async Task<IEnumerable<PickupPoint>> Get() {
-            return await context.PickupPoints.Include(x => x.Route).ThenInclude(y => y.Port).AsNoTracking().ToListAsync();
-        }
+        public new async Task<IEnumerable<PickupPoint>> Get() =>
+            await context.PickupPoints.Include(x => x.Route).ThenInclude(y => y.Port).AsNoTracking().ToListAsync();
 
-        public async Task<IEnumerable<PickupPoint>> GetForRoute(int routeId) {
-            return await context.PickupPoints.Include(x => x.Route).ThenInclude(y => y.Port).Where(m => m.RouteId == routeId).OrderBy(o => o.Time).ThenBy(o => o.Description).AsNoTracking().ToListAsync();
-        }
+        public async Task<IEnumerable<PickupPoint>> GetForRoute(int routeId) =>
+            await context.PickupPoints.Include(x => x.Route).ThenInclude(y => y.Port).Where(m => m.RouteId == routeId).OrderBy(o => o.Time).ThenBy(o => o.Description).AsNoTracking().ToListAsync();
 
-        public new async Task<PickupPoint> GetById(int pickupPointId) {
-            return await context.PickupPoints.Include(x => x.Route).ThenInclude(y => y.Port).AsNoTracking().SingleOrDefaultAsync(m => m.Id == pickupPointId);
-        }
+        public new async Task<PickupPoint> GetById(int pickupPointId) =>
+            await context.PickupPoints.Include(x => x.Route).ThenInclude(y => y.Port).AsNoTracking().SingleOrDefaultAsync(m => m.Id == pickupPointId);
+
+        public async Task<IEnumerable<PickupPoint>> GetActive() =>
+            await context.Set<PickupPoint>().Where(x => x.IsActive).ToListAsync();
 
     }
 
