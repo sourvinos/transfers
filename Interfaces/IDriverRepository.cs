@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Transfers {
@@ -7,7 +6,6 @@ namespace Transfers {
 
         Task<Driver> GetDefaultDriver();
         Task<string> CheckDefaultDriverExists(int? id, Driver driver);
-        Task<IEnumerable<Driver>> GetActive();
 
     }
 

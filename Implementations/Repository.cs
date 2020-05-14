@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +14,8 @@ namespace Transfers {
         public Repository(AppDbContext context) => this.context = context;
 
         public async Task<IEnumerable<T>> Get() => await context.Set<T>().ToListAsync();
+
+        public async Task<IEnumerable<T>> GetActive(Expression<Func<T, bool>> expression) => await context.Set<T>().Where(expression).ToListAsync();
 
         public async Task<T> GetById(int id) => await context.Set<T>().FindAsync(id);
 

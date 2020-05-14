@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -25,8 +24,6 @@ namespace Transfers {
             }
             return null;
         }
-
-        public async Task<IEnumerable<Driver>> GetActive() => await context.Set<Driver>().Where(x => x.IsActive).ToListAsync();
 
     }
 

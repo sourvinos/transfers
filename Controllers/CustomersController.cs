@@ -22,7 +22,7 @@ namespace Transfers {
 
         [HttpGet("[action]")]
         public async Task<IEnumerable<Customer>> GetActive() {
-            return await repo.GetActive();
+            return await repo.GetActive(x => x.IsActive);
         }
 
         [HttpGet("{id}")]

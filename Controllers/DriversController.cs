@@ -12,6 +12,7 @@ namespace Transfers {
     public class DriversController : ControllerBase {
 
         private readonly IDriverRepository repo;
+
         public DriversController(IDriverRepository repo) => (this.repo) = (repo);
 
         [HttpGet]
@@ -21,7 +22,7 @@ namespace Transfers {
 
         [HttpGet("[action]")]
         public async Task<IEnumerable<Driver>> GetActive() {
-            return await repo.GetActive();
+            return await repo.GetActive(x => x.IsActive);
         }
 
         [HttpGet("{id}")]

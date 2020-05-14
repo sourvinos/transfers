@@ -12,6 +12,7 @@ namespace Transfers {
     public class PickupPointsController : ControllerBase {
 
         private readonly IPickupPointRepository repo;
+
         public PickupPointsController(IPickupPointRepository repo) => (this.repo) = (repo);
 
         [HttpGet]
@@ -21,7 +22,7 @@ namespace Transfers {
 
         [HttpGet("[action]")]
         public async Task<IEnumerable<PickupPoint>> GetActive() {
-            return await repo.GetActive();
+            return await repo.GetActive(x => x.IsActive);
         }
 
         [HttpGet("routeId/{routeId}")]

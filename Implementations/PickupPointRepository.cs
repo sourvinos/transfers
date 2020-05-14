@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Transfers {
@@ -19,9 +18,6 @@ namespace Transfers {
         public new async Task<PickupPoint> GetById(int pickupPointId) =>
             await context.PickupPoints.Include(x => x.Route).ThenInclude(y => y.Port).AsNoTracking().SingleOrDefaultAsync(m => m.Id == pickupPointId);
 
-        public async Task<IEnumerable<PickupPoint>> GetActive() {
-            return await context.Set<PickupPoint>().Where(x => x.IsActive).ToListAsync();
-        }
     }
 
 }

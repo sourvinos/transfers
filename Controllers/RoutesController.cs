@@ -12,6 +12,7 @@ namespace Transfers {
     public class RoutesController : ControllerBase {
 
         private readonly IRouteRepository repo;
+
         public RoutesController(IRouteRepository repo) => (this.repo) = (repo);
 
         [HttpGet]
@@ -21,13 +22,7 @@ namespace Transfers {
 
         [HttpGet("[action]")]
         public async Task<IEnumerable<Route>> GetActive() {
-            return await repo.GetActive();
-        }
-
-        [HttpGet]
-        [Route("getForIndex")]
-        public async Task<IList<Route>> GetForIndex() {
-            return await repo.GetForDropDown();
+            return await repo.GetActive(x => x.IsActive);
         }
 
         [HttpGet("{id}")]

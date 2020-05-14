@@ -4,6 +4,7 @@ namespace Transfers {
     public class MappingProfile : Profile {
         public MappingProfile() {
             // From domain to api
+            CreateMap<PickupPoint, PickupPointSimpleResource>();
             CreateMap<Transfer, TransferResource>()
                 .ForMember(tr => tr.Destination, opt => opt.MapFrom(v => new DestinationResource { Id = v.Destination.Id, Abbreviation = v.Destination.Abbreviation, Description = v.Destination.Description }))
                 .ForMember(tr => tr.Customer, opt => opt.MapFrom(v => new CustomerResource { Id = v.Customer.Id, Description = v.Customer.Description }))

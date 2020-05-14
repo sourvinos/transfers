@@ -12,6 +12,7 @@ namespace Transfers {
     public class DestinationsController : ControllerBase {
 
         private readonly IDestinationRepository repo;
+
         public DestinationsController(IDestinationRepository repo) => (this.repo) = (repo);
 
         [HttpGet]
@@ -21,7 +22,7 @@ namespace Transfers {
 
         [HttpGet("[action]")]
         public async Task<IEnumerable<Destination>> GetActive() {
-            return await repo.GetActive();
+            return await repo.GetActive(x => x.IsActive);
         }
 
         [HttpGet("{id}")]
