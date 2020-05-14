@@ -3,13 +3,11 @@ using System.Threading.Tasks;
 
 namespace Transfers {
 
-    public interface ITransferRepository {
+    public interface ITransferRepository : IRepository<Transfer> {
 
         TransferGroupResultResource<TransferResource> Get(DateTime dateIn);
-        Task<Transfer> GetById(int id);
-        void Add(Transfer transfer);
+        new Task<Transfer> GetById(int id);
         void Update(SaveTransferResource saveTransferResource);
-        void Delete(Transfer transfer);
         void AssignDriver(int driverId, int[] ids);
 
     }

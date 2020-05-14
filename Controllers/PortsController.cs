@@ -12,6 +12,7 @@ namespace Transfers {
     public class PortsController : ControllerBase {
 
         private readonly IPortRepository repo;
+
         public PortsController(IPortRepository repo) => (this.repo) = (repo);
 
         [HttpGet]
@@ -19,16 +20,16 @@ namespace Transfers {
             return await repo.Get();
         }
 
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<Port>> GetActive() {
+            return await repo.GetActive();
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPort(int id) {
             Port Port = await repo.GetById(id);
             if (Port == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             return Ok(Port);
-        }
-
-        [HttpGet("[action]")]
-        public async Task<IEnumerable<Port>> GetActive() {
-            return await repo.GetActive();
         }
 
         [HttpPost]

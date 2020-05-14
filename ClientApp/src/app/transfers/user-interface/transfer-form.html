@@ -10,7 +10,7 @@
                 <mat-error *ngIf="customerDescription.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <mat-form-field>
-                <input type="text" matInput placeholder="Pickup point" formControlName="pickupPointDescription" data-tabindex="3" id="pickupPointDescription" [inputTabStop]="input" (change)="onLookupIndex(pickupPointsFlat, 'Pickup points', ['id', 'description', 'exactPoint', 'time'], ['id', 'description', 'exactPoint', 'time'], ['Id', 'Description', 'Exact point', 'Time'], ['1px', '440px', '440px', '100px'], ['none', '', '', ''], ['center', 'left', 'left', 'center'], $event)">
+                <input type="text" matInput placeholder="Pickup point" formControlName="pickupPointDescription" data-tabindex="3" id="pickupPointDescription" [inputTabStop]="input" (change)="onLookupIndex(pickupPointsFlat, 'Pickup points', ['pickuPointId', 'pickupPointDescription'], ['id', 'description', 'exactPoint', 'time'], ['Id', 'Description', 'Exact point', 'Time'], ['1px', '440px', '440px', '100px'], ['none', '', '', ''], ['center', 'left', 'left', 'center'], $event)">
                 <mat-error *ngIf="pickupPointDescription.hasError('required')">This is a required field!</mat-error>
             </mat-form-field>
             <div id="persons-panel">
@@ -47,7 +47,7 @@
             </mat-form-field>
         </div>
     </form>
-    <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
+    <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
     <div id="footer">
         <div id="buttons">
             <button mat-flat-button class="delete" *ngIf="form.value.id !== 0" id="delete" (click)="onDelete()">Delete</button>

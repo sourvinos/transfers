@@ -1,3 +1,4 @@
+import { PickupPointFlat } from './../../pickupPoints/classes/pickupPoint-flat';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material'
@@ -19,7 +20,9 @@ import { MessageService } from 'src/app/shared/services/message.service'
 import { SnackbarService } from 'src/app/shared/services/snackbar.service'
 import { Transfer } from '../classes/transfer'
 import { TransferService } from '../classes/transfer.service'
-import { PickupPointFlat } from 'src/app/pickupPoints/classes/pickupPoint-flat'
+import { Destination } from 'src/app/destinations/classes/destination'
+import { Customer } from 'src/app/customers/classes/customer'
+import { PickupPoint } from 'src/app/pickupPoints/classes/pickupPoint';
 
 @Component({
     selector: 'transfer-form',
@@ -31,9 +34,9 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     form: FormGroup
     defaultDriver: Driver
-    destinations: any[]
-    customers: any[]
-    pickupPoints: any[]
+    destinations: Destination[]
+    customers: Customer[]
+    pickupPoints: PickupPoint[]
     pickupPointsFlat: PickupPointFlat[]
     drivers: any[]
     ports: any[]
@@ -246,18 +249,18 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private populateDropDowns() {
         const sources = []
-        sources.push(this.destinationService.getAllActive())
         sources.push(this.customerService.getAllActive())
+        sources.push(this.destinationService.getAllActive())
         sources.push(this.driverService.getAllActive())
-        sources.push(this.pickupPointService.getAll())
-        sources.push(this.portService.getAll())
+        sources.push(this.pickupPointService.getAllActive())
+        sources.push(this.portService.getAllActive())
         return forkJoin(sources).subscribe(
             result => {
-                this.destinations = result[0]
-                this.customers = result[1]
-                this.pickupPoints = result[2]
+                this.customers = result[0]
+                this.destinations = result[1]
+                this.drivers = result[2]
+                this.pickupPoints = result[3]
                 this.pickupPointsFlat = this.flattenPickupPoints()
-                this.drivers = result[3]
                 this.ports = result[4]
                 this.renameObjects()
             })

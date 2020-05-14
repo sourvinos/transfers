@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Transfers {
 
-    public class TransferRepository : ITransferRepository {
+    public class TransferRepository : Repository<Transfer>, ITransferRepository {
 
         private readonly IMapper mapper;
         private readonly AppDbContext appDbContext;
 
-        public TransferRepository(AppDbContext appDbContext, IMapper mapper) => (this.appDbContext, this.mapper) = (appDbContext, mapper);
+        public TransferRepository(AppDbContext appDbContext, IMapper mapper) : base(appDbContext) => (this.appDbContext, this.mapper) = (appDbContext, mapper);
 
         TransferGroupResultResource<TransferResource> ITransferRepository.Get(DateTime dateIn) {
 
@@ -42,7 +42,7 @@ namespace Transfers {
 
         }
 
-        public async Task<Transfer> GetById(int id) {
+        public new async Task<Transfer> GetById(int id) {
             return await appDbContext.Transfers
                 .Include(x => x.Customer)
                 .Include(x => x.PickupPoint).ThenInclude(y => y.Route).ThenInclude(z => z.Port)
@@ -51,18 +51,8 @@ namespace Transfers {
                 .SingleOrDefaultAsync(m => m.Id == id);
         }
 
-        public void Add(Transfer transfer) {
-            appDbContext.Transfers.AddAsync(transfer);
-            appDbContext.SaveChanges();
-        }
-
         public void Update(SaveTransferResource saveTransferResource) {
             appDbContext.Entry(appDbContext.Transfers.Find(saveTransferResource.Id)).CurrentValues.SetValues(saveTransferResource);
-            appDbContext.SaveChanges();
-        }
-
-        public void Delete(Transfer transfer) {
-            appDbContext.Transfers.Remove(transfer);
             appDbContext.SaveChanges();
         }
 

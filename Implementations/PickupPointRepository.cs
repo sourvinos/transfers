@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Transfers {
+
     public class PickupPointRepository : Repository<PickupPoint>, IPickupPointRepository {
 
-        public PickupPointRepository(AppDbContext context) : base(context) { }
+        public PickupPointRepository(AppDbContext appDbContext) : base(appDbContext) { }
 
         public new async Task<IEnumerable<PickupPoint>> Get() =>
             await context.PickupPoints.Include(x => x.Route).ThenInclude(y => y.Port).AsNoTracking().ToListAsync();
@@ -17,9 +19,9 @@ namespace Transfers {
         public new async Task<PickupPoint> GetById(int pickupPointId) =>
             await context.PickupPoints.Include(x => x.Route).ThenInclude(y => y.Port).AsNoTracking().SingleOrDefaultAsync(m => m.Id == pickupPointId);
 
-        public async Task<IEnumerable<PickupPoint>> GetActive() =>
-            await context.Set<PickupPoint>().Where(x => x.IsActive).ToListAsync();
-
+        public async Task<IEnumerable<PickupPoint>> GetActive() {
+            return await context.Set<PickupPoint>().Where(x => x.IsActive).ToListAsync();
+        }
     }
 
 }

@@ -20,5 +20,4 @@ export class DriverService extends DataService {
         return this.http.get<Driver[]>('/api/drivers/getActive')
     }
 
-
 }
