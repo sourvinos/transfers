@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,11 @@ namespace Transfers {
     [Authorize(Policy = "RequireLoggedIn")]
     public class TransfersController : ControllerBase {
 
+        private readonly IMapper mapper;
         private readonly ITransferRepository repo;
 
-        public TransfersController(ITransferRepository repo) => (this.repo) = (repo);
+        public TransfersController(ITransferRepository repo, IMapper mapper) =>
+            (this.repo, this.mapper) = (repo, mapper);
 
         [HttpGet("date/{dateIn}")]
         public TransferGroupResultResource<TransferResource> Get(DateTime dateIn) {
@@ -22,14 +25,15 @@ namespace Transfers {
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTransfer(int id) {
-            Transfer transfer = await repo.GetById(id);
+            var transfer = await repo.GetById(id);
             if (transfer == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             return Ok(transfer);
         }
 
         [HttpPost]
-        public IActionResult PostTransfer([FromBody] Transfer transfer) {
+        public IActionResult PostTransfer([FromBody] SaveTransferResource saveTransferResource) {
             if (!ModelState.IsValid) return BadRequest(new { response = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage) });
+            var transfer = mapper.Map<SaveTransferResource, Transfer>(saveTransferResource);
             repo.Create(transfer);
             return Ok(new { response = ApiMessages.RecordCreated() });
         }
@@ -48,7 +52,7 @@ namespace Transfers {
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTransfer([FromRoute] int id) {
-            Transfer transfer = await repo.GetById(id);
+            var transfer = await repo.GetByIdToDelete(id);
             if (transfer == null) return NotFound(new { response = ApiMessages.RecordNotFound() });
             repo.Delete(transfer);
             return Ok(new { response = ApiMessages.RecordDeleted() });

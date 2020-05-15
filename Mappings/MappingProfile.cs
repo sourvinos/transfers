@@ -1,10 +1,11 @@
 using AutoMapper;
 
 namespace Transfers {
+
     public class MappingProfile : Profile {
+
         public MappingProfile() {
-            // From domain to api
-            CreateMap<PickupPoint, PickupPointSimpleResource>();
+            // Read
             CreateMap<Transfer, TransferResource>()
                 .ForMember(tr => tr.Destination, opt => opt.MapFrom(v => new DestinationResource { Id = v.Destination.Id, Abbreviation = v.Destination.Abbreviation, Description = v.Destination.Description }))
                 .ForMember(tr => tr.Customer, opt => opt.MapFrom(v => new CustomerResource { Id = v.Customer.Id, Description = v.Customer.Description }))
@@ -24,9 +25,7 @@ namespace Transfers {
                                 }
                         }
                 }));
-            // From api to domain 
-            // v refers to the domain class (.cs) 
-            // vr refers to the api class (.ts)
+            // Write
             CreateMap<SaveTransferResource, Transfer>()
                 .ForMember(v => v.Id, opt => opt.Ignore())
                 .ForMember(v => v.DateIn, opt => opt.MapFrom(vr => vr.dateIn))
@@ -40,5 +39,7 @@ namespace Transfers {
                 .ForMember(v => v.Remarks, opt => opt.MapFrom(vr => vr.Remarks))
                 .ForMember(v => v.UserName, opt => opt.MapFrom(vr => vr.UserName));
         }
+
     }
+
 }
