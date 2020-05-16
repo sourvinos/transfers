@@ -7,7 +7,7 @@
         public string ExactPoint { get; set; }
         public string Time { get; set; }
         public bool IsActive { get; set; }
-        public string UserName { get; set; }
+        public string UserId { get; set; }
 
         public int RouteId { get; set; }
 

@@ -36,7 +36,7 @@ namespace Transfers {
         }
 
         private async Task<IActionResult> GenerateNewToken(TokenRequest model) {
-            var user = await userManager.FindByNameAsync(model.UserName);
+            var user = await userManager.FindByNameAsync(model.Username);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password)) {
                 if (!await userManager.IsEmailConfirmedAsync(user)) {
                     return BadRequest(new { response = ApiMessages.AccountNotConfirmed() });
@@ -91,7 +91,7 @@ namespace Transfers {
                     expiration = newtoken.ValidTo,
                     refresh_token = refreshToken,
                     roles = roles.FirstOrDefault(),
-                    username = user.UserName,
+                    userId = user.Id,
                     displayName = user.DisplayName
             };
         }

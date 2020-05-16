@@ -52,10 +52,10 @@ export class AccountService {
     }
 
     getNewRefreshToken(): Observable<any> {
-        const username = localStorage.getItem('username')
+        const userId = localStorage.getItem('userId')
         const refreshToken = localStorage.getItem('refreshToken')
         const grantType = 'refresh_token'
-        return this.httpClient.post<any>(this.urlToken, { username, refreshToken, grantType }).pipe(
+        return this.httpClient.post<any>(this.urlToken, { userId, refreshToken, grantType }).pipe(
             map(response => {
                 console.log('Refresh token' + response.response.token)
                 if (response.response.token) {
@@ -84,7 +84,7 @@ export class AccountService {
         localStorage.removeItem('loginStatus')
         localStorage.removeItem('refreshToken')
         localStorage.removeItem('userRole')
-        localStorage.removeItem('username')
+        localStorage.removeItem('userId')
     }
 
     private navigateToLogin() {
@@ -102,7 +102,7 @@ export class AccountService {
         localStorage.setItem('loginStatus', '1')
         localStorage.setItem('refreshToken', response.response.refresh_token)
         localStorage.setItem('userRole', response.response.roles)
-        localStorage.setItem('username', response.response.username)
+        localStorage.setItem('userId', response.response.userId)
     }
 
     private setUserData() {

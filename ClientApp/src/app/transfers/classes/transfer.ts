@@ -32,5 +32,5 @@ export class Transfer {
     free: number
     totalPersons: number
     remarks: string
-    userName: string
+    userId: string
 }

@@ -143,9 +143,8 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             personInCharge: ['', [Validators.maxLength(128)]],
             email: ['', [Validators.maxLength(128)]],
             isActive: true,
-            userName: this.helperService.getUsernameFromLocalStorage()
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
-
     }
 
     private onGoBack() {
@@ -162,7 +161,7 @@ export class CustomerFormComponent implements OnInit, AfterViewInit, OnDestroy {
             personInCharge: result.personInCharge,
             email: result.email,
             isActive: result.isActive,
-            userName: result.userName
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
     }
 

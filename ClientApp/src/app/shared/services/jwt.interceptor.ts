@@ -51,7 +51,7 @@ export class JwtInterceptor implements HttpInterceptor {
                         this.tokenSubject.next(tokenresponse.response.token)
                         localStorage.setItem('loginStatus', '1')
                         localStorage.setItem('jwt', tokenresponse.response.token)
-                        localStorage.setItem('username', tokenresponse.response.username)
+                        localStorage.setItem('userId', tokenresponse.response.userId)
                         localStorage.setItem('displayName', tokenresponse.response.displayName)
                         localStorage.setItem('expiration', tokenresponse.response.expiration)
                         localStorage.setItem('userRole', tokenresponse.response.roles)

@@ -44,7 +44,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigateByUrl('/forgotPassword');
     }
 
-    onSave() {
+    onLogin() {
         const form = this.form.value
         this.accountService.login(form.username, form.password).subscribe(() => {
             this.router.navigateByUrl(this.returnUrl);

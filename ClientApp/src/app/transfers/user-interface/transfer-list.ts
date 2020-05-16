@@ -233,11 +233,11 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
             totalPersons: g,
             pickupPoint: { description: h, time: i, route: { description: j, port: { description: k } } },
             driver: { description: l },
-            userName: m,
+            userId: m,
             dateIn: n,
             remarks: o
         } of this.queryResultClone.transfers) {
-            this.transfersFlat.push({ id: a, destination: b, customer: c, adults: d, kids: e, free: f, totalPersons: g, pickupPoint: h, time: i, route: j, port: k, driver: l, userName: m, dateIn: n, remarks: o })
+            this.transfersFlat.push({ id: a, destination: b, customer: c, adults: d, kids: e, free: f, totalPersons: g, pickupPoint: h, time: i, route: j, port: k, driver: l, userId: m, dateIn: n, remarks: o })
         }
     }
 

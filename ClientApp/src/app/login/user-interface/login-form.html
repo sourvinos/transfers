@@ -23,11 +23,11 @@
             </div>
         </div>
     </form>
-    <p class="instructions" [class.hidden]=true>{{ form.value | json }} {{ form.valid }}</p>
+    <p class="instructions" [class.hidden]=false>{{ form.value | json }} {{ form.valid }}</p>
 </div>
 
 <div id="footer">
     <div id="buttons">
-        <button mat-flat-button class="primary" id="login" [disabled]="!form.valid" (click)="onSave()">Login</button>
+        <button mat-flat-button class="primary" id="login" [disabled]="!form.valid" (click)="onLogin()">Login</button>
     </div>
 </div>

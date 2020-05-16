@@ -167,12 +167,12 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
     private initForm() {
         this.form = this.formBuilder.group({
             id: 0,
-            routeId: [0, Validators.required], routeDescription: ['', Validators.required],
+            routeId: ['', Validators.required], routeDescription: ['', Validators.required],
             description: ['', [Validators.required, Validators.maxLength(128)]],
             exactPoint: ['', [Validators.required, Validators.maxLength(128)]],
             time: ['', [Validators.required, Validators.pattern('[0-9][0-9]:[0-9][0-9]')]],
             isActive: true,
-            userName: this.helperService.getUsernameFromLocalStorage()
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
     }
 
@@ -196,7 +196,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         setTimeout(() => {
             const route: any[] = this.routes.filter(x => x.routeId === this.routeId)
             this.form.patchValue({
-                routeId: route[0].id,
+                routeId: this.routeId,
                 routeDescription: route[0].routeDescription
             })
         }, 500)
@@ -204,7 +204,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
 
     private populateDropDowns() {
         const sources = []
-        sources.push(this.routeService.getAll())
+        sources.push(this.routeService.getAllActive())
         return forkJoin(sources).subscribe(
             result => {
                 this.routes = result[0]
@@ -221,7 +221,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
             exactPoint: result.exactPoint,
             time: result.time,
             isActive: result.isActive,
-            userName: result.userName
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
     }
 
@@ -234,7 +234,10 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
 
     private renameObjects() {
         this.routes.forEach(obj => {
-            this.renameKey(obj, 'id', 'routeId'); this.renameKey(obj, 'description', 'routeDescription')
+            this.renameKey(obj, 'id', 'routeId')
+            this.renameKey(obj, 'description', 'routeDescription')
+            this.renameKey(obj, 'isActive', 'routeIsActive')
+            this.renameKey(obj, 'userId', 'routeUserId')
         })
     }
 

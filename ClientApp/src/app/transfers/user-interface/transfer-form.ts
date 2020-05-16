@@ -188,7 +188,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         } of this.pickupPoints) {
             this.pickupPointsFlat.push({ id: a, description: b, exactPoint: c, time: d })
         }
-        console.log(this.pickupPointsFlat)
         return this.pickupPointsFlat
     }
 
@@ -227,7 +226,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             free: [0, [Validators.required, Validators.min(0), Validators.max(999)]],
             totalPersons: 0,
             remarks: ['', Validators.maxLength(128)],
-            userName: this.helperService.getUsernameFromLocalStorage()
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
     }
 
@@ -280,7 +279,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             free: result.free,
             totalPersons: result.totalPersons,
             remarks: result.remarks,
-            userName: result.userName
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
     }
 
@@ -299,7 +298,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             driverDescription: driver.description,
             portId: 0, portDescription: '',
             remarks: '',
-            userName: this.helperService.getUsernameFromLocalStorage()
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
     }
 
@@ -316,16 +315,28 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private renameObjects() {
         this.destinations.forEach(obj => {
-            this.renameKey(obj, 'id', 'destinationId'); this.renameKey(obj, 'description', 'destinationDescription')
+            this.renameKey(obj, 'id', 'destinationId')
+            this.renameKey(obj, 'description', 'destinationDescription')
+            this.renameKey(obj, 'isActive', 'destinationIsActive')
+            this.renameKey(obj, 'userId', 'destinationUserId')
         })
         this.customers.forEach(obj => {
-            this.renameKey(obj, 'id', 'customerId'); this.renameKey(obj, 'description', 'customerDescription')
+            this.renameKey(obj, 'id', 'customerId')
+            this.renameKey(obj, 'description', 'customerDescription')
+            this.renameKey(obj, 'isActive', 'customerIsActive')
+            this.renameKey(obj, 'userId', 'customerUserId')
         })
         this.drivers.forEach(obj => {
-            this.renameKey(obj, 'id', 'driverId'); this.renameKey(obj, 'description', 'driverDescription')
+            this.renameKey(obj, 'id', 'driverId')
+            this.renameKey(obj, 'description', 'driverDescription')
+            this.renameKey(obj, 'isActive', 'driverIsActive')
+            this.renameKey(obj, 'userId', 'driverUserId')
         })
         this.ports.forEach(obj => {
-            this.renameKey(obj, 'id', 'portId'); this.renameKey(obj, 'description', 'portDescription')
+            this.renameKey(obj, 'id', 'portId')
+            this.renameKey(obj, 'description', 'portDescription')
+            this.renameKey(obj, 'isActive', 'portIsActive')
+            this.renameKey(obj, 'userId', 'portUserId')
         })
     }
 

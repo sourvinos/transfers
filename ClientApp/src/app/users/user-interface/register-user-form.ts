@@ -36,7 +36,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     ngAfterViewInit() {
-        this.focus('username')
+        this.focus('userName')
     }
 
     ngOnDestroy() {
@@ -106,7 +106,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         this.flatForm = {
             email: this.form.value.email,
             displayName: this.form.value.displayName,
-            username: this.form.value.username,
+            userName: this.form.value.userName,
             password: this.form.value.passwords.password,
             confirmPassword: this.form.value.passwords.confirmPassword
         }
@@ -120,7 +120,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         this.form = this.formBuilder.group({
             email: ['', [Validators.required, Validators.email, Validators.maxLength(128)]],
             displayName: ['', [Validators.required, Validators.maxLength(32)]],
-            username: ['', [Validators.required, Validators.maxLength(32)]],
+            userName: ['', [Validators.required, Validators.maxLength(32)]],
             passwords: this.formBuilder.group({
                 password: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(128), ValidationService.containsSpace]],
                 confirmPassword: ['', [Validators.required]]
@@ -150,8 +150,8 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         return this.form.get('displayName')
     }
 
-    get Username() {
-        return this.form.get('username')
+    get UserName() {
+        return this.form.get('userName')
     }
 
     get Passwords() {

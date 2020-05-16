@@ -1,5 +1,5 @@
 export class RegisterUser {
-    username: string
+    userName: string
     displayName: string
     password: string
     confirmPassword: string

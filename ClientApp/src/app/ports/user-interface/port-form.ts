@@ -137,7 +137,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
             id: 0,
             description: ['', [Validators.required, Validators.maxLength(128)]],
             isActive: true,
-            userName: this.helperService.getUsernameFromLocalStorage()
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
     }
 
@@ -150,7 +150,7 @@ export class PortFormComponent implements OnInit, AfterViewInit, OnDestroy {
             id: result.id,
             description: result.description,
             isActive: result.isActive,
-            userName: result.userName
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
     }
 

@@ -65,7 +65,7 @@ export class PickupPointWrapperComponent implements OnInit, OnDestroy {
     }
 
     private populateDropDowns() {
-        this.routeService.getAll().subscribe((result: any) => {
+        this.routeService.getAllActive().subscribe((result: any) => {
             this.routes = result.sort((a: { description: number; }, b: { description: number; }) => (a.description > b.description) ? 1 : -1)
         })
     }

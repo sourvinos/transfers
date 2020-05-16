@@ -13,7 +13,7 @@ namespace Transfers {
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public int TotalPersons { get; set; }
         public string Remarks { get; set; }
-        public string UserName { get; set; }
+        public string UserId { get; set; }
         public int CustomerId { get; set; }
         public int PickupPointId { get; set; }
         public int DestinationId { get; set; }

@@ -21,10 +21,10 @@ export class UserListComponent implements OnInit, OnDestroy {
     url = '/users'
     resolver = 'userList'
 
-    headers = ['S', 'Id', 'Display name', 'Username', 'Email']
-    widths = ['40px', '0px', '40%', '30%', '']
+    headers = ['S', 'Id', 'Display name', 'User name', 'Email']
+    widths = ['40px', '', '30%', '30%', '']
     visibility = ['none', 'none', '', '', '', '']
-    justify = ['center', 'center', 'left', 'left', 'left']
+    justify = ['center', 'left', 'left', 'left', 'left']
     fields = ['', 'id', 'displayname', 'username', 'email']
 
     unlisten: Unlisten
@@ -46,7 +46,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
 
     onFilter(query: string) {
-        this.filteredRecords = query ? this.records.filter(p => p.username.toLowerCase().includes(query.toLowerCase())) : this.records
+        this.filteredRecords = query ? this.records.filter(p => p.userName.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
     onNew() {
@@ -81,7 +81,8 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     private loadRecords() {
         this.records = this.activatedRoute.snapshot.data[this.resolver]
-        this.filteredRecords = this.records.sort((a, b) => (a.username > b.username) ? 1 : -1)
+        this.filteredRecords = this.records.sort((a, b) => (a.userName > b.userName) ? 1 : -1)
+        console.log(this.filteredRecords)
     }
 
     private onGoBack() {

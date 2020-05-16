@@ -13,8 +13,8 @@ namespace Transfers {
         [MaxLength(32, ErrorMessage = "Email can not be longer than 32 characters")]
         public string Displayname { get; set; }
 
-        [Required(ErrorMessage = "Username is required")]
-        [MaxLength(32, ErrorMessage = "Username can not be longer than 32 characters")]
+        [Required(ErrorMessage = "User name is required")]
+        [MaxLength(32, ErrorMessage = "User name can not be longer than 32 characters")]
         public string Username { get; set; }
 
         [DataType(DataType.Password)]

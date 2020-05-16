@@ -16,9 +16,9 @@ namespace Transfers {
 
         public bool IsActive { get; set; }
 
-        [Required(ErrorMessage = "UserName is required")]
-        [MaxLength(128, ErrorMessage = "UserName can not be longer than 128 characters")]
-        public string UserName { get; set; }
+        [Required(ErrorMessage = "User Id is required")]
+        [MaxLength(128, ErrorMessage = "User Id can not be longer than 128 characters")]
+        public string UserId { get; set; }
 
         [Required(ErrorMessage = "Port Id is required")]
         public int PortId { get; set; }

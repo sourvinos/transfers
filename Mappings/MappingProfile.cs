@@ -37,7 +37,7 @@ namespace Transfers {
                 .ForMember(v => v.DestinationId, opt => opt.MapFrom(vr => vr.DestinationId))
                 .ForMember(v => v.DriverId, opt => opt.MapFrom(vr => vr.DriverId))
                 .ForMember(v => v.Remarks, opt => opt.MapFrom(vr => vr.Remarks))
-                .ForMember(v => v.UserName, opt => opt.MapFrom(vr => vr.UserName));
+                .ForMember(v => v.UserId, opt => opt.MapFrom(vr => vr.UserId));
         }
 
     }

@@ -31,8 +31,8 @@ export class HelperService {
         );
     }
 
-    getUsernameFromLocalStorage() {
-        return localStorage.getItem('username')
+    getUserIdFromLocalStorage() {
+        return localStorage.getItem('userId')
     }
 
     getDateFromLocalStorage() {

@@ -8,13 +8,11 @@ namespace Transfers {
 
         public RouteRepository(AppDbContext context) : base(context) { }
 
-        async Task<IList<Route>> IRouteRepository.Get() {
-            return await context.Routes.Include(p => p.Port).ToListAsync();
-        }
+        async Task<IList<Route>> IRouteRepository.Get() =>
+            await context.Routes.Include(p => p.Port).ToListAsync();
 
-        public new async Task<Route> GetById(int routeId) {
-            return await context.Routes.Include(p => p.Port).AsNoTracking().SingleOrDefaultAsync(m => m.Id == routeId);
-        }
+        public new async Task<Route> GetById(int routeId) =>
+            await context.Routes.Include(p => p.Port).AsNoTracking().SingleOrDefaultAsync(m => m.Id == routeId);
 
     }
 

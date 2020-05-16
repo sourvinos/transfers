@@ -152,7 +152,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
             phones: ['', [Validators.maxLength(128)]],
             isDefault: false,
             isActive: true,
-            userName: this.helperService.getUsernameFromLocalStorage()
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
     }
 
@@ -167,7 +167,7 @@ export class DriverFormComponent implements OnInit, AfterViewInit, OnDestroy {
             phones: result.phones,
             isActive: result.isActive,
             isDefault: result.isDefault,
-            userName: result.userName
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
     }
 

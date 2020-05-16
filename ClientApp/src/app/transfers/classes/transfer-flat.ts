@@ -12,6 +12,6 @@ export class TransferFlat {
     driver: string
     dateIn: string
     totalPersons: number
-    userName: string
+    userId: string
     remarks: string
 }

@@ -166,7 +166,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
             fullDescription: ['', [Validators.required, Validators.maxLength(128)]],
             portId: ['', Validators.required], portDescription: ['', Validators.required],
             isActive: true,
-            userName: this.helperService.getUsernameFromLocalStorage()
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
     }
 
@@ -188,7 +188,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private populateDropDowns() {
         const sources = []
-        sources.push(this.portService.getAll())
+        sources.push(this.portService.getAllActive())
         return forkJoin(sources).subscribe(
             result => {
                 this.ports = result[0]
@@ -204,7 +204,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
             fullDescription: result.fullDescription,
             portId: result.port.id, portDescription: result.port.description,
             isActive: result.isActive,
-            userName: result.userName
+            userId: this.helperService.getUserIdFromLocalStorage()
         })
     }
 
@@ -217,7 +217,10 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private renameObjects() {
         this.ports.forEach(obj => {
-            this.renameKey(obj, 'id', 'portId'); this.renameKey(obj, 'description', 'portDescription')
+            this.renameKey(obj, 'id', 'portId')
+            this.renameKey(obj, 'description', 'portDescription')
+            this.renameKey(obj, 'isActive', 'portIsActive')
+            this.renameKey(obj, 'userId', 'portUserId')
         })
     }
 
