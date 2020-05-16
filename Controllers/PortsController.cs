@@ -13,17 +13,16 @@ namespace Transfers {
 
         private readonly IPortRepository repo;
 
-        public PortsController(IPortRepository repo) => (this.repo) = (repo);
+        public PortsController(IPortRepository repo) =>
+            (this.repo) = (repo);
 
         [HttpGet]
-        public async Task<IEnumerable<Port>> Get() {
-            return await repo.Get();
-        }
+        public async Task<IEnumerable<Port>> Get() =>
+            await repo.Get();
 
         [HttpGet("[action]")]
-        public async Task<IEnumerable<Port>> GetActive() {
-            return await repo.GetActive(x => x.IsActive);
-        }
+        public async Task<IEnumerable<Port>> GetActive() =>
+            await repo.GetActive(x => x.IsActive);
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPort(int id) {

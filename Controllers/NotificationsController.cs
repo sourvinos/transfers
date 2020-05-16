@@ -11,13 +11,11 @@ namespace Transfers {
             return View();
         }
 
-        public IActionResult EmailConfirmationError() {
-            return View();
-        }
+        public IActionResult EmailConfirmationError() =>
+            View();
 
-        public IActionResult UserNotFound() {
-            return Redirect("/login");
-        }
+        public IActionResult UserNotFound() =>
+            Redirect("/login");
 
     }
 

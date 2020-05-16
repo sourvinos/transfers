@@ -19,14 +19,13 @@ namespace Transfers {
             (this.userManager, this.signManager) = (userManager, signInManager);
 
         [HttpGet]
-        public async Task<IEnumerable<UserListViewModel>> Get() {
-            return await userManager.Users.Select(u => new UserListViewModel {
+        public async Task<IEnumerable<UserListViewModel>> Get() =>
+            await userManager.Users.Select(u => new UserListViewModel {
                 Id = u.Id,
                     Username = u.UserName,
                     Displayname = u.DisplayName,
                     Email = u.Email
             }).OrderBy(o => o.Username).AsNoTracking().ToListAsync();
-        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(string id) {

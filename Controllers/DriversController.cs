@@ -13,17 +13,16 @@ namespace Transfers {
 
         private readonly IDriverRepository repo;
 
-        public DriversController(IDriverRepository repo) => (this.repo) = (repo);
+        public DriversController(IDriverRepository repo) =>
+            (this.repo) = (repo);
 
         [HttpGet]
-        public async Task<IEnumerable<Driver>> Get() {
-            return await repo.Get();
-        }
+        public async Task<IEnumerable<Driver>> Get() =>
+            await repo.Get();
 
         [HttpGet("[action]")]
-        public async Task<IEnumerable<Driver>> GetActive() {
-            return await repo.GetActive(x => x.IsActive);
-        }
+        public async Task<IEnumerable<Driver>> GetActive() =>
+            await repo.GetActive(x => x.IsActive);
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDriver(int id) {

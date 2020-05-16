@@ -4,16 +4,13 @@ using System.Runtime.Loader;
 
 namespace transfersUtils {
     internal class CustomAssemblyLoadContext : AssemblyLoadContext {
-        public IntPtr LoadUnmanagedLibrary(string absolutePath) {
-            return LoadUnmanagedDll(absolutePath);
-        }
+        public IntPtr LoadUnmanagedLibrary(string absolutePath) =>
+            LoadUnmanagedDll(absolutePath);
 
-        protected override IntPtr LoadUnmanagedDll(String unmanagedDllName) {
-            return LoadUnmanagedDllFromPath(unmanagedDllName);
-        }
+        protected override IntPtr LoadUnmanagedDll(String unmanagedDllName) =>
+            LoadUnmanagedDllFromPath(unmanagedDllName);
 
-        protected override Assembly Load(AssemblyName assemblyName) {
+        protected override Assembly Load(AssemblyName assemblyName) =>
             throw new NotImplementedException();
-        }
     }
 }

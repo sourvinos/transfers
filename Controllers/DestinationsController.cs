@@ -13,17 +13,16 @@ namespace Transfers {
 
         private readonly IDestinationRepository repo;
 
-        public DestinationsController(IDestinationRepository repo) => (this.repo) = (repo);
+        public DestinationsController(IDestinationRepository repo) =>
+            (this.repo) = (repo);
 
         [HttpGet]
-        public async Task<IEnumerable<Destination>> Get() {
-            return await repo.Get();
-        }
+        public async Task<IEnumerable<Destination>> Get() =>
+            await repo.Get();
 
         [HttpGet("[action]")]
-        public async Task<IEnumerable<Destination>> GetActive() {
-            return await repo.GetActive(x => x.IsActive);
-        }
+        public async Task<IEnumerable<Destination>> GetActive() =>
+            await repo.GetActive(x => x.IsActive);
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDestination(int id) {

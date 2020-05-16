@@ -9,9 +9,8 @@ namespace Transfers {
 
         private readonly AppSettings _appSettings;
 
-        public SendOutlookEmail(IOptions<AppSettings> appSettings) {
+        public SendOutlookEmail(IOptions<AppSettings> appSettings) =>
             _appSettings = appSettings.Value;
-        }
 
         public SendEmailResponse SendRegistrationEmail(string userEmail, string displayName, string callbackUrl) {
             using(MailMessage mail = new MailMessage()) {
@@ -35,13 +34,10 @@ namespace Transfers {
                     smtp.Send(mail);
                 }
             }
-
             return new SendEmailResponse();
-
         }
 
         public SendEmailResponse SendResetPasswordEmail(string displayName, string userEmail, string callbackUrl) {
-
             using(MailMessage mail = new MailMessage()) {
                 mail.From = new MailAddress(_appSettings.From);
                 mail.To.Add(userEmail);
@@ -63,10 +59,9 @@ namespace Transfers {
                     smtp.Send(mail);
                 }
             }
-
             return new SendEmailResponse();
-
         }
+
     }
 
 }

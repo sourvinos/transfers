@@ -19,8 +19,7 @@ namespace Transfers {
 
         [HttpGet("date/{dateIn}")]
         public TransferGroupResultResource<TransferResource> Get(DateTime dateIn) {
-            var transfers = this.repo.Get(dateIn);
-            return transfers;
+            return this.repo.Get(dateIn);
         }
 
         [HttpGet("{id}")]

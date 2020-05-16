@@ -13,7 +13,8 @@ namespace Transfers {
 
         private readonly IPickupPointRepository repo;
 
-        public PickupPointsController(IPickupPointRepository repo) => (this.repo) = (repo);
+        public PickupPointsController(IPickupPointRepository repo) =>
+            (this.repo) = (repo);
 
         [HttpGet]
         public async Task<IEnumerable<PickupPoint>> Get() {

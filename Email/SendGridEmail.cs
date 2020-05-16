@@ -9,9 +9,8 @@ namespace Transfers {
 
         private readonly AppSettings _appSettings;
 
-        public SendGridEmail(IOptions<AppSettings> appSettings) {
+        public SendGridEmail(IOptions<AppSettings> appSettings) =>
             _appSettings = appSettings.Value;
-        }
 
         public SendEmailResponse SendRegistrationEmail(string userEmail, string displayName, string callbackUrl) {
             var apiKey = _appSettings.SendGridKey;
