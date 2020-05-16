@@ -131,7 +131,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
 
     onNew() {
         this.driverService.getDefaultDriver().subscribe(response => {
-            this.router.navigate([this.location.path() + '/transfer/new'])
+            this.router.navigate([this.location.path() + '/transfer/new']) // OK
         }, () => {
             this.showSnackbar(this.messageService.noDefaultDriverFound(), 'error')
         })
@@ -209,7 +209,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
     }
 
     private editRecord(id: number) {
-        this.navigateToEditRoute(id)
+        this.router.navigate(['transfer/', id], { relativeTo: this.activatedRoute })
     }
 
     private filterByCriteria() {
@@ -273,10 +273,6 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
 
     private loadRecords() {
         this.queryResult = this.activatedRoute.snapshot.data[this.resolver]
-    }
-
-    private navigateToEditRoute(id: number) {
-        this.router.navigate(['transfer/', id], { relativeTo: this.activatedRoute })
     }
 
     private navigateToList() {

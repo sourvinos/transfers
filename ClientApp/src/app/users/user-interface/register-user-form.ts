@@ -23,7 +23,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     flatForm: RegisterUser
     form: FormGroup
     hidePassword = true
-    usersUrl = '/users'
+    url = '/users'
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
     confirmValidParentMatcher = new ConfirmValidParentMatcher();
@@ -129,7 +129,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     private onGoBack() {
-        this.router.navigate([this.usersUrl])
+        this.router.navigate([this.url])
     }
 
     private resetForm() {

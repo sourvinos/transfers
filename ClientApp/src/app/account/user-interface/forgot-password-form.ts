@@ -16,7 +16,7 @@ import { HelperService } from 'src/app/shared/services/helper.service';
 
 export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    loginUrl = '/login'
+    url = '/login'
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
 
@@ -49,7 +49,7 @@ export class ForgotPasswordFormComponent implements OnInit, AfterViewInit, OnDes
     }
 
     onGoBack() {
-        this.router.navigate([this.loginUrl])
+        this.router.navigate([this.url])
     }
 
     private addShortcuts() {

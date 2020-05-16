@@ -19,7 +19,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
 
     email: string
     token: string
-    loginUrl = '/login'
+    url = '/'
     hidePassword = true
     form: FormGroup
     unlisten: Unlisten
@@ -52,14 +52,14 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         const form = this.form.value;
         this.accountService.resetPassword(form.email, form.passwords.password, form.passwords.confirmPassword, form.token).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
-            this.router.navigateByUrl(this.loginUrl)
+            this.router.navigate([this.url])
         }, error => {
             this.showSnackbar(error.error.response, 'error')
         })
     }
 
     onGoBack() {
-        this.router.navigate([this.loginUrl])
+        this.router.navigate([this.url])
     }
 
     private addShortcuts() {

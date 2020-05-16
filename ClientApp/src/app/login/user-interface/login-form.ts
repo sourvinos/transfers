@@ -17,7 +17,7 @@ import { SnackbarService } from './../../shared/services/snackbar.service';
 export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     countdown = 0
-    returnUrl: string
+    url: string
     form: FormGroup
     hidePassword = true
     unlisten: Unlisten
@@ -47,7 +47,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
     onLogin() {
         const form = this.form.value
         this.accountService.login(form.username, form.password).subscribe(() => {
-            this.router.navigateByUrl(this.returnUrl);
+            this.router.navigateByUrl(this.url);
             this.countdownService.reset()
             this.countdownService.countdown.subscribe(data => { this.countdown = data })
         }, error => {

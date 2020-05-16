@@ -1,13 +1,12 @@
-import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
 import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { Customer } from '../classes/customer';
-import { HelperService } from 'src/app/shared/services/helper.service';
 
 @Component({
     selector: 'customer-list',
@@ -19,6 +18,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
     records: Customer[]
     filteredRecords: Customer[]
+    url = '/customers'
     resolver = 'customerList'
 
     headers = ['S', 'Id', 'Description', 'Phones', 'Email']
@@ -30,7 +30,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
 
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private interactionService: InteractionService, private buttonClickService: ButtonClickService, private helperService: HelperService, private location: Location) {
+    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private interactionService: InteractionService, private buttonClickService: ButtonClickService, private helperService: HelperService) {
         this.loadRecords()
     }
 
@@ -50,7 +50,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     }
 
     onNew() {
-        this.router.navigate([this.location.path() + '/new'])
+        this.router.navigate([this.url + '/new'])
     }
 
     private addShortcuts() {
@@ -71,7 +71,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     }
 
     private editRecord(id: number) {
-        this.router.navigate([this.location.path(), id])
+        this.router.navigate([this.url, id])
     }
 
     private focus(event: KeyboardEvent, element: string) {
