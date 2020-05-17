@@ -1,15 +1,16 @@
-import { Destination } from './../classes/destination';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { DestinationService } from 'src/app/destinations/classes/destination.service';
+import { InputTabStopDirective } from 'src/app/shared/directives/input-tabstop.directive';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { Destination } from './../classes/destination';
 
 @Component({
     selector: 'destination-form',
@@ -19,12 +20,18 @@ import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 
 export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    //#region Private
     url = '/destinations'
     form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
+    //#endregion
 
-    constructor(private destinationService: DestinationService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService, private buttonClickService: ButtonClickService) {
+    //#region Form
+    input: InputTabStopDirective
+    //#endregion
+
+    constructor(private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService, private destinationService: DestinationService, private dialogService: DialogService, private formBuilder: FormBuilder, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private messageService: MessageService, private router: Router, private snackbarService: SnackbarService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) { this.getRecord(p.id) }
         })
@@ -59,7 +66,7 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         }
     }
 
-    onDelete() {
+    public onDelete() {
         this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.destinationService.delete(this.form.value.id).subscribe(() => {
@@ -73,7 +80,11 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
         })
     }
 
-    onSave() {
+    public onGoBack() {
+        this.router.navigate([this.url])
+    }
+
+    public onSave() {
         if (this.form.value.id === 0) {
             this.destinationService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
@@ -141,10 +152,6 @@ export class DestinationFormComponent implements OnInit, AfterViewInit, OnDestro
             isActive: true,
             userId: this.helperService.getUserIdFromLocalStorage()
         })
-    }
-
-    private onGoBack() {
-        this.router.navigate([this.url])
     }
 
     private populateFields(result: Destination) {

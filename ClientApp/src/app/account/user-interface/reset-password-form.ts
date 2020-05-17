@@ -1,10 +1,11 @@
-import { HelperService } from 'src/app/shared/services/helper.service';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { InputTabStopDirective } from 'src/app/shared/directives/input-tabstop.directive';
 import { AccountService } from 'src/app/shared/services/account.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { ConfirmValidParentMatcher, ValidationService } from '../../shared/services/validation.service';
@@ -17,16 +18,25 @@ import { ConfirmValidParentMatcher, ValidationService } from '../../shared/servi
 
 export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    email: string
-    token: string
+    //#region Private
     url = '/'
-    hidePassword = true
     form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>();
-    confirmValidParentMatcher = new ConfirmValidParentMatcher();
+    //#endregion
 
-    constructor(private accountService: AccountService, private formBuilder: FormBuilder, private router: Router, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService, private helperService: HelperService) {
+    //#region Private particular
+    email: string
+    token: string
+    //#endregion
+
+    //#region Form
+    confirmValidParentMatcher = new ConfirmValidParentMatcher();
+    hidePassword = true
+    input: InputTabStopDirective
+    //#endregion
+
+    constructor(private accountService: AccountService, private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService, private formBuilder: FormBuilder, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private snackbarService: SnackbarService) {
         this.activatedRoute.params.subscribe(p => {
             this.email = p['email']
             this.token = p['token']
@@ -48,7 +58,7 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         this.unlisten()
     }
 
-    onSave() {
+    public onSave() {
         const form = this.form.value;
         this.accountService.resetPassword(form.email, form.passwords.password, form.passwords.confirmPassword, form.token).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
@@ -56,10 +66,6 @@ export class ResetPasswordFormComponent implements OnInit, AfterViewInit, OnDest
         }, error => {
             this.showSnackbar(error.error.response, 'error')
         })
-    }
-
-    onGoBack() {
-        this.router.navigate([this.url])
     }
 
     private addShortcuts() {

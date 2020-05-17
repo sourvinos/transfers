@@ -2,13 +2,14 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Subject } from 'rxjs'
+import { InputTabStopDirective } from 'src/app/shared/directives/input-tabstop.directive'
 import { ButtonClickService } from 'src/app/shared/services/button-click.service'
 import { DialogService } from 'src/app/shared/services/dialog.service'
+import { HelperService } from 'src/app/shared/services/helper.service'
 import { MessageService } from 'src/app/shared/services/message.service'
 import { SnackbarService } from 'src/app/shared/services/snackbar.service'
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service'
 import { UserService } from '../classes/user.service'
-import { HelperService } from 'src/app/shared/services/helper.service'
 
 @Component({
     selector: 'edit-user-form',
@@ -18,12 +19,18 @@ import { HelperService } from 'src/app/shared/services/helper.service'
 
 export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    //#region Private
     url = '/users'
     form: FormGroup
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
+    //#endregion
 
-    constructor(private userService: UserService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService, private buttonClickService: ButtonClickService, private helperService: HelperService) {
+    //#region Form
+    input: InputTabStopDirective
+    //#endregion
+
+    constructor(private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService, private dialogService: DialogService, private formBuilder: FormBuilder, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private messageService: MessageService, private router: Router, private snackbarService: SnackbarService, private userService: UserService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) { this.getRecord(p.id) }
         })
@@ -58,7 +65,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onChangePassword() {
+    public onChangePassword() {
         if (this.form.dirty) {
             this.userService.update(this.form.value.id, this.form.value).subscribe(() => {
                 this.router.navigate(['/users/changePassword/' + this.form.value.id])
@@ -71,7 +78,7 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onDelete() {
+    public onDelete() {
         this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToDelete(), ['ok', 'cancel']).subscribe(answer => {
             if (answer) {
                 this.userService.delete(this.form.value.id).subscribe((response) => {
@@ -85,7 +92,11 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    onSave() {
+    public onGoBack() {
+        this.router.navigate([this.url])
+    }
+
+    public onSave() {
         this.userService.update(this.form.value.id, this.form.value).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
             this.resetForm()
@@ -143,10 +154,6 @@ export class EditUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
             displayname: ['', [Validators.required, Validators.maxLength(32)]],
             email: ['', [Validators.required, Validators.email, Validators.maxLength(128)]],
         })
-    }
-
-    private onGoBack() {
-        this.router.navigate([this.url])
     }
 
     private populateFields(result: any) {

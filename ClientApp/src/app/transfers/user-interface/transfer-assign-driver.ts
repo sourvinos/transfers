@@ -10,8 +10,13 @@ import { Driver } from 'src/app/drivers/classes/driver';
 
 export class TransferAssignDriverComponent implements OnInit {
 
-    id = ''
+    //#region Private
     drivers: Driver[] = []
+    //#endregion
+
+    //#region Form
+    id = ''
+    //#endregion
 
     constructor(private dialogRef: MatDialogRef<TransferAssignDriverComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
@@ -19,7 +24,7 @@ export class TransferAssignDriverComponent implements OnInit {
         this.populateDropDowns()
     }
 
-    onClose() {
+    public onClose() {
         this.dialogRef.close()
     }
 

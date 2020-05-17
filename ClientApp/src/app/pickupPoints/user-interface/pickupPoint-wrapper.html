@@ -1,11 +1,11 @@
-<div id="header" *ngIf="this.activeRoute != 'form'; else elseBlock">
+<div id="header">
     <div id="title">
         <h1>Pickup points</h1>
     </div>
     <div id="search-box">
         <mat-form-field>
             <mat-label>Routes</mat-label>
-            <mat-select [(value)]="id" (selectionChange)="onLoadPickupPoints($event)">
+            <mat-select [(value)]="id" (selectionChange)="onLoadPickupPoints()">
                 <mat-option *ngFor=" let route of routes" [value]="route.id">
                     {{ route.description }}
                 </mat-option>

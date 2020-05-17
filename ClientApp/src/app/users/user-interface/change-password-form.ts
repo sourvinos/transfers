@@ -2,15 +2,16 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { InputTabStopDirective } from 'src/app/shared/directives/input-tabstop.directive';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { ConfirmValidParentMatcher, ValidationService } from 'src/app/shared/services/validation.service';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { UserService } from '../classes/user.service';
 import { ChangePassword } from './../classes/change-password';
-import { HelperService } from 'src/app/shared/services/helper.service';
 
 @Component({
     selector: 'change-password-form',
@@ -20,15 +21,24 @@ import { HelperService } from 'src/app/shared/services/helper.service';
 
 export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    form: FormGroup
+    //#region Private
     url = '/users'
-    hidePassword = true
-    flatForm: ChangePassword
-    confirmValidParentMatcher = new ConfirmValidParentMatcher();
+    form: FormGroup
     unlisten: Unlisten
-    ngUnsubscribe = new Subject<void>();
+    ngUnsubscribe = new Subject<void>()
+    //#endregion
 
-    constructor(private userService: UserService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService, private buttonClickService: ButtonClickService, private helperService: HelperService) {
+    //#region Private particular
+    flatForm: ChangePassword
+    //#endregion
+
+    //#region Form
+    confirmValidParentMatcher = new ConfirmValidParentMatcher();
+    hidePassword = true
+    input: InputTabStopDirective
+    //#endregion
+
+    constructor(private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService, private dialogService: DialogService, private formBuilder: FormBuilder, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private messageService: MessageService, private router: Router, private snackbarService: SnackbarService, private userService: UserService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) { this.getRecord(p.id) }
         });
@@ -63,7 +73,11 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
         }
     }
 
-    onSave() {
+    public onGoBack() {
+        this.router.navigate([this.url])
+    }
+
+    public onSave() {
         this.flattenFormFields();
         this.userService.updatePassword(this.flatForm).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
@@ -121,10 +135,6 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
         })
     }
 
-    private onGoBack() {
-        this.router.navigate([this.url])
-    }
-
     private initForm() {
         this.form = this.formBuilder.group({
             userId: '',
@@ -151,7 +161,7 @@ export class ChangePasswordFormComponent implements OnInit, AfterViewInit, OnDes
         this.snackbarService.open(message, type)
     }
 
-    // #region Helper properties
+    // #region Getters
 
     get CurrentPassword() {
         return this.form.get('currentPassword')

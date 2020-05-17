@@ -1,28 +1,29 @@
-import { PickupPointFlat } from './../../pickupPoints/classes/pickupPoint-flat';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { MatDialog } from '@angular/material'
-import { ActivatedRoute, Router } from '@angular/router'
-import { forkJoin, Subject } from 'rxjs'
-import { CustomerService } from 'src/app/customers/classes/customer.service'
-import { DestinationService } from 'src/app/destinations/classes/destination.service'
-import { Driver } from 'src/app/drivers/classes/driver'
-import { DriverService } from 'src/app/drivers/classes/driver.service'
-import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.service'
-import { PortService } from 'src/app/ports/classes/port.service'
-import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component'
-import { ButtonClickService } from 'src/app/shared/services/button-click.service'
-import { DialogService } from 'src/app/shared/services/dialog.service'
-import { HelperService } from 'src/app/shared/services/helper.service'
-import { InteractionService } from 'src/app/shared/services/interaction.service'
-import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
-import { MessageService } from 'src/app/shared/services/message.service'
-import { SnackbarService } from 'src/app/shared/services/snackbar.service'
-import { Transfer } from '../classes/transfer'
-import { TransferService } from '../classes/transfer.service'
-import { Destination } from 'src/app/destinations/classes/destination'
-import { Customer } from 'src/app/customers/classes/customer'
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, Subject } from 'rxjs';
+import { Customer } from 'src/app/customers/classes/customer';
+import { CustomerService } from 'src/app/customers/classes/customer.service';
+import { Destination } from 'src/app/destinations/classes/destination';
+import { DestinationService } from 'src/app/destinations/classes/destination.service';
+import { Driver } from 'src/app/drivers/classes/driver';
+import { DriverService } from 'src/app/drivers/classes/driver.service';
 import { PickupPoint } from 'src/app/pickupPoints/classes/pickupPoint';
+import { PickupPointService } from 'src/app/pickupPoints/classes/pickupPoint.service';
+import { PortService } from 'src/app/ports/classes/port.service';
+import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
+import { InputTabStopDirective } from 'src/app/shared/directives/input-tabstop.directive';
+import { ButtonClickService } from 'src/app/shared/services/button-click.service';
+import { DialogService } from 'src/app/shared/services/dialog.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
+import { InteractionService } from 'src/app/shared/services/interaction.service';
+import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
+import { MessageService } from 'src/app/shared/services/message.service';
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { Transfer } from '../classes/transfer';
+import { TransferService } from '../classes/transfer.service';
+import { PickupPointFlat } from './../../pickupPoints/classes/pickupPoint-flat';
 
 @Component({
     selector: 'transfer-form',
@@ -32,18 +33,27 @@ import { PickupPoint } from 'src/app/pickupPoints/classes/pickupPoint';
 
 export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    //#region Private
     form: FormGroup
-    defaultDriver: Driver
-    destinations: Destination[]
-    customers: Customer[]
-    pickupPoints: PickupPoint[]
-    pickupPointsFlat: PickupPointFlat[]
-    drivers: any[]
-    ports: any[]
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
+    //#endregion
 
-    constructor(private destinationService: DestinationService, private customerService: CustomerService, private pickupPointService: PickupPointService, private driverService: DriverService, private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private transferService: TransferService, private formBuilder: FormBuilder, public dialog: MatDialog, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private interactionService: InteractionService, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService, private buttonClickService: ButtonClickService) {
+    //#region Private particular
+    defaultDriver: Driver
+    customers: Customer[]
+    destinations: Destination[]
+    drivers: any[]
+    pickupPoints: PickupPoint[]
+    pickupPointsFlat: PickupPointFlat[]
+    ports: any[]
+    //#endregion
+
+    //#region Form
+    input: InputTabStopDirective
+    //#endregion
+
+    constructor(private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService, private customerService: CustomerService, private destinationService: DestinationService, private dialogService: DialogService, private driverService: DriverService, private formBuilder: FormBuilder, private helperService: HelperService, private interactionService: InteractionService, private keyboardShortcutsService: KeyboardShortcuts, public dialog: MatDialog, private messageService: MessageService, private pickupPointService: PickupPointService, private portService: PortService, private router: Router, private snackbarService: SnackbarService, private transferService: TransferService) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) {
                 this.getRecord(p.id)
@@ -91,12 +101,12 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onCalculateTotalPersons() {
+    public onCalculateTotalPersons() {
         const totalPersons = parseInt(this.form.value.adults, 10) + parseInt(this.form.value.kids, 10) + parseInt(this.form.value.free, 10)
         this.form.patchValue({ totalPersons: !!Number(totalPersons) ? totalPersons : 0 })
     }
 
-    onDelete() {
+    public onDelete() {
         this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.transferService.delete(this.form.value.id).subscribe(() => {
@@ -107,7 +117,11 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    onLookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
+    public onGoBack() {
+        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
+    }
+
+    public onLookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
             const key = fields[1]
@@ -124,7 +138,7 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onSave() {
+    public onSave() {
         if (this.form.value.id === 0 || this.form.value.id === null) {
             this.transferService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
@@ -228,10 +242,6 @@ export class TransferFormComponent implements OnInit, AfterViewInit, OnDestroy {
             remarks: ['', Validators.maxLength(128)],
             userId: this.helperService.getUserIdFromLocalStorage()
         })
-    }
-
-    private onGoBack() {
-        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
     private patchFields(result: any, fields: any[]) {

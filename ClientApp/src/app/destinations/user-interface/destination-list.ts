@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { HelperService } from 'src/app/shared/services/helper.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
 import { InteractionService } from 'src/app/shared/services/interaction.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { Destination } from '../classes/destination';
@@ -16,21 +16,24 @@ import { Destination } from '../classes/destination';
 
 export class DestinationListComponent implements OnInit, OnDestroy {
 
-    records: Destination[]
-    filteredRecords: Destination[]
+    //#region Private
     url = '/destinations'
+    records: Destination[] = []
+    filteredRecords: Destination[] = []
     resolver = 'destinationList'
+    unlisten: Unlisten
+    ngUnsubscribe = new Subject<void>()
+    //#endregion
 
+    //#region Form
     headers = ['S', 'Id', 'Abbreviation', 'Description']
     widths = ['40px', '0px', '150px', '']
     visibility = ['none', 'none', '', '', '']
     justify = ['center', 'center', 'center', 'left']
     fields = ['', 'id', 'abbreviation', 'description']
+    //#endregion
 
-    unlisten: Unlisten
-    ngUnsubscribe = new Subject<void>()
-
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private interactionService: InteractionService, private buttonClickService: ButtonClickService, private helperService: HelperService) {
+    constructor(private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService, private helperService: HelperService, private interactionService: InteractionService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router) {
         this.loadRecords()
     }
 
@@ -45,11 +48,15 @@ export class DestinationListComponent implements OnInit, OnDestroy {
         this.unlisten()
     }
 
-    onFilter(query: string) {
+    public onFilter(query: string) {
         this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
-    onNew() {
+    public onGoBack() {
+        this.router.navigate(['/'])
+    }
+
+    public onNew() {
         this.router.navigate([this.url + '/new'])
     }
 
@@ -82,10 +89,6 @@ export class DestinationListComponent implements OnInit, OnDestroy {
     private loadRecords() {
         this.records = this.activatedRoute.snapshot.data[this.resolver]
         this.filteredRecords = this.records.sort((a, b) => (a.description > b.description) ? 1 : -1)
-    }
-
-    private onGoBack() {
-        this.router.navigate(['/'])
     }
 
     private subscribeToInteractionService() {

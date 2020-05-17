@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subject } from 'rxjs';
 import { RouteService } from 'src/app/routes/classes/route.service';
 import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
+import { InputTabStopDirective } from 'src/app/shared/directives/input-tabstop.directive';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
@@ -22,13 +23,22 @@ import { PickupPointService } from '../classes/pickupPoint.service';
 
 export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    //#region Private
     form: FormGroup
-    routes: any[]
-    routeId: number
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
+    //#endregion
 
-    constructor(private pickupPointService: PickupPointService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private dialogService: DialogService, private messageService: MessageService, private buttonClickService: ButtonClickService, private routeService: RouteService, public dialog: MatDialog) {
+    //#region Private particular
+    routeId: number
+    routes: any[]
+    //#endregion
+
+    //#region Form
+    input: InputTabStopDirective
+    //#endregion
+
+    constructor(private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService, private dialogService: DialogService, private formBuilder: FormBuilder, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private messageService: MessageService, private pickupPointService: PickupPointService, private routeService: RouteService, private router: Router, private snackbarService: SnackbarService, public dialog: MatDialog) {
         this.activatedRoute.params.subscribe(p => {
             if (p.pickupPointId) {
                 this.getRecord(p.pickupPointId)
@@ -69,7 +79,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         }
     }
 
-    onDelete() {
+    public onDelete() {
         this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.pickupPointService.delete(this.form.value.id).subscribe(() => {
@@ -82,7 +92,11 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         })
     }
 
-    onLookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
+    public onGoBack() {
+        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
+    }
+
+    public onLookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
             const key = fields[1]
@@ -99,7 +113,7 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
         }
     }
 
-    onSave() {
+    public onSave() {
         if (this.form.value.id === 0 || this.form.value.id === null) {
             this.pickupPointService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
@@ -174,10 +188,6 @@ export class PickupPointFormComponent implements OnInit, AfterViewInit, OnDestro
             isActive: true,
             userId: this.helperService.getUserIdFromLocalStorage()
         })
-    }
-
-    private onGoBack() {
-        this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
     private patchFields(result: any, fields: any[]) {

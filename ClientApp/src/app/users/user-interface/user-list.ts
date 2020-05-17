@@ -4,9 +4,9 @@ import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { User } from 'src/app/account/classes/user'
 import { ButtonClickService } from 'src/app/shared/services/button-click.service'
+import { HelperService } from 'src/app/shared/services/helper.service'
 import { InteractionService } from 'src/app/shared/services/interaction.service'
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service'
-import { HelperService } from 'src/app/shared/services/helper.service'
 
 @Component({
     selector: 'user-list',
@@ -16,21 +16,24 @@ import { HelperService } from 'src/app/shared/services/helper.service'
 
 export class UserListComponent implements OnInit, OnDestroy {
 
-    records: User[]
-    filteredRecords: User[]
+    //#region Private
     url = '/users'
+    records: User[] = []
+    filteredRecords: User[] = []
     resolver = 'userList'
+    unlisten: Unlisten
+    ngUnsubscribe = new Subject<void>()
+    //#endregion
 
+    //#region Form
     headers = ['S', 'Id', 'Display name', 'User name', 'Email']
     widths = ['40px', '', '30%', '30%', '']
     visibility = ['none', 'none', '', '', '', '']
     justify = ['center', 'left', 'left', 'left', 'left']
     fields = ['', 'id', 'displayname', 'username', 'email']
+    //#endregion
 
-    unlisten: Unlisten
-    ngUnsubscribe = new Subject<void>()
-
-    constructor(private activatedRoute: ActivatedRoute, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private interactionService: InteractionService, private buttonClickService: ButtonClickService, private helperService: HelperService) {
+    constructor(private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService, private helperService: HelperService, private interactionService: InteractionService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router) {
         this.loadRecords()
     }
 
@@ -45,11 +48,15 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.unlisten()
     }
 
-    onFilter(query: string) {
+    public onFilter(query: string) {
         this.filteredRecords = query ? this.records.filter(p => p.userName.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
-    onNew() {
+    public onGoBack() {
+        this.router.navigate(['/'])
+    }
+
+    public onNew() {
         this.router.navigate([this.url + '/new'])
     }
 
@@ -83,10 +90,6 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.records = this.activatedRoute.snapshot.data[this.resolver]
         this.filteredRecords = this.records.sort((a, b) => (a.userName > b.userName) ? 1 : -1)
         console.log(this.filteredRecords)
-    }
-
-    private onGoBack() {
-        this.router.navigate(['/'])
     }
 
     private subscribeToInteractionService() {

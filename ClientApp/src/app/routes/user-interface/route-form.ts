@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subject } from 'rxjs';
 import { PortService } from 'src/app/ports/classes/port.service';
 import { DialogIndexComponent } from 'src/app/shared/components/dialog-index/dialog-index.component';
+import { InputTabStopDirective } from 'src/app/shared/directives/input-tabstop.directive';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
@@ -22,13 +23,22 @@ import { RouteService } from '../classes/route.service';
 
 export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    //#region Private
     url = '/routes'
     form: FormGroup
-    ports: any[]
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
+    //#endregion
 
-    constructor(private routeService: RouteService, private portService: PortService, private helperService: HelperService, private formBuilder: FormBuilder, private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private messageService: MessageService, private snackbarService: SnackbarService, private buttonClickService: ButtonClickService) {
+    //#region Private particular
+    ports: any[]
+    //#endregion
+
+    //#region Form
+    input: InputTabStopDirective
+    //#endregion
+
+    constructor(private activatedRoute: ActivatedRoute, private buttonClickService: ButtonClickService, private dialogService: DialogService, private formBuilder: FormBuilder, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private messageService: MessageService, private portService: PortService, private routeService: RouteService, private router: Router, private snackbarService: SnackbarService, public dialog: MatDialog) {
         this.activatedRoute.params.subscribe(p => {
             if (p.id) { this.getRecord(p.id) }
         })
@@ -64,7 +74,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onDelete() {
+    public onDelete() {
         this.dialogService.open('Warning', 'warningColor', this.messageService.askConfirmationToDelete(), ['cancel', 'ok']).subscribe(response => {
             if (response) {
                 this.routeService.delete(this.form.value.id).subscribe(() => {
@@ -77,7 +87,11 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    onLookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
+    public onGoBack() {
+        this.router.navigate([this.url])
+    }
+
+    public onLookupIndex(lookupArray: any[], title: string, formFields: any[], fields: any[], headers: any[], widths: any[], visibility: any[], justify: any[], value: { target: { value: any } }) {
         const filteredArray = []
         lookupArray.filter(x => {
             const key = fields[1]
@@ -94,7 +108,7 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    onSave() {
+    public onSave() {
         if (this.form.value.id === 0) {
             this.routeService.add(this.form.value).subscribe(() => {
                 this.showSnackbar(this.messageService.showAddedRecord(), 'info')
@@ -168,10 +182,6 @@ export class RouteFormComponent implements OnInit, AfterViewInit, OnDestroy {
             isActive: true,
             userId: this.helperService.getUserIdFromLocalStorage()
         })
-    }
-
-    private onGoBack() {
-        this.router.navigate([this.url])
     }
 
     private patchFields(result: any, fields: any[]) {

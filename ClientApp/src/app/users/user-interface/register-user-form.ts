@@ -2,15 +2,16 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { InputTabStopDirective } from 'src/app/shared/directives/input-tabstop.directive';
 import { AccountService } from 'src/app/shared/services/account.service';
 import { ButtonClickService } from 'src/app/shared/services/button-click.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
 import { MessageService } from 'src/app/shared/services/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar.service';
 import { RegisterUser } from '../../account/classes/register-user';
 import { KeyboardShortcuts, Unlisten } from '../../shared/services/keyboard-shortcuts.service';
 import { ConfirmValidParentMatcher, ValidationService } from '../../shared/services/validation.service';
-import { HelperService } from 'src/app/shared/services/helper.service';
 
 @Component({
     selector: 'register-user-form',
@@ -20,15 +21,24 @@ import { HelperService } from 'src/app/shared/services/helper.service';
 
 export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    flatForm: RegisterUser
-    form: FormGroup
-    hidePassword = true
+    //#region Private
     url = '/users'
+    form: FormGroup
     unlisten: Unlisten
-    ngUnsubscribe = new Subject<void>();
-    confirmValidParentMatcher = new ConfirmValidParentMatcher();
+    ngUnsubscribe = new Subject<void>()
+    //#endregion
 
-    constructor(private accountService: AccountService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private dialogService: DialogService, private snackbarService: SnackbarService, private messageService: MessageService, private buttonClickService: ButtonClickService, private helperService: HelperService) { }
+    //#region Private particular
+    flatForm: RegisterUser
+    //#endregion
+
+    //#region Form
+    hidePassword = true
+    input: InputTabStopDirective
+    confirmValidParentMatcher = new ConfirmValidParentMatcher();
+    //#endregion
+
+    constructor(private accountService: AccountService, private buttonClickService: ButtonClickService, private dialogService: DialogService, private formBuilder: FormBuilder, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private messageService: MessageService, private router: Router, private snackbarService: SnackbarService) { }
 
     ngOnInit() {
         this.initForm()
@@ -59,11 +69,11 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    onResetForm() {
-        this.form.reset()
+    public onGoBack() {
+        this.router.navigate([this.url])
     }
 
-    onSave() {
+    public onSave() {
         this.flattenFormFields();
         this.accountService.register(this.flatForm).subscribe((response) => {
             this.showSnackbar(response.response, 'info')
@@ -128,10 +138,6 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         })
     }
 
-    private onGoBack() {
-        this.router.navigate([this.url])
-    }
-
     private resetForm() {
         this.form.reset()
     }
@@ -140,7 +146,7 @@ export class RegisterUserFormComponent implements OnInit, AfterViewInit, OnDestr
         this.snackbarService.open(message, type)
     }
 
-    // #region Helper properties
+    // #region Getters
 
     get Email() {
         return this.form.get('email')

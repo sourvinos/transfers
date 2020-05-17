@@ -13,9 +13,9 @@
     <form [formGroup]="form" autocomplete="off">
         <div id="section-one">
             <mat-form-field>
-                <input type="text" matInput placeholder="Username" formControlName="username" data-tabindex="1" id="username" [inputTabStop]="input">
-                <mat-error *ngIf="Username.errors?.required">This field is required</mat-error>
-                <mat-error *ngIf="Username.errors?.maxlength">This field can be up to {{ Username.errors.maxlength.requiredLength }} characters long</mat-error>
+                <input type="text" matInput placeholder="Username" formControlName="userName" data-tabindex="1" id="username" [inputTabStop]="input">
+                <mat-error *ngIf="UserName.errors?.required">This field is required</mat-error>
+                <mat-error *ngIf="UserName.errors?.maxlength">This field can be up to {{ UserName.errors.maxlength.requiredLength }} characters long</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <input type="text" matInput placeholder="Display name" formControlName="displayName" data-tabindex="2" id="displayName" [inputTabStop]="input">

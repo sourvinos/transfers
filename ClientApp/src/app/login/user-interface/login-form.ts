@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { InputTabStopDirective } from 'src/app/shared/directives/input-tabstop.directive';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service';
 import { AccountService } from '../../shared/services/account.service';
@@ -16,14 +17,23 @@ import { SnackbarService } from './../../shared/services/snackbar.service';
 
 export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    countdown = 0
-    url: string
+    //#region Private
+    url = '/'
     form: FormGroup
-    hidePassword = true
     unlisten: Unlisten
     ngUnsubscribe = new Subject<void>()
+    //#endregion
 
-    constructor(private accountService: AccountService, private countdownService: CountdownService, private router: Router, private formBuilder: FormBuilder, private keyboardShortcutsService: KeyboardShortcuts, private snackbarService: SnackbarService, private helperService: HelperService) { }
+    //#region Private particular
+    countdown = 0
+    //#endregion
+
+    //#region Form
+    hidePassword = true
+    input: InputTabStopDirective
+    //#endregion
+
+    constructor(private accountService: AccountService, private countdownService: CountdownService, private formBuilder: FormBuilder, private helperService: HelperService, private keyboardShortcutsService: KeyboardShortcuts, private router: Router, private snackbarService: SnackbarService) { }
 
     ngOnInit() {
         this.initForm()
@@ -34,17 +44,17 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.focus('username')
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy() {
         this.ngUnsubscribe.next()
         this.ngUnsubscribe.unsubscribe()
         this.unlisten()
     }
 
-    onForgotPassword() {
+    public onForgotPassword() {
         this.router.navigateByUrl('/forgotPassword');
     }
 
-    onLogin() {
+    public onLogin() {
         const form = this.form.value
         this.accountService.login(form.username, form.password).subscribe(() => {
             this.router.navigateByUrl(this.url);
@@ -82,7 +92,7 @@ export class LoginFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.snackbarService.open(message, type)
     }
 
-    // #region Helper properties
+    // #region Getters
 
     get Username() {
         return this.form.get('username')

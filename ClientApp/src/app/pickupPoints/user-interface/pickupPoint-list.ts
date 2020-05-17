@@ -18,19 +18,25 @@ import { PickupPoint } from '../classes/pickupPoint';
 
 export class PickupPointListComponent implements OnInit, OnDestroy {
 
-    records: PickupPoint[]
-    filteredRecords: PickupPoint[]
+    //#region Private
+    records: PickupPoint[] = []
+    filteredRecords: PickupPoint[] = []
     resolver = 'pickupPointList'
-    routeDescription: string
+    unlisten: Unlisten
+    ngUnsubscribe = new Subject<void>()
+    //#endregion
 
+    //#region Private particular
+    routeDescription: string
+    //#endregion
+
+    //#region Form
     headers = ['S', 'Id', 'Description', 'Exact point', 'Time']
     widths = ['40px', '0', '45%', '', '100px']
     visibility = ['none', 'none', '', '', '']
     justify = ['center', 'center', 'left', 'left', 'center']
     fields = ['', 'id', 'description', 'exactPoint', 'time']
-
-    unlisten: Unlisten
-    ngUnsubscribe = new Subject<void>()
+    //#endregion
 
     constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: InteractionService, private routeService: RouteService, private keyboardShortcutsService: KeyboardShortcuts, private buttonClickService: ButtonClickService, private location: Location, private helperService: HelperService) {
         this.activatedRoute.params.subscribe(p => {
@@ -50,15 +56,15 @@ export class PickupPointListComponent implements OnInit, OnDestroy {
         this.unlisten()
     }
 
-    onFilter(query: string) {
+    public onFilter(query: string) {
         this.filteredRecords = query ? this.records.filter(p => p.description.toLowerCase().includes(query.toLowerCase())) : this.records
     }
 
-    onGoBack() {
+    public onGoBack() {
         this.router.navigate(['../../'], { relativeTo: this.activatedRoute })
     }
 
-    onNew() {
+    public onNew() {
         this.router.navigate([this.location.path() + '/pickupPoint/new']) // OK
     }
 

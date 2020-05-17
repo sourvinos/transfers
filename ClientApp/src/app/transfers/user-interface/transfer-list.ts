@@ -11,9 +11,9 @@ import { InteractionService } from 'src/app/shared/services/interaction.service'
 import { KeyboardShortcuts, Unlisten } from 'src/app/shared/services/keyboard-shortcuts.service'
 import { MessageService } from 'src/app/shared/services/message.service'
 import { SnackbarService } from 'src/app/shared/services/snackbar.service'
+import { TransferFlat } from '../classes/transfer-flat'
 import { TransferPdfService } from '../classes/transfer-pdf.service'
 import { TransferService } from '../classes/transfer.service'
-import { TransferFlat } from '../classes/transfer-flat'
 import { TransferViewModel } from './../classes/transferViewModel'
 import { TransferAssignDriverComponent } from './transfer-assign-driver'
 
@@ -25,34 +25,39 @@ import { TransferAssignDriverComponent } from './transfer-assign-driver'
 
 export class TransferListComponent implements OnInit, AfterViewInit, AfterViewChecked, DoCheck, OnDestroy {
 
-    wrapperUrl = '/transfers'
+    //#region Private
+    records: string[] = []
     resolver = 'transferList'
+    unlisten: Unlisten
+    ngUnsubscribe = new Subject<void>()
+    //#endregion
+
+    //#region Private particular
     dateIn: string
     queryResult = new TransferViewModel()
     queryResultClone = new TransferViewModel()
-    records: string[] = []
     totals: any[] = []
     selectedDestinations: string[] = []
     selectedCustomers: string[] = []
     selectedRoutes: string[] = []
     selectedDrivers: string[] = []
     selectedPorts: string[] = []
-    checkedDestinations = true
-    checkedCustomers = true
-    checkedRoutes = true
-    checkedDrivers = true
-    checkedPorts = true
     transfersFlat: TransferFlat[] = []
     mustRefresh = true
+    //#endregion
 
+    //#region Form
     headers = ['S', 'Id', 'Dest', 'Route', 'Customer', 'Pickup point', 'Time', 'A', 'K', 'F', 'T', 'Driver', 'Port']
     widths = ['40px', '100px', '200px', '100px', '200px', '200px', '60px', '40px', '40px', '40px', '40px', '100px', '100px']
     visibility = ['', 'none', '', '', '', '', '', '', '', '', '', '', '']
     justify = ['center', 'center', 'left', 'center', 'left', 'left', 'center', 'right', 'right', 'right', 'right', 'left', 'left']
     fields = ['', 'id', 'destination', 'route', 'customer', 'pickupPoint', 'time', 'adults', 'kids', 'free', 'totalPersons', 'driver', 'port']
-
-    unlisten: Unlisten
-    ngUnsubscribe = new Subject<void>()
+    checkedDestinations = true
+    checkedCustomers = true
+    checkedRoutes = true
+    checkedDrivers = true
+    checkedPorts = true
+    //#endregion
 
     constructor(private activatedRoute: ActivatedRoute, private router: Router, private interactionService: InteractionService, private service: TransferService, private pdfService: TransferPdfService, private driverService: DriverService, private location: Location, private snackbarService: SnackbarService, public dialog: MatDialog, private transferService: TransferService, private helperService: HelperService, private messageService: MessageService, private keyboardShortcutsService: KeyboardShortcuts, private buttonClickService: ButtonClickService) {
         this.activatedRoute.params.subscribe((params: Params) => this.dateIn = params['dateIn'])
@@ -101,7 +106,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.unlisten()
     }
 
-    onAssignDriver() {
+    public onAssignDriver() {
         if (this.isRecordSelected()) {
             const dialogRef = this.dialog.open(TransferAssignDriverComponent, {
                 height: '350px',
@@ -125,11 +130,11 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         }
     }
 
-    onCreatePdf() {
+    public onCreatePdf() {
         this.pdfService.createReport(this.transfersFlat, this.getDriversFromLocalStorage(), this.dateIn)
     }
 
-    onNew() {
+    public onNew() {
         this.driverService.getDefaultDriver().subscribe(response => {
             this.router.navigate([this.location.path() + '/transfer/new']) // OK
         }, () => {
@@ -137,7 +142,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         })
     }
 
-    onToggleItem(item: any, lookupArray: string[], checkedVariable, className: string) {
+    public onToggleItem(item: any, lookupArray: string[], checkedVariable, className: string) {
         this.toggleActiveItem(item, lookupArray)
         this.initCheckedPersons()
         this.filterByCriteria()
@@ -147,7 +152,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.checkToToggleHeaderCheckbox(lookupArray, checkedVariable, className)
     }
 
-    onToggleItems(className: string, lookupArray: { splice: (arg0: number) => void }, checkedArray: any) {
+    public onToggleItems(className: string, lookupArray: { splice: (arg0: number) => void }, checkedArray: any) {
         event.stopPropagation()
         lookupArray.splice(0)
         this.selectItems(className, lookupArray, !checkedArray)
@@ -279,7 +284,7 @@ export class TransferListComponent implements OnInit, AfterViewInit, AfterViewCh
         this.router.navigate(['transfers/dateIn/', this.helperService.getDateFromLocalStorage()])
     }
 
-    private onGoBack() {
+    public onGoBack() {
         this.router.navigate(['/'])
     }
 
